@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.silverpeas.looks</groupId>
+	<artifactId>default</artifactId>
+    <version>5.15-SNAPSHOT</version>
+  </parent>
+	
+  <groupId>org.silverpeas.looks.aurora</groupId>
+  <artifactId>look-war</artifactId>
+  <packaging>war</packaging>
+  <name>Default look webapp</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.silverpeas.core.ejb-core</groupId>
+      <artifactId>node</artifactId>
+      <classifier>client</classifier>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.core.ejb-core</groupId>
+      <artifactId>publication</artifactId>
+      <classifier>client</classifier>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.core.ejb-core</groupId>
+      <artifactId>mylinks</artifactId>
+      <classifier>client</classifier>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.components.delegatednews</groupId>
+      <artifactId>delegatednews-jar</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.components.almanach</groupId>
+      <artifactId>almanach-ejb</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.components.question-reply</groupId>
+      <artifactId>question-reply-jar</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+  </dependencies>
+
+</project>
