@@ -12,6 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.silverpeas.attachment.AttachmentServiceFactory;
 import org.silverpeas.attachment.model.SimpleDocument;
 import org.silverpeas.attachment.model.SimpleDocumentPK;
+import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.components.quickinfo.model.QuickInfoServiceFactory;
 import org.silverpeas.core.admin.OrganisationController;
 import org.silverpeas.date.Period;
 import org.silverpeas.date.PeriodType;
@@ -498,9 +501,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   private boolean isComponentForNews(String componentId) {
-    ComponentInstLight componentInst =
-        getOrganizationController().getComponentInstLight(componentId);
-    return getSettings("Entity.News.ComponentName", "toBeDefined").equals(componentInst.getLabel());
+    return componentId.startsWith("quickinfo");
   }
   
   public List<News> getNews() {
@@ -520,55 +521,16 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<DelegatedNews> delegatedNews = delegatedNewsService.getAllValidDelegatedNews();
     
     for (DelegatedNews delegated : delegatedNews) {
-      try {
-        delegated.getPublicationDetail().setBeginDate(delegated.getBeginDate());
-        news.add(new News(delegated.getPublicationDetail(), true));
-      } catch (Exception e) {
-        // delegated news refers a deleted publication
-        SilverTrace.warn("lookCG11", "LookSDIS84Helper.getNews()", "CANT_GET_NEWS",
-            "PublicationId = " + delegated.getPubId());
-      }
+      News aNews = new News(delegated.getPublicationDetail());
+      news.add(aNews);
     }
 
     return news;
-  }
-
-  public List<News> getNewsByService(String spaceId) {
-    String[] asAvailCompoForCurUser =
-        getOrganizationController().getAvailCompoIds(spaceId,
-            getMainSessionController().getUserId());
-    String componentId = null;
-    String newsComponentId = null;
-    for (int nI = 0; nI < asAvailCompoForCurUser.length && newsComponentId == null; nI++) {
-      componentId = asAvailCompoForCurUser[nI];
-      if (isComponentForNews(componentId)) {
-        newsComponentId = componentId;
-      }
-    }
-    
-    List<News> filteredPublis = new ArrayList<News>();
-    if (newsComponentId == null) {
-      return filteredPublis;
-    }
-
-    return getNewsByComponentId(newsComponentId);
   }
   
-  private List<News> getNewsByComponentId(String appId) {
-    List<News> news = new ArrayList<News>();
-    
-    List<PublicationDetail> publis =
-        (List<PublicationDetail>) getPublicationBm().getDetailsByFatherPK(
-            new NodePK("0", appId), "P.pubUpdateDate desc", true);
-    
-    if (publis != null) {
-      for (PublicationDetail publi : publis) {
-        if (PublicationDetail.VALID.equalsIgnoreCase(publi.getStatus())) {
-          news.add(new News(publi, true));
-        }
-      }
-    }
-    return news;
+  private List<News> getNewsByComponentId(String appId) {    
+    QuickInfoService service = QuickInfoServiceFactory.getQuickInfoService();
+    return service.getVisibleNews(appId);
   }
 
   public List<Shortcut> getShortcuts(String id) {

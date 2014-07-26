@@ -13,6 +13,10 @@
   <name>Default look webapp</name>
 
   <dependencies>
+  	<dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.silverpeas.core.ejb-core</groupId>
       <artifactId>node</artifactId>
@@ -49,6 +53,12 @@
     <dependency>
       <groupId>com.silverpeas.components.question-reply</groupId>
       <artifactId>question-reply-jar</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.components.quickinfo</groupId>
+      <artifactId>quickinfo-jar</artifactId>
       <version>${silverpeas.version}</version>
       <scope>provided</scope>
     </dependency>

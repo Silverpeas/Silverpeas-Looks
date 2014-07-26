@@ -54,6 +54,26 @@ public class BannerMainItem {
     this.apps = apps;
   }
   
+  private int getNumberOfElements() {
+    int nb = 0;
+    if (getSubspaces() != null) {
+      nb += getSubspaces().size();
+    }
+    if (getApps() != null) {
+      nb += getApps().size();
+    }
+    return nb;
+  }
   
-
+  public int getNumberOfColumns() {
+    int nb = getNumberOfElements();
+    int result = 0;
+    while (nb > 6) {
+      result++;
+      nb = nb-6;
+    }
+    result++;
+    return result;
+  }
+  
 }

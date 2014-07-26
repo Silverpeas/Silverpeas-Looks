@@ -1,3 +1,4 @@
+<%@page import="org.silverpeas.components.quickinfo.model.News"%>
 <%@page import="com.silverpeas.util.EncodeHelper"%>
 <%@page import="com.silverpeas.questionReply.model.Question"%>
 <%@page import="com.silverpeas.myLinks.model.LinkDetail"%>
@@ -6,7 +7,6 @@
 <%@page import="com.stratelia.webactiv.almanach.model.EventDetail"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.Date"%>
-<%@page import="org.silverpeas.looks.aurora.News"%>
 <%@page import="org.silverpeas.looks.aurora.NextEventsDate"%>
 <%@page import="com.stratelia.webactiv.almanach.model.EventOccurrence"%>
 <%@page import="org.silverpeas.looks.aurora.City"%>
@@ -24,7 +24,9 @@
 <%@page import="java.text.SimpleDateFormat"%>
 
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
-<%@ taglib tagdir="/WEB-INF/tags/silverpeas/util" prefix="viewTags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 
 <%
 LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
@@ -42,7 +44,6 @@ if (showWeather) {
 }
 Calendar calendar = Calendar.getInstance();
 List<Shortcut> shortcuts = helper.getMainShortcuts();
-Ticker ticker = helper.getTicker();
 List<LinkDetail> bookmarks = helper.getBookmarks();
 Question question = helper.getAQuestion();
 %>
@@ -54,7 +55,6 @@ Question question = helper.getAQuestion();
 <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
 <view:looknfeel/>
-<view:includePlugin name="ticker" />
 <view:includePlugin name="pdc" />
 <view:includePlugin name="popup"/>
 <link rel="stylesheet" href="css/normalize.min.css" />
@@ -185,7 +185,7 @@ $(document).ready(function() {
                		<% if (nextEvents != null && !nextEvents.isEmpty()) { %>
 					<div class="secteur-container events portlet" id="home-event" >
                             <div class="header">
-                              <h2 class="portlet-title">Agenda du CG</h2>
+                              <h2 class="portlet-title">Ev&eacute;nements &agrave; venir</h2>
                             </div>
                             <div class="portlet-content" id="calendar">
                               <ul class="eventList" id="eventList">
@@ -243,7 +243,8 @@ $(document).ready(function() {
 					
 					<% if (showWeather) { %>
 					<div class="secteur-container weather" id="weather-home">
-					  <h4><%=helper.getString("look.home.weather.title") %></h4>
+					  <h4><span class="title"><%=helper.getString("look.home.weather.title") %></span><span class="date-today"><span class="number"> 23</span> <span class="month">juillet</span> <span class="year">2014</span></span></h4>
+					  <div id="ephemeride">Brigitte</div>
 				      <div id="localisation-weather"> <span class="label">&Agrave; : </span>
 				      <%
 				        boolean firstCity = true;
@@ -310,7 +311,7 @@ $(document).ready(function() {
 					<div class="cg-favorit-main-container">
 						<ul class="cg-favorit-list">
 							<% for (Shortcut shortcut : shortcuts) { %>
-							  <li><a href="<%=shortcut.getUrl() %>" target="<%=shortcut.getTarget() %>"><img alt="<%=shortcut.getAltText() %>" src="<%=shortcut.getIconURL() %>" /> <%=shortcut.getAltText() %></a></li>
+							   <li><a href="<%=shortcut.getUrl() %>" title="<%=shortcut.getAltText() %>" target="<%=shortcut.getTarget() %>"><img alt="<%=shortcut.getAltText() %>" src="<%=shortcut.getIconURL() %>" /> <span><%=shortcut.getAltText() %></span></a></li>
 							<% } %>	
 						</ul>
 					</div>
@@ -322,10 +323,10 @@ $(document).ready(function() {
 				  <ul class="rslides" id="slider">
 					<% for (News news : listOfNews) { %>
 						<li>
-						  <a href="<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, news.getPublicationDetail().getId())%>"><img src="<%=news.getThumbnailURL() %>" alt="" /></a>
+						  <a href="<%=news.getPermalink()%>"><img src="<%=news.getPublication().getThumbnail().getURL() %>" alt="" /></a>
 						  <div class="caption">
-							<h2><a href="<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, news.getPublicationDetail().getId())%>"><%=news.getPublicationDetail().getName(helper.getLanguage()) %></a></h2>
-							<p><%=news.getPublicationDetail().getDescription(helper.getLanguage()) %></p>
+							<h2><a href="<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, news.getPublicationId())%>"><%=news.getTitle() %></a></h2>
+							<p><%=news.getDescription() %></p>
 						  </div>
 						</li>
 					<% } %>
@@ -333,19 +334,23 @@ $(document).ready(function() {
 				<% } %>
 				</div>
     
-                <div class="secteur-container actualite-magique" id="actualite-magique-home">
-					<h4>Autres actualit&eacute;s</h4>
-					<div class="actualite-magique-main-container">
-					<img id="la-magie" src="imgDesign/magique-tri.png" />
-						<span>Mercredi 26 Mars</span>
-						<ul><li><strong>ACTION SOCIALE / Un plan &eacute;labor&eacute; en concertation</strong>
-							R&eacute;unir tous les acteurs du Puy-de-D&ocirc;me pour poser les jalons du futur Programme d&eacute;partemental de l'insertion (PDI). Tel &eacute;tait le but des rencontres de l'insertion, organis&eacute;es le 13 f&eacute;vrier dernier &aacute; l'H&ocirc;tel du D&eacute;partement.</li></ul>
-						<ul><li><strong>Des &eacute;tudiants mobilis&eacute;s</strong>
-							Depuis 20 ans, les &eacute;tudiants b&eacute;n&eacute;voles de l'Afev Auvergne se mobilisent pour faire du soutien scolaire aupr&egrave;s d'&eacute;l&egrave;ves issus de milieux d&eacute;favoris&eacute;s, scolaris&eacute;s en &eacute;coles primaires, coll&egrave;ges et lyc&eacute;es professionnels. </li></ul>
-					<br clear="left" /></div>
-					</div>
-                </div>
-                <viewTags:displayTicker ticker="<%=ticker%>" language="<%=language%>"/>
+                <div id="last-publication-home" class="secteur-container">
+		          <h4>Derni&egrave;res <span>publications</span></h4>
+		          
+		            <div id="last-publicationt-main-container">
+		              <ul class="last-publication-list">
+		              	<% for (PublicationDetail publication : helper.getDernieresPublications()) { %>
+		              		<li onclick="location.href='<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, publication.getId())%>'">
+			                  <a href="<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, publication.getId())%>"><%=publication.getName() %></a>
+			                  <view:username userId="<%=publication.getUpdaterId() %>" />
+			                  <span class="date-publication"><view:formatDate value="<%=publication.getUpdateDate() %>"/></span>
+			                  <p class="description-publication"><%=publication.getDescription() %></p>
+			                </li>
+		              	<% } %>
+		              </ul>
+		           </div>
+     
+    	</div>
             </div> <!-- #main -->
         </div>
 </body>
