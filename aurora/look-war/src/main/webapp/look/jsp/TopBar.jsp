@@ -35,7 +35,6 @@ List<Project> projects = helper.getProjects();
 <view:looknfeel/>
 <view:includePlugin name="ticker" />
 <link rel="stylesheet" href="css/normalize.min.css" />
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/animation.js"></script>
 <script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/topBar.js"></script>
 <script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/connectedUsers.js"></script>
 <script type="text/javascript">
