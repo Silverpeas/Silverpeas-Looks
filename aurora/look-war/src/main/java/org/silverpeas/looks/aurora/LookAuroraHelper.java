@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.silverpeas.attachment.AttachmentServiceFactory;
@@ -42,7 +44,6 @@ import com.silverpeas.questionReply.control.QuestionManager;
 import com.silverpeas.questionReply.control.QuestionManagerFactory;
 import com.silverpeas.questionReply.model.Question;
 import com.silverpeas.util.StringUtil;
-import com.stratelia.silverpeas.peasCore.MainSessionController;
 import com.stratelia.silverpeas.peasCore.URLManager;
 import com.stratelia.silverpeas.silvertrace.SilverTrace;
 import com.stratelia.webactiv.SilverpeasRole;
@@ -56,7 +57,6 @@ import com.stratelia.webactiv.beans.admin.SpaceInstLight;
 import com.stratelia.webactiv.util.DateUtil;
 import com.stratelia.webactiv.util.EJBUtilitaire;
 import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.ResourceLocator;
 import com.stratelia.webactiv.util.exception.UtilException;
 import com.stratelia.webactiv.util.node.model.NodePK;
 import com.stratelia.webactiv.util.publication.model.PublicationDetail;
@@ -67,8 +67,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private DelegatedNewsService delegatedNewsService = null;
   private PublicationHelper kmeliaTransversal = null;
   
-  public LookAuroraHelper(MainSessionController mainSessionController, ResourceLocator resources) {
-    super(mainSessionController, resources);
+  public LookAuroraHelper(HttpSession session) {
+    super(session);
 
     delegatedNewsService = ServicesFactory.getDelegatedNewsService();
   }

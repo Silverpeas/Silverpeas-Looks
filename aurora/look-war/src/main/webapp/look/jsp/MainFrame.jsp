@@ -24,7 +24,7 @@ String			attachmentId		 	= (String) session.getAttribute("RedirectToAttachmentId
 ResourceLocator generalMessage			= new ResourceLocator("com.stratelia.webactiv.multilang.generalMultilang", language);
 String			topBarParams			= "";
 String			frameBottomParams		= "";
-boolean			login					= false;
+boolean			login					= StringUtil.getBooleanValue(request.getParameter("Login"));
 
 if (m_MainSessionCtrl == null) {
 %>
@@ -35,7 +35,7 @@ if (m_MainSessionCtrl == null) {
 } else {	
   	LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
 	if (helper == null) {
-		helper = new LookAuroraHelper(m_MainSessionCtrl, gef.getFavoriteLookSettings());
+		helper = new LookAuroraHelper(session);
 		helper.setMainFrame("MainFrame.jsp");
 		
 		session.setAttribute("Silverpeas_LookHelper", helper);
