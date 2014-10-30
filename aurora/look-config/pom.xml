@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.silverpeas.looks</groupId>
-	<artifactId>default</artifactId>
+    <artifactId>aurora</artifactId>
     <version>5.15-SNAPSHOT</version>
   </parent>
 	

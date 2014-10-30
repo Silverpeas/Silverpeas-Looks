@@ -17,7 +17,7 @@
   </dependencies>
   
   <modules>
-    <module>look-war</module>
     <module>look-config</module>
+    <module>look-war</module>
   </modules>
 </project>

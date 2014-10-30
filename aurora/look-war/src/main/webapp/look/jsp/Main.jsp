@@ -318,8 +318,8 @@ $(document).ready(function() {
 				</div>
 				<% } %>
 
+				  <% if (listOfNews != null && !listOfNews.isEmpty()) { %>
                 <div id="carrousel-actualite">
-                <% if (listOfNews != null && !listOfNews.isEmpty()) { %>
 				  <ul class="rslides" id="slider">
 					<% for (News news : listOfNews) { %>
 						<li>
@@ -331,9 +331,9 @@ $(document).ready(function() {
 						</li>
 					<% } %>
 				  </ul>
-				<% } %>
 				</div>
-    
+				<% } %>
+				
                 <div id="last-publication-home" class="secteur-container">
 		          <h4>Derni&egrave;res <span>publications</span></h4>
 		          
