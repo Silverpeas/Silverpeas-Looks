@@ -29,6 +29,14 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>Silverpeas</id>
+      <name>Silverpeas Maven 3.x Repository</name>
+      <url>http://www.silverpeas.org/nexus/content/groups/silverpeas</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <groupId>org.silverpeas</groupId>
   <artifactId>looks</artifactId>
   <version>5.15-SNAPSHOT</version>

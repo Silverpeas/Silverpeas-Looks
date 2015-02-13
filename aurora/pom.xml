@@ -12,10 +12,6 @@
   <packaging>pom</packaging>
   <name>Default Silverpeas Look</name>
   
-  <dependencies>
-    
-  </dependencies>
-  
   <modules>
     <module>look-config</module>
     <module>look-war</module>
