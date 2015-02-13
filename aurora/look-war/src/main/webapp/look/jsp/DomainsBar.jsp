@@ -73,7 +73,6 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
 <link href="<%=m_sContext%>/util/styleSheets/jquery.autocomplete.css" rel="stylesheet" type="text/css" media="screen"/>
 
 <!-- Add RICO javascript library -->
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/animation.js"></script>
 <script type="text/javascript" src="<%=m_sContext%>/util/ajax/prototype.js"></script>
 <script type="text/javascript" src="<%=m_sContext%>/util/ajax/rico.js"></script>
 <script type="text/javascript" src="<%=m_sContext%>/util/ajax/ricoAjax.js"></script>

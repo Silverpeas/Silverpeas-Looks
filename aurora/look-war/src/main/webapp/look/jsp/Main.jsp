@@ -1,8 +1,6 @@
 <%@page import="org.silverpeas.components.quickinfo.model.News"%>
-<%@page import="com.silverpeas.util.EncodeHelper"%>
 <%@page import="com.silverpeas.questionReply.model.Question"%>
 <%@page import="com.silverpeas.myLinks.model.LinkDetail"%>
-<%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="com.stratelia.webactiv.almanach.model.EventDetail"%>
 <%@page import="java.util.Locale"%>
@@ -19,8 +17,6 @@
 <%@page import="com.stratelia.silverpeas.peasCore.URLManager"%>
 <%@page import="com.stratelia.webactiv.util.publication.model.PublicationDetail"%>
 <%@page import="com.silverpeas.look.Shortcut"%>
-<%@ page import="com.silverpeas.look.Ticker"%>
-<%@ page import="com.silverpeas.look.TickerItem"%>
 <%@page import="java.text.SimpleDateFormat"%>
 
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
@@ -30,8 +26,8 @@
 
 <%
 LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
-//helper.setSpaceIdAndSubSpaceId("WA1");
-SimpleDateFormat mainDateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRENCH);
+SimpleDateFormat eventDateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRENCH);
+SimpleDateFormat mainDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.FRENCH);
 Zoom zoom = helper.getZoom();
 List<EventOccurrence> eventsOfTheDay = helper.getTodayEvents();
 List<NextEventsDate> nextEvents = helper.getNextEvents();
@@ -46,6 +42,7 @@ Calendar calendar = Calendar.getInstance();
 List<Shortcut> shortcuts = helper.getMainShortcuts();
 List<LinkDetail> bookmarks = helper.getBookmarks();
 Question question = helper.getAQuestion();
+boolean showEphemeris = helper.getSettings("home.ephemeris", true);
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -58,7 +55,6 @@ Question question = helper.getAQuestion();
 <view:includePlugin name="pdc" />
 <view:includePlugin name="popup"/>
 <link rel="stylesheet" href="css/normalize.min.css" />
-<link href="css/ticker-style.css" rel="stylesheet" type="text/css" />
 <style>
 html, body {
 	height:100%;
@@ -69,8 +65,9 @@ html, body {
   display: none;
 }
 </style>
-<script src="js/responsiveslides.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="scripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/responsiveslides.min.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/ephemeris.min.js"></script>
 <script type="text/javascript">
 var weatherCookieName = "Silverpeas_Intranet_LastVisitedCity";
 
@@ -143,18 +140,15 @@ function toggleBookmarks() {
 	$(".other-bookmark").toggle("slow");
 	if ($(".other-bookmark").css("display") == "none") {
 		$("#user-favorit-home a").removeClass("less");
-		/*$("#"+facet+" .toggle span").html("Tout afficher");
-		$("#"+facet+" .toggle").addClass("more");
-		$("#"+facet+" .toggle").removeClass("less");*/
 	} else {
 		$("#user-favorit-home a").addClass("less");
-		/*$("#"+facet+" .toggle span").html("R&eacute;duire");
-		$("#"+facet+" .toggle").addClass("less");
-		$("#"+facet+" .toggle").removeClass("more");*/
 	}
 }
 
 $(document).ready(function() {
+
+  $("#ephemeride").html(ephemeris.getTodayEphemerisName());
+
 	$("#slider").responsiveSlides({
         auto: true,
         pager: false,
@@ -185,7 +179,7 @@ $(document).ready(function() {
                		<% if (nextEvents != null && !nextEvents.isEmpty()) { %>
 					<div class="secteur-container events portlet" id="home-event" >
                             <div class="header">
-                              <h2 class="portlet-title">Ev&eacute;nements &agrave; venir</h2>
+                              <h2 class="portlet-title"><%=helper.getString("look.home.events.next")%></h2>
                             </div>
                             <div class="portlet-content" id="calendar">
                               <ul class="eventList" id="eventList">
@@ -194,7 +188,7 @@ $(document).ready(function() {
                               	%>
                                 <li class="events">
                                   <div class="eventShortDate"><span class="number"><%=calendar.get(Calendar.DATE)%></span>/<span class="month"><%=calendar.get(Calendar.MONTH)+1 %></span></div>
-                                  <div class="eventLongDate"><%=mainDateFormat.format(date.date) %></div>
+                                  <div class="eventLongDate"><%=eventDateFormat.format(date.date) %></div>
                                   <% for (EventOccurrence eventOccurence : date.events) {
 							          	EventDetail event = eventOccurence.getEventDetail();
 							        %>
@@ -224,27 +218,30 @@ $(document).ready(function() {
                                 <% } %>
                               </ul>
                             </div>
-							<a title="voir plus..." href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, helper.getSettings("home.events.appId", "")) %>" class="link-more"><span>Voir plus...</span> </a>
+							<a title="<%=helper.getString("look.home.events.more")%>" href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, helper.getSettings("home.events.appId", "")) %>" class="link-more"><span><%=helper.getString("look.home.events.more")%></span> </a>
                           </div>
                           <% } %>
 			   
 					<% if (question != null) { %>
 				   <div class="secteur-container faq" id="faq-home">
-						<h4>FAQ</h4>
+						<h4><%=helper.getString("look.home.faq.title")%></h4>
 						<div class="FAQ-entry-main-container">
 							<div class="FAQ-entry">
 								<p><a href="<%=question._getPermalink()%>"><%=question.getTitle() %></a></p>
 							</div>
-							<a href="<%=m_sContext %>/RquestionReply/<%=question.getInstanceId() %>/CreateQQuery" class="link-add"><span>Poser votre <strong>question</strong>...</span> </a>
+							<a href="<%=m_sContext %>/RquestionReply/<%=question.getInstanceId() %>/CreateQQuery" class="link-add"><span><%=helper.getString(
+                  "look.home.faq.post")%></span> </a>
 						</div>
-						<a title="voir plus ..." href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, question.getInstanceId()) %>" class="link-more"><span>Voir plus...</span> </a>
+						<a title="<%=helper.getString("look.home.faq.more")%>" href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, question.getInstanceId()) %>" class="link-more"><span><%=helper.getString(
+                "look.home.faq.more")%></span> </a>
 					</div>
 					<% } %>
 					
-					<% if (showWeather) { %>
+          <% if (showEphemeris) { %>
 					<div class="secteur-container weather" id="weather-home">
-					  <h4><span class="title"><%=helper.getString("look.home.weather.title") %></span><span class="date-today"><span class="number"> 23</span> <span class="month">juillet</span> <span class="year">2014</span></span></h4>
+					  <h4><span class="title"><%=helper.getString("look.home.weather.title") %></span><span class="date-today"><%=mainDateFormat.format(new Date())%></span></h4>
 					  <div id="ephemeride">Brigitte</div>
+            <% if (showWeather) { %>
 				      <div id="localisation-weather"> <span class="label">&Agrave; : </span>
 				      <%
 				        boolean firstCity = true;
@@ -266,8 +263,9 @@ $(document).ready(function() {
 				          <span class="max">max ??&deg;</span> </div>
 				        <div class="label"><%=helper.getString("look.home.weather.tomorrow") %></div>
 				      </div>
-				    </div>
-					<% } %>
+            <% } %>
+          </div>
+          <% } %>
 					
 					<% if (helper.displaySearchOnHome()) { %>
 					<div class="secteur-container search" id="bloc-advancedSeach">
@@ -283,7 +281,7 @@ $(document).ready(function() {
     
     				<% if (bookmarks != null && !bookmarks.isEmpty()) { %>
 				   <div class="secteur-container user-favorit" id="user-favorit-home">
-						<h4>Mes favoris</h4>
+						<h4><%=helper.getString("look.home.bookmarks.title")%></h4>
 						<div class="user-favorit-main-container">
 							<ul class="user-favorit-list">
 								<% for (int i=0; i<bookmarks.size(); i++) {
@@ -297,7 +295,7 @@ $(document).ready(function() {
 								<% } %>
 							</ul>
 						</div>
-						<a title="voir plus ..." href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>Voir plus...</span> </a>
+						<a title="<%=helper.getString("look.home.bookmarks.more")%>" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span><%=helper.getString("look.home.bookmarks.more")%></span> </a>
 					</div>
 					<% } %>
 				   
@@ -307,7 +305,7 @@ $(document).ready(function() {
 				
 				<% if (shortcuts != null && !shortcuts.isEmpty()) { %>
 				<div class="secteur-container cg-favorit" id="cg-favorit-home">
-					<h4>Acc&egrave;s rapide</h4>
+					<h4><%=helper.getString("look.home.shortcuts")%></h4>
 					<div class="cg-favorit-main-container">
 						<ul class="cg-favorit-list">
 							<% for (Shortcut shortcut : shortcuts) { %>
@@ -318,8 +316,8 @@ $(document).ready(function() {
 				</div>
 				<% } %>
 
+				  <% if (listOfNews != null && !listOfNews.isEmpty()) { %>
                 <div id="carrousel-actualite">
-                <% if (listOfNews != null && !listOfNews.isEmpty()) { %>
 				  <ul class="rslides" id="slider">
 					<% for (News news : listOfNews) { %>
 						<li>
@@ -331,12 +329,11 @@ $(document).ready(function() {
 						</li>
 					<% } %>
 				  </ul>
-				<% } %>
 				</div>
-    
+				<% } %>
+				
                 <div id="last-publication-home" class="secteur-container">
-		          <h4>Derni&egrave;res <span>publications</span></h4>
-		          
+		          <h4><%=helper.getString("look.home.publications.title")%></h4>
 		            <div id="last-publicationt-main-container">
 		              <ul class="last-publication-list">
 		              	<% for (PublicationDetail publication : helper.getDernieresPublications()) { %>

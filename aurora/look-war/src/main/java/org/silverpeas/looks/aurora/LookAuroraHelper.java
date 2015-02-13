@@ -76,14 +76,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public List<BannerMainItem> getBannerMainItems() {
     String param = getSettings("banner.spaces", null);
     if (param != null) {
-      List<BannerMainItem> items = null;
+      List<BannerMainItem> items = new ArrayList<BannerMainItem>();
       OrganisationController oc = getOrganisationController();
       String[] spaceIds = StringUtils.split(param);
       for (String spaceId : spaceIds) {
         if (oc.isSpaceAvailable(spaceId, getUserId())) {
-          if (items == null) {
-            items = new ArrayList<BannerMainItem>();
-          }
           BannerMainItem item = new BannerMainItem(oc.getSpaceInstLightById(spaceId));
           String[] subspaceIds = oc.getAllSubSpaceIds(spaceId, getUserId());
           for (String subspaceId : subspaceIds) {
@@ -166,7 +163,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<Shortcut> getMainShortcuts() {
-    return getShortcuts("Home1");
+    return getShortcuts("home");
   }
 
   public List<City> getWeatherCities() {
@@ -176,8 +173,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     
     List<City> cities = new ArrayList<City>();
     
-    String[] woeids = StringUtil.split(getSettings("weather.woeid", ""), ",");
-    String[] labels = StringUtil.split(getSettings("weather.cities", ""), ",");
+    String[] woeids = StringUtil.split(getSettings("home.weather.woeid", ""), ",");
+    String[] labels = StringUtil.split(getSettings("home.weather.cities", ""), ",");
     
     for (int i=0; i<woeids.length; i++) {
       try {
