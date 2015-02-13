@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.silverpeas</groupId>
+    <artifactId>parent</artifactId>
+    <version>28-SNAPSHOT</version>
+  </parent>
+
+  <scm>
+    <connection>scm:git:git@github.com:Silverpeas/Silverpeas-Looks.git</connection>
+    <developerConnection>scm:git:git@github.com:Silverpeas/Silverpeas-Looks.git</developerConnection>
+    <url>http://github.com/Silverpeas/Silverpeas-Looks</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <repositories>
+    <repository>
+      <id>Silverpeas</id>
+      <layout>default</layout>
+      <name>Silverpeas Repository</name>
+      <url>http://www.silverpeas.org/nexus/content/groups/silverpeas</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <groupId>org.silverpeas</groupId>
+  <artifactId>looks</artifactId>
+  <version>5.15-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Silverpeas Looks</name>
+  
+  <properties>
+    <!-- Version of Silverpeas on which it depends -->
+    <silverpeas.version>5.15-SNAPSHOT</silverpeas.version>
+  </properties>
+
+  <dependencies>
+  <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.ejb</groupId>
+      <artifactId>ejb-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jms</groupId>
+      <artifactId>jms-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>jta</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.core</groupId>
+      <artifactId>web-core</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.silverpeas.core</groupId>
+      <artifactId>lib-core</artifactId>
+      <version>${silverpeas.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>assembly</descriptorRef>
+          </descriptorRefs>
+          <appendAssemblyId>true</appendAssemblyId>
+          <attach>true</attach>
+          <skipAssembly>true</skipAssembly>
+          <finalName>${project.artifactId}-${project.version}-configuration</finalName>
+        </configuration>
+        <executions>
+          <execution>
+            <id>manage-configuration</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.silverpeas</groupId>
+            <artifactId>assembly-configuration</artifactId>
+            <version>${config.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <modules>
+    <module>aurora</module>
+  </modules>
+
+</project>
