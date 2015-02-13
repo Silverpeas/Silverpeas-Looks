@@ -93,8 +93,8 @@ if (m_MainSessionCtrl == null) {
   	  spaceId = Admin.SPACE_KEY_PREFIX+spaces.get(0).getId();
   	}
 	
-  	String bannerHeight = helper.getSettings("bannerHeight", "115");
-  	String footerHeight = helper.getSettings("footerHeight", "26");
+  	String bannerHeight = helper.getSettings("banner.height", "115");
+  	String footerHeight = helper.getSettings("footer.height", "26");
   	String framesetRows = bannerHeight+",100%,*,*,*";
   	if (helper.displayPDCFrame()) {
         framesetRows = bannerHeight+",100%,"+footerHeight+",*,*,*";

@@ -17,7 +17,7 @@ String currentHeading = helper.getSpaceId();
 
 String wallPaper = helper.getSpaceWallPaper();
 if (wallPaper == null) {
-  wallPaper = gef.getIcon("wallPaper");
+  wallPaper = gef.getIcon("banner.wallPaper");
 }
 if (wallPaper == null) {
   wallPaper = "imgDesign/bandeau.jpg";
@@ -190,13 +190,13 @@ body {
 </style>
 </head>
 <body id="top">
-<div id="ticker"><viewTags:displayTicker/></div>
+<viewTags:displayTicker/>
 <div class="header-container">
   <div  class="wrapper clearfix">
     <h1 class="title">Intranet</h1>
-    <a id="logo-header" href="#" onclick="javaScript:goToHome();"> <img alt="" src="<%=helper.getSettings("logo", "imgDesign/logo.png") %>" /> </a>
+    <a id="logo-header" href="#" onclick="javaScript:goToHome();"> <img alt="" src="<%=helper.getSettings("logo", "icons/1px.gif") %>" /> </a>
     <div id="topar-header">
-      <div id="infoConnection"> <a target="bottomFrame" href="frameBottom.jsp?FromMySpace=1"><img id="avatar-img" alt="mon avatar" src="/silverpeas<%=helper.getUserDetail().getAvatar()%>" /></a>
+      <div id="infoConnection"> <a target="bottomFrame" href="frameBottom.jsp?FromMySpace=1"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="<%=helper.getUserDetail().getAvatar()%>" /></a>
         <div class="avatarName">
           <div class="btn-header">	
           	<a title="<%=helper.getString("look.banner.profile.title")%>" target="bottomFrame" href="frameBottom.jsp?FromMySpace=1"><%=helper.getUserFullName() %></a> 
@@ -212,8 +212,8 @@ body {
           </div>
         </div>
         
-        <div id="notification-count" class="btn-header">| <a href="<%=m_sContext %>/RSILVERMAIL/jsp/Main" target="bottomFrame"><span>...</span> <span id="notification-label">notifications</span></a> </div>
-        |
+        <div id="notification-count" class="btn-header"> <a href="<%=m_sContext %>/RSILVERMAIL/jsp/Main" target="bottomFrame"><span>...</span> <span id="notification-label">notifications</span></a> </div>
+
         <% if (projects != null && !projects.isEmpty()) { %>
         <div class="btn-header">
           <label class="select-header">
@@ -225,8 +225,8 @@ body {
             </select>
           </label>
         </div>
-        |
         <% } %>
+
         <% if (apps != null && !apps.isEmpty()) { %>
         <div class="btn-header">
           <label class="select-header">
@@ -241,7 +241,9 @@ body {
         <% } %>
       </div>
       <ul id="outils">
-        <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">2 autres utilisateurs connectés, </a></li>
+        <% if (helper.getSettings("displayConnectedUsers", true)) { %>
+        <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">2 autres utilisateurs connectÃ©s, </a></li>
+        <% } %>
         <li id="map-link-header"><a target="bottomFrame" href="/silverpeas/admin/jsp/Map.jsp" title="<%=helper.getString("lookSilverpeasV5.Map") %>"><%=helper.getString("lookSilverpeasV5.Map") %></a></li>
         <li id="help-link-header"><a target="_blank" href="/help_fr/index.html" title="<%=helper.getString("lookSilverpeasV5.Help") %>"><%=helper.getString("lookSilverpeasV5.Help") %></a></li>
         <li id="directory-link-header"><a target="bottomFrame" href="/silverpeas/Rdirectory/jsp/Main?Sort=NEWEST" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>

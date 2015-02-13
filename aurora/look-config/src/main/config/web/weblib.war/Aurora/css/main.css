@@ -55,18 +55,27 @@ textarea {
 	height:57px;
 }
 
+
 .btn-header,
 #search-form-header a {
 	background-color:#1C94D4;
     border-radius:11px;
 		-webkit-border-radius:11px;
 		-moz-border-radius:11px;
-	display:inline-block;
+	display:block;
+	float:left;
 	border:1px solid #0b7fbd;
 	padding:0 0.5em 0 0.5em;
 	color:#FFF;
 	position:relative;
 	height:21px;
+	line-height:21px;
+	margin-right:0.5em;
+}
+
+#search-form-header a {
+	display:inline-block;
+	float:none;
 }
 .btn-header a {
 	color:#FFF;
@@ -78,10 +87,9 @@ textarea {
 	padding-right:0.5em;
 }
 .btn-header a span {
-	border-right:1px solid #c45450;
 	padding-right:0.5em;
 }
-/* The CSS */
+
 .select-header select {
 	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
     padding:0 3px 0 0;
@@ -99,11 +107,7 @@ textarea {
     appearance:none;
     cursor:pointer;
 	min-height:19px;
-}
-
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    .select-header select {padding-right:27px}
+	min-width:100px;
 }
 
 label.select-header {
@@ -140,13 +144,14 @@ label.select-header:before {
 
 .header-container #infoConnection .avatarName  {
 	position:relative;    
-	display: inline-block;
+	float:left;
 }
 .header-container #avatar-img {
 	height:42px;
 	float:left;
 	border:1px solid #c8c8c8;
 	margin-right:1em;
+	max-width:42px
 }
 
 .header-container #infoConnection #show-menu-spacePerso {
