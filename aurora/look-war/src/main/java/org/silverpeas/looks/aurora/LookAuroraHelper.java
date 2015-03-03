@@ -353,7 +353,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
     
   /**
-   * @param spaceId
+   * @param numRub
    * @return
    */
   public List<PublicationDetail> getDernieresPublications(String numRub) {
@@ -647,7 +647,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   
   public List<LinkDetail> getBookmarks() {
     MyLinksBm myLinksBm = EJBUtilitaire.getEJBObjectRef(JNDINames.MYLINKSBM_EJBHOME, MyLinksBm.class);
-    List<LinkDetail> links = (List<LinkDetail>) myLinksBm.getAllLinks(getUserId());
+    List<LinkDetail> links = myLinksBm.getAllLinks(getUserId());
     List<LinkDetail> bookmarks = new ArrayList<LinkDetail>();
     for (LinkDetail link : links) {
       if (link.isVisible()) {
