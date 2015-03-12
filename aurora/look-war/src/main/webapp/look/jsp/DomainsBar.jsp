@@ -273,7 +273,7 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
 <input type="hidden" name="message" value="SHOWCLIPBOARD"/>
 </form>
 <!-- Form below is used only to refresh this page according to external link (ie search engine, homepage,...) -->
-<form name="privateDomainsForm" action="DomainsBarSilverpeasV5.jsp" method="post">
+<form name="privateDomainsForm" action="DomainsBar.jsp" method="post">
 <input type="hidden" name ="component_id"/>
 <input type="hidden" name ="privateDomain"/>
 <input type="hidden" name ="privateSubDomain"/>
