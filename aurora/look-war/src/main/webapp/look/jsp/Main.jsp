@@ -227,7 +227,7 @@ $(document).ready(function() {
 						<h4><%=helper.getString("look.home.faq.title")%></h4>
 						<div class="FAQ-entry-main-container">
 							<div class="FAQ-entry">
-								<p><a href="<%=question._getPermalink()%>"><%=question.getTitle() %></a></p>
+								<p><a href="<%=m_sContext %><%=question._getPermalink()%>"><%=question.getTitle() %></a></p>
 							</div>
 							<a href="<%=m_sContext %>/RquestionReply/<%=question.getInstanceId() %>/CreateQQuery" class="link-add"><span><%=helper.getString(
                   "look.home.faq.post")%></span> </a>
