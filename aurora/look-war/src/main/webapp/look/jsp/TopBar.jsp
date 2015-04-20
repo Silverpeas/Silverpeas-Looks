@@ -245,7 +245,7 @@ body {
         <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">2 autres utilisateurs connectés, </a></li>
         <% } %>
         <li id="map-link-header"><a target="bottomFrame" href="/silverpeas/admin/jsp/Map.jsp" title="<%=helper.getString("lookSilverpeasV5.Map") %>"><%=helper.getString("lookSilverpeasV5.Map") %></a></li>
-        <li id="help-link-header"><a target="_blank" href="/help_fr/index.html" title="<%=helper.getString("lookSilverpeasV5.Help") %>"><%=helper.getString("lookSilverpeasV5.Help") %></a></li>
+        <li id="help-link-header"><a target="_blank" href="<%=helper.getSettings("helpURL", "https://extranet.silverpeas.com/help_fr/")%>" title="<%=helper.getString("lookSilverpeasV5.Help") %>"><%=helper.getString("lookSilverpeasV5.Help") %></a></li>
         <li id="directory-link-header"><a target="bottomFrame" href="/silverpeas/Rdirectory/jsp/Main?Sort=NEWEST" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>
         <% if(helper.isBackOfficeVisible()) { %>
         <li id="adminstration-link-header"> <a target="_top" href="/silverpeas/RjobManagerPeas/jsp/Main"><%=helper.getString("lookSilverpeasV5.backOffice") %></a></li>
