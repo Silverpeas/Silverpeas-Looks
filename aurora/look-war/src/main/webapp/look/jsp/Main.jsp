@@ -18,6 +18,7 @@
 <%@page import="com.stratelia.webactiv.util.publication.model.PublicationDetail"%>
 <%@page import="com.silverpeas.look.Shortcut"%>
 <%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="org.silverpeas.looks.aurora.FAQ" %>
 
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -41,7 +42,7 @@ if (showWeather) {
 Calendar calendar = Calendar.getInstance();
 List<Shortcut> shortcuts = helper.getMainShortcuts();
 List<LinkDetail> bookmarks = helper.getBookmarks();
-Question question = helper.getAQuestion();
+FAQ faq = helper.getAQuestion();
 boolean showEphemeris = helper.getSettings("home.ephemeris", true);
 %>
 
@@ -222,17 +223,19 @@ $(document).ready(function() {
                           </div>
                           <% } %>
 			   
-					<% if (question != null) { %>
+					<% if (faq != null) { %>
 				   <div class="secteur-container faq" id="faq-home">
 						<h4><%=helper.getString("look.home.faq.title")%></h4>
 						<div class="FAQ-entry-main-container">
 							<div class="FAQ-entry">
-								<p><a href="<%=m_sContext %><%=question._getPermalink()%>"><%=question.getTitle() %></a></p>
+								<p><a href="<%=m_sContext %><%=faq.getQuestion()._getPermalink()%>"><%=faq.getQuestion().getTitle() %></a></p>
 							</div>
-							<a href="<%=m_sContext %>/RquestionReply/<%=question.getInstanceId() %>/CreateQQuery" class="link-add"><span><%=helper.getString(
+              <% if (faq.isCanAskAQuestion()) { %>
+							<a href="<%=m_sContext %>/RquestionReply/<%=faq.getQuestion().getInstanceId() %>/CreateQQuery" class="link-add"><span><%=helper.getString(
                   "look.home.faq.post")%></span> </a>
+              <% } %>
 						</div>
-						<a title="<%=helper.getString("look.home.faq.more")%>" href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, question.getInstanceId()) %>" class="link-more"><span><%=helper.getString(
+						<a title="<%=helper.getString("look.home.faq.more")%>" href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, faq.getQuestion().getInstanceId()) %>" class="link-more"><span><%=helper.getString(
                 "look.home.faq.more")%></span> </a>
 					</div>
 					<% } %>

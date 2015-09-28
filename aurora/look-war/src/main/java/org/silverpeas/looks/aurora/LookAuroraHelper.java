@@ -631,11 +631,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     try {
       return getPublicationHelper().getUpdatedPublications(spaceId, sinceNbDays, nbPublis);
     } catch (ClassNotFoundException e) {
-      SilverTrace.error("lookCG26", "LookCG26Helper.getLastUpdatedPublicationsSince", "", e);
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getLastUpdatedPublicationsSince", "", e);
     } catch (InstantiationException e) {
-      SilverTrace.error("lookCG26", "LookCG26Helper.getLastUpdatedPublicationsSince", "", e);
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getLastUpdatedPublicationsSince", "", e);
     } catch (IllegalAccessException e) {
-      SilverTrace.error("lookCG26", "LookCG26Helper.getLastUpdatedPublicationsSince", "", e);
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getLastUpdatedPublicationsSince", "", e);
     }
     return new ArrayList<PublicationDetail>();
   }
@@ -657,28 +657,33 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return bookmarks;
   }
   
-  public Question getAQuestion() {
+  public FAQ getAQuestion() {
     QuestionManager qm = QuestionManagerFactory.getQuestionManager();
     String appId = getSettings("home.faq.appId", "");
     if (StringUtil.isDefined(appId)) {
       try {
         List<Question> questions = (List<Question>) qm.getQuestions(appId);
         if (questions != null && !questions.isEmpty()) {
+          FAQ faq = null;
           if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
               questions.size() > 1) {
             Random random = new Random();
             int i = random.nextInt(questions.size()-1);
-            return questions.get(i);
+            faq = new FAQ(questions.get(i));
           } else {
-            return questions.get(0);
+            faq = new FAQ(questions.get(0));
           }
+          String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
+          SilverpeasRole role = SilverpeasRole.getGreaterFrom(SilverpeasRole.from(profiles));
+          faq.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
+          return faq;
         }
       } catch (QuestionReplyException e) {
-        SilverTrace.error("lookCG11", "LookCG11Helper.getDidYouKnow",
-            "root.MSG_GEN_PARAM_VALUE", e);
+        SilverTrace
+            .error("lookAurora", "LookAuroraHelper.LookAuroraHelper", "root.MSG_GEN_PARAM_VALUE",
+                e);
       }
     }
     return null;
   }
-
 }
