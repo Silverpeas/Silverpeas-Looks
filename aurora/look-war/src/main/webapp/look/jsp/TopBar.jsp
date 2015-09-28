@@ -27,6 +27,7 @@ List<BannerMainItem> mainItems = helper.getBannerMainItems();
 
 List<ComponentInst> apps = helper.getApplications();
 List<Project> projects = helper.getProjects();
+String directoryURL = helper.getSettings("directoryURL", null);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -246,7 +247,9 @@ body {
         <% } %>
         <li id="map-link-header"><a target="bottomFrame" href="/silverpeas/admin/jsp/Map.jsp" title="<%=helper.getString("lookSilverpeasV5.Map") %>"><%=helper.getString("lookSilverpeasV5.Map") %></a></li>
         <li id="help-link-header"><a target="_blank" href="<%=helper.getSettings("helpURL", "https://extranet.silverpeas.com/help_fr/")%>" title="<%=helper.getString("lookSilverpeasV5.Help") %>"><%=helper.getString("lookSilverpeasV5.Help") %></a></li>
-        <li id="directory-link-header"><a target="bottomFrame" href="/silverpeas/Rdirectory/jsp/Main?Sort=NEWEST" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>
+        <% if (StringUtil.isDefined(directoryURL)) { %>
+          <li id="directory-link-header"><a target="bottomFrame" href="<%=directoryURL%>" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>
+        <% } %>
         <% if(helper.isBackOfficeVisible()) { %>
         <li id="adminstration-link-header"> <a target="_top" href="/silverpeas/RjobManagerPeas/jsp/Main"><%=helper.getString("lookSilverpeasV5.backOffice") %></a></li>
         <% } %>
