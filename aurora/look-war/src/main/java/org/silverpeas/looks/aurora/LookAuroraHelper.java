@@ -519,6 +519,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     
     for (DelegatedNews delegated : delegatedNews) {
       News aNews = new News(delegated.getPublicationDetail());
+      aNews.setPublicationId(delegated.getPublicationDetail().getId());
       news.add(aNews);
     }
 

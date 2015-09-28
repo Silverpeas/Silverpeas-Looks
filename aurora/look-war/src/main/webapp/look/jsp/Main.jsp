@@ -326,7 +326,7 @@ $(document).ready(function() {
 						<li>
 						  <a href="<%=news.getPermalink()%>"><img src="<%=news.getPublication().getThumbnail().getURL() %>" alt="" /></a>
 						  <div class="caption">
-							<h2><a href="<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, news.getPublicationId())%>"><%=news.getTitle() %></a></h2>
+							<h2><a href="<%=news.getPermalink()%>"><%=news.getTitle() %></a></h2>
 							<p><%=news.getDescription() %></p>
 						  </div>
 						</li>
