@@ -293,8 +293,14 @@ $(document).ready(function() {
 								  if (i > 4) {
 								    classFrag = "class=\"other-bookmark\"";
 								  }
+								  String bookmarkUrl = bookmark.getUrl();
+								  String target = "_blank";
+								  if (!bookmarkUrl.toLowerCase().startsWith("http")) {
+									bookmarkUrl = m_sContext + bookmarkUrl;
+									target = "";
+								  }
 								%>
-								<li <%=classFrag%>><a href="<%=m_sContext+bookmark.getUrl()%>"><%=bookmark.getName() %></a></li>
+								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>"><%=bookmark.getName() %></a></li>
 								<% } %>
 							</ul>
 						</div>
