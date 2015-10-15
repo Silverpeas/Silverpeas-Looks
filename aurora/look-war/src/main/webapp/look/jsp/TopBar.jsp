@@ -122,7 +122,9 @@ $(document).ready(function() {
 	}, function() {
 		$('.spacePerso').hide();
 	});
-	
+
+	<% if (helper.getSettings("banner.subElements", true)) { %>
+
 	$('#nav >  ul > li > div').hover(function() {
 	
   if($(this).children('ul').text().length!=0) {
@@ -147,6 +149,8 @@ $(document).ready(function() {
 		$('.nav-niveau-2').hide();
 		$('#nav   ul  div').removeClass('simple-hover');
 	});
+
+	<% } %>
 	
 	$('#top').hover(function() {
 			
