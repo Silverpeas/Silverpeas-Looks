@@ -367,7 +367,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
    */
   public List<PublicationDetail> getDernieresPublications() {
     return getLatestPublications(null, Integer
-        .parseInt(getSettings("NbDernieresPublications", "3")));
+        .parseInt(getSettings("home.publications.nb", "3")));
   }
 
   /**
