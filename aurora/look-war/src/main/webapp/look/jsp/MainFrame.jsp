@@ -25,6 +25,7 @@ ResourceLocator generalMessage			= new ResourceLocator("com.stratelia.webactiv.m
 String			topBarParams			= "";
 String			frameBottomParams		= "";
 boolean			login					= StringUtil.getBooleanValue(request.getParameter("Login"));
+String thisFrame = "/look/jsp/MainFrame.jsp";
 
 if (m_MainSessionCtrl == null) {
 %>
@@ -36,7 +37,7 @@ if (m_MainSessionCtrl == null) {
   	LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
 	if (helper == null) {
 		helper = new LookAuroraHelper(session);
-		helper.setMainFrame("MainFrame.jsp");
+		helper.setMainFrame(thisFrame);
 		
 		session.setAttribute("Silverpeas_LookHelper", helper);
 		login = true;
@@ -74,7 +75,7 @@ if (m_MainSessionCtrl == null) {
 		frameBottomParams += "&Login=1";
 	}
 	
-	if (!"MainFrame.jsp".equalsIgnoreCase(helper.getMainFrame())) {
+	if (!thisFrame.equalsIgnoreCase(helper.getMainFrame())) {
 		session.setAttribute("RedirectToSpaceId", spaceIdFromRedirect);
 		%>
 			<script type="text/javascript">
