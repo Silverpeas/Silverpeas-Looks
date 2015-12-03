@@ -44,6 +44,7 @@ List<Shortcut> shortcuts = helper.getMainShortcuts();
 List<LinkDetail> bookmarks = helper.getBookmarks();
 FAQ faq = helper.getAQuestion();
 boolean showEphemeris = helper.getSettings("home.ephemeris", true);
+String newsSize = helper.getSettings("home.news.width","1095") + "x" + helper.getSettings("home.news.height","");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -330,7 +331,9 @@ $(document).ready(function() {
 				  <ul class="rslides" id="slider">
 					<% for (News news : listOfNews) { %>
 						<li>
-						  <a href="<%=news.getPermalink()%>"><img src="<%=news.getPublication().getThumbnail().getURL() %>" alt="" /></a>
+						  <a href="<%=news.getPermalink()%>">
+							  <view:image src="<%=news.getPublication().getThumbnail().getURL() %>" alt="" size="<%=newsSize%>"/>
+						  </a>
 						  <div class="caption">
 							<h2><a href="<%=news.getPermalink()%>"><%=news.getTitle() %></a></h2>
 							<p><%=news.getDescription() %></p>
