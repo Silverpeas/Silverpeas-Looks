@@ -366,7 +366,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
    * @return
    */
   public List<PublicationDetail> getDernieresPublications() {
-    return getLatestPublications(null, Integer
+    String spaceId = getSettings("space.homepage.latestpublications.spaceid", "");
+    if (spaceId.isEmpty()) spaceId = null;
+    return getLatestPublications(spaceId, Integer
         .parseInt(getSettings("NbDernieresPublications", "3")));
   }
 
@@ -504,7 +506,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public List<News> getNews() {
     String newsType = getSettings("home.news", "");
     if (StringUtil.isDefined(newsType)) {
-      if (newsType.equalsIgnoreCase("delegated")) {
+      if (newsType.toLowerCase().startsWith("delegated")) {
         return getDelegatedNews();
       } else {
         return getNewsByComponentId(newsType);
