@@ -660,26 +660,47 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return bookmarks;
   }
   
-  public FAQ getAQuestion() {
+  public List<FAQ> getQuestions() {
+    List<FAQ> faqs = new ArrayList<FAQ>();
     QuestionManager qm = QuestionManagerFactory.getQuestionManager();
     String appId = getSettings("home.faq.appId", "");
+    int nb = getSettings("home.faq.nb", 1);
     if (StringUtil.isDefined(appId)) {
       try {
+        FAQ faq = null;
+        String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
+        SilverpeasRole role = SilverpeasRole.getGreaterFrom(SilverpeasRole.from(profiles));
         List<Question> questions = (List<Question>) qm.getQuestions(appId);
         if (questions != null && !questions.isEmpty()) {
-          FAQ faq = null;
+          if (nb > questions.size()) nb = questions.size();
           if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
               questions.size() > 1) {
             Random random = new Random();
-            int i = random.nextInt(questions.size()-1);
-            faq = new FAQ(questions.get(i));
+            int j = 0;
+            while (j < nb) {
+              int i = random.nextInt(questions.size()-1);
+              faq = new FAQ(questions.get(i));
+              faq.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
+              boolean tryagain = false;
+              for (FAQ f : faqs) {
+                if (f.getQuestion().getPK().getId().equals(faq.getQuestion().getPK().getId())) {
+                  tryagain = true;
+                  break;
+                }
+              }
+              if (!tryagain) {
+                faqs.add(faq);
+                j++;
+              }
+            }
           } else {
-            faq = new FAQ(questions.get(0));
+            for (int i = 0; i < nb; i++) {
+              faq = new FAQ(questions.get(i));
+              faq.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
+              faqs.add(faq);
+            }
           }
-          String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
-          SilverpeasRole role = SilverpeasRole.getGreaterFrom(SilverpeasRole.from(profiles));
-          faq.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
-          return faq;
+          return faqs;
         }
       } catch (QuestionReplyException e) {
         SilverTrace
