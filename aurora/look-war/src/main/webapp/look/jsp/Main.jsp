@@ -305,7 +305,7 @@ $(document).ready(function() {
 									target = "";
 								  }
 								%>
-								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>"><%=bookmark.getName() %></a></li>
+								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>" title="<%=bookmark.getDescription()%>"><%=bookmark.getName() %></a></li>
 								<% } %>
 							</ul>
 						</div>
