@@ -43,7 +43,9 @@ Calendar calendar = Calendar.getInstance();
 List<Shortcut> shortcuts = helper.getMainShortcuts();
 List<LinkDetail> bookmarks = helper.getBookmarks();
 List<FAQ> faqs = helper.getQuestions();
-boolean showEphemeris = helper.getSettings("home.ephemeris", true);
+boolean showEphemeris = helper.getSettings("home.showEmptyFavoriteArea", true);
+boolean showEmptyFavoriteArea = helper.getSettings("home.ephemeris", true);
+String emptyFavoriteAreaHtmlFragement = helper.getSettings("home.emptyFavoriteAreaHtmlFragement", "");
 String newsSize = helper.getSettings("home.news.width","1095") + "x" + helper.getSettings("home.news.height","");
 %>
 
@@ -286,11 +288,11 @@ $(document).ready(function() {
 				      </form>
 				    </div>
 				    <% } %>
-    
-    				<% if (bookmarks != null && !bookmarks.isEmpty()) { %>
+
 				   <div class="secteur-container user-favorit" id="user-favorit-home">
 						<h4><%=helper.getString("look.home.bookmarks.title")%></h4>
 						<div class="user-favorit-main-container">
+							<% if (bookmarks != null && !bookmarks.isEmpty()) { %>
 							<ul class="user-favorit-list">
 								<% for (int i=0; i<bookmarks.size(); i++) {
 								  LinkDetail bookmark = bookmarks.get(i);
@@ -308,10 +310,18 @@ $(document).ready(function() {
 								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>" title="<%=bookmark.getDescription()%>"><%=bookmark.getName() %></a></li>
 								<% } %>
 							</ul>
+							<% } else { %>
+								<% if (emptyFavoriteAreaHtmlFragement != null && !emptyFavoriteAreaHtmlFragement.isEmpty()) {%>
+								<c:import var="htmlFragment" url="<%=emptyFavoriteAreaHtmlFragement%>" charEncoding="UTF-8"/>
+								<c:out value="${htmlFragment}" escapeXml="false"/>
+								<% } %>
+							<% } %>
 						</div>
+					   	<% if (bookmarks != null && !bookmarks.isEmpty()) { %>
 						<a title="<%=helper.getString("look.home.bookmarks.more")%>" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span><%=helper.getString("look.home.bookmarks.more")%></span> </a>
+					   <% } %>
 					</div>
-					<% } %>
+
 				   
                </div>
                 
