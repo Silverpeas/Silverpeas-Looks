@@ -674,7 +674,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         if (questions != null && !questions.isEmpty()) {
           if (nb > questions.size()) nb = questions.size();
           if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
-              questions.size() > 1) {
+              questions.size() > 1 && questions.size() > nb) {
             Random random = new Random();
             int j = 0;
             while (j < nb) {
