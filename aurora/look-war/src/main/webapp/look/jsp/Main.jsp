@@ -42,8 +42,11 @@ if (showWeather) {
 Calendar calendar = Calendar.getInstance();
 List<Shortcut> shortcuts = helper.getMainShortcuts();
 List<LinkDetail> bookmarks = helper.getBookmarks();
-FAQ faq = helper.getAQuestion();
+boolean someBookmarks = bookmarks != null && !bookmarks.isEmpty();
+List<FAQ> faqs = helper.getQuestions();
 boolean showEphemeris = helper.getSettings("home.ephemeris", true);
+boolean showBookmarksAreaWhenEmpty = helper.getSettings("home.bookmarks.empty.show", true);
+String noBookmarksFragment = helper.getSettings("home.bookmarks.empty.fragment", "");
 String newsSize = helper.getSettings("home.news.width","1095") + "x" + helper.getSettings("home.news.height","");
 %>
 
@@ -224,19 +227,23 @@ $(document).ready(function() {
                           </div>
                           <% } %>
 			   
-					<% if (faq != null) { %>
+					<% if (faqs != null && !faqs.isEmpty()) { %>
 				   <div class="secteur-container faq" id="faq-home">
 						<h4><%=helper.getString("look.home.faq.title")%></h4>
-						<div class="FAQ-entry-main-container">
+					   	<div class="FAQ-entry-main-container">
 							<div class="FAQ-entry">
-								<p><a href="<%=m_sContext %><%=faq.getQuestion()._getPermalink()%>"><%=faq.getQuestion().getTitle() %></a></p>
+					    	<% for(FAQ faq : faqs) { %>
+									<p><a href="<%=m_sContext %><%=faq.getQuestion()._getPermalink()%>"><%=faq.getQuestion().getTitle() %></a></p>
+					    	<% } %>
 							</div>
-              <% if (faq.isCanAskAQuestion()) { %>
+							<%	FAQ faq = faqs.get(0);
+								if (faq.isCanAskAQuestion()) { %>
 							<a href="<%=m_sContext %>/RquestionReply/<%=faq.getQuestion().getInstanceId() %>/CreateQQuery" class="link-add"><span><%=helper.getString(
-                  "look.home.faq.post")%></span> </a>
-              <% } %>
+									"look.home.faq.post")%></span> </a>
+							<% } %>
 						</div>
-						<a title="<%=helper.getString("look.home.faq.more")%>" href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, faq.getQuestion().getInstanceId()) %>" class="link-more"><span><%=helper.getString(
+						<a title="<%=helper.getString("look.home.faq.more")%>"
+						   href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, faq.getQuestion().getInstanceId()) %>" class="link-more"><span><%=helper.getString(
                 "look.home.faq.more")%></span> </a>
 					</div>
 					<% } %>
@@ -282,11 +289,12 @@ $(document).ready(function() {
 				      </form>
 				    </div>
 				    <% } %>
-    
-    				<% if (bookmarks != null && !bookmarks.isEmpty()) { %>
+
+           <% if (someBookmarks || showBookmarksAreaWhenEmpty) { %>
 				   <div class="secteur-container user-favorit" id="user-favorit-home">
 						<h4><%=helper.getString("look.home.bookmarks.title")%></h4>
 						<div class="user-favorit-main-container">
+							<% if (someBookmarks) { %>
 							<ul class="user-favorit-list">
 								<% for (int i=0; i<bookmarks.size(); i++) {
 								  LinkDetail bookmark = bookmarks.get(i);
@@ -297,17 +305,26 @@ $(document).ready(function() {
 								  String bookmarkUrl = bookmark.getUrl();
 								  String target = "_blank";
 								  if (!bookmarkUrl.toLowerCase().startsWith("http")) {
-									bookmarkUrl = m_sContext + bookmarkUrl;
-									target = "";
+									  bookmarkUrl = m_sContext + bookmarkUrl;
+									  target = "";
 								  }
 								%>
-								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>"><%=bookmark.getName() %></a></li>
+								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>" title="<%=bookmark.getDescription()%>"><%=bookmark.getName() %></a></li>
 								<% } %>
 							</ul>
+							<% } else { %>
+								<% if (StringUtil.isDefined(noBookmarksFragment)) {%>
+								<c:import var="htmlFragment" url="<%=noBookmarksFragment%>" charEncoding="UTF-8"/>
+								<c:out value="${htmlFragment}" escapeXml="false"/>
+								<% } %>
+							<% } %>
 						</div>
-						<a title="<%=helper.getString("look.home.bookmarks.more")%>" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span><%=helper.getString("look.home.bookmarks.more")%></span> </a>
+					   	<% if (someBookmarks) { %>
+						    <a title="<%=helper.getString("look.home.bookmarks.more")%>" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span><%=helper.getString("look.home.bookmarks.more")%></span> </a>
+					    <% } %>
 					</div>
-					<% } %>
+          <% } %>
+
 				   
                </div>
                 
