@@ -88,7 +88,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           }
           String[] appIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserId());
           for (String appId : appIds) {
-            item.addApp(oc.getComponentInstLight(appId));
+            ComponentInstLight app = oc.getComponentInstLight(appId);
+            if (!app.isHidden()) {
+              item.addApp(app);
+            }
           }
           items.add(item);
         }
