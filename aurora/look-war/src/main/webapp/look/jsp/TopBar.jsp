@@ -260,7 +260,7 @@ body {
       </ul>
       <div id="search-zone-header">
         <form id="search-form-header" target="bottomFrame" method="post" action="/silverpeas/RpdcSearch/jsp/AdvancedSearch" name="searchForm">
-          <label for="query">Recherche rapide</label>
+          <label for="query"><%=helper.getString("look.banner.search") %></label>
           <input id="query" size="30" name="query" autocomplete="off" class="ac_input" />
           <input type="hidden" value="clear" name="mode"/>
           <a href="javascript:searchEngine()">Go</a>
