@@ -84,40 +84,15 @@ boolean hideMenu = "1".equals(fromTopBar) || "1".equals(login);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript">
-var columntype=""
-var defaultsetting=""
-
-function getCurrentSetting(){
-	if (document.body)
-		return (document.body.cols)? document.body.cols : document.body.rows
+var expandedCols = "<%=framesetWidth%>,*";
+function hideFrame(){
+  expandedCols = document.body.cols;
+  document.body.cols = "10,*";
 }
 
-function setframevalue(coltype, settingvalue){
-	if (coltype=="rows")
-		document.body.rows=settingvalue
-	else if (coltype=="cols")
-		document.body.cols=settingvalue
+function showFrame() {
+  document.body.cols = expandedCols;
 }
-
-function resizeFrame(contractsetting){
-	if (getCurrentSetting()!=defaultsetting)
-		setframevalue(columntype, defaultsetting)
-	else
-		setframevalue(columntype, contractsetting)
-}
-
-function init(){
-	if (!document.all && !document.getElementById) return
-	if (document.body!=null){
-		columntype=(document.body.cols)? "cols" : "rows"
-		defaultsetting=(document.body.cols)? document.body.cols : document.body.rows
-	} 
-	else
-		setTimeout("init()",100)
-}
-
-setTimeout("init()",100);
-
 </script>
 </head>
 <% if (hideMenu) { %>
@@ -128,7 +103,7 @@ setTimeout("init()",100);
 	</frameset>
 <% } else { %>
 	<frameset cols="<%=framesetWidth%>,*">
-		<frame src="DomainsBar.jsp<%=paramsForDomainsBar%>" name="SpacesBar" frameborder="0" scrolling="auto" noresize="noresize"/>
+		<frame src="DomainsBar.jsp<%=paramsForDomainsBar%>" name="SpacesBar" frameborder="0" scrolling="auto"/>
 		<frame src="<%=frameURL%>" name="MyMain" marginheight="0" frameborder="0" scrolling="auto"/>
 		<noframes></noframes>
   	</frameset>

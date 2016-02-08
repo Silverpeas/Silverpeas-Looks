@@ -116,16 +116,16 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
 
   var navVisible = true;
   function resizeFrame() {
-    parent.resizeFrame('10,*');
-    if (navVisible)
-    {
+    if (navVisible) {
       document.body.scroll = "no";
       document.images['expandReduce'].src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/extend.gif";
-    }
-    else
-    {
+      jQuery("#domainsBar").hide();
+      parent.hideFrame();
+    } else {
       document.body.scroll = "auto";
       document.images['expandReduce'].src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/reduct.gif";
+      jQuery("#domainsBar").show();
+      parent.showFrame();
     }
     document.images['expandReduce'].blur();
     navVisible = !navVisible;
