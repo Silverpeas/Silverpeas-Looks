@@ -73,17 +73,23 @@ function unselectHeadings() {
 
 function goToTool(url) {
 	unselectHeadings();
-	top.bottomFrame.location.href = url;
+  if (StringUtil.isDefined(url)) {
+    top.bottomFrame.location.href = url;
+  }
 }
 
 function goToApplication(url) {
 	unselectHeadings();
-	top.bottomFrame.location.href = url;
+  if (StringUtil.isDefined(url)) {
+    top.bottomFrame.location.href = url;
+  }
 }
 
 function goToProject(url) {
 	unselectHeadings();
-	top.bottomFrame.location.href = url;
+  if (StringUtil.isDefined(url)) {
+    top.bottomFrame.location.href = url;
+  }
 }
 
 function setConnectedUsers(nb) {
@@ -223,7 +229,7 @@ body {
         <div class="btn-header">
           <label class="select-header">
             <select id="project-select" onchange="goToProject(this.value)">
-              <option selected="selected"><%=helper.getString("look.banner.projects") %></option>
+              <option selected="selected" value=""><%=helper.getString("look.banner.projects") %></option>
               <% for (Project project : helper.getProjects()) { %>
               <option value="<%=URLManager.getSimpleURL(URLManager.URL_SPACE, project.getSpace().getShortId()) %>"><%=project.getName() %></option>
               <% } %>
@@ -236,7 +242,7 @@ body {
         <div class="btn-header">
           <label class="select-header">
             <select id="application-select" onchange="goToApplication(this.value)">
-              <option selected="selected"><%=helper.getString("look.banner.applications") %></option>
+              <option selected="selected" value=""><%=helper.getString("look.banner.applications") %></option>
               <% for (ComponentInst app : helper.getApplications()) { %>
               <option value="<%=URLManager.getApplicationURL()+URLManager.getURL(app.getName(), "", app.getId()) %>Main"><%=app.getLabel() %></option>
               <% } %>
