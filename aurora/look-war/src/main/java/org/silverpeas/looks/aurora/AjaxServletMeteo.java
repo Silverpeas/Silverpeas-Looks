@@ -43,7 +43,7 @@ public class AjaxServletMeteo extends HttpServlet {
 	 */
 	private String loadMeteoXML(String townId) throws IOException {
 
-		String adresse = "http://weather.yahooapis.com/forecastrss?u=c&w="+townId;
+		String adresse = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D'"+townId+"'&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
 			
 		BufferedReader reader = null;
 		InputStream in = null;
