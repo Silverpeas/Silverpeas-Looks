@@ -1,6 +1,6 @@
 package org.silverpeas.looks.aurora;
 
-import com.silverpeas.questionReply.model.Question;
+import org.silverpeas.components.questionreply.model.Question;
 
 /**
  * @author Nicolas Eysseric

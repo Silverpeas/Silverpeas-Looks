@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.stratelia.webactiv.almanach.model.EventOccurrence;
+import org.silverpeas.components.almanach.model.EventOccurrence;
 
 public class NextEventsDate {
   

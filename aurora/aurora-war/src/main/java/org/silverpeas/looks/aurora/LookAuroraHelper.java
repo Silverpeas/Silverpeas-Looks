@@ -1,84 +1,69 @@
 package org.silverpeas.looks.aurora;
 
-import java.rmi.RemoteException;
+import org.silverpeas.components.almanach.model.EventOccurrence;
+import org.silverpeas.components.almanach.service.AlmanachService;
+import org.silverpeas.components.delegatednews.model.DelegatedNews;
+import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
+import org.silverpeas.components.questionreply.QuestionReplyException;
+import org.silverpeas.components.questionreply.model.Question;
+import org.silverpeas.components.questionreply.service.QuestionManager;
+import org.silverpeas.components.questionreply.service.QuestionManagerProvider;
+import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.core.admin.component.model.ComponentInst;
+import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.component.model.WAComponent;
+import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.space.PersonalSpaceController;
+import org.silverpeas.core.admin.space.SpaceInst;
+import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.admin.user.model.SilverpeasRole;
+import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.date.period.Period;
+import org.silverpeas.core.date.period.PeriodType;
+import org.silverpeas.core.mylinks.model.LinkDetail;
+import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
+import org.silverpeas.core.mylinks.service.MyLinksService;
+import org.silverpeas.core.silvertrace.SilverTrace;
+import org.silverpeas.core.util.DateUtil;
+import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.URLUtil;
+import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
+import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
+import org.silverpeas.core.web.look.PublicationHelper;
+import org.silverpeas.core.web.look.Shortcut;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.silverpeas.attachment.AttachmentServiceFactory;
-import org.silverpeas.attachment.model.SimpleDocument;
-import org.silverpeas.attachment.model.SimpleDocumentPK;
-import org.silverpeas.components.quickinfo.model.News;
-import org.silverpeas.components.quickinfo.model.QuickInfoService;
-import org.silverpeas.components.quickinfo.model.QuickInfoServiceFactory;
-import org.silverpeas.core.admin.OrganisationController;
-import org.silverpeas.date.Period;
-import org.silverpeas.date.PeriodType;
-import org.silverpeas.wysiwyg.control.WysiwygController;
-
-import com.silverpeas.admin.components.WAComponent;
-import com.silverpeas.delegatednews.model.DelegatedNews;
-import com.silverpeas.delegatednews.service.DelegatedNewsService;
-import com.silverpeas.delegatednews.service.ServicesFactory;
-import com.silverpeas.form.DataRecord;
-import com.silverpeas.form.Field;
-import com.silverpeas.form.FormException;
-import com.silverpeas.form.RecordSet;
-import com.silverpeas.form.displayers.WysiwygFCKFieldDisplayer;
-import com.silverpeas.look.LookSilverpeasV5Helper;
-import com.silverpeas.look.PublicationHelper;
-import com.silverpeas.look.Shortcut;
-import com.silverpeas.myLinks.ejb.MyLinksBm;
-import com.silverpeas.myLinks.model.LinkDetail;
-import com.silverpeas.publicationTemplate.PublicationTemplate;
-import com.silverpeas.publicationTemplate.PublicationTemplateException;
-import com.silverpeas.publicationTemplate.PublicationTemplateManager;
-import com.silverpeas.questionReply.QuestionReplyException;
-import com.silverpeas.questionReply.control.QuestionManager;
-import com.silverpeas.questionReply.control.QuestionManagerFactory;
-import com.silverpeas.questionReply.model.Question;
-import com.silverpeas.util.StringUtil;
-import com.stratelia.silverpeas.peasCore.URLManager;
-import com.stratelia.silverpeas.silvertrace.SilverTrace;
-import com.stratelia.webactiv.SilverpeasRole;
-import com.stratelia.webactiv.almanach.control.ejb.AlmanachBm;
-import com.stratelia.webactiv.almanach.model.EventOccurrence;
-import com.stratelia.webactiv.beans.admin.ComponentInst;
-import com.stratelia.webactiv.beans.admin.ComponentInstLight;
-import com.stratelia.webactiv.beans.admin.PersonalSpaceController;
-import com.stratelia.webactiv.beans.admin.SpaceInst;
-import com.stratelia.webactiv.beans.admin.SpaceInstLight;
-import com.stratelia.webactiv.util.DateUtil;
-import com.stratelia.webactiv.util.EJBUtilitaire;
-import com.stratelia.webactiv.util.JNDINames;
-import com.stratelia.webactiv.util.exception.UtilException;
-import com.stratelia.webactiv.util.node.model.NodePK;
-import com.stratelia.webactiv.util.publication.model.PublicationDetail;
-
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
-  List<Heading> headings = null;
   private DelegatedNewsService delegatedNewsService = null;
   private PublicationHelper kmeliaTransversal = null;
   
   public LookAuroraHelper(HttpSession session) {
     super(session);
 
-    delegatedNewsService = ServicesFactory.getDelegatedNewsService();
+    delegatedNewsService = DelegatedNewsService.get();
   }
-  
+
+  public void initLayoutConfiguration() {
+    super.initLayoutConfiguration();
+    DefaultLayoutConfiguration layout = (DefaultLayoutConfiguration) super.getLayoutConfiguration();
+    layout.setHeaderURL("/look/jsp/TopBar.jsp");
+    layout.setBodyURL("/look/jsp/bodyPartAurora.jsp");
+    layout.setBodyNavigationURL("/look/jsp/DomainsBar.jsp");
+  }
+
   public List<BannerMainItem> getBannerMainItems() {
     String param = getSettings("banner.spaces", null);
     if (param != null) {
       List<BannerMainItem> items = new ArrayList<BannerMainItem>();
-      OrganisationController oc = getOrganisationController();
-      String[] spaceIds = StringUtils.split(param);
+      OrganizationController oc = getOrganisationController();
+      String[] spaceIds = StringUtil.split(param);
       for (String spaceId : spaceIds) {
         if (oc.isSpaceAvailable(spaceId, getUserId())) {
           BannerMainItem item = new BannerMainItem(oc.getSpaceInstLightById(spaceId));
@@ -119,7 +104,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       SpaceInstLight space = getOrganizationController().getSpaceInstLightById(spaceId);
       if (space != null) {
         Project project = new Project(space);
-        String[] componentIds = getOrganizationController().getAvailCompoIdsAtRoot(space.getShortId(), getUserId());
+        String[] componentIds = getOrganizationController().getAvailCompoIdsAtRoot(space.getId(), getUserId());
         for (String componentId : componentIds) {
           ComponentInst component = getOrganizationController().getComponentInst(componentId);
           if (component != null && !component.isHidden()) {
@@ -133,40 +118,36 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   public String getLoginHomePage() {
-    return getSettings("loginHomepage", URLManager.getApplicationURL()+"/sdis84/jsp/Main.jsp");
+    return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
   }
 
-  public Zoom getZoom() throws RemoteException {
-    NodePK fatherPK = getZoomSource();
-    Collection<PublicationDetail> publis =
-        getPublicationBm().getDetailsByFatherPK(fatherPK, "P.pubUpdateDate desc", true);
-    for (PublicationDetail publi : publis) {
-      if (publi.getStatus().equalsIgnoreCase(PublicationDetail.VALID)) {
-        String zoom = getPublicationWysiwygContent(publi);
-        if (StringUtil.isDefined(zoom)) {
-          return new Zoom(publi, zoom);
-        }
-      }
-    }
-    return null;
-  }
-
-  private NodePK getZoomSource() {
-    return new NodePK(getSettings("zoom.topicId", "toBeDefined"), getSettings("zoom.componentId",
-        "toBeDefined"));
-  }
-
-  private String getPublicationWysiwygContent(PublicationDetail publication) {
-    return WysiwygController.load(publication.getPK().getInstanceId(), publication.getPK().getId(),
-        getLanguage());
-  }
-  
   public boolean displaySearchOnHome() {
     return getSettings("home.search", true);
   }
 
   public List<Shortcut> getMainShortcuts() {
     return getShortcuts("home");
+  }
+
+  public List<Shortcut> getShortcuts(String id) {
+    List<Shortcut> shortcuts = new ArrayList<Shortcut>();
+    boolean end = false;
+    int i = 1;
+    while (!end) {
+      String prefix = "Shortcut." + id + "." + i;
+      String url = getSettings(prefix + ".Url", null);
+      if (StringUtil.isDefined(url)) {
+        String target = getSettings(prefix + ".Target", "toBeDefined");
+        String altText = getSettings(prefix + ".AltText", "toBeDefined");
+        String iconUrl = getSettings(prefix + ".IconUrl", "toBeDefined");
+        Shortcut shortcut = new Shortcut(iconUrl, target, url, altText);
+        shortcuts.add(shortcut);
+        i++;
+      } else {
+        end = true;
+      }
+    }
+    return shortcuts;
   }
 
   public List<City> getWeatherCities() {
@@ -188,181 +169,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return cities;
   }
-  
-  public Heading getHeading(String spaceId) {
-    if (!StringUtil.isDefined(spaceId)) {
-      spaceId = getSubSpaceId();
-    }
-    SilverTrace.info("lookSDIS84", "LookSDIS84Helper.getHeading", "root.MSG_GEN_ENTER_METHOD",
-        "spaceId = " + spaceId);
-    SpaceInstLight space = getOrganizationController().getSpaceInstLightById(spaceId);
-    String componentId = getComponentIdWebPage(spaceId);
-    ComponentInst component = getOrganizationController().getComponentInst(componentId);
-    Heading heading = new Heading(space, "");
-    String[] profiles = getOrganisationController().getUserProfiles(getUserId(), componentId);
-    heading.setAdmin(ArrayUtils.contains(profiles, SilverpeasRole.publisher.name()));
-    heading.setBackOfficeAppId(componentId);
-    if (component != null) {
-      String param = component.getParameterValue("xmlTemplate");
-      if (StringUtil.isDefined(param)) {
-        DataRecord data = getDataRecord(componentId, param);
-        if (data != null) {
-          setHeadingEdito(heading, data, componentId);
-          setHeadingImage(heading, data, componentId);
-          setHeadingShortcuts(heading, data, componentId);
-          setHeadingTitle(heading, data);
-        }
-      }
-    }
-    
-    heading.setLastPublications(getLatestPublications(spaceId, 7));
-    
-    String[] almanachIds = getOrganisationController().getAllComponentIdsRecur(spaceId, getUserId(), "almanach", true, false);
-    if (almanachIds != null && almanachIds.length > 0) {
-      heading.setNextEventsDate(getNextEvents(false, almanachIds));
-    }
-    
-    return heading;
-  }
-  
-  private void setHeadingTitle(Heading heading, DataRecord data) {
-    String fieldName = getSettings("headings.title.fieldname", "titre");
-    // get description
-    try {
-      Field field = data.getField(fieldName);
-      if (field != null) {
-        heading.setTitle(field.getValue());
-      }
-    } catch (UtilException e) {
-      SilverTrace.error("lookSDIS84", "LookSDIS84Helper.getProjectDescription", "root.MSG_ERROR",
-          e);
-    } catch (FormException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-  
-  private void setHeadingEdito(Heading heading, DataRecord data, String componentId) {
-    String fieldName = getSettings("headings.about.fieldname", "edito");
-    // get description
-    try {
-      heading.setEdito(WysiwygFCKFieldDisplayer.getContentFromFile(componentId, "0", fieldName));
-    } catch (UtilException e) {
-      SilverTrace.error("lookSDIS84", "LookSDIS84Helper.getProjectDescription", "root.MSG_ERROR",
-          e);
-    }
-  }
-  
-  private void setHeadingImage(Heading heading, DataRecord data, String componentId) {
-    // get image
-    try {
-      String fieldName = getSettings("headings.image.fieldname", "image");
-      Field field = data.getField(fieldName);
-      if (field != null) {
-        if (field.getValue() != null) {
-          heading.setImageURL(getImageURLFromField(field, componentId));
-        }
-      }
-    } catch (FormException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-  
-  private String getImageURLFromField(Field field, String componentId) {
-    if (field != null) {
-      String fieldValue = field.getValue();
-      if (fieldValue != null) {
-        String attachmentId =
-            fieldValue.substring(fieldValue.indexOf("_") + 1, fieldValue.length());
-        if (StringUtil.isDefined(attachmentId)) {
-          if (attachmentId.startsWith("/")) {
-            // case of an image provided by a gallery
-            return attachmentId;
-          } else {
-            SimpleDocument attachment =
-                AttachmentServiceFactory.getAttachmentService().searchDocumentById(
-                    new SimpleDocumentPK(attachmentId, componentId), null);
-            if (attachment != null) {
-              return URLManager.getApplicationURL()+attachment.getAttachmentURL();
-            }
-          }
-        }
-      }
-    }
-    return "#";
-  }
-  
-  private void setHeadingShortcuts(Heading heading, DataRecord data, String componentId) {
-    String imageFieldName = getSettings("headings.shortcuts.image.fieldname", "shortcutImage");
-    String urlFieldName = getSettings("headings.shortcuts.url.fieldname", "shortcutURL");
-    String targetFieldName = getSettings("headings.shortcuts.target.fieldname", "shortcutTarget");
-    String textFieldName = getSettings("headings.shortcuts.text.fieldname", "shortcutText");
-    
-    List<Shortcut> shortcuts = new ArrayList<Shortcut>();
-    
-    try {
-      Field fieldURL = data.getField(urlFieldName+"1");
-      for (int i=1; i<=6 && fieldURL != null && StringUtil.isDefined(fieldURL.getValue()); i++) {
-        Field fieldImage = data.getField(imageFieldName+String.valueOf(i));
-        Field fieldTarget = data.getField(targetFieldName+String.valueOf(i));
-        Field fieldText = data.getField(textFieldName+String.valueOf(i));
-        Shortcut shortcut =
-            new Shortcut(getImageURLFromField(fieldImage, componentId), fieldTarget.getValue(),
-                fieldURL.getValue(), fieldText.getValue());
-        shortcuts.add(shortcut);
-        fieldURL = data.getField(urlFieldName+String.valueOf(i+1));
-      }
-    } catch (FormException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    
-    heading.setShortcuts(shortcuts);
-  }
-
-  /**
-   * @param spaceId
-   * @return
-   */
-  public String getComponentIdWebPage(String spaceId) {
-    String[] asAvailCompoForCurUser =
-        getOrganizationController().getAvailCompoIds(spaceId,
-            getMainSessionController().getUserId());
-    for (String componentId : asAvailCompoForCurUser) {
-      ComponentInstLight componentInst =
-          getOrganizationController().getComponentInstLight(componentId);
-
-      if (getSettings("heading.about.ComponentDesc", "toBeDefined").equals(
-          componentInst.getDescription())) {
-        return componentId;
-      }
-    }
-    return null;
-  }
-
-  public String getServiceDescription(String componentId, String param) {
-    DataRecord data = getDataRecord(componentId, param);
-    if (data != null) {
-      String fieldName = getSettings("services.about.fieldName", "Missions");
-      try {
-        return WysiwygFCKFieldDisplayer.getContentFromFile(componentId, "0", fieldName);
-      } catch (UtilException e) {
-        SilverTrace.error("lookSDIS84", "LookSDIS84Helper.getServiceDescription",
-            "root.MSG_ERROR", e);
-      }
-    }
-    return "";
-  }
-    
-  /**
-   * @param numRub
-   * @return
-   */
-  public List<PublicationDetail> getDernieresPublications(String numRub) {
-    return getLatestPublications(getSettings("Rubrique" + numRub, "toBeDefined"), Integer
-        .parseInt(getSettings("NbDernieresPublicationsRub", "6")));
-  }
 
   /**
    * Dernières publications
@@ -375,55 +181,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return getLatestPublications(spaceId,
         Integer.parseInt(getSettings("home.publications.nb", "3")));
-  }
-
-  /**
-   * Dernières publications affichées au maximum
-   * @return
-   */
-  public List<PublicationDetail> getDernieresPublicationsMax() {
-    return getLatestPublications(null, Integer.parseInt(getSettings("NbDernieresPublicationsMax",
-        "50")));
-  }
-
-  public List<ComponentInst> getPersonalComponents() {
-    PersonalSpaceController psc = new PersonalSpaceController();
-    SpaceInst space = psc.getPersonalSpace(getUserId());
-    List<ComponentInst> components = null;
-    if (space != null) {
-      components = space.getAllComponentsInst();
-    }
-    List<WAComponent> allComponents = psc.getVisibleComponents(getOrganizationController());
-    List<ComponentInst> result = new ArrayList<ComponentInst>();
-    for (WAComponent oneComponent : allComponents) {
-      ComponentInst componentUsed = getComponentInst(components, oneComponent);
-      if (componentUsed == null) {
-        componentUsed = new ComponentInst();
-        componentUsed.setLabel(getComponentLabel(oneComponent.getName()));
-        componentUsed.setName(oneComponent.getName());
-      }
-      result.add(componentUsed);
-    }
-    return result;
-  }
-
-  private ComponentInst getComponentInst(List<ComponentInst> components, WAComponent waComponent) {
-    if (components != null) {
-      for (ComponentInst component : components) {
-        if (component.getName().equalsIgnoreCase(waComponent.getName())) {
-          return component;
-        }
-      }
-    }
-    return null;
-  }
-
-  private String getComponentLabel(String componentName) {
-    String label = getString("lookSilverpeasV5.personalSpace." + componentName);
-    if (!StringUtil.isDefined(label)) {
-      label = componentName;
-    }
-    return label;
   }
 
   /**
@@ -445,50 +202,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return hyperLinks;
   }
 
-  public List<Shortcut> getHeadingShorcuts(String headingId) {
-    return getShortcuts(headingId);
-  }
-
-  public OrganisationController getOrganizationController() {
+  public OrganizationController getOrganizationController() {
     return super.getOrganisationController();
   }
 
-  private PublicationTemplate getXMLTemplate(String componentId, String xmlTemplateName) {
-    try {
-      String shortName =
-          xmlTemplateName.substring(xmlTemplateName.indexOf("/") + 1, xmlTemplateName.indexOf("."));
-      PublicationTemplate pubTemplate =
-          PublicationTemplateManager.getInstance().getPublicationTemplate(
-              componentId + ":" + shortName);
-
-      return pubTemplate;
-    } catch (PublicationTemplateException e) {
-      SilverTrace.error("lookSDIS84", "LookSDIS84Helper.getXMLTemplate()", "", e);
-    }
-    return null;
-  }
-
-  public DataRecord getDataRecord(String componentId, String xmlTemplateName) {
-    try {
-      PublicationTemplate pubTemplate = getXMLTemplate(componentId, xmlTemplateName);
-      if (pubTemplate != null) {
-
-        RecordSet recordSet = pubTemplate.getRecordSet();
-        DataRecord data = recordSet.getRecord("0", getLanguage());
-        if (data == null) {
-          data = recordSet.getEmptyRecord();
-          data.setId("0");
-          data.setLanguage(getLanguage());
-        }
-
-        return data;
-      }
-    } catch (Exception e) {
-      SilverTrace.error("lookSDIS84", "LookSDIS84Helper.getDataRecord()", "", e);
-    }
-    return null;
-  }
-  
   @Override
   public List<PublicationDetail> getLatestPublications(String spaceId, int nbPublis) {
     List<PublicationDetail> publications = super.getLatestPublications(spaceId, nbPublis*2);
@@ -534,44 +251,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   private List<News> getNewsByComponentId(String appId) {    
-    QuickInfoService service = QuickInfoServiceFactory.getQuickInfoService();
+    QuickInfoService service = QuickInfoService.get();
     return service.getVisibleNews(appId);
-  }
-
-  public List<Shortcut> getShortcuts(String id) {
-    List<Shortcut> shortcuts = new ArrayList<Shortcut>();
-    boolean end = false;
-    int i = 1;
-    while (!end) {
-      String prefix = "Shortcut." + id + "." + i;
-      String url = getSettings(prefix + ".Url", null);
-      if (StringUtil.isDefined(url)) {
-        String target = getSettings(prefix + ".Target", "toBeDefined");
-        String altText = getSettings(prefix + ".AltText", "toBeDefined");
-        String iconUrl = getSettings(prefix + ".IconUrl", "toBeDefined");
-        Shortcut shortcut = new Shortcut(iconUrl, target, url, altText);
-        shortcuts.add(shortcut);
-        i++;
-      } else {
-        end = true;
-      }
-    }
-    return shortcuts;
-  }
-  
-  public String getCSSClassNames() {
-    String currentSpaceId = getSubSpaceIdOrSpaceId();
-  
-    List<SpaceInst> spaces = getOrganizationController().getSpacePath(currentSpaceId);
-    StringBuilder sb = new StringBuilder(10);
-    for (SpaceInst spaceInst : spaces) {
-      String spaceId = spaceInst.getId();
-      if (!spaceId.startsWith("WA")) {
-        spaceId = "WA" + spaceId;
-      }
-      sb.append(spaceId).append(" ");
-    }
-    return sb.toString();
   }
   
   private String getSubSpaceIdOrSpaceId() {
@@ -582,7 +263,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return currentSpaceId;
   }
   
-  public List<EventOccurrence> getTodayEvents() {   
+  public List<EventOccurrence> getTodayEvents() {
     List<EventOccurrence> events =
         getAlmanachBm().getEventOccurrencesInPeriod(Period.from(new Date(), PeriodType.day, "fr"),
             getAlmanachIds());
@@ -615,8 +296,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return result;
   }
   
-  private AlmanachBm getAlmanachBm() {
-    return EJBUtilitaire.getEJBObjectRef(JNDINames.ALMANACHBM_EJBHOME, AlmanachBm.class);
+  private AlmanachService getAlmanachBm() {
+    return AlmanachService.get();
   }
   
   private String[] getAlmanachIds() {
@@ -654,8 +335,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   public List<LinkDetail> getBookmarks() {
-    MyLinksBm myLinksBm = EJBUtilitaire.getEJBObjectRef(JNDINames.MYLINKSBM_EJBHOME, MyLinksBm.class);
-    List<LinkDetail> links = myLinksBm.getAllLinks(getUserId());
+    MyLinksService myLinksService = new DefaultMyLinksService();
+    List<LinkDetail> links = myLinksService.getAllLinks(getUserId());
     List<LinkDetail> bookmarks = new ArrayList<LinkDetail>();
     for (LinkDetail link : links) {
       if (link.isVisible()) {
@@ -667,7 +348,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   
   public List<FAQ> getQuestions() {
     List<FAQ> faqs = new ArrayList<FAQ>();
-    QuestionManager qm = QuestionManagerFactory.getQuestionManager();
+    QuestionManager qm = QuestionManagerProvider.getQuestionManager();
     String appId = getSettings("home.faq.appId", "");
     int nb = getSettings("home.faq.nb", 1);
     if (StringUtil.isDefined(appId)) {

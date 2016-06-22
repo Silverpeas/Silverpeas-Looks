@@ -27,13 +27,13 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.*"%>
-<%@ page import="com.silverpeas.util.StringUtil"%>
-<%@ page import="com.silverpeas.util.EncodeHelper"%>
-<%@ page import="com.stratelia.webactiv.util.*"%>
-<%@ page import="com.stratelia.silverpeas.peasCore.URLManager"%>
-<%@ page import="com.stratelia.webactiv.util.viewGenerator.html.GraphicElementFactory"%>
-
-<%@ page import="com.silverpeas.look.LookHelper" %>
+<%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
+<%@ page import="org.silverpeas.core.web.look.LookHelper" %>
+<%@ page import="org.silverpeas.core.util.StringUtil" %>
+<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
+<%@ page import="org.silverpeas.core.util.SettingBundle" %>
+<%@ page import="org.silverpeas.core.util.EncodeHelper" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -42,12 +42,12 @@
 
 <%-- Set resource bundle --%>
 <fmt:setLocale value="${sessionScope['SilverSessionController'].favoriteLanguage}" />
-<view:setBundle basename="com.silverpeas.lookSilverpeasV5.multilang.lookBundle"/>
+<view:setBundle basename="org.silverpeas.lookSilverpeasV5.multilang.lookBundle"/>
 
 <%
-String m_sContext = URLManager.getApplicationURL();
+String m_sContext = URLUtil.getApplicationURL();
 GraphicElementFactory gef = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
-LookHelper helper = (LookHelper) session.getAttribute(LookHelper.SESSION_ATT);
+LookHelper helper = LookHelper.getLookHelper(session);
 
 String spaceId    	= request.getParameter("privateDomain");
 String subSpaceId   = request.getParameter("privateSubDomain");
@@ -59,76 +59,24 @@ if (!StringUtil.isDefined(spaceId) && StringUtil.isDefined(componentId)) {
 } else if (StringUtil.isDefined(subSpaceId)) {
   spaceId = subSpaceId;
 }
+gef.setSpaceIdForCurrentRequest(spaceId);
 
-ResourceLocator resourceSearchEngine = new ResourceLocator("com.stratelia.silverpeas.pdcPeas.settings.pdcPeasSettings", "");
-int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.minChars", 3);
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title></title>
-<view:looknfeel></view:looknfeel>
-<!-- Add JQuery mask plugin css -->
-<link href="<%=m_sContext%>/util/styleSheets/jquery.loadmask.css" rel="stylesheet" type="text/css" />
-<link href="<%=m_sContext%>/util/styleSheets/jquery.autocomplete.css" rel="stylesheet" type="text/css" media="screen"/>
-
-<!-- Add RICO javascript library -->
-<script type="text/javascript" src="<%=m_sContext%>/util/ajax/prototype.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/ajax/rico.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/ajax/ricoAjax.js"></script>
-
-<!-- Add jQuery javascript library -->
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/jquery/jquery.loadmask.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/jquery/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/jquery/jquery.bgiframe.min.js"></script>
-
-<!-- Custom domains bar javascript -->
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/navigation.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/personalSpace.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/login.js"></script>
-
 <script type="text/javascript">
+  if (navigator.userAgent.match(/(android|iphone|ipad|blackberry|symbian|symbianos|symbos|netfront|model-orange|javaplatform|iemobile|windows phone|samsung|htc|opera mobile|opera mobi|opera mini|presto|huawei|blazer|bolt|doris|fennec|gobrowser|iris|maemo browser|mib|cldc|minimo|semc-browser|skyfire|teashark|teleca|uzard|uzardweb|meego|nokia|bb10|playbook)/gi)) {
+    if ( ((screen.width  >= 480) && (screen.height >= 800)) || ((screen.width  >= 800) && (screen.height >= 480)) || navigator.userAgent.match(/ipad/gi) ) {
+      var ss = document.createElement("link");
+      ss.type = "text/css";
+      ss.rel = "stylesheet";
+      ss.href = "<%=m_sContext%>/util/styleSheets/domainsBar-tablette.css";
+      document.getElementsByTagName("head")[0].appendChild(ss);
+    }
+  }
+
   function reloadTopBar(reload) {
     if (reload) {
       top.topFrame.location.href=getContext()+getTopBarPage();
     }
-  }
-
-  function checkSubmitToSearch(ev) {
-    var touche = ev.keyCode;
-    if (touche == 13) {
-      searchEngine();
-    }
-  }
-
-  function searchEngine() {
-        if (document.searchForm.query.value != "")
-        {
-        document.searchForm.action = "<%=m_sContext%>/RpdcSearch/jsp/AdvancedSearch";
-          document.searchForm.submit();
-        }
-  }
-
-  function advancedSearchEngine(){
-    document.searchForm.action = "<%=m_sContext%>/RpdcSearch/jsp/ChangeSearchTypeToExpert";
-    document.searchForm.submit();
-  }
-
-  var navVisible = true;
-  function resizeFrame() {
-    if (navVisible) {
-      document.body.scroll = "no";
-      document.images['expandReduce'].src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/extend.gif";
-      jQuery("#domainsBar").hide();
-      parent.hideFrame();
-    } else {
-      document.body.scroll = "auto";
-      document.images['expandReduce'].src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/reduct.gif";
-      jQuery("#domainsBar").show();
-      parent.showFrame();
-    }
-    document.images['expandReduce'].blur();
-    navVisible = !navVisible;
   }
 
   // Callback methods to navigation.js
@@ -180,15 +128,13 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
         return "/look/jsp/TopBar.jsp";
     }
 
-    function getFooterPage() {
-    	return getContext()+"/RpdcSearch/jsp/ChangeSearchTypeToExpert?SearchPage=/admin/jsp/pdcSearchSilverpeasV5.jsp&";
-    }
-
     /**
      * Reload bottom frame
      */
     function reloadSpacesBarFrame(tabId) {
-       top.bottomFrame.location.href="<%=m_sContext%>/admin/jsp/frameBottomSilverpeasV5.jsp?UserMenuDisplayMode=" + tabId;
+      spLayout.getBody().load({
+        "UserMenuDisplayMode" : tabId
+      });
     }
 
     function getPersonalSpaceLabels() {
@@ -199,47 +145,24 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
         return labels;
     }
 
+    function notifyAdministrators() {
+      SP_openWindow('/silverpeas/RnotificationUser/jsp/Main?popupMode=Yes&editTargets=No&theTargetsUsers=Administrators', 'notifyUserPopup', '700', '400', 'menubar=no,scrollbars=no,statusbar=no');
+    }
+
   /**
    * Using "jQuery" instead of "$" at this level prevents of getting conficts with another
    * javascript plugin.
    */
-  //used by keyword autocompletion
   jQuery(document).ready(function() {
 	  <% if (displayPersonalSpace) { %>
 	    jQuery("#spacePerso .spaceURL").css("display", "block");
 	    openMySpace();
 	  <% } %>
-	  <%  if(resourceSearchEngine.getBoolean("enableAutocompletion", false)){ %>
-    jQuery("#query").autocomplete("<%=m_sContext%>/AutocompleteServlet", {
-      minChars : <%=autocompletionMinChars%>,
-      max : 50,
-      autoFill : false,
-      mustMatch : false,
-      matchContains : false,
-      scrollHeight : 220
-    });
-    <%}%>
-    
-    
   });
 
 </script>
-</head>
-<body class="fondDomainsBar">
-<div id="redExp"><a href="javascript:resizeFrame();"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/reduct.gif" border="0" name="expandReduce" alt="<fmt:message key="lookSilverpeasV5.reductExtend" />" title="<fmt:message key="lookSilverpeasV5.reductExtend" />"/></a></div>
+<div class="fondDomainsBar">
 <div id="domainsBar">
-  <div id="recherche">
-    <div id="submitRecherche">
-      <form name="searchForm" action="<%=m_sContext%>/RpdcSearch/jsp/AdvancedSearch" method="post" target="MyMain">
-      <input name="query" size="30" id="query"/>
-      <input type="hidden" name="mode" value="clear"/>
-      <a href="javascript:searchEngine()"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="20" height="20" border="0" alt=""/></a>
-      </form>
-    </div>
-        <div id="bodyRecherche">
-            <a href="javascript:advancedSearchEngine()"><fmt:message key="lookSilverpeasV5.AdvancedSearch" /></a> | <a href="<%=m_sContext%>/RpdcSearch/jsp/LastResults" target="MyMain"><fmt:message key="lookSilverpeasV5.LastSearchResults" /></a> | <a href="#" onclick="javascript:SP_openWindow('<%=m_sContext%>/RpdcSearch/jsp/help.jsp', 'Aide', '700', '220','scrollbars=yes, resizable, alwaysRaised');"><fmt:message key="lookSilverpeasV5.Help" /></a>
-    </div>
-    </div>
   <div id="spaceTransverse"></div>
   <div id="basSpaceTransverse">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -252,7 +175,7 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
     </div>
     <div id="spaceMenuDivId">
       <div id="spaces">
-		<center><br/><br/><fmt:message key="lookSilverpeasV5.loadingSpaces" /><br/><br/><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/inProgress.gif" alt="<fmt:message key="lookSilverpeasV5.loadingSpaces" />"/></center>
+		  <br/><br/><fmt:message key="lookSilverpeasV5.loadingSpaces" /><br/><br/><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/inProgress.gif" alt="<fmt:message key="lookSilverpeasV5.loadingSpaces" />"/>
 	  </div>
       <% if (!helper.isAnonymousAccess()) { %>
         <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();"><fmt:message key="lookSilverpeasV5.PersonalSpace" /></a></div>
@@ -269,14 +192,12 @@ int autocompletionMinChars = resourceSearchEngine.getInteger("autocompletion.min
     </div>
 
 </div>
-<form name="clipboardForm" action="<%=m_sContext+URLManager.getURL(URLManager.CMP_CLIPBOARD)%>Idle.jsp" method="post" target="IdleFrame">
+<form name="clipboardForm" action="<%=m_sContext+URLUtil.getURL(URLUtil.CMP_CLIPBOARD)%>Idle.jsp" method="post" target="IdleFrame">
 <input type="hidden" name="message" value="SHOWCLIPBOARD"/>
 </form>
-<!-- Form below is used only to refresh this page according to external link (ie search engine, homepage,...) -->
-<form name="privateDomainsForm" action="DomainsBar.jsp" method="post">
-<input type="hidden" name ="component_id"/>
-<input type="hidden" name ="privateDomain"/>
-<input type="hidden" name ="privateSubDomain"/>
-</form>
-</body>
-</html>
+
+  <!-- Custom domains bar javascript -->
+  <view:script src="/util/javaScript/lookV5/navigation.js"/>
+  <view:script src="/util/javaScript/lookV5/personalSpace.js"/>
+  <view:script src="/util/javaScript/lookV5/login.js"/>
+</div>

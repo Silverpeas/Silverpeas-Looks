@@ -1,24 +1,22 @@
 <%@page import="org.silverpeas.components.quickinfo.model.News"%>
-<%@page import="com.silverpeas.questionReply.model.Question"%>
-<%@page import="com.silverpeas.myLinks.model.LinkDetail"%>
 <%@page import="java.util.Calendar"%>
-<%@page import="com.stratelia.webactiv.almanach.model.EventDetail"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.Date"%>
 <%@page import="org.silverpeas.looks.aurora.NextEventsDate"%>
-<%@page import="com.stratelia.webactiv.almanach.model.EventOccurrence"%>
 <%@page import="org.silverpeas.looks.aurora.City"%>
-<%@page import="org.silverpeas.looks.aurora.Zoom"%>
 <%@page import="org.silverpeas.looks.aurora.LookAuroraHelper"%>
 <%@ include file="../../admin/jsp/importFrameSet.jsp"%>
 
 <%@page import="java.util.List"%>
-<%@page import="com.silverpeas.util.StringUtil"%>
-<%@page import="com.stratelia.silverpeas.peasCore.URLManager"%>
-<%@page import="com.stratelia.webactiv.util.publication.model.PublicationDetail"%>
-<%@page import="com.silverpeas.look.Shortcut"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page import="org.silverpeas.looks.aurora.FAQ" %>
+<%@ page import="org.silverpeas.components.almanach.model.EventOccurrence" %>
+<%@ page import="org.silverpeas.core.web.look.Shortcut" %>
+<%@ page import="org.silverpeas.core.mylinks.model.LinkDetail" %>
+<%@ page import="org.silverpeas.components.almanach.model.EventDetail" %>
+<%@ page import="org.silverpeas.core.util.StringUtil" %>
+<%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.core.contribution.publication.model.PublicationDetail" %>
 
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -29,7 +27,6 @@
 LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
 SimpleDateFormat eventDateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRENCH);
 SimpleDateFormat mainDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.FRENCH);
-Zoom zoom = helper.getZoom();
 List<EventOccurrence> eventsOfTheDay = helper.getTodayEvents();
 List<NextEventsDate> nextEvents = helper.getNextEvents();
 List<News> listOfNews = helper.getNews();
@@ -59,7 +56,6 @@ String newsSize = helper.getSettings("home.news.width","1095") + "x" + helper.ge
 <view:looknfeel/>
 <view:includePlugin name="pdc" />
 <view:includePlugin name="popup"/>
-<link rel="stylesheet" href="css/normalize.min.css" />
 <style>
 html, body {
 	height:100%;
@@ -228,7 +224,7 @@ $(document).ready(function() {
                                 <% } %>
                               </ul>
                             </div>
-							<a title="<%=helper.getString("look.home.events.more")%>" href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, helper.getSettings("home.events.appId", "")) %>" class="link-more"><span><%=helper.getString("look.home.events.more")%></span> </a>
+							<a title="<%=helper.getString("look.home.events.more")%>" href="<%=URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, helper.getSettings("home.events.appId", "")) %>" class="link-more"><span><%=helper.getString("look.home.events.more")%></span> </a>
                           </div>
                           <% } %>
 			   
@@ -248,7 +244,7 @@ $(document).ready(function() {
 							<% } %>
 						</div>
 						<a title="<%=helper.getString("look.home.faq.more")%>"
-						   href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, faq.getQuestion().getInstanceId()) %>" class="link-more"><span><%=helper.getString(
+						   href="<%=URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, faq.getQuestion().getInstanceId()) %>" class="link-more"><span><%=helper.getString(
                 "look.home.faq.more")%></span> </a>
 					</div>
 					<% } %>
@@ -371,8 +367,8 @@ $(document).ready(function() {
 		            <div id="last-publicationt-main-container">
 		              <ul class="last-publication-list">
 		              	<% for (PublicationDetail publication : helper.getDernieresPublications()) { %>
-		              		<li onclick="location.href='<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, publication.getId())%>'">
-			                  <a href="<%=URLManager.getSimpleURL(URLManager.URL_PUBLI, publication.getId())%>"><%=publication.getName() %></a>
+		              		<li onclick="location.href='<%=URLUtil.getSimpleURL(URLUtil.URL_PUBLI, publication.getId())%>'">
+			                  <a href="<%=URLUtil.getSimpleURL(URLUtil.URL_PUBLI, publication.getId())%>"><%=publication.getName() %></a>
 			                  <view:username userId="<%=publication.getUpdaterId() %>" />
 			                  <span class="date-publication"><view:formatDate value="<%=publication.getUpdateDate() %>"/></span>
 			                  <p class="description-publication"><%=publication.getDescription() %></p>

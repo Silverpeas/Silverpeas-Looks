@@ -335,6 +335,7 @@ padding:8px 28px 4px;
 
 .spaceLevelPerso {
 	padding:0;
+	padding:0;
 }
 
 #domainsBar #contentSpacespacePerso a {
@@ -348,9 +349,10 @@ padding:8px 28px 4px;
 	top:10px;	
 }
 
-
-
-
+#sp-layout-body-part-layout-toggle-part {
+  margin-bottom: -8px;
+  position: relative;
+}
 /********************************** ELMTS FOOTER *******************************/
 #pdcFrame {
 	background-image:inherit;

@@ -1,27 +1,22 @@
-<%@page import="com.stratelia.webactiv.beans.admin.ComponentInstLight"%>
 <%@page import="org.silverpeas.looks.aurora.BannerMainItem"%>
 <%@page import="org.silverpeas.looks.aurora.Project"%>
-<%@page import="com.stratelia.webactiv.beans.admin.ComponentInst"%>
 <%@page import="org.silverpeas.looks.aurora.LookAuroraHelper"%>
 <%@ include file="../../admin/jsp/importFrameSet.jsp" %>
-<%@ page import="java.net.URLEncoder"%>
-<%@ page import="com.stratelia.webactiv.beans.admin.SpaceInstLight"%>
-<%@ page import="com.stratelia.silverpeas.peasCore.URLManager"%>
 <%@ page import="java.util.List"%>
-<%@ page import="com.silverpeas.util.StringUtil"%>
+<%@ page import="org.silverpeas.core.admin.component.model.ComponentInst" %>
+<%@ page import="org.silverpeas.core.util.StringUtil" %>
+<%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.core.admin.space.SpaceInstLight" %>
+<%@ page import="org.silverpeas.core.admin.component.model.ComponentInstLight" %>
+<%@ page import="org.silverpeas.core.web.look.LookHelper" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/util" prefix="viewTags" %>
-<%
-LookAuroraHelper 	helper 	= (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
-String currentHeading = helper.getSpaceId();
 
-String wallPaper = helper.getSpaceWallPaper();
-if (wallPaper == null) {
-  wallPaper = gef.getIcon("banner.wallPaper");
-}
-if (wallPaper == null) {
-  wallPaper = "imgDesign/bandeau.jpg";
-}
+<c:set var="curHelper" value="${sessionScope.Silverpeas_LookHelper}" />
+<%
+LookAuroraHelper 	helper 	= (LookAuroraHelper) LookHelper.getLookHelper(session);
+String currentHeading = helper.getSpaceId();
 
 List<BannerMainItem> mainItems = helper.getBannerMainItems();
 
@@ -29,19 +24,17 @@ List<ComponentInst> apps = helper.getApplications();
 List<Project> projects = helper.getProjects();
 String directoryURL = helper.getSettings("directoryURL", null);
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>bandeau</title>
-<view:looknfeel/>
+
 <view:includePlugin name="ticker" />
 <link rel="stylesheet" href="css/normalize.min.css" />
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/topBar.js"></script>
-<script type="text/javascript" src="<%=m_sContext%>/util/javaScript/lookV5/connectedUsers.js"></script>
+<view:script src="/util/javaScript/lookV5/connectedUsers.js"/>
 <script type="text/javascript">
 function goToHome() {
 	selectHeading('home');
-    top.bottomFrame.location.href = "<%=helper.getLoginHomePage()%>";
+  var params = {};
+  params.Login = "1";
+  params.FromTopBar = "1";
+  spLayout.getBody().load(params);
 }
 
 function getContext() {
@@ -62,7 +55,7 @@ function reloadTopBar() {
 
 function selectHeading(id) {
 	unselectHeadings();
-	$('#'+id+" > div").addClass("selected");
+	$('#navMainItem-'+id+" > div").addClass("selected");
 }
 
 function unselectHeadings() {
@@ -71,25 +64,43 @@ function unselectHeadings() {
 	});
 }
 
-function goToTool(url) {
-	unselectHeadings();
+function goToMainSpace(id) {
+  selectHeading(id);
+  goToSpace(id);
+}
+
+function goToSpace(id) {
+  var params = {};
+  params.SpaceId = id;
+  spLayout.getBody().load(params);
+}
+
+function goToSpaceApp(id) {
+  var params = {};
+  params.ComponentId = id;
+  spLayout.getBody().load(params);
+}
+
+function changeBody(url) {
   if (StringUtil.isDefined(url)) {
-    top.bottomFrame.location.href = url;
+    spLayout.getBody().getContent().load(url);
   }
+}
+
+function goToPersonalSpace() {
+  var params = {};
+  params.FromMySpace = '1';
+  spLayout.getBody().load(params);
 }
 
 function goToApplication(url) {
 	unselectHeadings();
-  if (StringUtil.isDefined(url)) {
-    top.bottomFrame.location.href = url;
-  }
+  changeBody(url);
 }
 
-function goToProject(url) {
+function goToProject(projectSpaceId) {
 	unselectHeadings();
-  if (StringUtil.isDefined(url)) {
-    top.bottomFrame.location.href = url;
-  }
+  goToSpace(projectSpaceId)
 }
 
 function setConnectedUsers(nb) {
@@ -106,9 +117,24 @@ function setConnectedUsers(nb) {
 }
 
 function searchEngine() {
-    if (document.searchForm.query.value !== "") {
-      document.searchForm.submit();
-    }
+  if (document.searchForm.query.value !== "") {
+    executeSearchActionToBodyPartTarget("AdvancedSearch", true);
+  }
+}
+
+function advancedSearchEngine(){
+  executeSearchActionToBodyPartTarget("ChangeSearchTypeToExpert", true);
+}
+
+function lastResultsSearchEngine(){
+  executeSearchActionToBodyPartTarget("LastResults", false);
+}
+
+function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
+  var urlParameters = hasToSerializeForm ?
+      jQuery(document.searchForm).serializeFormJSON() : {};
+  var url = sp.formatUrl("<%=m_sContext%>/RpdcSearch/jsp/" + action, urlParameters);
+  spLayout.getBody().getContent().load(url);
 }
 
 $(document).ready(function() {
@@ -188,42 +214,35 @@ $(document).ready(function() {
 					}
 				} catch (e) {
 					//do nothing
-					alert(e);
+					alert("ici "+e);
 				}
 			});
 
 });
 </script>
-<style>
-body {
-	background-image: url(<%=wallPaper%>);
-}
-</style>
-</head>
-<body id="top">
 <viewTags:displayTicker/>
 <div class="header-container">
-  <div  class="wrapper clearfix">
+  <div class="wrapper clearfix">
     <h1 class="title">Intranet</h1>
-    <a id="logo-header" href="#" onclick="javaScript:goToHome();"> <img alt="" src="<%=helper.getSettings("logo", "icons/1px.gif") %>" /> </a>
+    <a id="logo-header" href="#" onclick="javascript:goToHome();"> <img alt="" src="<%=helper.getSettings("logo", "icons/1px.gif") %>" /> </a>
     <div id="topar-header">
-      <div id="infoConnection"> <a target="bottomFrame" href="frameBottom.jsp?FromMySpace=1"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="<%=helper.getUserDetail().getAvatar()%>" /></a>
+      <div id="infoConnection"> <a href="javascript:goToPersonalSpace()"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="<%=helper.getUserDetail().getAvatar()%>" /></a>
         <div class="avatarName">
           <div class="btn-header">	
-          	<a title="<%=helper.getString("look.banner.profile.title")%>" target="bottomFrame" href="frameBottom.jsp?FromMySpace=1"><%=helper.getUserFullName() %></a> 
+          	<a title="<%=helper.getString("look.banner.profile.title")%>" href="javascript:goToPersonalSpace()"><%=helper.getUserFullName() %></a>
             <a id="show-menu-spacePerso" href="#"> Mon espace perso</a>
           </div>
           <div class="spacePerso">
             <ul>
-              <li><a id="link-settings" target="bottomFrame" href="/silverpeas/RMyProfil/jsp/MySettings"><%=helper.getString("look.banner.profile.settings") %></a> </li>
-              <li><a id="link-myspace" target="bottomFrame" href="frameBottom.jsp?FromMySpace=1"><%=helper.getString("look.banner.profile.myspace") %></a></li>
-              <li><a id="link-feed" target="bottomFrame" href="/silverpeas/RMyProfil/jsp/Main"><%=helper.getString("look.banner.profile.feed") %></a></li>
+              <li><a id="link-settings" href="javascript:changeBody('/silverpeas/RMyProfil/jsp/MySettings')"><%=helper.getString("look.banner.profile.settings") %></a> </li>
+              <li><a id="link-myspace" href="javascript:goToPersonalSpace()"><%=helper.getString("look.banner.profile.myspace") %></a></li>
+              <li><a id="link-feed" href="javascript:changeBody('/silverpeas/RMyProfil/jsp/Main')"><%=helper.getString("look.banner.profile.feed") %></a></li>
               <li><a id="link-logout" id="logOut-link" target="_top" href="/silverpeas/LogoutServlet"><%=helper.getString("look.banner.logout") %></a> </li>
             </ul>
           </div>
         </div>
         
-        <div id="notification-count" class="btn-header"> <a href="<%=m_sContext %>/RSILVERMAIL/jsp/Main" target="bottomFrame"><span>...</span> <span id="notification-label">notifications</span></a> </div>
+        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody('<%=m_sContext %>/RSILVERMAIL/jsp/Main')"><span>...</span> <span id="notification-label">notifications</span></a> </div>
 
         <% if (projects != null && !projects.isEmpty()) { %>
         <div class="btn-header">
@@ -231,7 +250,7 @@ body {
             <select id="project-select" onchange="goToProject(this.value)">
               <option selected="selected" value=""><%=helper.getString("look.banner.projects") %></option>
               <% for (Project project : helper.getProjects()) { %>
-              <option value="<%=URLManager.getSimpleURL(URLManager.URL_SPACE, project.getSpace().getShortId()) %>"><%=project.getName() %></option>
+              <option value="<%=project.getSpace().getId() %>"><%=project.getName() %></option>
               <% } %>
             </select>
           </label>
@@ -244,7 +263,7 @@ body {
             <select id="application-select" onchange="goToApplication(this.value)">
               <option selected="selected" value=""><%=helper.getString("look.banner.applications") %></option>
               <% for (ComponentInst app : helper.getApplications()) { %>
-              <option value="<%=URLManager.getApplicationURL()+URLManager.getURL(app.getName(), "", app.getId()) %>Main"><%=app.getLabel() %></option>
+              <option value="<%=URLUtil.getApplicationURL()+URLUtil.getURL(app.getName(), "", app.getId()) %>Main"><%=app.getLabel() %></option>
               <% } %>
             </select>
           </label>
@@ -255,44 +274,44 @@ body {
         <% if (helper.getSettings("displayConnectedUsers", true)) { %>
         <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">2 autres utilisateurs connectés, </a></li>
         <% } %>
-        <li id="map-link-header"><a target="bottomFrame" href="/silverpeas/admin/jsp/Map.jsp" title="<%=helper.getString("lookSilverpeasV5.Map") %>"><%=helper.getString("lookSilverpeasV5.Map") %></a></li>
+        <li id="map-link-header"><a href="javascript:changeBody('/silverpeas/admin/jsp/Map.jsp')" title="<%=helper.getString("lookSilverpeasV5.Map") %>"><%=helper.getString("lookSilverpeasV5.Map") %></a></li>
         <li id="help-link-header"><a target="_blank" href="<%=helper.getSettings("helpURL", "https://extranet.silverpeas.com/help_fr/")%>" title="<%=helper.getString("lookSilverpeasV5.Help") %>"><%=helper.getString("lookSilverpeasV5.Help") %></a></li>
         <% if (StringUtil.isDefined(directoryURL)) { %>
-          <li id="directory-link-header"><a target="bottomFrame" href="<%=directoryURL%>" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>
+          <li id="directory-link-header"><a href="javascript:changeBody('<%=directoryURL%>')" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>
         <% } %>
         <% if(helper.isBackOfficeVisible()) { %>
         <li id="adminstration-link-header"> <a target="_top" href="/silverpeas/RjobManagerPeas/jsp/Main"><%=helper.getString("lookSilverpeasV5.backOffice") %></a></li>
         <% } %>
       </ul>
       <div id="search-zone-header">
-        <form id="search-form-header" target="bottomFrame" method="post" action="/silverpeas/RpdcSearch/jsp/AdvancedSearch" name="searchForm">
+        <form id="search-form-header" method="get" action="javascript:searchEngine()" name="searchForm">
           <label for="query"><%=helper.getString("look.banner.search") %></label>
-          <input id="query" size="30" name="query" autocomplete="off" class="ac_input" />
+          <input id="query" size="30" name="query" />
           <input type="hidden" value="clear" name="mode"/>
           <a href="javascript:searchEngine()">Go</a>
         </form>
-        <a id="lastResult-link-header" target="bottomFrame" href="<%=m_sContext%>/RpdcSearch/jsp/LastResults"><span><%=helper.getString("lookSilverpeasV5.LastSearchResults") %></span></a>
-        <a id="advancedSearch-link-header" target="bottomFrame" href="<%=m_sContext%>/RpdcSearch/jsp/ChangeSearchTypeToExpert"><span><%=helper.getString("lookSilverpeasV5.AdvancedSearch") %> </span></a>
+        <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()"><span><%=helper.getString("lookSilverpeasV5.LastSearchResults") %></span></a>
+        <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()"><span><%=helper.getString("lookSilverpeasV5.AdvancedSearch") %> </span></a>
       </div>
     </div>
     <div id="nav">
       <ul>
       	<li>
-        	<div class="selected"> <a href="#" onclick="javaScript:goToHome();"><span><%=helper.getString("look.banner.home") %></span></a> </div>
+        	<div class="selected"> <a href="javascript:goToHome();"><span><%=helper.getString("look.banner.home") %></span></a> </div>
         </li>
         <% for (BannerMainItem item : mainItems) { %>
-        <li id="<%=item.getSpace().getFullId()%>"> 
+        <li id="navMainItem-<%=item.getSpace().getId()%>">
         	<div>
-        		<a href="frameBottom.jsp?SpaceId=<%=item.getSpace().getFullId()%>" target="bottomFrame" onclick="javascript:selectHeading('<%=item.getSpace().getFullId()%>')"><span><%=item.getSpace().getName(helper.getLanguage()) %></span></a>
+        		<a href="javascript:goToMainSpace('<%=item.getSpace().getId()%>')"><span><%=item.getSpace().getName(helper.getLanguage()) %></span></a>
          		 <ul class="nav-niveau-2 nav-<%=item.getNumberOfColumns()%>-column">
 					<% if (item.getSubspaces() != null) { %>
 	                    <% for (SpaceInstLight subspace : item.getSubspaces()) { %>
-	                    	<li class="space"><a href="frameBottom.jsp?SpaceId=<%=subspace.getFullId()%>" target="bottomFrame"><span><%=subspace.getName(helper.getLanguage())%></span></a></li>
+	                    	<li class="space"><a href="javascript:goToSpace('<%=subspace.getId()%>')"><span><%=subspace.getName(helper.getLanguage())%></span></a></li>
 	                    <% } %>
                     <% } %>
                     <% if (item.getApps() != null) { %>
 	                    <% for (ComponentInstLight app : item.getApps()) { %>
-	                   		<li><a href="<%=URLManager.getSimpleURL(URLManager.URL_COMPONENT, app.getId())%>" target="bottomFrame"><span><%=app.getName(helper.getLanguage())%></span></a></li>
+	                   		<li><a href="javascript:goToSpaceApp('<%=app.getId()%>')"><span><%=app.getName(helper.getLanguage())%></span></a></li>
 	                    <% } %>
                     <% } %>
          		</ul>
@@ -304,5 +323,3 @@ body {
     <div id="deco-header"> </div>
   </div>
 </div>
-</body>
-</html>

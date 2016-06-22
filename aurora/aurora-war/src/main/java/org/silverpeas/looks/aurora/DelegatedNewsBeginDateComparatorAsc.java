@@ -24,9 +24,9 @@
 
 package org.silverpeas.looks.aurora;
 
-import java.util.Comparator;
+import org.silverpeas.components.delegatednews.model.DelegatedNews;
 
-import com.silverpeas.delegatednews.model.DelegatedNews;
+import java.util.Comparator;
 
 public class DelegatedNewsBeginDateComparatorAsc implements Comparator<DelegatedNews> {
   static public DelegatedNewsBeginDateComparatorAsc comparator =

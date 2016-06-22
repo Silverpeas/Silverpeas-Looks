@@ -4,16 +4,15 @@
   <parent>
     <groupId>org.silverpeas</groupId>
     <artifactId>looks</artifactId>
-    <version>5.15-SNAPSHOT</version>
+    <version>6.0-SNAPSHOT</version>
   </parent>
   
   <groupId>org.silverpeas.looks</groupId>
   <artifactId>aurora</artifactId>
   <packaging>pom</packaging>
-  <name>Default Silverpeas Look</name>
-  
+  <name>Silverpeas Aurora Look</name>
   <modules>
-    <module>look-config</module>
-    <module>look-war</module>
+    <module>aurora-configuration</module>
+    <module>aurora-war</module>
   </modules>
 </project>

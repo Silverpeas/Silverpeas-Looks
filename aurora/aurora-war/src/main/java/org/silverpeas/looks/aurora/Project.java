@@ -1,10 +1,10 @@
 package org.silverpeas.looks.aurora;
 
+import org.silverpeas.core.admin.component.model.ComponentInst;
+import org.silverpeas.core.admin.space.SpaceInstLight;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.stratelia.webactiv.beans.admin.ComponentInst;
-import com.stratelia.webactiv.beans.admin.SpaceInstLight;
 
 public class Project {
 
