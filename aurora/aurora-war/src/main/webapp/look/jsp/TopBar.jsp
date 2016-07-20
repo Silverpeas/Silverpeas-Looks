@@ -1,32 +1,45 @@
-<%@page import="org.silverpeas.looks.aurora.BannerMainItem"%>
-<%@page import="org.silverpeas.looks.aurora.Project"%>
-<%@page import="org.silverpeas.looks.aurora.LookAuroraHelper"%>
-<%@ include file="../../admin/jsp/importFrameSet.jsp" %>
-<%@ page import="java.util.List"%>
-<%@ page import="org.silverpeas.core.admin.component.model.ComponentInst" %>
-<%@ page import="org.silverpeas.core.util.StringUtil" %>
-<%@ page import="org.silverpeas.core.util.URLUtil" %>
-<%@ page import="org.silverpeas.core.admin.space.SpaceInstLight" %>
-<%@ page import="org.silverpeas.core.admin.component.model.ComponentInstLight" %>
-<%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
+<%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/util" prefix="viewTags" %>
 
-<c:set var="curHelper" value="${sessionScope.Silverpeas_LookHelper}" />
-<%
-LookAuroraHelper 	helper 	= (LookAuroraHelper) LookHelper.getLookHelper(session);
-String currentHeading = helper.getSpaceId();
+<c:set var="lookHelper" value="${sessionScope.Silverpeas_LookHelper}" />
+<c:set var="currentHeading" value="${lookHelper.spaceId}"/>
+<c:set var="mainItems" value="${lookHelper.bannerMainItems}"/>
+<c:set var="apps" value="${lookHelper.applications}"/>
+<c:set var="projects" value="${lookHelper.projects}"/>
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
+<c:set var="directoryURL" value="${settings.directoryURL}"/>
 
-List<BannerMainItem> mainItems = helper.getBannerMainItems();
+<view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
-List<ComponentInst> apps = helper.getApplications();
-List<Project> projects = helper.getProjects();
-String directoryURL = helper.getSettings("directoryURL", null);
-%>
+<fmt:message var="labelConnectedUser" key="look.banner.connected.user.one"/>
+<fmt:message var="labelConnectedUsers" key="look.banner.connected.user.many"/>
+
+<fmt:message var="labelProfile" key="look.banner.profile.title"/>
+<fmt:message var="labelProfileSettings" key="look.banner.profile.settings"/>
+<fmt:message var="labelProfileMySpace" key="look.banner.profile.myspace"/>
+<fmt:message var="labelProfileMyFeed" key="look.banner.profile.feed"/>
+
+<fmt:message var="labelLogout" key="look.banner.logout"/>
+<fmt:message var="labelProjects" key="look.banner.projects"/>
+<fmt:message var="labelApplications" key="look.banner.applications"/>
+
+<fmt:message var="labelHome" key="look.banner.home"/>
+<fmt:message var="labelMap" key="look.banner.map"/>
+<fmt:message var="labelHelp" key="look.banner.help"/>
+<fmt:message var="labelDirectory" key="look.banner.directory"/>
+<fmt:message var="labelBackoffice" key="look.banner.backoffice"/>
+
+<fmt:message var="labelSearch" key="look.banner.search"/>
+<fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
+<fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
+
+<c:url var="urlLogout" value="/LogoutServlet"/>
+<c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
 
 <view:includePlugin name="ticker" />
-<link rel="stylesheet" href="css/normalize.min.css" />
 <view:script src="/util/javaScript/lookV5/connectedUsers.js"/>
 <script type="text/javascript">
 function goToHome() {
@@ -35,10 +48,6 @@ function goToHome() {
   params.Login = "1";
   params.FromTopBar = "1";
   spLayout.getBody().load(params);
-}
-
-function getContext() {
-	return "<%=m_sContext%>";
 }
 
 function getDomainsBarPage() {
@@ -107,9 +116,9 @@ function setConnectedUsers(nb) {
 	if (nb <= 0) {
 		$("#connectedUsers").hide();
 	} else {
-		var label = " <%=helper.getString("lookSilverpeasV5.connectedUsers")%>";
+		var label = " ${labelConnectedUsers}";
 		if (nb == 1) {
-		    label = " <%=helper.getString("lookSilverpeasV5.connectedUser")%>";
+		    label = " ${labelConnectedUser}";
 		}
 		$("#connectedUsers").show();
 		$("#connectedUsers a").text(nb + label);
@@ -133,16 +142,16 @@ function lastResultsSearchEngine(){
 function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
   var urlParameters = hasToSerializeForm ?
       jQuery(document.searchForm).serializeFormJSON() : {};
-  var url = sp.formatUrl("<%=m_sContext%>/RpdcSearch/jsp/" + action, urlParameters);
+  var url = sp.formatUrl(webContext+"/RpdcSearch/jsp/" + action, urlParameters);
   spLayout.getBody().getContent().load(url);
 }
 
 $(document).ready(function() {
-	<% if (StringUtil.isDefined(currentHeading)) { %>
-		selectHeading('<%=currentHeading%>');
-	<% } %>
-	
-	setConnectedUsers(<%=helper.getNBConnectedUsers()%>);
+  <c:if test="${silfn:isDefined(currentHeading)}">
+    selectHeading('${currentHeading}');
+  </c:if>
+
+	setConnectedUsers(${lookHelper.NBConnectedUsers});
 	
 	$('#show-menu-spacePerso').hover(function() {
 		 $('.spacePerso').show();
@@ -155,7 +164,7 @@ $(document).ready(function() {
 		$('.spacePerso').hide();
 	});
 
-	<% if (helper.getSettings("banner.subElements", true)) { %>
+	<c:if test="${settings.displayMenuSubElements}">
 
 	$('#nav >  ul > li > div').hover(function() {
 	
@@ -182,7 +191,7 @@ $(document).ready(function() {
 		$('#nav   ul  div').removeClass('simple-hover');
 	});
 
-	<% } %>
+  </c:if>
 	
 	$('#top').hover(function() {
 			
@@ -193,7 +202,7 @@ $(document).ready(function() {
 		$('#nav   ul  div').removeClass('simple-hover');
 	});
 	
-	$.getJSON("<%=m_sContext%>/PersonalSpace?Action=GetTools&IEFix="+new Date().getTime(),
+	$.getJSON(webContext+"/PersonalSpace?Action=GetTools&IEFix="+new Date().getTime(),
 			function(data){
 				try {
 					// display tools
@@ -224,100 +233,98 @@ $(document).ready(function() {
 <div class="header-container">
   <div class="wrapper clearfix">
     <h1 class="title">Intranet</h1>
-    <a id="logo-header" href="#" onclick="javascript:goToHome();"> <img alt="" src="<%=helper.getSettings("logo", "icons/1px.gif") %>" /> </a>
+    <a id="logo-header" href="#" onclick="javascript:goToHome();"> <img alt="" src="${settings.logo}" /> </a>
     <div id="topar-header">
-      <div id="infoConnection"> <a href="javascript:goToPersonalSpace()"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="<%=helper.getUserDetail().getAvatar()%>" /></a>
+      <div id="infoConnection"> <a href="javascript:goToPersonalSpace()"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="${lookHelper.userDetail.avatar}" /></a>
         <div class="avatarName">
           <div class="btn-header">	
-          	<a title="<%=helper.getString("look.banner.profile.title")%>" href="javascript:goToPersonalSpace()"><%=helper.getUserFullName() %></a>
+          	<a title="${labelProfile}" href="javascript:goToPersonalSpace()">${lookHelper.userFullName}</a>
             <a id="show-menu-spacePerso" href="#"> Mon espace perso</a>
           </div>
           <div class="spacePerso">
             <ul>
-              <li><a id="link-settings" href="javascript:changeBody('/silverpeas/RMyProfil/jsp/MySettings')"><%=helper.getString("look.banner.profile.settings") %></a> </li>
-              <li><a id="link-myspace" href="javascript:goToPersonalSpace()"><%=helper.getString("look.banner.profile.myspace") %></a></li>
-              <li><a id="link-feed" href="javascript:changeBody('/silverpeas/RMyProfil/jsp/Main')"><%=helper.getString("look.banner.profile.feed") %></a></li>
-              <li><a id="link-logout" id="logOut-link" target="_top" href="/silverpeas/LogoutServlet"><%=helper.getString("look.banner.logout") %></a> </li>
+              <li><a id="link-settings" href="javascript:changeBody(webContext+'/RMyProfil/jsp/MySettings')">${labelProfileSettings}</a> </li>
+              <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
+              <li><a id="link-feed" href="javascript:changeBody(webContext+'/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
+              <li><a id="link-logout" id="logOut-link" target="_top" href="${urlLogout}">${labelLogout}</a> </li>
             </ul>
           </div>
         </div>
         
-        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody('<%=m_sContext %>/RSILVERMAIL/jsp/Main')"><span>...</span> <span id="notification-label">notifications</span></a> </div>
+        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody(webContext+'/RSILVERMAIL/jsp/Main')"><span>...</span> <span id="notification-label">notifications</span></a> </div>
 
-        <% if (projects != null && !projects.isEmpty()) { %>
+        <c:if test="${not empty projects}">
         <div class="btn-header">
           <label class="select-header">
             <select id="project-select" onchange="goToProject(this.value)">
-              <option selected="selected" value=""><%=helper.getString("look.banner.projects") %></option>
-              <% for (Project project : helper.getProjects()) { %>
-              <option value="<%=project.getSpace().getId() %>"><%=project.getName() %></option>
-              <% } %>
+              <option selected="selected" value="">${labelProjects}</option>
+              <c:forEach var="project" items="${projects}">
+                <option value="${project.space.id}">${project.name}</option>
+              </c:forEach>
             </select>
           </label>
         </div>
-        <% } %>
+        </c:if>
 
-        <% if (apps != null && !apps.isEmpty()) { %>
+        <c:if test="${not empty apps}">
         <div class="btn-header">
           <label class="select-header">
             <select id="application-select" onchange="goToApplication(this.value)">
-              <option selected="selected" value=""><%=helper.getString("look.banner.applications") %></option>
-              <% for (ComponentInst app : helper.getApplications()) { %>
-              <option value="<%=URLUtil.getApplicationURL()+URLUtil.getURL(app.getName(), "", app.getId()) %>Main"><%=app.getLabel() %></option>
-              <% } %>
+              <option selected="selected" value="">${labelApplications}</option>
+              <c:forEach var="app" items="${apps}">
+                <option value="${app.internalLink}">${app.label}</option>
+              </c:forEach>
             </select>
           </label>
         </div>
-        <% } %>
+        </c:if>
       </div>
       <ul id="outils">
-        <% if (helper.getSettings("displayConnectedUsers", true)) { %>
-        <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">2 autres utilisateurs connectés, </a></li>
-        <% } %>
-        <li id="map-link-header"><a href="javascript:changeBody('/silverpeas/admin/jsp/Map.jsp')" title="<%=helper.getString("lookSilverpeasV5.Map") %>"><%=helper.getString("lookSilverpeasV5.Map") %></a></li>
-        <li id="help-link-header"><a target="_blank" href="<%=helper.getSettings("helpURL", "https://extranet.silverpeas.com/help_fr/")%>" title="<%=helper.getString("lookSilverpeasV5.Help") %>"><%=helper.getString("lookSilverpeasV5.Help") %></a></li>
-        <% if (StringUtil.isDefined(directoryURL)) { %>
-          <li id="directory-link-header"><a href="javascript:changeBody('<%=directoryURL%>')" title="<%=helper.getString("look.banner.directory") %>"><%=helper.getString("look.banner.directory") %></a></li>
-        <% } %>
-        <% if(helper.isBackOfficeVisible()) { %>
-        <li id="adminstration-link-header"> <a target="_top" href="/silverpeas/RjobManagerPeas/jsp/Main"><%=helper.getString("lookSilverpeasV5.backOffice") %></a></li>
-        <% } %>
+        <c:if test="${settings.displayConnectedUsers}">
+          <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">X autres utilisateurs connectés</a></li>
+        </c:if>
+        <li id="map-link-header"><a href="javascript:changeBody(webContext+'/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
+        <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
+        <c:if test="${silfn:isDefined(directoryURL)}">
+          <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
+        </c:if>
+        <c:if test="${lookHelper.backOfficeVisible}">
+          <li id="adminstration-link-header"> <a target="_top" href="${urlAdmin}">${labelBackoffice}</a></li>
+        </c:if>
       </ul>
       <div id="search-zone-header">
         <form id="search-form-header" method="get" action="javascript:searchEngine()" name="searchForm">
-          <label for="query"><%=helper.getString("look.banner.search") %></label>
+          <label for="query">${labelSearch}</label>
           <input id="query" size="30" name="query" />
           <input type="hidden" value="clear" name="mode"/>
           <a href="javascript:searchEngine()">Go</a>
         </form>
-        <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()"><span><%=helper.getString("lookSilverpeasV5.LastSearchResults") %></span></a>
-        <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()"><span><%=helper.getString("lookSilverpeasV5.AdvancedSearch") %> </span></a>
+        <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()"><span>${labelSearchResults}</span></a>
+        <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()"><span>${labelSearchAdvanced}</span></a>
       </div>
     </div>
     <div id="nav">
       <ul>
       	<li>
-        	<div class="selected"> <a href="javascript:goToHome();"><span><%=helper.getString("look.banner.home") %></span></a> </div>
+        	<div class="selected"> <a href="javascript:goToHome();"><span>${labelHome}</span></a> </div>
         </li>
-        <% for (BannerMainItem item : mainItems) { %>
-        <li id="navMainItem-<%=item.getSpace().getId()%>">
+        <c:forEach var="item" items="${mainItems}">
+        <li id="navMainItem-${item.space.id}">
         	<div>
-        		<a href="javascript:goToMainSpace('<%=item.getSpace().getId()%>')"><span><%=item.getSpace().getName(helper.getLanguage()) %></span></a>
-         		 <ul class="nav-niveau-2 nav-<%=item.getNumberOfColumns()%>-column">
-					<% if (item.getSubspaces() != null) { %>
-	                    <% for (SpaceInstLight subspace : item.getSubspaces()) { %>
-	                    	<li class="space"><a href="javascript:goToSpace('<%=subspace.getId()%>')"><span><%=subspace.getName(helper.getLanguage())%></span></a></li>
-	                    <% } %>
-                    <% } %>
-                    <% if (item.getApps() != null) { %>
-	                    <% for (ComponentInstLight app : item.getApps()) { %>
-	                   		<li><a href="javascript:goToSpaceApp('<%=app.getId()%>')"><span><%=app.getName(helper.getLanguage())%></span></a></li>
-	                    <% } %>
-                    <% } %>
+        		<a href="javascript:goToMainSpace('${item.space.id}')"><span>${item.space.name}</span></a>
+            <ul class="nav-niveau-2 nav-${item.numberOfColumns}-column">
+            <c:set var="subspaces" value="${item.subspaces}"/>
+            <c:forEach var="subspace" items="${subspaces}">
+              <li class="space"><a href="javascript:goToSpace('${subspace.id}')"><span>${subspace.name}</span></a></li>
+            </c:forEach>
+            <c:set var="itemApps" value="${item.apps}"/>
+            <c:forEach var="itemApp" items="${itemApps}">
+              <li><a href="javascript:goToSpaceApp('${itemApp.id}')"><span>${itemApp.label}</span></a></li>
+            </c:forEach>
          		</ul>
-             </div>
+          </div>
         </li>
-        <% } %>
+        </c:forEach>
       </ul>
     </div>
     <div id="deco-header"> </div>

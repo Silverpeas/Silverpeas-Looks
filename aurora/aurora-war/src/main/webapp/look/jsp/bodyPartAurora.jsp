@@ -34,11 +34,10 @@
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ include file="../../admin/jsp/importFrameSet.jsp" %>
 
-<%-- Set resource bundle --%>
-<fmt:setLocale value="${sessionScope['SilverSessionController'].favoriteLanguage}"/>
-<view:setBundle basename="org.silverpeas.lookSilverpeasV5.multilang.lookBundle"/>
+<c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+<view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
-<fmt:message var="redExtLabel" key="lookSilverpeasV5.reductExtend" />
+<fmt:message var="redExtLabel" key="look.layout.reduce" />
 
 <%
 String strGoToNew 	= (String) session.getAttribute("gotoNew");

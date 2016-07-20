@@ -26,6 +26,8 @@ import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
 import org.silverpeas.core.mylinks.service.MyLinksService;
 import org.silverpeas.core.silvertrace.SilverTrace;
 import org.silverpeas.core.util.DateUtil;
+import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.core.util.ResourceLocator;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
@@ -43,11 +45,17 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private DelegatedNewsService delegatedNewsService = null;
   private PublicationHelper kmeliaTransversal = null;
+  private LocalizationBundle messages;
+  private LookSettings settings;
   
   public LookAuroraHelper(HttpSession session) {
     super(session);
 
     delegatedNewsService = DelegatedNewsService.get();
+
+    messages = ResourceLocator
+        .getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
+            getMainSessionController().getFavoriteLanguage());
   }
 
   public void initLayoutConfiguration() {
@@ -56,6 +64,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     layout.setHeaderURL("/look/jsp/TopBar.jsp");
     layout.setBodyURL("/look/jsp/bodyPartAurora.jsp");
     layout.setBodyNavigationURL("/look/jsp/DomainsBar.jsp");
+
+    settings = new LookSettings(getSettingsBundle());
   }
 
   public List<BannerMainItem> getBannerMainItems() {
@@ -119,10 +129,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   
   public String getLoginHomePage() {
     return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
-  }
-
-  public boolean displaySearchOnHome() {
-    return getSettings("home.search", true);
   }
 
   public List<Shortcut> getMainShortcuts() {
@@ -346,16 +352,17 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return bookmarks;
   }
   
-  public List<FAQ> getQuestions() {
-    List<FAQ> faqs = new ArrayList<FAQ>();
+  public Questions getQuestions() {
+    Questions faqs = new Questions();
     QuestionManager qm = QuestionManagerProvider.getQuestionManager();
     String appId = getSettings("home.faq.appId", "");
     int nb = getSettings("home.faq.nb", 1);
     if (StringUtil.isDefined(appId)) {
+      faqs.setAppId(appId);
       try {
-        FAQ faq = null;
         String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
         SilverpeasRole role = SilverpeasRole.getGreaterFrom(SilverpeasRole.from(profiles));
+        faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
         List<Question> questions = (List<Question>) qm.getQuestions(appId);
         if (questions != null && !questions.isEmpty()) {
           if (nb > questions.size()) nb = questions.size();
@@ -365,25 +372,22 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             int j = 0;
             while (j < nb) {
               int i = random.nextInt(questions.size()-1);
-              faq = new FAQ(questions.get(i));
-              faq.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
+              Question question = questions.get(i);
               boolean tryagain = false;
-              for (FAQ f : faqs) {
-                if (f.getQuestion().getPK().getId().equals(faq.getQuestion().getPK().getId())) {
+              for (Question q : faqs.getList()) {
+                if (question.getPK().getId().equals(q.getPK().getId())) {
                   tryagain = true;
                   break;
                 }
               }
               if (!tryagain) {
-                faqs.add(faq);
+                faqs.add(question);
                 j++;
               }
             }
           } else {
             for (int i = 0; i < nb; i++) {
-              faq = new FAQ(questions.get(i));
-              faq.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
-              faqs.add(faq);
+              faqs.add(questions.get(i));
             }
           }
           return faqs;
@@ -395,5 +399,13 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     return null;
+  }
+
+  public LocalizationBundle getLocalizedBundle() {
+    return messages;
+  }
+
+  public LookSettings getLookSettings() {
+    return settings;
   }
 }

@@ -1,8 +1,6 @@
 <%@page import="org.silverpeas.looks.aurora.LookAuroraHelper"%>
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
-<%@ page import="org.silverpeas.core.admin.space.SpaceInst" %>
-<%@ page import="java.util.List" %>
 <%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -31,13 +29,10 @@ boolean			login					= StringUtil.getBooleanValue(request.getParameter("Login"));
 String thisFrame = "/look/jsp/MainFrame.jsp";
 
 if (m_MainSessionCtrl == null) {
-%>
-	<script> 
-		top.location="../../Login.jsp";
-	</script>
-<%
-} else {	
-  	LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+  request.getRequestDispatcher("../../Login.jsp").forward(request, response);
+}
+
+  LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
 	if (helper == null) {
 		helper = new LookAuroraHelper(session);
 		helper.setMainFrame(thisFrame);
@@ -86,16 +81,6 @@ if (m_MainSessionCtrl == null) {
 			</script>
 		<%
 	}
-	
-	List<SpaceInst> spaces = null;
-  	if (StringUtil.isDefined(componentIdFromRedirect)) {
-  		spaces = helper.getOrganizationController().getSpacePathToComponent(componentIdFromRedirect);
-  	} else if (StringUtil.isDefined(spaceId)) {
-  	  	spaces = helper.getOrganizationController().getSpacePath(spaceId);
-  	}
-  	if (spaces != null) {
-  	  spaceId = spaces.get(0).getId();
-  	}
 	
   	String bannerHeight = helper.getSettings("banner.height", "115") + "px";
   	String footerHeight = helper.getSettings("footer.height", "26") + "px";
@@ -206,4 +191,3 @@ if (m_MainSessionCtrl == null) {
 <view:progressMessage/>
 </body>
 </html>
-<% } %>

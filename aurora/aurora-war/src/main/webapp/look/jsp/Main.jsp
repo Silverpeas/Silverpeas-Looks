@@ -1,51 +1,46 @@
-<%@page import="org.silverpeas.components.quickinfo.model.News"%>
-<%@page import="java.util.Calendar"%>
-<%@page import="java.util.Locale"%>
-<%@page import="java.util.Date"%>
-<%@page import="org.silverpeas.looks.aurora.NextEventsDate"%>
-<%@page import="org.silverpeas.looks.aurora.City"%>
-<%@page import="org.silverpeas.looks.aurora.LookAuroraHelper"%>
-<%@ include file="../../admin/jsp/importFrameSet.jsp"%>
-
-<%@page import="java.util.List"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@ page import="org.silverpeas.looks.aurora.FAQ" %>
-<%@ page import="org.silverpeas.components.almanach.model.EventOccurrence" %>
-<%@ page import="org.silverpeas.core.web.look.Shortcut" %>
-<%@ page import="org.silverpeas.core.mylinks.model.LinkDetail" %>
-<%@ page import="org.silverpeas.components.almanach.model.EventDetail" %>
-<%@ page import="org.silverpeas.core.util.StringUtil" %>
-<%@ page import="org.silverpeas.core.util.URLUtil" %>
-<%@ page import="org.silverpeas.core.contribution.publication.model.PublicationDetail" %>
-
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
 
-<%
-LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
-SimpleDateFormat eventDateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRENCH);
-SimpleDateFormat mainDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.FRENCH);
-List<EventOccurrence> eventsOfTheDay = helper.getTodayEvents();
-List<NextEventsDate> nextEvents = helper.getNextEvents();
-List<News> listOfNews = helper.getNews();
-List<City> cities = helper.getWeatherCities();
-boolean showWeather = cities != null && !cities.isEmpty();
-String defaultWoeid = "";
-if (showWeather) {
-  defaultWoeid = cities.get(0).getWoeid();
-}
-Calendar calendar = Calendar.getInstance();
-List<Shortcut> shortcuts = helper.getMainShortcuts();
-List<LinkDetail> bookmarks = helper.getBookmarks();
-boolean someBookmarks = bookmarks != null && !bookmarks.isEmpty();
-List<FAQ> faqs = helper.getQuestions();
-boolean showEphemeris = helper.getSettings("home.ephemeris", true);
-boolean showBookmarksAreaWhenEmpty = helper.getSettings("home.bookmarks.empty.show", true);
-String noBookmarksFragment = helper.getSettings("home.bookmarks.empty.fragment", "");
-String newsSize = helper.getSettings("home.news.width","1095") + "x" + helper.getSettings("home.news.height","");
-%>
+<c:set var="weatherCities" value="${lookHelper.weatherCities}"/>
+<c:set var="showWeather" value="${not empty weatherCities}"/>
+<c:set var="showEphemeris" value="${settings.displayEphemeris}"/>
+
+<c:set var="nextEvents" value="${lookHelper.nextEvents}"/>
+<c:set var="listOfNews" value="${lookHelper.news}"/>
+<c:set var="newsImageSize" value="${settings.newsImageSize}"/>
+<c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
+<c:set var="questions" value="${lookHelper.questions}"/>
+<c:set var="publications" value="${lookHelper.dernieresPublications}"/>
+<c:set var="bookmarks" value="${lookHelper.bookmarks}"/>
+<c:set var="someBookmarks" value="${not empty bookmarks}"/>
+<c:set var="showBookmarksAreaWhenEmpty" value="${settings.displayBookmarksAreaWhenEmpty}"/>
+<c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
+
+<c:set var="now" value="<%=new java.util.Date()%>" />
+
+<view:setBundle bundle="${lookHelper.localizedBundle}"/>
+
+<fmt:message var="labelEvents" key="look.home.events.next"/>
+<fmt:message var="labelEventsMore" key="look.home.events.more"/>
+<fmt:message var="labelQuestions" key="look.home.faq.title"/>
+<fmt:message var="labelQuestionsPost" key="look.home.faq.post"/>
+<fmt:message var="labelQuestionsMore" key="look.home.faq.more"/>
+
+<fmt:message var="labelWeather" key="look.home.weather.title"/>
+<fmt:message var="labelWeatherToday" key="look.home.weather.today"/>
+<fmt:message var="labelWeatherTomorrow" key="look.home.weather.tomorrow"/>
+
+<fmt:message var="labelSearch" key="look.home.search.title"/>
+<fmt:message var="labelSearchButton" key="look.home.search.button"/>
+<fmt:message var="labelBookmarks" key="look.home.bookmarks.title"/>
+<fmt:message var="labelBookmarksMore" key="look.home.bookmarks.more"/>
+<fmt:message var="labelShortcuts" key="look.home.shortcuts"/>
+<fmt:message var="labelPublications" key="look.home.publications.title"/>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -92,7 +87,7 @@ function showWeather(woeid) {
 	var url = "http://fr.meteo.yahoo.com/france/dummy/unknown-"+woeid;
 	$('#external_meteo').attr("href", url);
 	$.ajax({
-		url: "<%=m_sContext%>/RAjaxMeteo/",
+		url: webContext+"/RAjaxMeteo/",
 		type: "get",
 		dataType: "xml",
 		cache: false,
@@ -124,7 +119,6 @@ function showWeather(woeid) {
 				$('#day'+numeroJour+' .temperature .max').html("max "+high+"&deg;");
 				$('#day'+numeroJour+' img').attr("alt", $(this).attr('text'));
 				$('#day'+numeroJour+' img').attr("src", "/silverpeas/look/jsp/imgDesign/meteo/meteo_"+code+".png");
-				//$('#day'+numeroJour).html('<a href="'+url+'" target="_blank"><img src="http://l.yimg.com/a/i/us/we/52/'+code+'.gif"/></a><div class="jour"><a href="'+url+'" target="_blank">'+days[day]+'<br/>'+low+'&deg;/'+high+'&deg;</a>');
 			});
 	 	},
 	 
@@ -165,14 +159,14 @@ $(document).ready(function() {
         namespace: "centered-btns"
     });
 	
-	<% if (showWeather) { %>
-	// init weather
-	var woeid = $.cookie(weatherCookieName);
-	if(woeid == null){
-		woeid = <%=defaultWoeid%>;
-	} 
-	showWeather(woeid);
-	<% } %>
+	<c:if test="${showWeather}">
+    // init weather
+    var woeid = $.cookie(weatherCookieName);
+    if(woeid == null){
+      woeid = $("#localisation-weather a:first").attr("id");
+    }
+    showWeather(woeid);
+	</c:if>
 	
 	$('#used_pdc').pdc('used');
 });
@@ -180,205 +174,196 @@ $(document).ready(function() {
 </head>
 <body>
 <div class="main-container">
-            <div class="main wrapper clearfix">
-               <div class="right-main-container">
-               		<% if (nextEvents != null && !nextEvents.isEmpty()) { %>
-					<div class="secteur-container events portlet" id="home-event" >
-                            <div class="header">
-                              <h2 class="portlet-title"><%=helper.getString("look.home.events.next")%></h2>
-                            </div>
-                            <div class="portlet-content" id="calendar">
-                              <ul class="eventList" id="eventList">
-                              	<% for (NextEventsDate date : nextEvents) {
-                              	  calendar.setTime(date.date);
-                              	%>
-                                <li class="events">
-                                  <div class="eventShortDate"><span class="number"><%=calendar.get(Calendar.DATE)%></span>/<span class="month"><%=calendar.get(Calendar.MONTH)+1 %></span></div>
-                                  <div class="eventLongDate"><%=eventDateFormat.format(date.date) %></div>
-                                  <% for (EventOccurrence eventOccurence : date.events) {
-							          	EventDetail event = eventOccurence.getEventDetail();
-							        %>
-                                  <div class="event">
-                                    <div class="eventName"> > <a href="<%=event.getPermalink()%>"><%=event.getName() %></a><span class="clock-events">
-											<% if (StringUtil.isDefined(event.getStartHour())) { %>
-												<%=event.getStartHour()%>
-											<% } %>
-											<% if (StringUtil.isDefined(event.getStartHour()) && StringUtil.isDefined(event.getEndHour()) && !event.getEndHour().equals(event.getStartHour())) { %>
-												 - 
-											<% } %>
-											<% if (StringUtil.isDefined(event.getEndHour()) && !event.getEndHour().equals(event.getStartHour())) { %>
-												 <%=event.getEndHour()%>
-											<% } %>
-											</span></div>
-									<% if (StringUtil.isDefined(event.getPlace())) { %>
-                                    <div class="eventInfo">
-                                      <div class="eventPlace">
-                                        <div class="bloc"><span><%=event.getPlace() %></span></div>
-                                      </div>
-                                      <br clear="left"/>
-                                    </div>
-                                    <% } %>
-                                  </div>
-                                  <% } %>
-                                </li>
-                                <% } %>
-                              </ul>
-                            </div>
-							<a title="<%=helper.getString("look.home.events.more")%>" href="<%=URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, helper.getSettings("home.events.appId", "")) %>" class="link-more"><span><%=helper.getString("look.home.events.more")%></span> </a>
-                          </div>
-                          <% } %>
-			   
-					<% if (faqs != null && !faqs.isEmpty()) { %>
-				   <div class="secteur-container faq" id="faq-home">
-						<h4><%=helper.getString("look.home.faq.title")%></h4>
-					   	<div class="FAQ-entry-main-container">
-							<div class="FAQ-entry">
-					    	<% for(FAQ faq : faqs) { %>
-									<p><a href="<%=m_sContext %><%=faq.getQuestion()._getPermalink()%>"><%=faq.getQuestion().getTitle() %></a></p>
-					    	<% } %>
-							</div>
-							<%	FAQ faq = faqs.get(0);
-								if (faq.isCanAskAQuestion()) { %>
-							<a href="<%=m_sContext %>/RquestionReply/<%=faq.getQuestion().getInstanceId() %>/CreateQQuery" class="link-add"><span><%=helper.getString(
-									"look.home.faq.post")%></span> </a>
-							<% } %>
-						</div>
-						<a title="<%=helper.getString("look.home.faq.more")%>"
-						   href="<%=URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, faq.getQuestion().getInstanceId()) %>" class="link-more"><span><%=helper.getString(
-                "look.home.faq.more")%></span> </a>
-					</div>
-					<% } %>
-					
-          <% if (showEphemeris) { %>
-					<div class="secteur-container weather" id="weather-home">
-					  <h4><span class="title"><%=helper.getString("look.home.weather.title") %></span><span class="date-today"><%=mainDateFormat.format(new Date())%></span></h4>
-					  <div id="ephemeride">Brigitte</div>
-            <% if (showWeather) { %>
-				      <div id="localisation-weather"> <span class="label">&Agrave; : </span>
-				      <%
-				        boolean firstCity = true;
-				      	for (City city : cities) { %>
-				      		<% if (!firstCity) { %>
-				      			/ 
-				      		<% } %>
-				      		<a class="select" id="<%=city.getWoeid() %>" href="#" onclick="javascript:showWeather(<%=city.getWoeid()%>);return false;"><%=city.getLabel() %></a>
-				      <%	firstCity = false; 
-				      	} %>
-				      </div>
-				      <div class="day" id="day1"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
-				        <div class="temperature"><span class="min">min 22&deg;</span> <br />
-				          <span class="max">max 32&deg;</span> </div>
-				        <div class="label"><%=helper.getString("look.home.weather.today") %></div>
-				      </div>
-				      <div class="day" id="day2"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
-				        <div class="temperature"><span class="min">min ??&deg;</span> <br />
-				          <span class="max">max ??&deg;</span> </div>
-				        <div class="label"><%=helper.getString("look.home.weather.tomorrow") %></div>
-				      </div>
-            <% } %>
+  <div class="main wrapper clearfix">
+    <div class="right-main-container">
+      <c:if test="${not empty nextEvents}">
+		    <div class="secteur-container events portlet" id="home-event">
+          <div class="header">
+            <h2 class="portlet-title">${labelEvents}</h2>
           </div>
-          <% } %>
+          <div class="portlet-content" id="calendar">
+            <ul class="eventList" id="eventList">
+              <c:forEach var="date" items="${nextEvents}">
+                <li class="events">
+                  <div class="eventShortDate"><span class="number">${date.dayInMonth}</span>/<span class="month">${date.month}</span></div>
+                  <div class="eventLongDate"><fmt:formatDate value="${date.date}" pattern="EEEE dd MMMM yyyy"/></div>
+                  <c:forEach var="eventOccurence" items="${date.events}">
+                    <c:set var="event" value="${eventOccurence.eventDetail}"/>
+                    <div class="event">
+                      <div class="eventName"> > <a href="${event.permalink}">${event.name}</a>
+                        <span class="clock-events">
+                        <c:if test="${silfn:isDefined(event.startHour)}">
+                          ${event.startHour}
+                        </c:if>
+                        <c:if test="${silfn:isDefined(event.startHour) && silfn:isDefined(event.endHour) && event.endHour != event.startHour}">
+                          -
+                        </c:if>
+                        <c:if test="${silfn:isDefined(event.endHour) && event.endHour != event.startHour}">
+                          ${event.endHour}
+                        </c:if>
+                        </span>
+                      </div>
+                      <c:if test="${silfn:isDefined(event.place)}">
+                        <div class="eventInfo">
+                          <div class="eventPlace">
+                            <div class="bloc"><span>${event.place}</span></div>
+                          </div>
+                          <br clear="left"/>
+                        </div>
+                      </c:if>
+                    </div>
+                  </c:forEach>
+                </li>
+              </c:forEach>
+            </ul>
+          </div>
+					<a title="${labelEventsMore}" href="${settings.eventsAppURL}" class="link-more"><span>${labelEventsMore}</span> </a>
+        </div>
+      </c:if>
+
+      <c:if test="${not empty questions.list}">
+			  <div class="secteur-container faq" id="faq-home">
+				  <h4>${labelQuestions}</h4>
+					<div class="FAQ-entry-main-container">
+					  <div class="FAQ-entry">
+              <c:forEach var="question" items="${questions.list}">
+					      <p><a href="/silverpeas${question._getPermalink()}">${question.title}</a></p>
+              </c:forEach>
+            </div>
+            <c:if test="${questions.canAskAQuestion}">
+    				  <a href="${questions.requestURL}" class="link-add"><span>${labelQuestionsPost}</span> </a>
+            </c:if>
+          </div>
+					<a title="${labelQuestionsMore}" href="${questions.appURL}" class="link-more"><span>${labelQuestionsMore}</span> </a>
+        </div>
+      </c:if>
 					
-					<% if (helper.displaySearchOnHome()) { %>
-					<div class="secteur-container search" id="bloc-advancedSeach">
-				      <h4><%=helper.getString("look.home.search.title") %></h4>
-				      <form method="post" action="<%=m_sContext%>/RpdcSearch/jsp/AdvancedSearch" name="AdvancedSearch">
-				        <input type="text" id="query" value="" size="60" name="query" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input"/>
-				        <input type="hidden" name="AxisValueCouples"/><input type="hidden" name="mode" value="clear"/>
-				        <fieldset id="used_pdc" class="skinFieldset"></fieldset>
-				        <a id="submit-AdvancedSearch" href="javascript:search()"><span><%=helper.getString("look.home.search.button") %></span></a>
-				      </form>
-				    </div>
-				    <% } %>
+      <c:if test="${showEphemeris}">
+			  <div class="secteur-container weather" id="weather-home">
+				  <h4><span class="title">${labelWeather}</span><span class="date-today"><fmt:formatDate value="${now}" pattern="dd MMM yyyy"/></span></h4>
+					<div id="ephemeride">Brigitte</div>
+          <c:if test="${showWeather}">
+				    <div id="localisation-weather"> <span class="label">&Agrave; : </span>
+              <c:set var="firstCity" value="true"/>
+              <c:forEach var="city" items="${weatherCities}">
+                <c:if test="${not firstCity}">
+                  /
+                </c:if>
+				        <a class="select" id="${city.woeid}" href="#" onclick="javascript:showWeather(${city.woeid});return false;">${city.label}</a>
+                <c:set var="firstCity" value="false"/>
+              </c:forEach>
+            </div>
+				    <div class="day" id="day1"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
+				      <div class="temperature"><span class="min">min XX&deg;</span> <br />
+				        <span class="max">max XX&deg;</span> </div>
+              <div class="label">${labelWeatherToday}</div>
+            </div>
+				    <div class="day" id="day2"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
+				      <div class="temperature"><span class="min">min XX&deg;</span> <br />
+				        <span class="max">max XX&deg;</span> </div>
+              <div class="label">${labelWeatherTomorrow}</div>
+            </div>
+          </c:if>
+        </div>
+      </c:if>
+					
+			<c:if test="${settings.displaySearchOnHome}">
+				<div class="secteur-container search" id="bloc-advancedSeach">
+			    <h4>${labelSearch}</h4>
+          <form method="post" action="/silverpeas/RpdcSearch/jsp/AdvancedSearch" name="AdvancedSearch">
+            <input type="text" id="query" value="" size="60" name="query" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input"/>
+				    <input type="hidden" name="AxisValueCouples"/><input type="hidden" name="mode" value="clear"/>
+				    <fieldset id="used_pdc" class="skinFieldset"></fieldset>
+				    <a id="submit-AdvancedSearch" href="javascript:search()"><span>${labelSearchButton}</span></a>
+          </form>
+        </div>
+      </c:if>
 
-           <% if (someBookmarks || showBookmarksAreaWhenEmpty) { %>
-				   <div class="secteur-container user-favorit" id="user-favorit-home">
-						<h4><%=helper.getString("look.home.bookmarks.title")%></h4>
-						<div class="user-favorit-main-container">
-							<% if (someBookmarks) { %>
+      <c:if test="${someBookmarks || showBookmarksAreaWhenEmpty}">
+        <div class="secteur-container user-favorit" id="user-favorit-home">
+				  <h4>${labelBookmarks}</h4>
+					<div class="user-favorit-main-container">
+					  <c:if test="${someBookmarks}">
 							<ul class="user-favorit-list">
-								<% for (int i=0; i<bookmarks.size(); i++) {
-								  LinkDetail bookmark = bookmarks.get(i);
-								  String classFrag = "class=\"main-bookmark\"";
-								  if (i > 4) {
-								    classFrag = "class=\"other-bookmark\"";
-								  }
-								  String bookmarkUrl = bookmark.getUrl();
-								  String target = "_blank";
-								  if (!bookmarkUrl.toLowerCase().startsWith("http")) {
-									  bookmarkUrl = m_sContext + bookmarkUrl;
-									  target = "";
-								  }
-								%>
-								<li <%=classFrag%>><a href="<%= bookmarkUrl%>" target="<%=target%>" title="<%=bookmark.getDescription()%>"><%=bookmark.getName() %></a></li>
-								<% } %>
+                <c:set var="classFrag" value="main-bookmark"/>
+                <c:set var="bId" value="0"/>
+                <c:forEach var="bookmark" items="${bookmarks}">
+                  <c:if test="${bId > 4}">
+                    <c:set var="classFrag" value="other-bookmark"/>
+                  </c:if>
+                  <c:set var="bookmarkUrl" value="${bookmark.url}"/>
+                  <c:set var="target" value="_blank"/>
+                  <c:if test="${not bookmarkUrl.toLowerCase().startsWith('http')}">
+                    <c:set var="bookmarkUrl" value="/silverpeas${bookmark.url}"/>
+                    <c:set var="target" value=""/>
+                  </c:if>
+								  <li class="${classFrag}"><a href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
+                  <c:set var="bId" value="${bId+1}"/>
+                </c:forEach>
 							</ul>
-							<% } else { %>
-								<% if (StringUtil.isDefined(noBookmarksFragment)) {%>
-								<c:import var="htmlFragment" url="<%=noBookmarksFragment%>" charEncoding="UTF-8"/>
-								<c:out value="${htmlFragment}" escapeXml="false"/>
-								<% } %>
-							<% } %>
-						</div>
-					   	<% if (someBookmarks) { %>
-						    <a title="<%=helper.getString("look.home.bookmarks.more")%>" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span><%=helper.getString("look.home.bookmarks.more")%></span> </a>
-					    <% } %>
-					</div>
-          <% } %>
-
-				   
-               </div>
+            </c:if>
+            <c:if test="${not someBookmarks and silfn:isDefined(noBookmarksFragment)}">
+              <c:import var="htmlFragment" url="${noBookmarksFragment}" charEncoding="UTF-8"/>
+              <c:out value="${htmlFragment}" escapeXml="false"/>
+            </c:if>
+          </div>
+          <c:if test="${someBookmarks}">
+            <a title="${labelBookmarksMore}" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>${labelBookmarksMore}</span> </a>
+          </c:if>
+        </div>
+      </c:if>
+    </div>
                 
-                <div class="principal-main-container">     
-				
-				<% if (shortcuts != null && !shortcuts.isEmpty()) { %>
+    <div class="principal-main-container">
+
+      <c:if test="${not empty shortcuts}">
 				<div class="secteur-container cg-favorit" id="cg-favorit-home">
-					<h4><%=helper.getString("look.home.shortcuts")%></h4>
+					<h4>${labelShortcuts}</h4>
 					<div class="cg-favorit-main-container">
 						<ul class="cg-favorit-list">
-							<% for (Shortcut shortcut : shortcuts) { %>
-							   <li><a href="<%=shortcut.getUrl() %>" title="<%=shortcut.getAltText() %>" target="<%=shortcut.getTarget() %>"><img alt="<%=shortcut.getAltText() %>" src="<%=shortcut.getIconURL() %>" /> <span><%=shortcut.getAltText() %></span></a></li>
-							<% } %>	
+              <c:forEach var="shortcut" items="${shortcuts}">
+							   <li><a href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}"><img alt="${shortcut.altText}" src="${shortcut.iconURL}" /> <span>${shortcut.altText}</span></a></li>
+              </c:forEach>
 						</ul>
 					</div>
 				</div>
-				<% } %>
+      </c:if>
 
-				  <% if (listOfNews != null && !listOfNews.isEmpty()) { %>
-                <div id="carrousel-actualite">
+			<c:if test="${not empty listOfNews}">
+        <div id="carrousel-actualite">
 				  <ul class="rslides" id="slider">
-					<% for (News news : listOfNews) { %>
-						<li>
-						  <a href="<%=news.getPermalink()%>">
-							  <view:image src="<%=news.getPublication().getThumbnail().getURL() %>" alt="" size="<%=newsSize%>"/>
-						  </a>
-						  <div class="caption">
-							<h2><a href="<%=news.getPermalink()%>"><%=news.getTitle() %></a></h2>
-							<p><%=news.getDescription() %></p>
-						  </div>
-						</li>
-					<% } %>
+            <c:forEach var="news" items="${listOfNews}">
+              <li>
+                <a href="${news.permalink}">
+                  <view:image src="${news.publication.thumbnail.URL}" alt="" size="${newsImageSize}"/>
+                </a>
+                <div class="caption">
+                  <h2><a href="${news.permalink}">${news.title}</a></h2>
+                  <p>${news.description}</p>
+                </div>
+              </li>
+            </c:forEach>
 				  </ul>
 				</div>
-				<% } %>
+      </c:if>
 				
-                <div id="last-publication-home" class="secteur-container">
-		          <h4><%=helper.getString("look.home.publications.title")%></h4>
-		            <div id="last-publicationt-main-container">
-		              <ul class="last-publication-list">
-		              	<% for (PublicationDetail publication : helper.getDernieresPublications()) { %>
-		              		<li onclick="location.href='<%=URLUtil.getSimpleURL(URLUtil.URL_PUBLI, publication.getId())%>'">
-			                  <a href="<%=URLUtil.getSimpleURL(URLUtil.URL_PUBLI, publication.getId())%>"><%=publication.getName() %></a>
-			                  <view:username userId="<%=publication.getUpdaterId() %>" />
-			                  <span class="date-publication"><view:formatDate value="<%=publication.getUpdateDate() %>"/></span>
-			                  <p class="description-publication"><%=publication.getDescription() %></p>
-			                </li>
-		              	<% } %>
-		              </ul>
-		           </div>
-     
-    	</div>
-            </div> <!-- #main -->
+      <div id="last-publication-home" class="secteur-container">
+		    <h4>${labelPublications}</h4>
+		    <div id="last-publicationt-main-container">
+		      <ul class="last-publication-list">
+            <c:forEach var="publication" items="${publications}">
+		          <li onclick="location.href='${publication.permalink}'">
+			          <a href="${publication.permalink}">${publication.name}</a>
+			          <view:username userId="${publication.updaterId}" />
+			          <span class="date-publication"><view:formatDate value="${publication.updateDate}"/></span>
+			          <p class="description-publication">${publication.description}</p>
+              </li>
+            </c:forEach>
+          </ul>
         </div>
+    	</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

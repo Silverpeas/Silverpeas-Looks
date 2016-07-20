@@ -26,26 +26,29 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ page import="java.util.*"%>
-<%@ page import="org.silverpeas.core.util.URLUtil" %>
 <%@ page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
-<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
-<%@ page import="org.silverpeas.core.util.SettingBundle" %>
-<%@ page import="org.silverpeas.core.util.EncodeHelper" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
+<%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 
-<%-- Set resource bundle --%>
-<fmt:setLocale value="${sessionScope['SilverSessionController'].favoriteLanguage}" />
-<view:setBundle basename="org.silverpeas.lookSilverpeasV5.multilang.lookBundle"/>
+<c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+<view:setBundle bundle="${lookHelper.localizedBundle}"/>
+
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
+
+<fmt:message var="labelLoading" key="look.loading"/>
+
+<fmt:message var="labelPersonal" key="look.personalSpace"/>
+<fmt:message var="labelPersonalAdd" key="look.personalSpace.add"/>
+<fmt:message var="labelPersonalRemove" key="look.personalSpace.remove.confirm"/>
+<fmt:message var="labelPersonalSelect" key="look.personalSpace.select"/>
 
 <%
-String m_sContext = URLUtil.getApplicationURL();
 GraphicElementFactory gef = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
 LookHelper helper = LookHelper.getLookHelper(session);
 
@@ -68,7 +71,7 @@ gef.setSpaceIdForCurrentRequest(spaceId);
       var ss = document.createElement("link");
       ss.type = "text/css";
       ss.rel = "stylesheet";
-      ss.href = "<%=m_sContext%>/util/styleSheets/domainsBar-tablette.css";
+      ss.href = webContext+"/util/styleSheets/domainsBar-tablette.css";
       document.getElementsByTagName("head")[0].appendChild(ss);
     }
   }
@@ -81,15 +84,15 @@ gef.setSpaceIdForCurrentRequest(spaceId);
 
   // Callback methods to navigation.js
     function getContext() {
-      return "<%=m_sContext%>";
+      return webContext;
     }
 
     function getHomepage() {
-      return "<%=helper.getSettings("defaultHomepage", "/dt")%>";
+      return "${settings.defaultHomepageURL}";
     }
 
     function getPersoHomepage() {
-      return "<%=helper.getSettings("persoHomepage", "/dt")%>";
+      return "${settings.personalHomepageURL}";
     }
 
     function getSpaceIdToInit() {
@@ -101,11 +104,11 @@ gef.setSpaceIdForCurrentRequest(spaceId);
     }
 
     function displayComponentsIcons() {
-      return <%=helper.getSettings("displayComponentIcons")%>;
+      return ${settings.displayAppIcons};
     }
 
     function getPDCLabel() {
-      return '<fmt:message key="lookSilverpeasV5.pdc" />';
+      return 'useless';
     }
 
     function getLook() {
@@ -113,15 +116,15 @@ gef.setSpaceIdForCurrentRequest(spaceId);
     }
 
     function getSpaceWithCSSToApply() {
-      return "<%=helper.getSpaceWithCSSToApply()%>";
+      return "${lookHelper.spaceWithCSSToApply}";
     }
 
     function displayPDC() {
-        return "<%=helper.displayPDCInNavigationFrame()%>";
+        return "${settings.displayPDCInNavigationFrame}";
     }
 
     function displayContextualPDC() {
-        return <%=helper.displayContextualPDC()%>;
+        return ${settings.displayContextualPDC};
     }
 
     function getTopBarPage() {
@@ -139,9 +142,9 @@ gef.setSpaceIdForCurrentRequest(spaceId);
 
     function getPersonalSpaceLabels() {
         var labels = new Array(2);
-        labels[0] = "<%=EncodeHelper.javaStringToJsString(helper.getString("lookSilverpeasV5.personalSpace.select"))%>";
-        labels[1] = "<%=EncodeHelper.javaStringToJsString(helper.getString("lookSilverpeasV5.personalSpace.remove.confirm"))%>";
-        labels[2] = "<%=EncodeHelper.javaStringToJsString(helper.getString("lookSilverpeasV5.personalSpace.add"))%>";
+        labels[0] = "${silfn:escapeJs(labelPersonalSelect)}";
+        labels[1] = "${silfn:escapeJs(labelPersonalRemove)}";
+        labels[2] = "${silfn:escapeJs(labelPersonalAdd)}";
         return labels;
     }
 
@@ -167,32 +170,32 @@ gef.setSpaceIdForCurrentRequest(spaceId);
   <div id="basSpaceTransverse">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
-                <td class="basSpacesGauche"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesMilieu"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesDroite"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="8" height="8" alt=""/></td>
+                <td class="basSpacesGauche"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
+                <td class="basSpacesMilieu"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
+                <td class="basSpacesDroite"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
             </tr>
         </table>
     </div>
     <div id="spaceMenuDivId">
       <div id="spaces">
-		  <br/><br/><fmt:message key="lookSilverpeasV5.loadingSpaces" /><br/><br/><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/inProgress.gif" alt="<fmt:message key="lookSilverpeasV5.loadingSpaces" />"/>
+		  <br/><br/><fmt:message key="lookSilverpeasV5.loadingSpaces" /><br/><br/><img src="icons/inProgress.gif" alt="<fmt:message key="lookSilverpeasV5.loadingSpaces" />"/>
 	  </div>
-      <% if (!helper.isAnonymousAccess()) { %>
-        <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();"><fmt:message key="lookSilverpeasV5.PersonalSpace" /></a></div>
-      <% } %>
+    <c:if test="${lookHelper.anonymousAccess}">
+      <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();">${labelPersonal}</a></div>
+    </c:if>
     </div>
     <div id="basSpaces">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
-                <td class="basSpacesGauche"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesMilieu"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesDroite"><img src="<%=m_sContext%>/admin/jsp/icons/silverpeasV5/px.gif" width="8" height="8" alt=""/></td>
+                <td class="basSpacesGauche"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
+                <td class="basSpacesMilieu"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
+                <td class="basSpacesDroite"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
             </tr>
         </table>
     </div>
 
 </div>
-<form name="clipboardForm" action="<%=m_sContext+URLUtil.getURL(URLUtil.CMP_CLIPBOARD)%>Idle.jsp" method="post" target="IdleFrame">
+<form name="clipboardForm" action="../../clipboard/jsp/Idle.jsp" method="post" target="IdleFrame">
 <input type="hidden" name="message" value="SHOWCLIPBOARD"/>
 </form>
 
