@@ -26,6 +26,14 @@ public class LookSettings {
     return settings.getBoolean("banner.subElements", true);
   }
 
+  public boolean isDisplayMenuAppsFirst() {
+    return settings.getBoolean("banner.menu.apps.first", false);
+  }
+
+  public boolean isDisplayMenuAppIcons() {
+    return settings.getBoolean("banner.menu.apps.icons", false);
+  }
+
   public String getLogo() {
     return settings.getString("logo", "icons/1px.gif");
   }

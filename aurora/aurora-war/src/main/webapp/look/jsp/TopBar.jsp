@@ -39,8 +39,13 @@
 <c:url var="urlLogout" value="/LogoutServlet"/>
 <c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
 
+<c:set var="smartmenusSkin" value="sm-clean"/>
+
 <view:includePlugin name="ticker" />
 <view:script src="/util/javaScript/lookV5/connectedUsers.js"/>
+<view:script src="js/jquery.smartmenus.min.js"/>
+<link href="css/sm-core-css.css" rel="stylesheet" type="text/css" />
+<link href='css/${smartmenusSkin}/${smartmenusSkin}.css' rel='stylesheet' type='text/css' />
 <script type="text/javascript">
 function goToHome() {
 	selectHeading('home');
@@ -64,11 +69,11 @@ function reloadTopBar() {
 
 function selectHeading(id) {
 	unselectHeadings();
-	$('#navMainItem-'+id+" > div").addClass("selected");
+	$('#space-'+id).addClass("selected");
 }
 
 function unselectHeadings() {
-	$('#nav > ul > li > div').each(function(index) {
+	$('#nav > ul > li').each(function(index) {
 		$(this).removeClass("selected");
 	});
 }
@@ -152,8 +157,8 @@ $(document).ready(function() {
   </c:if>
 
 	setConnectedUsers(${lookHelper.NBConnectedUsers});
-	
-	$('#show-menu-spacePerso').hover(function() {
+
+  $('#show-menu-spacePerso').hover(function() {
 		 $('.spacePerso').show();
 	}, function() {
 	});
@@ -165,43 +170,11 @@ $(document).ready(function() {
 	});
 
 	<c:if test="${settings.displayMenuSubElements}">
-
-	$('#nav >  ul > li > div').hover(function() {
-	
-  if($(this).children('ul').text().length!=0) {
-    				$('#nav').addClass('sousMenu');
-    				$('.nav-niveau-2').hide();
-    				$('#nav   ul  div').removeClass('hover');
-    				$('#nav   ul  div').removeClass('simple-hover');
-    				$(this).addClass('hover');
-    				$(this).children('ul').show();
-    			}else {
-    				$('#nav').removeClass('sousMenu');
-    				$('#nav   ul  div').removeClass('simple-hover');
-    				$('#nav   ul  div').removeClass('hover');
-    				$('.nav-niveau-2').hide();
-    				
-    				$(this).addClass('simple-hover');
-    			}
-			
-	}, function() {
-		$('#nav').removeClass('sousMenu');
-		$('#nav   ul  div').removeClass('hover');
-		$('.nav-niveau-2').hide();
-		$('#nav   ul  div').removeClass('simple-hover');
-	});
-
+    $('#main-menu').smartmenus({
+      showOnClick: false
+    });
   </c:if>
-	
-	$('#top').hover(function() {
-			
-	}, function() {
-		$('#nav').removeClass('sousMenu');
-		$('#nav   ul  div').removeClass('hover');
-		$('.nav-niveau-2').hide();
-		$('#nav   ul  div').removeClass('simple-hover');
-	});
-	
+
 	$.getJSON(webContext+"/PersonalSpace?Action=GetTools&IEFix="+new Date().getTime(),
 			function(data){
 				try {
@@ -304,26 +277,12 @@ $(document).ready(function() {
       </div>
     </div>
     <div id="nav">
-      <ul>
+      <ul id="main-menu" class="sm ${smartmenusSkin}">
       	<li>
         	<div class="selected"> <a href="javascript:goToHome();"><span>${labelHome}</span></a> </div>
         </li>
         <c:forEach var="item" items="${mainItems}">
-        <li id="navMainItem-${item.space.id}">
-        	<div>
-        		<a href="javascript:goToMainSpace('${item.space.id}')"><span>${item.space.name}</span></a>
-            <ul class="nav-niveau-2 nav-${item.numberOfColumns}-column">
-            <c:set var="subspaces" value="${item.subspaces}"/>
-            <c:forEach var="subspace" items="${subspaces}">
-              <li class="space"><a href="javascript:goToSpace('${subspace.id}')"><span>${subspace.name}</span></a></li>
-            </c:forEach>
-            <c:set var="itemApps" value="${item.apps}"/>
-            <c:forEach var="itemApp" items="${itemApps}">
-              <li><a href="javascript:goToSpaceApp('${itemApp.id}')"><span>${itemApp.label}</span></a></li>
-            </c:forEach>
-         		</ul>
-          </div>
-        </li>
+          <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}" displayAppIcon="${settings.displayMenuAppIcons}" callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"/>
         </c:forEach>
       </ul>
     </div>
