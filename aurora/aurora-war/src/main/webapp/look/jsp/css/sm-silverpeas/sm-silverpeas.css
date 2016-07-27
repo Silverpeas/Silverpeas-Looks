@@ -1,0 +1,210 @@
+.sm {
+    z-index: 99;
+}
+.sm-silverpeas a, .sm-silverpeas a:hover, .sm-silverpeas a:focus, .sm-silverpeas a:active {
+  text-decoration: none;
+}
+.sm-silverpeas a.current {
+  color: #000000;
+}
+.sm-silverpeas a.disabled {
+  color: #bbbbbb;
+}
+.sm-silverpeas a span.sub-arrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  left: auto;
+  right: 4px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  text-align: center;
+}
+.sm-silverpeas a.highlighted span.sub-arrow:before {
+  display: block;
+  content: '-';
+}
+.sm-silverpeas > li:first-child > a, .sm-silverpeas > li:first-child > :not(ul) a {
+  border-radius: 5px 5px 0 0;
+}
+.sm-silverpeas > li:last-child > a, .sm-silverpeas > li:last-child > *:not(ul) a, .sm-silverpeas > li:last-child > ul,
+.sm-silverpeas > li:last-child > ul > li:last-child > a, .sm-silverpeas > li:last-child > ul > li:last-child > *:not(ul) a, .sm-silverpeas > li:last-child > ul > li:last-child > ul,
+.sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > a, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul,
+.sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > a, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul,
+.sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > a, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul {
+  border-radius: 0 0 5px 5px;
+}
+.sm-silverpeas > li:last-child > a.highlighted, .sm-silverpeas > li:last-child > *:not(ul) a.highlighted,
+.sm-silverpeas > li:last-child > ul > li:last-child > a.highlighted, .sm-silverpeas > li:last-child > ul > li:last-child > *:not(ul) a.highlighted,
+.sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > a.highlighted, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a.highlighted,
+.sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > a.highlighted, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a.highlighted,
+.sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > a.highlighted, .sm-silverpeas > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a.highlighted {
+  border-radius: 0;
+}
+.sm-silverpeas li {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+.sm-silverpeas > li:first-child {
+  border-top: 0;
+}
+.sm-silverpeas ul {
+  background:#EEEEEE;
+}
+.sm-silverpeas ul a, .sm-silverpeas ul a:hover, .sm-silverpeas ul a:focus, .sm-silverpeas ul a:active {
+  border-left: 8px solid transparent;
+}
+.sm-silverpeas ul ul a,
+.sm-silverpeas ul ul a:hover,
+.sm-silverpeas ul ul a:focus,
+.sm-silverpeas ul ul a:active {
+  border-left: 16px solid transparent;
+}
+.sm-silverpeas ul ul ul a,
+.sm-silverpeas ul ul ul a:hover,
+.sm-silverpeas ul ul ul a:focus,
+.sm-silverpeas ul ul ul a:active {
+  border-left: 24px solid transparent;
+}
+.sm-silverpeas ul ul ul ul a,
+.sm-silverpeas ul ul ul ul a:hover,
+.sm-silverpeas ul ul ul ul a:focus,
+.sm-silverpeas ul ul ul ul a:active {
+  border-left: 32px solid transparent;
+}
+.sm-silverpeas ul ul ul ul ul a,
+.sm-silverpeas ul ul ul ul ul a:hover,
+.sm-silverpeas ul ul ul ul ul a:focus,
+.sm-silverpeas ul ul ul ul ul a:active {
+  border-left: 40px solid transparent;
+}
+
+@media (min-width: 768px) {
+  /* Switch to desktop layout
+  -----------------------------------------------
+     These transform the menu tree from
+     collapsible to desktop (navbar + dropdowns)
+  -----------------------------------------------*/
+  /* start... (it's not recommended editing these rules) */
+  .sm-silverpeas ul {
+    position: absolute;
+    width: 12em;
+  }
+
+  .sm-silverpeas li {
+    float: left;
+  }
+
+  .sm-silverpeas ul li {
+    float: none;
+  }
+
+  .sm-silverpeas a {
+    white-space: nowrap;
+  }
+
+  .sm-silverpeas ul a {
+    white-space: normal;
+  }
+
+  .sm-silverpeas .sm-nowrap > li > a, .sm-silverpeas .sm-nowrap > li > :not(ul) a {
+    white-space: nowrap;
+  }
+
+  /* ...end */
+  .sm-silverpeas a:hover, .sm-silverpeas a:focus, .sm-silverpeas a:active, .sm-silverpeas a.highlighted {
+    color: #000000;
+  }
+  .sm-silverpeas a.current {
+    color: #000000;
+  }
+  .sm-silverpeas a.disabled {
+    color: #bbbbbb;
+  }
+  .sm-silverpeas a.has-submenu {
+    padding-right: 24px;
+  }
+  .sm-silverpeas a.highlighted span.sub-arrow:before {
+    display: none;
+  }
+  .sm-silverpeas li {
+    border-top: 0;
+  }
+  .sm-silverpeas > li > ul:before,
+  .sm-silverpeas > li > ul:after {
+    content: '';
+    position: absolute;
+    top: -18px;
+    left: 30px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border-width: 9px;
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent #bbbbbb transparent;
+  }
+  .sm-silverpeas > li > ul:after {
+    top: -16px;
+    left: 31px;
+    border-width: 8px;
+    border-color: transparent transparent #FFF transparent;
+  }
+  .sm-silverpeas ul {
+    border: 1px solid #bbbbbb;
+    padding: 5px 0;
+    background: #FFF;
+    border-radius: 5px !important;
+    box-shadow: 0 5px 9px rgba(0, 0, 0, 0.2);
+  }
+  .sm-silverpeas ul a, .sm-silverpeas ul a:hover, .sm-silverpeas ul a:focus, .sm-silverpeas ul a:active, .sm-silverpeas ul a.highlighted {
+    border: 0 !important;
+    padding: 10px 20px;
+    color: #555555;
+  }
+  .sm-silverpeas ul a.current {
+    color: #000000;
+  }
+  .sm-silverpeas ul a.disabled {
+    background: #FFF;
+    color: #cccccc;
+  }
+  .sm-silverpeas ul a.has-submenu {
+    padding-right: 32px;
+  }
+  .sm-silverpeas span.scroll-up,
+  .sm-silverpeas span.scroll-down {
+    position: absolute;
+    display: none;
+    visibility: hidden;
+    overflow: hidden;
+    background: #FFF;
+    height: 20px;
+  }
+  .sm-silverpeas span.scroll-up:hover,
+  .sm-silverpeas span.scroll-down:hover {
+    background: #fbf7aa;
+  }
+  .sm-silverpeas span.scroll-up:hover span.scroll-up-arrow, .sm-silverpeas span.scroll-up:hover span.scroll-down-arrow {
+    border-color: transparent transparent #000000 transparent;
+  }
+  .sm-silverpeas span.scroll-down:hover span.scroll-down-arrow {
+    border-color: #000000 transparent transparent transparent;
+  }
+  .sm-silverpeas span.scroll-up-arrow, .sm-silverpeas span.scroll-down-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -6px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border-width: 6px;
+    border-style: dashed dashed solid dashed;
+    border-color: transparent transparent #555555 transparent;
+  }
+  .sm-silverpeas span.scroll-down-arrow {
+    top: 8px;
+    border-style: solid dashed dashed dashed;
+    border-color: #555555 transparent transparent transparent;
+  }
+}

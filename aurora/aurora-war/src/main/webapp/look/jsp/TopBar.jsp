@@ -39,7 +39,7 @@
 <c:url var="urlLogout" value="/LogoutServlet"/>
 <c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
 
-<c:set var="smartmenusSkin" value="sm-clean"/>
+<c:set var="smartmenusSkin" value="sm-silverpeas"/>
 
 <view:includePlugin name="ticker" />
 <view:script src="/util/javaScript/lookV5/connectedUsers.js"/>
@@ -278,8 +278,8 @@ $(document).ready(function() {
     </div>
     <div id="nav">
       <ul id="main-menu" class="sm ${smartmenusSkin}">
-      	<li>
-        	<div class="selected"> <a href="javascript:goToHome();"><span>${labelHome}</span></a> </div>
+      	<li class="selected">
+        	<a href="javascript:goToHome();"><span>${labelHome}</span></a>
         </li>
         <c:forEach var="item" items="${mainItems}">
           <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}" displayAppIcon="${settings.displayMenuAppIcons}" callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"/>
