@@ -79,6 +79,18 @@
   border-left: 40px solid transparent;
 }
 
+
+.sm-silverpeas.displayMenuAppIcons-true .app img {
+  position:absolute;
+  top:30%;
+  left:20px;
+  z-index:100
+}
+
+ .sm-silverpeas.displayMenuAppIcons-true ul .app a, .sm-silverpeas.displayMenuAppIcons-true ul .app a:hover, .sm-silverpeas.displayMenuAppIcons-true ul .app a:focus, .sm-silverpeas.displayMenuAppIcons-true ul .app a:active, .sm-silverpeas.displayMenuAppIcons-true ul .app a.highlighted {
+  padding-left:46px;
+}
+
 @media (min-width: 768px) {
   /* Switch to desktop layout
   -----------------------------------------------

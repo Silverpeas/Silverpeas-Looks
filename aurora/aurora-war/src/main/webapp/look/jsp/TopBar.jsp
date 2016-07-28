@@ -277,7 +277,7 @@ $(document).ready(function() {
       </div>
     </div>
     <div id="nav">
-      <ul id="main-menu" class="sm ${smartmenusSkin}">
+      <ul id="main-menu" class="sm ${smartmenusSkin} displayMenuAppIcons-${settings.displayMenuAppIcons}">
       	<li class="selected">
         	<a href="javascript:goToHome();"><span>${labelHome}</span></a>
         </li>
