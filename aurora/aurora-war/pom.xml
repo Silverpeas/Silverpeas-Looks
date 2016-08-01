@@ -13,15 +13,7 @@
   <name>Look Aurora Web Application</name>
 
   <dependencies>
-    <dependency>
-      <groupId>javax.servlet.jsp.jstl</groupId>
-      <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>javax.servlet.jsp.jstl</artifactId>
-    </dependency>
-	  <dependency>
+	 <dependency>
       <groupId>org.silverpeas.components.quickinfo</groupId>
       <artifactId>silverpeas-quickinfo</artifactId>
 	    <version>${silverpeas.version}</version>

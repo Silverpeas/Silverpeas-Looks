@@ -1305,11 +1305,16 @@ button,
 #administration a,
 .spaceHome .list-responsible-user .userName,
 .spaceHome .spaceNavigation li a,
-#browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information{
+#browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information {
 	font-size: 10.5pt;
 	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
+#nav ul  ul > li > a,
+ #nav ul  ul > li > a span{
+	font-size: 10.5pt;
+	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+}
 .spaceHome #spaceQuiskInfo li.slide > h4 ,
 .spaceHome #publication li a b,
 .spaceHome #publication .header h4,
@@ -1327,7 +1332,8 @@ button,
 
 #portletPages h2.portlet-title,
 #shortcuts a , #shortcuts a:hover, #shortcuts a:focus, #shortcuts td.activeShortcut a,
-#nav  ul > li > div > a{
+#nav >  ul > li > a,
+ #nav >  ul > li > a span {
 	font-size:12pt;
 	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }

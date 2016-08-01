@@ -316,7 +316,7 @@ label.select-header:before {
    ============== */
 #nav {
 	position: relative;
-	padding-top:95px;
+	padding-top:102px;
 	width: 100%;
 	height:48px;
 	background:transparent url(../imgDesign/bg-menu-nav1.png) top left no-repeat;
@@ -330,12 +330,8 @@ label.select-header:before {
 	padding:0;
 }
 
-#nav  ul > li > div > a {    
+#nav >  ul > li >  a {    
 	display: block;
-	padding:0 2em;
-    height: 46px;
-    line-height: 30px;
-    text-decoration: none;
 	text-align:center
 }
 #nav > ul > li:first-child  {        
@@ -354,12 +350,16 @@ label.select-header:before {
 	position:relative;
 	z-index:100;
 }
-#nav a span {
-	color:#333;
-	text-align: center;    
-	line-height: 38px;
-    padding: 0;
-	text-transform:uppercase;
+
+#nav >  ul > li > a  {
+  color:#333;
+  text-align: center;    
+  text-decoration: none;
+  display:block;
+  padding:0 2em;
+  height: 46px;
+  line-height: 38px;
+  text-transform:uppercase;
 }
 #nav ul ul a span  {
 	line-height:110%;
@@ -438,9 +438,28 @@ label.select-header:before {
 	color:#7EB73B
 }
 
+/* la fleche du  menu vers le bas */
+#nav .sm-silverpeas a span.sub-arrow {
+  margin-top: -2px;
+  right: 12px;
+  border-width: 4px;
+  border-style: solid dashed dashed dashed;
+  border-color: #555555 transparent transparent transparent;
+  background: transparent;
+  border-radius: 0;
+}
+/* la fleche du sous menu vers la droite */
+#nav .sm-silverpeas ul a span.sub-arrow {
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: dashed dashed dashed solid;
+  border-color: transparent transparent transparent #555555;
+}
 
-
-
+#nav .sm-silverpeas ul a:hover, #nav .sm-silverpeas ul a:focus, #nav .sm-silverpeas ul a:active, #nav .sm-silverpeas ul a.highlighted {
+  background: #fbf7aa;
+  color: #000000;
+}
 
 .main {
 	padding: 0 0 40px;
@@ -929,6 +948,21 @@ label.select-header:before {
    Media Queries
    ========================================================================== */
 
+   
+
+@media only screen and (max-width: 980px), only screen and (max-device-width: 980px){   
+  #nav > ul > li > a {    
+    padding: 0 2.1em 0 0;
+    font-size:10pt;
+  }
+ #nav >  ul > li > a span {    
+    font-size:10pt;
+  }
+  #nav ul ul > li > a, #nav ul ul > li > a span {
+    font-size: 8.5pt;
+    }
+}
+ 
 @media only screen and (min-width: 480px) {
 
 
