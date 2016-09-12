@@ -12,10 +12,8 @@ import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
-import org.silverpeas.core.admin.component.model.WAComponent;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.admin.space.PersonalSpaceController;
-import org.silverpeas.core.admin.space.SpaceInst;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -25,11 +23,7 @@ import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
 import org.silverpeas.core.mylinks.service.MyLinksService;
 import org.silverpeas.core.silvertrace.SilverTrace;
-import org.silverpeas.core.util.DateUtil;
-import org.silverpeas.core.util.LocalizationBundle;
-import org.silverpeas.core.util.ResourceLocator;
-import org.silverpeas.core.util.StringUtil;
-import org.silverpeas.core.util.URLUtil;
+import org.silverpeas.core.util.*;
 import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
 import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.PublicationHelper;
@@ -242,21 +236,33 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return null;
   }
-  
+
   private List<News> getDelegatedNews() {
     List<News> news = new ArrayList<News>();
     List<DelegatedNews> delegatedNews = delegatedNewsService.getAllValidDelegatedNews();
-    
-    for (DelegatedNews delegated : delegatedNews) {
-      News aNews = new News(delegated.getPublicationDetail());
-      aNews.setPublicationId(delegated.getPublicationDetail().getId());
-      news.add(aNews);
+    try {
+      for (DelegatedNews delegated : delegatedNews) {
+        if (Administration.get().isComponentAvailable(delegated.getInstanceId(), getUserId())) {
+          News aNews = new News(delegated.getPublicationDetail());
+          aNews.setPublicationId(delegated.getPublicationDetail().getId());
+          news.add(aNews);
+        }
+      }
+    } catch(Exception e) {
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getDelegatedNews", "", e);
     }
 
     return news;
   }
   
-  private List<News> getNewsByComponentId(String appId) {    
+  private List<News> getNewsByComponentId(String appId) {
+    try {
+      if (!Administration.get().isComponentAvailable(appId, getUserId())) {
+        return new ArrayList<News>();
+      }
+    } catch (Exception e) {
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getNewsByComponentId", "", e);
+    }
     QuickInfoService service = QuickInfoService.get();
     return service.getVisibleNews(appId);
   }
@@ -270,10 +276,21 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   public List<EventOccurrence> getTodayEvents() {
-    List<EventOccurrence> events =
-        getAlmanachBm().getEventOccurrencesInPeriod(Period.from(new Date(), PeriodType.day, "fr"),
-            getAlmanachIds());
-    return events;
+    List<EventOccurrence> availableEvents = new ArrayList<EventOccurrence>();
+    try {
+      List<EventOccurrence> events =
+              getAlmanachBm().getEventOccurrencesInPeriod(Period.from(new Date(), PeriodType.day, "fr"),
+                      getAlmanachIds());
+      for (EventOccurrence event : events) {
+        if (Administration.get().isComponentAvailable(event.getEventDetail().getInstanceId(), getUserId())) {
+          availableEvents.add(event);
+        }
+      }
+    } catch (Exception e) {
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getTodayEvents", "", e);
+    }
+
+    return availableEvents;
   }
   
   public List<NextEventsDate> getNextEvents() {
@@ -281,23 +298,29 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   private List<NextEventsDate> getNextEvents(boolean fetchOnlyImportant, String... almanachIds) {
-    List<EventOccurrence> events = getAlmanachBm().getNextEventOccurrences(almanachIds);
-    Date today = new Date();
     List<NextEventsDate> result = new ArrayList<NextEventsDate>();
-    Date date = null;
-    NextEventsDate nextEventsDate = null;
-    for (EventOccurrence event : events) {
-      if (!fetchOnlyImportant || (fetchOnlyImportant && event.isPriority())) {
-        Date eventDate = event.getStartDate().asDate();
-        if (DateUtil.compareTo(today, eventDate, true) != 0) {
-          if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
-            nextEventsDate = new NextEventsDate(eventDate); 
-            result.add(nextEventsDate);
-            date = eventDate;
+    try {
+      List<EventOccurrence> events = getAlmanachBm().getNextEventOccurrences(almanachIds);
+      Date today = new Date();
+      Date date = null;
+      NextEventsDate nextEventsDate = null;
+      for (EventOccurrence event : events) {
+        if (Administration.get().isComponentAvailable(event.getEventDetail().getInstanceId(), getUserId())) {
+          if (!fetchOnlyImportant || (fetchOnlyImportant && event.isPriority())) {
+            Date eventDate = event.getStartDate().asDate();
+            if (DateUtil.compareTo(today, eventDate, true) != 0) {
+              if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
+                nextEventsDate = new NextEventsDate(eventDate);
+                result.add(nextEventsDate);
+                date = eventDate;
+              }
+              nextEventsDate.addEvent(event);
+            }
           }
-          nextEventsDate.addEvent(event);
         }
       }
+    } catch(Exception e) {
+      SilverTrace.error("lookAurora", "LookAuroraHelper.getNextEvents", "", e);
     }
     return result;
   }
