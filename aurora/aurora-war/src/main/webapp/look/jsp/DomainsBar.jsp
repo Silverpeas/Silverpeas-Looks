@@ -178,11 +178,11 @@ gef.setSpaceIdForCurrentRequest(spaceId);
     </div>
     <div id="spaceMenuDivId">
       <div id="spaces">
-		  <br/><br/><fmt:message key="lookSilverpeasV5.loadingSpaces" /><br/><br/><img src="icons/inProgress.gif" alt="<fmt:message key="lookSilverpeasV5.loadingSpaces" />"/>
-	  </div>
-    <c:if test="${lookHelper.anonymousAccess}">
-      <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();">${labelPersonal}</a></div>
-    </c:if>
+		  <br/><br/>${labelLoading}<br/><br/><img src="icons/inProgress.gif" alt="${labelLoading}"/>
+      </div>
+      <c:if test="${not lookHelper.anonymousAccess}">
+        <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();">${labelPersonal}</a></div>
+      </c:if>
     </div>
     <div id="basSpaces">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
