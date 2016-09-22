@@ -42,8 +42,8 @@
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
 
 <view:includePlugin name="ticker" />
-<view:script src="/util/javaScript/lookV5/connectedUsers.js"/>
-<view:script src="js/jquery.smartmenus.min.js"/>
+<view:loadScript src="/util/javaScript/lookV5/connectedUsers.js" jsPromiseName="connectedUsersPromise"/>
+<view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise"/>
 <link href="css/sm-core-css.css" rel="stylesheet" type="text/css" />
 <link href='css/${smartmenusSkin}/${smartmenusSkin}.css' rel='stylesheet' type='text/css' />
 <script type="text/javascript">
@@ -170,9 +170,11 @@ $(document).ready(function() {
 	});
 
 	<c:if test="${settings.displayMenuSubElements}">
+  smartMenuPromise.then(function() {
     $('#main-menu').smartmenus({
-      showOnClick: false
+      showOnClick : false
     });
+  });
   </c:if>
 
 	$.getJSON(webContext+"/PersonalSpace?Action=GetTools&IEFix="+new Date().getTime(),

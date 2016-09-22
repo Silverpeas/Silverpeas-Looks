@@ -200,7 +200,7 @@ gef.setSpaceIdForCurrentRequest(spaceId);
 </form>
 
   <!-- Custom domains bar javascript -->
-  <view:script src="/util/javaScript/lookV5/navigation.js"/>
-  <view:script src="/util/javaScript/lookV5/personalSpace.js"/>
-  <view:script src="/util/javaScript/lookV5/login.js"/>
+  <view:loadScript src="/util/javaScript/lookV5/navigation.js"/>
+  <view:loadScript src="/util/javaScript/lookV5/personalSpace.js"/>
+  <view:loadScript src="/util/javaScript/lookV5/login.js"/>
 </div>
