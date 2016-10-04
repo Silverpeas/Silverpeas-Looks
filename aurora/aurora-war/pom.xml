@@ -44,5 +44,31 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jslint</goal>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <jswarn>false</jswarn>
+          <excludes>
+            <exclude>**/*.min.*</exclude>
+            <exclude>**/*-min.*</exclude>
+            <exclude>**/*.min-*</exclude>
+            <exclude>**/*-min-*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
