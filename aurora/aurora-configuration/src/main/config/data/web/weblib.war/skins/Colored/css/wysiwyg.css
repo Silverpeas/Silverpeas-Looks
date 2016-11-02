@@ -1,0 +1,83 @@
+/**
+ * Copyright (C) 2000 - 2009 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://repository.silverpeas.com/legal/licensing"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+/**********************************************************/
+/**** WYSIWYG Styles **************************************/
+/**********************************************************/
+
+h2.wysiwyg-title1 {
+	font-family:kabel_medium,"Trebuchet MS",sans-serif;
+  font-weight:100;   
+  background: url() no-repeat scroll left bottom rgba(0, 0, 0, 0);
+  padding:0 0 10px 0;
+  margin:0 0 1em;
+	color:#808080;
+	font-size:20px;
+	border-bottom:1px solid #eee;
+	line-height:200%;
+  border-left:0;
+}
+h3.wysiwyg-title2 {
+	font-family:kabel_medium,"Trebuchet MS",sans-serif;
+  font-weight:100;   
+  background: url() no-repeat scroll left bottom rgba(0, 0, 0, 0);
+  margin:0 0 0.5em;
+	color:#c20e1a ;
+	font-size:18px;
+	line-height:200%;
+  border-left:0;
+}
+p.wysiwyg-important {
+  background:#f6f5f5;
+  border-width: 1px;
+  border-style: solid;
+  border-image: none;
+  border-color: #E5E5E5 #CBCBCB #CBCBCB #E5E5E5;
+  box-shadow: 2px 2px 2px 0px #CBCBCB;
+  border-radius:0;
+  padding:1em 1em 0 1em;
+  }
+  
+p.wysiwyg-important::before {
+	font-family:kabel_medium,"Trebuchet MS",sans-serif;
+  color: #515E66;
+  content: "\201C";
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.20em;
+  vertical-align: -0.4em;
+}
+p.wysiwyg-important::after {
+	font-family:kabel_medium,"Trebuchet MS",sans-serif;
+  color: #515E66;
+  content: "\201D";
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-left: 0.20em;
+  vertical-align: -0.6em;
+}
+strong.wysiwyg-focus {
+    background-color: #f04f33;
+    padding:0.2em 0.5em;
+    }
