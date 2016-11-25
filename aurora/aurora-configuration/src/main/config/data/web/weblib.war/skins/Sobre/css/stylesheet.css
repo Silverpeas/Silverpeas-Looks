@@ -39,13 +39,7 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 
 /********************************** ELMTS COLONNE GAUCHE *******************************/
 .fondDomainsBar {
-    background: url("") repeat scroll left top #F9F9F9;
 	border-right:1px solid #ccc;
-	border-left:0;
-}
-
-#recherche {
-	display:none;
 }
 
 #domainsBar {
@@ -56,80 +50,6 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 	position:absolute;
 	border-right:1px solid #ccc;
 	box-sizing:border-box;
-	width:100%;
-}
-
-#recherche {
-	margin:0px;
-}
-
-#recherche #submitRecherche {
-    height: 26px;
-}
-
-#recherche #submitRecherche input {
-	height: 20px;
-	margin-left: 15px;
-	margin-top: 15px;
-	width: 180px;
-	background-color:transparent;
-	border:medium none;
-	color: #666666;
-}
-
-#recherche #bodyRecherche, #recherche #bodyRecherche a {
-	color: #575757;
-}
-#recherche #submitRecherche a {
-    display: block;
-    height: 25px;
-    left: 219px;
-    margin-left: 0;
-    position: absolute;
-    top: 14px;
-    width: 28px;
-}
-#recherche #bodyRecherche {
-    margin-left: 19px;
-    margin-top: 16px;
-    text-align: left;
-}
-
-
-#tabDivId {
-width:200px;
-}
-
-#tabDivId #tab0 ,#tabDivId #tab1{
-padding:8px 28px 4px;
-}
-
-
-#authForm {
-	background-color: #FFF;
-	color: #000;
-	width: 234px;
-	padding-right:10px;
-}
-
-#loginBox {
-    padding-top: 0;
-}
-
-#domainsBar #loginBox #userNav {
-	display:none;
-}
-
-#domainsBar #loginBox .forgottenPwd a {
-	color: #7EB73B;
-	text-decoration:underline;
-}
-
-#loginBox form {
-	margin-right:20px;
-}
-
-#loginBox form input {
 	width:100%;
 }
 
@@ -210,19 +130,6 @@ padding:8px 28px 4px;
 #basSpaceTransverse {
 	display: none;
 }
-
-.spaceLevel1On .browseSpace #favdiv a{
-	background:transparent url();
-	padding:0;
-	border:0;
-}
-
-#favdiv {
-	position:absolute;
-	top:8px;
-	right:2px;
-}
-
 
 
 .spaceLevel1On .browseSpace .browseComponent a,
@@ -317,13 +224,7 @@ padding:8px 28px 4px;
 	top:10px;	
 }
 
-
-
-
 /********************************** ELMTS FOOTER *******************************/
-#pdcFrame {
-	background-image:inherit;
-}
 
 /********************************** ELMTS DIVERS *******************************/
 
@@ -333,13 +234,13 @@ padding:8px 28px 4px;
 }
 
 #browseBar {    
-	background:transparent none;
-    border-top: 2px solid #fff;    
-	color: #626262;
-    font-size: 9px;
-	height: 23px;
-    padding-top: 9px;
-    padding-left: 12px;
+  background:transparent none;
+  border-top: 2px solid #fff;    
+  color: #626262;
+  font-size: 9px;
+  height: 23px;
+  padding-top: 9px;
+  padding-left: 12px;
 }
 
 #browseBar a {    
@@ -373,32 +274,8 @@ padding:8px 28px 4px;
 	margin:0;
 }
 
-.cellBrowseBar , .cellOperation {
-	padding-bottom: 0;
-	border-bottom:0;
-}
- .cellOperation {
-	padding-left: 24px;
-}
-
 #browseBar #breadCrumb a{
 		font-size:9pt;
-}
-
-
-.cellBodyWindows {
-    background-image: none;
-    border:0;
-    background-color : transparent;
-}
-
-.tableFrame {
-    background-color: transparent;
-	position:relative;
-}
-.hautFrame {
-	border-radius:0px 0px 15px 15px;
-	padding-bottom:10px;
 }
 
 #TreeDiv1 {
@@ -459,9 +336,6 @@ text-transform:uppercase;
 #blog #blogContainer #bandeau {
 	background:transparent url();
 }
-
-
-
 
 
 .sousNavBulle p, #agenda #navigation, #agenda #agendaView, #agenda #footer, #richContent, #blog #blogContainer, #navBlog, #viewPostDraft, #blog #blogContainer #postsList div.post, #viewPost, #whitePagesSheet .sheet .sousNavBulle p, #publicProfileContenu .sousNavBulle p{
@@ -528,15 +402,6 @@ text-transform:uppercase;
 #portletPages dl.sort dd{
 	background-color:#FFF;
 	margin-bottom:10px;
-}
-
-
-#pubList {
-	padding:6px;
-}
-
-#pubList .tableBoard {
-	width:100% !important;
 }
 
 #facetSearchDivId {
@@ -615,8 +480,7 @@ text-transform:uppercase;
 div.buttonPane .button {
 	display:inline-block;
 }
-              
-              
+
 button.ui-button.ui-widget {
 	background-image:url();
 	background-color:#000 ;
@@ -721,9 +585,6 @@ button.ui-button.ui-widget:hover {
 	background-position:bottom right;
 	background-repeat:no-repeat;
 }
-.fondPhoto .txtlibform {
-
-}
 
 .ArrayColumn, .ArrayCell,  
 #classifieds .tableFrame #categories .categoryTitle{
@@ -778,7 +639,6 @@ background-image: none;
 	font-size:90%;
 }
 
-
 #agenda #currentScope, #agenda #jump, #agenda #today ,#agenda #categories, #agenda #invitations, #agenda #alert, #agenda #caption, #agenda #rss {
 	border:1px solid #CCC;
     margin-top: 0;
@@ -796,26 +656,14 @@ background-image: none;
 	font-size:80%;
 }
 
-#pdcFrame td{
-	font-size:11px;
-	padding:0;
-}
-
-#pdcFrame table{
-	border-spacing:0;
-    border-collapse:collapse;
-	padding:0;
-}
-
 #pdcFrame .sp_button{
 	font-size:11px;
 }
 
-
 #redExp {   
-	left: 1px;
-    position: absolute;
-    top: 17px;
+  left: 1px;
+  position: absolute;
+  top: 17px;
 }
 
 .ongletAdminOn .txtPetitBlanc {
@@ -829,7 +677,6 @@ background-image: none;
 .ongletAdminOn strong a:hover{
     border-bottom: 2px solid #000000;
 }
-
 
 #i18n .ArrayNavigationOn {
 	padding:0 3px;
@@ -867,58 +714,8 @@ background-image: none;
 	}
 }
 
-#backHome {
-     background: url("../imgDesign/logo.png") no-repeat scroll 7px 0px transparent;
-     height: 115px;
-     left: 0px;
-     top: 0px;
-     width: 189px;
-}
-
-#backHome img {
-     height: 115px ! important;
-     width: 214px ! important;
-}
-
-#recherche {
-     background: url("../imgDesign/fondRecherche.png") no-repeat scroll left top transparent;
-     left: 0px;
-     top: 0px;
-     width: 250px;
-     z-index: 100;
-}
-
-#domainsBar {
-     background: none no-repeat scroll left top transparent;
-}
-
-#tabDivId {
-     background: none no-repeat scroll 0px -121px transparent;
-}
-
 a:hover {
      color: #444443;
-}
-
-#administration a {
-     background: url("../imgDesign/bg-btn-admin.png") no-repeat scroll right 7px transparent;
-     color: #FFFFFF;
-     display: block;
-     font-family: "Century Gothic","Trebuchet MS",Arial, sans serif;
-     font-weight: 100;
-     height: 60px;
-     line-height: 60px;
-     padding: 0px 45px 0px 15px;
-     width: 116px;
-}
-
-#administration a:hover, #administration a:focus {
-     background-color: #EC9C01;
-}
-
-#pdcFrame {
-     background: url("") repeat-x scroll left top #D0CFCB;
-     color: #353535;
 }
 
 #domainsBar a {
@@ -1193,7 +990,7 @@ a:hover {
 .sp_tabOff a,
 caption,
 Label, legend{
-     font-size:10pt;
+  font-size:10pt;
 }
 
 
@@ -1591,9 +1388,4 @@ color:#1C94D4;
 
 .eventInfo div span a {
   font-size:100%;
-}
-
-.wrap .resizable.resizable2 {
-    width: 68%;
-    margin-left: 2%;
 }
