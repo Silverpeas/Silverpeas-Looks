@@ -44,10 +44,10 @@ textarea {
 }
 
 #logo-header {        
-	bottom: 44px;
-    left: 72px;
-    position: absolute;
-    z-index: 100;
+  bottom: 44px;
+  left: 72px;
+  position: absolute;
+  z-index: 100;
 }
 
 #topar-header {
@@ -91,23 +91,21 @@ textarea {
 }
 
 .select-header select {
-	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
-    padding:0 3px 0 0;
-    margin: 0;
-    border-radius:4px;
-		-webkit-border-radius:4px;
-		-moz-border-radius:4px;
-    background: #1C94D4;
-    color:#fff;
-    border:none;
-    outline:none;
-    display: inline-block;
-		-webkit-appearance:none;
-		-moz-appearance:none;
-    appearance:none;
-    cursor:pointer;
-	min-height:19px;
-	min-width:100px;
+  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
+  padding:0 3px 0 0;
+  margin: 0;
+  border-radius:4px;
+  background: #1C94D4;
+  color:#fff;
+  border:none;
+  outline:none;
+  display: inline-block;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  cursor:pointer;
+  min-height:19px;
+  width:120px;
 }
 
 label.select-header {
@@ -118,21 +116,21 @@ label.select-header:after {
 
 }
 label.select-header:before {
-    content:'  >';
-    right:0; 
-	top:0px;
-    width:20px; 
-	height:20px;
-    background:#1C94D4;
-    position:absolute;
-    pointer-events:none;
-    display:block;    
-	color:#fff;
-	white-space: pre-wrap;
-    transform:rotate(90deg);
-    -webkit-transform:rotate(90deg);
-    -moz-transform:rotate(90deg);
-    -ms-transform:rotate(90deg);    
+  content:'  >';
+  right:0; 
+  top:0px;
+  width:20px; 
+  height:20px;
+  background:#1C94D4;
+  position:absolute;
+  pointer-events:none;
+  display:block;    
+  color:#fff;
+  white-space: pre-wrap;
+  transform:rotate(90deg);
+  -webkit-transform:rotate(90deg);
+  -moz-transform:rotate(90deg);
+  -ms-transform:rotate(90deg);    
 }
 
 .header-container #infoConnection {
@@ -451,9 +449,9 @@ label.select-header:before {
 /* la fleche du sous menu vers la droite */
 #nav .sm-silverpeas ul a span.sub-arrow {
   margin-top: -5px;
-  border-width: 5px;
+  border-width: 4px;
   border-style: dashed dashed dashed solid;
-  border-color: transparent transparent transparent #555555;
+  border-color: transparent transparent transparent #666;
 }
 
 #nav .sm-silverpeas ul a:hover, #nav .sm-silverpeas ul a:focus, #nav .sm-silverpeas ul a:active, #nav .sm-silverpeas ul a.highlighted {
@@ -961,6 +959,24 @@ label.select-header:before {
   #nav ul ul > li > a, #nav ul ul > li > a span {
     font-size: 8.5pt;
     }
+  #search-zone-header {
+    top:80px;
+    border-radius:15px 0 0 15px;
+    z-index: 1001;
+    }
+  
+  #nav > ul > li:first-child a span {        
+    text-indent:-3000px;
+    display:inline-block;
+  }
+
+  #nav > ul > li:first-child a  {            
+    background: transparent url(../imgDesign/packImages.png) no-repeat 9px -124px;
+    padding-left: 18px;
+    height: 35px;
+    width: 33px;
+  }
+
 }
  
 @media only screen and (min-width: 480px) {
