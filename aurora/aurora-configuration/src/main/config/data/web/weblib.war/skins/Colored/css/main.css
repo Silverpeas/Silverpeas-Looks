@@ -34,7 +34,7 @@ textarea {
 
    =================== */
 
-  body#top {
+body#top {
 	background-repeat: no-repeat;
 	background-position:0 0px;
 }  
@@ -1360,20 +1360,3 @@ padding-left:1em;
 }
 
 /********************** ***************************/
-
-#rightSide {
-    padding: 0 1em;
-    width: 67%;
-}
-
-#DropZone {
-	width:98% !important;
-}
-
- #portletPages.rightContent {
-	padding-right:1em;
- }
- 
- body > form {
-	height:auto;
- }

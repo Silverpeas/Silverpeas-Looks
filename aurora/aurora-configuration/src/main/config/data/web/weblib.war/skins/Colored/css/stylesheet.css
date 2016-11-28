@@ -1,4 +1,3 @@
-
 /**
 * Copyright (C) 2000 - 2011 Silverpeas
 *
@@ -210,13 +209,16 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 }
 
 /********************************** ELMTS FOOTER *******************************/
-#pdcFrame {
-	background-image:inherit;
-}
+
 
 /********************************** ELMTS DIVERS *******************************/
 .cellBrowseBar {
   min-height:30px;
+  margin-top:2em;
+}
+
+.cellOperation {
+  top:1em;
 }
 /* fil ariane */
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information{
@@ -236,10 +238,6 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 #browseBar #breadCrumb  *:last-child,
 #browseBar #breadCrumb  *:last-child a{
 	color:#878787 !important;
-}
-
-#topPage {
-  display: block;
 }
 
 #browseBar #breadCrumb {
@@ -377,14 +375,6 @@ text-transform:uppercase;
 	margin-bottom:10px;
 }
 
-#pubList {
-	padding:6px;
-}
-
-#pubList .tableBoard {
-	width:100% !important;
-}
-
 #facetSearchDivId {
 	border: none;
 }
@@ -448,7 +438,7 @@ a.button{
   background: #3FBBA3 none repeat scroll 0% 0%;
   border:0;
   border-radius: 10px;
-  color: #FFF !important;
+  color: #FFF;
   width: auto;   
   font-weight: normal;
   padding: 5px 10px;
@@ -519,7 +509,6 @@ button.ui-button.ui-widget:hover {
 }
 
 .sousOnglets {
-	background-image:none;
 	height:3px;
 }
 
@@ -610,7 +599,6 @@ button.ui-button.ui-widget:hover {
 	box-shadow:0;
 	padding:7px;
 	behavior: url("/silverpeas/util/styleSheets/PIE.htc");
-	position:relative;
 }
 .fondPhoto {
 	background-color:#FFF;
@@ -638,6 +626,7 @@ button.ui-button.ui-widget:hover {
 .pageNav , .pageNav .ArrayNavigation, .pageNav .pageOff {
 background-image: none;
 }
+
 .pageNav {
 	border-radius: 5px;
 	box-shadow:0;
@@ -689,25 +678,9 @@ background-image: none;
 	font-size:80%;
 }
 
-#pdcFrame td{
-	font-size:11px;
-	padding:0;
-}
-
-#pdcFrame table{
-	border-spacing:0;
-    border-collapse:collapse;
-	padding:0;
-}
-
-#pdcFrame .milieuBoutonV5 a{
-	font-size:11px;
-}
-
-
 #redExp {
-    margin-bottom: -8px;
-    position: relative;
+  margin-bottom: -8px;
+  position: relative;
 }
 
 .ongletAdminOn .txtPetitBlanc {
@@ -726,11 +699,9 @@ background-image: none;
 #i18n .ArrayNavigationOn {
 	padding:0 3px;
 	background-color:#E32338;
-	/*letter-spacing:1px;*/
 	font-size: 10pt;
 	color:#FFF
 }
-
 
 #i18n .ArrayNavigationOn:hover {
 	background-color:#EC9C01;
@@ -741,62 +712,12 @@ background-image: none;
 	width:150px;
 }
 
-
-@media only screen and (max-width: 650px), only screen and (max-device-width: 650px){
-	.rightContent {
-		clear: both;
-		float: none;
-		margin-top: 40px;
-		width: auto;
-	}
-	.rightContent .attachments {
-		min-width:auto;
-	}
-	.principalContent {
-    	margin-right: 0;
-    	margin-top: 10px;
-	}
-	.header h4 {
-    	min-width: auto;
-	}
-}
-
-#backHome {
-     background: url("../imgDesign/logo.png") no-repeat scroll 7px 0px transparent;
-     height: 115px;
-     left: 0px;
-     top: 0px;
-     width: 189px;
-}
-
-#backHome img {
-     height: 115px ! important;
-     width: 214px ! important;
-}
-
-#recherche {
-     background: url("../imgDesign/fondRecherche.png") no-repeat scroll left top transparent;
-     left: 0px;
-     top: 0px;
-     width: 250px;
-     z-index: 100;
-}
-
-#domainsBar {
-     background: none no-repeat scroll left top transparent;
-}
-
 #tabDivId {
      background: none no-repeat scroll 0px -121px transparent;
 }
 
 a:hover {
      color: #444443;
-}
-
-#pdcFrame {
-     background: url("") repeat-x scroll left top #D0CFCB;
-     color: #353535;
 }
 
 #domainsBar a {
@@ -960,7 +881,7 @@ a:hover {
 }
 
 .sousOnglets, .sp_tabOn a, .sp_tabOff a:hover, .sp_tabOn span {
-  background-color:#c20e1a;
+  background-color:#EE3343;
   color: #FFFFFF;
 }
 
@@ -1032,8 +953,8 @@ a:hover {
 }
 
 #myProfileFiche .action .link, #publicProfileFiche #contactCommun .link, #publicProfileFiche #allContact .link, .txtnav, .txtbigdate, .txttitrecol, #directory .link {
-  border-color: #c20e1a;
-  color: #c20e1a;
+  border-color: #EE3343;
+  color: #EE3343;
   line-height: 12px;
   font-weight:100;
 }
@@ -1126,17 +1047,13 @@ button,
   color: #000;
 }
 
-.ArrayColumn a:hover {
-  color: #444444;
-}
-
 .pageNav {
   background-color: #FFFFFF;
 }
 
 .pageNav .pageIndex {
   background-color: transparent;
-  border-right: 1px solid #444443;
+  border-right: 1px solid #444;
 }
 
 .skinFieldset legend {
@@ -1146,19 +1063,17 @@ button,
   font-weight: bold;
 }
 .skinFieldset label{
-	 font-weight: 100;
+  font-weight: 100;
 }
 
 .rightContent #dNdActionLabel {
-     color: #333333;
+  color: #333333;
 }
 
-#settings .txtlibform, #settings .textePetitBold, .pdcPosition h3, #blog #blogContainer #bandeau a, #backHomeBlog a {
-  color: #444443;
-}
-
-.eventName a {
-  color: #444443 ! important;
+#settings .txtlibform, #settings .textePetitBold, .pdcPosition h3, #blog #blogContainer #bandeau a, #backHomeBlog a,
+.ArrayColumn a:hover,
+.eventName a  {
+  color: #444;
 }
 
 .eventMonth {
@@ -1259,7 +1174,6 @@ button,
 .portlet .eventInfo div div.bloc {
   padding: 2px 8px 0 38px;
   font-size:100%;
-
 }
 
 .portlet .eventList  {
@@ -1269,6 +1183,7 @@ button,
   margin:0;
   background-color:transparent
 }
+
 .portlet .eventList .eventInfo {
   padding:1px 0;
 }
@@ -1290,49 +1205,49 @@ button,
 }
 
 .spaceHome .spaceDescription {
-	color: #989ea9;
-    display: block;
-    font-size: 14px;
-    line-height: 1.4em;
-    margin-bottom: 20px;
-	font-weight:unset;
-	border:0;
-	padding-left:0;
+  color: #989ea9;
+  display: block;
+  font-size: 14px;
+  line-height: 1.4em;
+  margin-bottom: 20px;
+  font-weight:unset;
+  border:0;
+  padding-left:0;
 }
 
 #preview .publiDesc {
-	color: #989ea9;
-    display: block;
-    font-size: 14px;
-	font-weight:unset;
-	border:0;
-	padding-left:0;
-	padding: 0px !important;
+  color: #989ea9;
+  display: block;
+  font-size: 14px;
+  font-weight:unset;
+  border:0;
+  padding-left:0;
+  padding: 0px !important;
 }
 
 .spaceHome .spaceNavigation li.browse-space a {
-     background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px -10px transparent;
-     padding-left: 38px;
+  background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px -10px transparent;
+  padding-left: 38px;
 }
 
 .spaceHome .spaceNavigation li p {
-     padding-left: 38px;
+  padding-left: 38px;
 }
 
 .spaceHome .spaceNavigation li.browse-component p {
-     padding-left: 0;
+  padding-left: 0;
 }
 .spaceHome #spaceManager h2.portlet-title {
-     color: #0BA6CE;
+  color: #0BA6CE;
 }
 
 .spaceHome #spaceManager ul {
-     list-style: none outside none;
-     padding: 0px;
+  list-style: none outside none;
+  padding: 0px;
 }
 
 .spaceHome #spaceManager .intfdcolor {
-     background-color: transparent;
+  background-color: transparent;
 }
 
 .portlet #calendar li.events {
@@ -1342,43 +1257,43 @@ button,
 }
 
 .portlet #calendar .eventInfo {
-     background-color: #FFFFFF;
+  background-color: #FFFFFF;
 }
 
 .spaceHome #spaceEvent h2.portlet-title, .spaceHome #spaceQuiskInfo h2.portlet-title {
-     color: #777777;
+  color: #777777;
 }
 
 .spaceHome #publication .bgDegradeGris, .spaceHome #publication.bgDegradeGris {
-     background: none repeat scroll 0% 0% transparent;
-     border: 0px none;
-     margin: 0px;
-     padding: 0px;
-	 behavior: none;
-	 box-shadow:none;
-	 text-align:center;
+  background: none repeat scroll 0% 0% transparent;
+  border: 0px none;
+  margin: 0px;
+  padding: 0px;
+  behavior: none;
+  box-shadow:none;
+  text-align:center;
 }
 
 .spaceHome #publication.bgDegradeGris {
-     border-radius: 0px;
-     border-top:0;
-     margin-top: 2em;
-     padding-top: 1em;
-	 behavior: none;
+  border-radius: 0px;
+  border-top:0;
+  margin-top: 2em;
+  padding-top: 1em;
+  behavior: none;
 }
 
 .header h4 {
-    font-size: 100%;
+  font-size: 100%;
 }
 
 .spaceHome #publication li a b,
 .last-publication-list li a b {
-     font-weight: 100;
+  font-weight: 100;
 }
 
 .last-publication-list li  a:hover,
 #publicationList li  a:hover{
-    color:#00b2c8;
+  color:#00b2c8;
 }
 
 .last-publication-list li  a,
@@ -1394,7 +1309,6 @@ button,
 	font-family:Comic Sans Ms;
 }
 
-
 .last-publication-list li a:hover b {
 color:#FFF;
 }
@@ -1405,29 +1319,29 @@ color:#FFF;
 
 .spaceHome #publication li .userToZoom ,
 .last-publication-list li .userToZoom {
-     color: #1C94D4;
+  color: #1C94D4;
 }
 
 .spaceHome #spaceQuiskInfo li.slide {
-     min-height: 135px;
+  min-height: 135px;
 }
 
 .spaceHome #spaceQuiskInfo li.slide > h4 {
-     color: #c20e1a;
-     font-weight: 100;
-     line-height: 120%;
+  color: #EE3343;
+  font-weight: 100;
+  line-height: 120%;
 }
 
 .spaceHome #spaceQuiskInfo li.slide p {
-     line-height: 110%;
+  line-height: 110%;
 }
 
 .spaceHome #spaceQuiskInfo .slides-pagination a:hover, .spaceHome #spaceQuiskInfo .slides-pagination .selected a {
-     background-color: #c20e1a;
+  background-color: #EE3343;
 }
 
 .spaceHome .list-responsible-user li {
-     width: auto;
+  width: auto;
 }
 
 .btn-deploy-all-item, #dynamicalLoad, #displaying, #displaying a {width:auto}
