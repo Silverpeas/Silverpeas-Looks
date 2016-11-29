@@ -1,4 +1,3 @@
-
 /**
 * Copyright (C) 2000 - 2011 Silverpeas
 *
@@ -48,6 +47,10 @@ a,
   color:#FFF;
 }
 
+#portletPages div.portlet-content .actuality-date{
+  color:#5a5a5a;
+}
+
 html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut, .textePetitBold{
 	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 	font-size:9pt;
@@ -56,123 +59,9 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 
 
 /********************************** ELMTS COLONNE GAUCHE *******************************/
-.fondDomainsBar {
-     background: url("") repeat scroll left top #272928;
-}
-
 #sp-layout-body-part-layout-content-part,
 body {
   background:#272928 url("../imgDesign/fd-tdm.jpg") top center no-repeat;
-  }
-
-#recherche {
-	display:none;
-}
-
-#domainsBar {
-	padding:0;
-	margin:0 0 10px 0;
-}
-
-#recherche {
-	margin:0px;
-}
-
-#recherche #submitRecherche {
-    height: 26px;
-}
-
-#recherche #submitRecherche input {
-	height: 20px;
-	margin-left: 15px;
-	margin-top: 15px;
-	width: 180px;
-	background-color:transparent;
-	border:medium none;
-	color: #dfdfdf;
-}
-
-#recherche #bodyRecherche, #recherche #bodyRecherche a {
-	color: #575757;
-}
-#recherche #submitRecherche a {
-    display: block;
-    height: 25px;
-    left: 219px;
-    margin-left: 0;
-    position: absolute;
-    top: 14px;
-    width: 28px;
-}
-#recherche #bodyRecherche {
-    margin-left: 19px;
-    margin-top: 16px;
-    text-align: left;
-}
-
-
-#tabDivId {
-width:200px;
-}
-
-#tabDivId #tab0 ,#tabDivId #tab1{
-padding:8px 28px 4px;
-}
-
-#tabDivId .milieuOngletOn {
-	padding:0 10px;
-	background-image: none;
-	background-color:#efefef;
-	border:1px solid #CACACA;
-	border-bottom:none;
-	border-radius:8px 8px 0 0;
-}
-
-#tabDivId .milieuOngletOn a {
-	color:#333333;
-	font-weight:bold;
-}
-
-#tabDivId .milieuOngletOff {
-	padding:0 10px;
-	background-image: none;
-	background-color:#D4D4D4;
-	border:1px solid #BFBFBF;
-	border-bottom: none;
-	border-radius:8px 8px 0 0;
-}
-
-#tabDivId .milieuOngletOff a {
-	color:#6F6F6F;
-}
-
-
-#authForm {
-	background-color: #FFF;
-	color: #000;
-	width: 234px;
-	padding-right:10px;
-}
-
-#loginBox {
-    padding-top: 0;
-}
-
-#domainsBar #loginBox #userNav {
-	display:none;
-}
-
-#domainsBar #loginBox .forgottenPwd a {
-	color: #ed4d4d;
-	text-decoration:underline;
-}
-
-#loginBox form {
-	margin-right:20px;
-}
-
-#loginBox form input {
-	width:100%;
 }
 
 /* NAV GAUCHE */
@@ -226,8 +115,6 @@ padding:8px 28px 4px;
 	border-radius: 0 0 12px 0;
 }
 
-
-
 .spaceLevel1 .browseComponent a,
 .spaceLevel1On .browseComponent a ,
 .spaceLevel1On .browseComponentActiv a{
@@ -247,7 +134,6 @@ padding:8px 28px 4px;
 	position:relative;
 }
 
-
 #basSpaces ,
 #basSpaceTransverse {
 	display: none;
@@ -264,8 +150,6 @@ padding:8px 28px 4px;
 	top:8px;
 	right:2px;
 }
-
-
 
 .spaceLevel1On .browseSpace .browseComponent a,
 .spaceLevel1On .browseSpace .browseComponentActiv a{
@@ -294,7 +178,6 @@ padding:8px 28px 4px;
 	top:4px;
 	left:26px;
 }
-
 
 .spaceLevel1On .browseSpace .browseSpace .browseComponent a,
 .spaceLevel1On .browseSpace .browseSpace .browseComponentActiv a{
@@ -365,15 +248,15 @@ padding:8px 28px 4px;
   position: relative;
 }
 /********************************** ELMTS FOOTER *******************************/
-#pdcFrame {
-	background-image:inherit;
-}
 
 /********************************** ELMTS DIVERS *******************************/
 
 /* fil ariane */
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information{
 	font-weight: normal;
+}
+#browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar .information {
+  color:#FFF;
 }
 
 #browseBar {
@@ -396,28 +279,6 @@ padding:8px 28px 4px;
 
 .cellBrowseBar , .cellOperation {
 	padding-bottom: 5px;
-}
-
-.cellBodyWindows {
-    background-image: none;
-    border:0;
-    background-color : transparent;
-}
-
-.basGaucheWindow, .basMilieuWindow, .basDroiteWindow {
-    background-image: none;
-    background-color: transparent;
-    height: 1px;
-    border: none;
-    border-bottom: 0px solid #DEDEDE;
-}
-.tableFrame {
-    background-color: transparent;
-	position:relative;
-}
-
-.milieuFrame {
-  padding-top:1em;
 }
 
 .kmelia .hautFrame,
@@ -452,9 +313,6 @@ padding:8px 28px 4px;
   padding:1%;
 }
 
-#TreeDiv1 {
-}
-
 #blog #titresTopics , #blog #titresArchives, #blog #titresLiens {
 	background-image: none;
 	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
@@ -464,8 +322,6 @@ padding:8px 28px 4px;
 	background-color:#E1E1E1;
 	background-image:none;
 	border-radius:8px 8px 0 0;
-	-moz-border-radius:8px 8px 0 0;
-	-webkit-border-radius:8px 8px 0 0;
 }
 .tableNavigationList {
 background-color:#D6D7D9;
@@ -510,14 +366,9 @@ text-transform:uppercase;
 	background:transparent url();
 }
 
-
-
-
-
 .sousNavBulle p, #agenda #navigation, #agenda #footer, #richContent, #blog #blogContainer, #navBlog, #viewPostDraft, #blog #blogContainer #postsList div.post, #viewPost, #whitePagesSheet .sheet .sousNavBulle p, #publicProfileContenu .sousNavBulle p{
 	padding:8px;
 }
-
 
 .newsFeed , #identity table, #ReceiveInvitation{
 	margin:0;
@@ -573,9 +424,6 @@ text-transform:uppercase;
   color:#000;
 }
 
-.arrayPane {
-}
-
 #portletPages h2.portlet-title {
 	border-bottom: 0px solid #CCCCCC;
 	color:#ec8601;
@@ -612,19 +460,8 @@ text-transform:uppercase;
   background-color:transparent;
 }
 
-
-#pubList {
-	padding:6px;
-}
-
-#pubList .tableBoard {
-	width:100% !important;
-}
-
 .tableBoard {
    background:#272928  url();
-  border:0 ;
-  width:98%;
 }
 
 .tableBoard .txtlibform, .tableBoard .textePetitBold,
@@ -708,18 +545,9 @@ text-transform:uppercase;
 	padding-left:6px;
 }
 
-#searchGroupValues ul li.selected {
-}
 #searchGroupValues ul li.selected a{
 	color:#00395A;
 }
-.intfdcolor {
-	background-image: none;
-}
-.ArrayNavigation {
-	background-image: none;
-}
-
 /* Boutons et onglets*/
 .sousOnglets, .sp_tabOn a, .sp_tabOff a:hover, .sp_tabOn span {
     background-color: #d01515;
@@ -754,7 +582,6 @@ div.buttonPane .button {
 }
 
 .sousOnglets {
-	background-image:none;
 	height:3px;
 }
 /* MenuToogle Yuimenu*/
@@ -778,11 +605,6 @@ div.buttonPane .button {
 	display:none;
 }
 
-#kmelia #rightSide.resizable > div {
-	margin-left:2em;
-	margin-right:1em;
-}
-
 #topPage .yuimenu, #kmelia .yuimenu, #attachmentList .yuimenu{
 	padding:6px 0;
 	border-radius: 8px 0 8px 8px;
@@ -797,62 +619,7 @@ div.buttonPane .button {
 	border-bottom:0px solid #262827 ;
 }
 
-
-
-/* onglet menu */	
-#tabDivId {
-	padding-right: 40px;
-}
-
-#tabDivId #tab0 ,#tabDivId #tab1{
-	padding:8px 36px 8px;
-}
-
-
-#tabDivId .milieuOngletOn {
-	background-image: none;
-	background-color:transparent;
-	border:0;
-}
-
-#tabDivId .milieuOngletOn a {
-	color:#77b800;
-	font-weight:bold;
-	display:block;
-	background-color:transparent;
-	padding:0;
-}
-#tabDivId .milieuOngletOff a {
-	color:#000;
-	font-weight:bold;
-	display:block;
-	background-color:transparent;
-	padding:0;
-	margin: 0;
-}
-#tabDivId #tab0.milieuOngletOff {
-	font-weight:bold;
-	background:transparent url(../imgDesign/favorit.png) left bottom no-repeat;
-}
-
-#tabDivId #tab0.milieuOngletOn {
-	background:transparent url(../imgDesign/favoritSelect.png) left bottom no-repeat;
-}
-#tabDivId .milieuOngletOff {
-	background-image: none;
-	background-color:transparent;
-	font-weight:100;
-	border:0;
-}
-#tabDivId #tab1.milieuOngletOff {
-	font-weight:bold;
-	background:transparent url(../imgDesign/all.png) left bottom no-repeat;
-}
-
-#tabDivId #tab1.milieuOngletOn {
-	background:transparent url(../imgDesign/allSelect.png) left bottom no-repeat;
-}
-
+/* onglet menu */
 #tabbedPane, #tabbedPane2 , #tabbedPane1 , #tabbedPane0{ 
 	position:relative;
 }
@@ -865,22 +632,21 @@ div.buttonPane .button {
 	font-weight:normal;
 	color:#575757;
 }
+
 .cadrePhoto {
 	background-color:#E1E1E1;
 	border-radius: 5px;
 	box-shadow:0;
 	padding:7px;
 	behavior: url("/silverpeas/util/styleSheets/PIE.htc");
-	position:relative;
 }
+
+
 .fondPhoto {
 	background-color:transparent;
 	padding:0 0 18px;
 	background-position:bottom right;
 	background-repeat:no-repeat;
-}
-.fondPhoto .txtlibform {
-
 }
 
 .ArrayColumn, .ArrayCell,  
@@ -912,15 +678,17 @@ background-image: none;
 	padding:3px 0 0 0;
 }
 
-.bgDegradeGris, .userzoom-tooltip, .userzoom-tooltip-interaction-accessProfil, .userzoom-tooltip-interaction-accessTchat, .userzoom-tooltip-interaction-accessNotification, .userzoom-tooltip-interaction-action-invitation, .userzoom-tooltip-interaction-accessTchat.disabled:hover {
+.bgDegradeGris {
   background-image: url(/silverpeas/util/icons/gradientSVG.jsp?from=2d2f2e&to=171717&vertical=0&horizontal=100);
   border: 1px solid #212121;
 }
+ #globalResultList .ArrayNavigation,
+ #globalResultQueryLabel .ArrayNavigation{
+  background:transparent url();
+  }
 
 .commentaires {
-    background-color: #FFF;
-    display: table;
-    width: 98%;
+  background-color: #FFF;
 }
 
 h2.mediaTitle {
@@ -964,10 +732,9 @@ color:#FFF;
 	font-size:90%;
 }
 
-
 #agenda #currentScope, #agenda #jump, #agenda #today ,#agenda #categories, #agenda #invitations, #agenda #alert, #agenda #caption, #agenda #rss {
-	border:1px solid #CCC;
-    margin-top: 0;
+  border:1px solid #CCC;
+  margin-top: 0;
 }
 
 #subTopics ul li a {
@@ -981,22 +748,6 @@ color:#FFF;
 .portlet .title-item-rssNews .channelName-rssNews {
 	font-size:80%;
 }
-
-#pdcFrame td{
-	font-size:11px;
-	padding:0;
-}
-
-#pdcFrame table{
-	border-spacing:0;
-    border-collapse:collapse;
-	padding:0;
-}
-
-#pdcFrame .milieuBoutonV5 a{
-	font-size:11px;
-}
-
 
 #redExp {
     margin-bottom: -8px;
@@ -1018,13 +769,11 @@ color:#FFF;
     border-bottom: 2px solid #000000;
 }
 
-
 #i18n .ArrayNavigationOn {
 	padding:0 3px;
 	background-color:#353535;
 	letter-spacing:1px;
 }
-
 
 #i18n .ArrayNavigationOn:hover {
 	background-color:#EC9C01;
@@ -1055,189 +804,135 @@ color:#FFF;
 	}
 }
 
-#backHome {
-     background: url("../imgDesign/logo.png") no-repeat scroll 7px 0px transparent;
-     height: 115px;
-     left: 0px;
-     top: 0px;
-     width: 189px;
-}
-
-#backHome img {
-     height: 115px ! important;
-     width: 214px ! important;
-}
-
-#recherche {
-     background: url("../imgDesign/fondRecherche.png") no-repeat scroll left top transparent;
-     left: 0px;
-     top: 0px;
-     width: 250px;
-     z-index: 100;
-}
-
-#domainsBar {
-     background: none no-repeat scroll left top transparent;
-}
-
-#tabDivId {
-     background: none no-repeat scroll 0px -121px transparent;
-}
-
 a:hover {
-     color: #FFF;
-}
-
-#administration a {
-     background: url("../imgDesign/bg-btn-admin.png") no-repeat scroll right 7px transparent;
-     color: #FFFFFF;
-     display: block;
-     font-family: "Century Gothic","Trebuchet MS",Arial, sans serif;
-     font-weight: 100;
-     height: 60px;
-     line-height: 60px;
-     padding: 0px 45px 0px 15px;
-     width: 116px;
-}
-
-#administration a:hover, #administration a:focus {
-     background-color: #EC9C01;
-}
-
-#pdcFrame {
-     background: url("") repeat-x scroll left top #D0CFCB;
-     color: #353535;
-}
-
-#domainsBar a {
-    
+  color: #FFF;
 }
 
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information {
-     color: #FFF;
+  color: #FFF;
 }
 
 .spaceLevel1On .contentSpace {
-     border-bottom:0;
-     padding-bottom: 10px;
+  border-bottom:0;
+  padding-bottom: 10px;
 }
 
 .spaceLevel1On .contentSpace, #contentSpacespacePerso {
-     background-color: #272928;
+  background-color: #272928;
 }
 
 #domainsBar #spaces a:hover, #domainsBar #spaceTransverse a:hover {
-     color: #ed4d4d;
+  color: #ed4d4d;
 }
 
 #domainsBar .spaceLevel1 a.spaceURL, #domainsBar .spaceLevel1On a.spaceURL,
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL {
-     background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px bottom transparent;
-     color: #555;
-     display: block;
-     font-weight: 100;
-     line-height: 19px;
-     min-height: 18px;
-     padding: 13px 10px 17px  45px;
+  background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px bottom transparent;
+  color: #555;
+  display: block;
+  font-weight: 100;
+  line-height: 19px;
+  min-height: 18px;
+  padding: 13px 10px 17px  45px;
 }
 
 #domainsBar .spaceLevel1 a.spaceURL:hover {
-     background: url("../imgDesign/bg_menu_level1Hover.png") no-repeat scroll  0px bottom  transparent;
-     color: #FFF;
+  background: url("../imgDesign/bg_menu_level1Hover.png") no-repeat scroll  0px bottom  transparent;
+  color: #FFF;
 }
 
 #domainsBar .spaceLevel1On a.spaceURL:hover, #domainsBar .spaceLevel1On a.spaceURL,
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL  {
-     background: url("../imgDesign/bg_menu_level1On.png") no-repeat scroll  0px bottom  #272928;
-     color: #FFF;
-     padding-left: 15px;
+  background: url("../imgDesign/bg_menu_level1On.png") no-repeat scroll  0px bottom  #272928;
+  color: #FFF;
+  padding-left: 15px;
 }
 
 #domainsBar .spaceLevel1On .browseSpace > a {
-     background: url("../imgDesign/packFleche.png") no-repeat scroll 8px -2px transparent;
-     font-weight: 100;
-     padding: 4px 10px 4px 32px;
-     position: relative;
+  background: url("../imgDesign/packFleche.png") no-repeat scroll 8px -2px transparent;
+  font-weight: 100;
+  padding: 4px 10px 4px 32px;
+  position: relative;
 }
 
 #domainsBar .spaceLevel1On .contentSpace .spaceOn > a {
-     background: url("../imgDesign/packFleche.png") no-repeat scroll 8px -153px transparent;
-     color: #ed4d4d;
+  background: url("../imgDesign/packFleche.png") no-repeat scroll 8px -153px transparent;
+  color: #ed4d4d;
 }
 
 #domainsBar .spaceLevel1On .browseSpace .browseComponent a, #domainsBar .spaceLevel1On .browseSpace .browseComponentActiv a {
-     padding-left: 58px;
+  padding-left: 58px;
 }
 
 #domainsBar .spaceLevel1On .browseSpace .browseSpace > a {
-     background: url("../imgDesign/packFleche.png") no-repeat scroll 28px -2px transparent;
-     color: #616063;
-     padding: 4px 10px 4px 52px;
+  background: url("../imgDesign/packFleche.png") no-repeat scroll 28px -2px transparent;
+  color: #616063;
+  padding: 4px 10px 4px 52px;
 }
 
 #domainsBar .spaceLevel1On .contentSpace .contentSpace .spaceOn > a {
-     background: url("../imgDesign/packFleche.png") no-repeat scroll 28px -153px transparent;
-     color: #ed4d4d;
+  background: url("../imgDesign/packFleche.png") no-repeat scroll 28px -153px transparent;
+  color: #ed4d4d;
 }
 
 #domainsBar .spaceLevel1On .browseSpace .browseSpace .browseComponent a, #domainsBar .spaceLevel1On .browseSpace .browseSpace .browseComponentActiv a {
-     padding-left: 78px;
+  padding-left: 78px;
 }
 
 #domainsBar .spaceLevel1On .browseSpace .browseSpace .browseSpace > a {
-     background: url("../imgDesign/packFleche.png") no-repeat scroll 48px -2px transparent;
-     color: #616063;
-     padding: 4px 10px 4px 72px;
+  background: url("../imgDesign/packFleche.png") no-repeat scroll 48px -2px transparent;
+  color: #616063;
+  padding: 4px 10px 4px 72px;
 }
 
 #domainsBar .spaceLevel1On .contentSpace .contentSpace .contentSpace .spaceOn > a {
-     background: url("../imgDesign/packFleche.png") no-repeat scroll 48px -153px transparent;
-     color: #ed4d4d;
+  background: url("../imgDesign/packFleche.png") no-repeat scroll 48px -153px transparent;
+  color: #ed4d4d;
 }
 
 #domainsBar .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponent a, #domainsBar .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponentActiv a {
-     padding-left: 98px;
+  padding-left: 98px;
 }
 
 .spaceLevel1On .browseSpace .browseComponent a, .spaceLevel1On .browseSpace .browseComponentActiv a {
-     background: url("") repeat scroll 0% 0% transparent;
-     border: 0px none;
-     padding: 5px 10px 0px 52px;
-     text-transform: inherit;
+  background: url("") repeat scroll 0% 0% transparent;
+  border: 0px none;
+  padding: 5px 10px 0px 52px;
+  text-transform: inherit;
 }
 
 .spaceLevel1On .browseSpace .browseComponent img.browseIconComponent, .spaceLevel1On .browseSpace .browseComponentActiv img.browseIconComponent {
-     left: 29px;
-     top: 4px;
+  left: 29px;
+  top: 4px;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseComponent a, .spaceLevel1On .browseSpace .browseSpace .browseComponentActiv a {
-     background: url("") repeat scroll 0% 0% transparent;
-     border: 0px none;
-     padding: 5px 10px 0px 72px;
-     text-transform: inherit;
+  background: url("") repeat scroll 0% 0% transparent;
+  border: 0px none;
+  padding: 5px 10px 0px 72px;
+  text-transform: inherit;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseComponent img.browseIconComponent, .spaceLevel1On .browseSpace .browseSpace .browseComponentActiv img.browseIconComponent {
-     left: 50px;
-     top: 4px;
+  left: 50px;
+  top: 4px;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponent a, .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponentActiv a {
-     background: url("") repeat scroll 0% 0% transparent;
-     border: 0px none;
-     padding: 5px 10px 0px 92px;
-     text-transform: inherit;
+  background: url("") repeat scroll 0% 0% transparent;
+  border: 0px none;
+  padding: 5px 10px 0px 92px;
+  text-transform: inherit;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponent img.browseIconComponent, .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponentActiv img.browseIconComponent {
-     left: 70px;
-     top: 4px;
+  left: 70px;
+  top: 4px;
 }
 
 #spacePerso {
-     background:transparent url();
-	 border:0;
+  background:transparent url();
+  border:0;
 }
 
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL {
@@ -1245,105 +940,76 @@ a:hover {
 }
 
 #contentSpacespacePerso{
-	 padding-bottom:15px;
+  padding-bottom:15px;
 }
 
 
 #domainsBar #spacePerso .browseComponentActiv a {
-     color: #1C94D4;
-     font-weight: bold;
+  color: #1C94D4;
+  font-weight: bold;
 }
 
 #domainsBar #spacePerso .contentSpace {
-     background-color: transparent;
-     clear: both;
+  background-color: transparent;
+  clear: both;
 }
 
 #domainsBar #spacePerso .contentSpace .browseComponent {
-     text-align: left;
+  text-align: left;
 }
 
 #domainsBar #spacePerso .contentSpace a {
-     padding-left: 10px;
+  padding-left: 10px;
 }
 
-#domainsBar .milieuBoutonV5 a, .milieuBoutonV5 a {
-     color: #FFFFFF;
-}
-
-.sousOnglets, .milieuOngletOn a, .milieuOngletOff a:hover, .milieuOngletOn span {
-     background-color: #ed4d4d;
-     color: #FFFFFF;
-}
-
-.milieuOngletOn a {
-     color: #FFFFFF;
-     font-weight: 100;
-}
-
-.milieuOngletOff a,
-.milieuOngletOff span {
-     background-color: #D6D7D9;
-}
-
-.milieuOngletOff a {
-     color: #dfdfdf;
-}
-
-.milieuOngletOff a:hover {
-     color: #FFFFFF;
+.sousOnglets{
+  background-color: #ed4d4d;
+  color: #FFFFFF;
 }
 
 #topPage .yuimenu, #kmelia .yuimenu, #attachmentList .yuimenu {
-     background-color: #F2F2F2;
-     border: 1px solid #5D5D5E;
+  background-color: #F2F2F2;
+  border: 1px solid #5D5D5E;
 }
 
 #topPage .yuimenu ul, #kmelia .yuimenu ul, #attachmentList .yuimenu ul {
-     border-color: #5D5D5E;
+  border-color: #5D5D5E;
 }
 
 .yuimenu a, #portletPages .yuimenu a {
-     background-color: #F2F2F2;
-    
+  background-color: #F2F2F2;
 }
 
 .yuimenuitemlabel, .yuimenuitemlabel:visited, .yuimenubaritemlabel, .yuimenubaritemlabel:visited {
-	   color: #5D5D5E;
+  color: #5D5D5E;
 }
 
 .yuimenu .yuimenubaritem-selected, .yuimenu .yuimenuitem-selected {
-     background-color: #F2D5D8;
+  background-color: #F2D5D8;
 }
 
 .yuimenu a:hover, #portletPages .yuimenu a:hover {
-     background-color: #d01515;
-     border-color: #d01515;
-     color: #FFFFFF;
+  background-color: #d01515;
+  border-color: #d01515;
+  color: #FFFFFF;
 }
 
 #portletPages .list-responsible-user .action a:hover, .list-responsible-user .action a:hover {border-bottom:0}
 
-#blog #titresTopics a, #blog #titresArchives a, #blog #titresLiens a, .titreCouleur {
-     color: #444443;
-}
-
-.txtlibform, .textePetitBold {
-  color: #444444;
+#blog #titresTopics a, #blog #titresArchives a, #blog #titresLiens a, .titreCouleur,
+.txtlibform, .textePetitBold { 
+  color: #444;
 }
 
 #used_pdc .txtlibform, #used_pdc .textePetitBold {
   color: #FFF;
 }
 
-
-
 #myProfileFiche .action .link, #publicProfileFiche #contactCommun .link, #publicProfileFiche #allContact .link, .txtnav, .txtbigdate, .txttitrecol, #directory .link {
-     border-color: #EC8601;
-     color: #EC8601;
-     line-height: 12px;
+  border-color: #EC8601;
+  color: #EC8601;
+  line-height: 12px;
 }
-
 
 /************ TAILLE DES POLICES CENTRALISEE ***************/
 
@@ -1363,7 +1029,7 @@ a:hover {
 .txtBaseline,
 caption,
 Label, legend{
-     font-size:9pt;
+  font-size:9pt;
 }
 
 
@@ -1382,10 +1048,6 @@ Label, legend{
 #portletPages dl.sort ,
 #portletPages dl.sort dd,
 button.ui-button.ui-widget,
-.milieuBoutonV5 a,
-.milieuOngletOn a,
-.milieuOngletOff a,
-button,
 .ongletAdminOn .txtPetitBlanc,
 .ongletAdminOn strong,
 .yuimenu a , #portletPages .yuimenu a,
@@ -1444,27 +1106,27 @@ button,
 
 
 .ongletAdminOn span.textePetitBold, .ongletAdminOff span.txtPetitBlanc {
-	 font-weight:100;
+  font-weight:100;
 }
 .ArrayColumn, #classifieds .tableFrame #categories .categoryTitle, .tableArrayPane thead {
-     background-color: #D6D7D9;
-     color: #000000;
+  background-color: #D6D7D9;
+  color: #000000;
 }
 
 .ArrayColumn a {
-     color: #000000;
+  color: #000000;
 }
 
 .ArrayColumn a:hover {
-     color: #444444;
+  color: #444444;
 }
 
 .pageNav {
 }
 
 .pageNav .pageIndex {
-     background-color: transparent;
-     border-right: 1px solid #444443;
+  background-color: transparent;
+  border-right: 1px solid #444443;
 }
 
 .skinFieldset legend,
@@ -1472,45 +1134,45 @@ button,
 #profiles legend,
 #profil-groups-belong legend,
 .parameters legend{
-     padding-right: 20px;
-     background-color:#FFF !important;
-     border-radius:4px;
+  padding-right: 20px;
+  background-color:#FFF !important;
+  border-radius:4px;
 }
 
 .rightContent #dNdActionLabel {
-     color: #333333;
+  color: #333333;
 }
 
 #settings .txtlibform, #settings .textePetitBold, .pdcPosition h3, #blog #blogContainer #bandeau a, #backHomeBlog a {
-     color: #444443;
+  color: #444443;
 }
 
 #home-event .eventName a {
-     color: #FFF;
+  color: #FFF;
 }
 
 .eventMonth {
-     background-color: #FFFFFF;
-     color: #212322 ! important;
+  background-color: #FFFFFF;
+  color: #212322 ! important;
 }
 
 .eventsView #navigation {
-     background-color: transparent;
+  background-color: transparent;
 }
 
 #menubar-creation-actions, #attachment-creation-actions {
-     background-color: #FDF4EF;
-     border-bottom: 1px solid #EDBCBB;
-     border-top: 1px solid #EDBCBB;
+  background-color: #FDF4EF;
+  border-bottom: 1px solid #EDBCBB;
+  border-top: 1px solid #EDBCBB;
 }
 
 #menubar-creation-actions .menubar-creation-actions-item:hover, #attachment-creation-actions .menubar-creation-actions-item:hover {
-     background-color: #EDBCBB;
-     color: #00395A;
+  background-color: #EDBCBB;
+  color: #00395A;
 }
 
 #classified_contact_link {
-     width: 166px;
+  width: 166px;
 }
 
 /********************* ALMANACH PORTLET **************************/
@@ -1617,35 +1279,35 @@ button,
 }
 
 .spaceHome .spaceDescription {
-     border-left: 6px solid #E4E4E4;
-     color: #dfdfdf;
-     padding: 8px;
+  border-left: 6px solid #E4E4E4;
+  color: #dfdfdf;
+  padding: 8px;
 }
 
 
 .spaceHome .spaceNavigation li.browse-space a {
-     background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px -10px transparent;
-     padding-left: 38px;
+  background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px -10px transparent;
+  padding-left: 38px;
 }
 
 .spaceHome .spaceNavigation li p {
-     padding-left: 38px;
+  padding-left: 38px;
 }
 
 .spaceHome .spaceNavigation li.browse-component p {
-     padding-left: 0;
+  padding-left: 0;
 }
 .spaceHome #spaceManager h2.portlet-title {
-     color: #FFF;
+  color: #FFF;
 }
 
 .spaceHome #spaceManager ul {
-     list-style: none outside none;
-     padding: 0px;
+  list-style: none outside none;
+  padding: 0px;
 }
 
 .spaceHome #spaceManager .intfdcolor {
-     background-color: transparent;
+  background-color: transparent;
 }
 
 .spaceHome .rightContent {
@@ -1666,47 +1328,47 @@ button,
 }
 
 .spaceHome #spaceEvent h2.portlet-title, .spaceHome #spaceQuiskInfo h2.portlet-title {
-     color: #FFF;
+  color: #FFF;
 }
 
 .spaceHome #publication .bgDegradeGris, .spaceHome #publication.bgDegradeGris {
-     background: none repeat scroll 0% 0% transparent;
-     border: 0px none;
-     margin: 0px;
-     padding: 0px;
-	 behavior: none;
+  background: none repeat scroll 0% 0% transparent;
+  border: 0px none;
+  margin: 0px;
+  padding: 0px;
+  behavior: none;
 }
 
 .spaceHome #publication.bgDegradeGris {
-     border-radius: 0px;
-     border-top: 2px dotted #E4E4E4;
-     margin-top: 2em;
-     padding-top: 1em;
-	 behavior: none;
+  border-radius: 0px;
+  border-top: 2px dotted #E4E4E4;
+  margin-top: 2em;
+  padding-top: 1em;
+  behavior: none;
 }
 
 .spaceHome #publication .header h4 {
-     color: #FFF;
-     font-weight: 100;
-     margin: 0px;
-     padding: 0px;
+  color: #FFF;
+  font-weight: 100;
+  margin: 0px;
+  padding: 0px;
 }
 
 .header h4 {
-    font-size: 100%;
+  font-size: 100%;
 }
 
 .spaceHome #publication li,
 .last-publication-list li {
-     list-style-image: url("../imgDesign/puce.png");
+  list-style-image: url("../imgDesign/puce.png");
 }
 .spaceHome #publication li a:hover,
 .last-publication-list li  a:hover{
-    background-color:#F0F0F0;
+  background-color:#000;
 }
 .spaceHome #publication li a:hover b,
 .last-publication-list li  a:hover b{
-    color:#333;
+  color:#333;
 }
 
 .spaceHome #publication li a b,
@@ -1721,45 +1383,47 @@ button,
 
 .spaceHome #publication li .userToZoom ,
 .last-publication-list li .userToZoom {
-     color: #FFF;
+  color: #FFF;
 }
 
 .spaceHome #spaceQuiskInfo li.slide {
-     min-height: 135px;
+  min-height: 135px;
 }
 
 .spaceHome #spaceQuiskInfo li.slide > h4 {
-     color: #EC7501;
-     font-weight: 100;
-     line-height: 120%;
+  color: #EC7501;
+  font-weight: 100;
+  line-height: 120%;
 }
 
 .spaceHome #spaceQuiskInfo li.slide p {
-     line-height: 110%;
+  line-height: 110%;
 }
 
 .spaceHome #spaceQuiskInfo .slides-pagination a:hover, .spaceHome #spaceQuiskInfo .slides-pagination .selected a {
-     background-color: #EC7501;
+  background-color: #EC7501;
 }
 
 .spaceHome .list-responsible-user li {
-     width: auto;
+  width: auto;
 }
-
+h1.spaceName {
+  color:#FFF;
+}
 .btn-deploy-all-item, #dynamicalLoad, #displaying, #displaying a {width:auto}
 #displaying {width:228px;}
-
-
-#advanced-search form .milieuBoutonV5 a,
-#globalResult form .milieuBoutonV5 a,
-#directory form .milieuBoutonV5 a{
-	 padding: 1px 10px;
-	 font-size:9pt !important;
-}
 
 #admin-treeview .intfdcolor51,
 #admin-treeview .intfdcolor13,
 #admin-treeview .intfdcolor4,
 #admin-treeview .intfdcolor{
   background-color:transparent;
+}
+
+#directory #indexAndSearch {
+    background: #EAEAEA url() bottom left no-repeat;
+}
+
+.txt-no-content {
+  color:#FFF;
 }
