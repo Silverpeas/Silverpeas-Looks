@@ -335,7 +335,11 @@ $(document).ready(function() {
             <c:forEach var="news" items="${listOfNews}">
               <li>
                 <a href="${news.permalink}">
+		<% if (news.getPublication().getThumbnail() != null) { %>
                   <view:image src="${news.publication.thumbnail.URL}" alt="" size="${newsImageSize}"/>
+		<% } else { %>
+		  <view:image src="/look/jsp/imgDesign/emptyNews.png" size="<%=newsSize%>"/>
+		<% } %>
                 </a>
                 <div class="caption">
                   <h2><a href="${news.permalink}">${news.title}</a></h2>
