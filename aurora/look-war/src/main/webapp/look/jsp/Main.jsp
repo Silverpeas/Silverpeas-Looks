@@ -184,6 +184,7 @@ $(document).ready(function() {
 </head>
 <body>
 <div class="main-container">
+
             <div class="main wrapper clearfix">
                <div class="right-main-container">
                		<% if (nextEvents != null && !nextEvents.isEmpty()) { %>
@@ -354,7 +355,11 @@ $(document).ready(function() {
 					<% for (News news : listOfNews) { %>
 						<li>
 						  <a href="<%=news.getPermalink()%>">
+							<% if (news.getPublication().getThumbnail() != null) { %>
 							  <view:image src="<%=news.getPublication().getThumbnail().getURL() %>" alt="" size="<%=newsSize%>"/>
+							<% } else { %>
+							  <view:image src="/look/jsp/imgDesign/emptyNews.png" size="<%=newsSize%>"/>
+							<% } %>
 						  </a>
 						  <div class="caption">
 							<h2><a href="<%=news.getPermalink()%>"><%=news.getTitle() %></a></h2>
@@ -385,4 +390,5 @@ $(document).ready(function() {
             </div> <!-- #main -->
         </div>
 </body>
+
 </html>
