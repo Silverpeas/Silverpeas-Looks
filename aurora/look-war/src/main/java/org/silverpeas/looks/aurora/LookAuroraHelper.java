@@ -133,7 +133,20 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   public String getLoginHomePage() {
-    return getSettings("loginHomepage", URLManager.getApplicationURL()+"/sdis84/jsp/Main.jsp");
+    if (userCanDisplayMainHomePage()) {
+      return getSettings("loginHomepage", URLManager.getApplicationURL()+"/look/jsp/Main.jsp");
+    } else {
+      return URLManager.getApplicationURL() + "/look/jsp/frameBottom.jsp?SpaceId=" + getBannerMainItems().get(0).getSpace().getFullId();
+    }
+  }
+
+  public boolean userCanDisplayMainHomePage() {
+    boolean accessMainHome = true;
+    List<News> news = getNews();
+    if (!news.isEmpty()) {
+      accessMainHome = news.get(0).getPublication().canBeAccessedBy(getUserDetail());
+    }
+    return accessMainHome;
   }
 
   public Zoom getZoom() throws RemoteException {
