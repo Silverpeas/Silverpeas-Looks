@@ -118,6 +118,11 @@ function showWeather(woeid) {
 				var day = $(this).attr('day');
 				var low = $(this).attr('low');
 				var high = $(this).attr('high');
+
+				// Convert F to C°
+				low = Math.round((low - 32) / 1.8);
+				high = Math.round((high - 32) / 1.8);
+
 				var code = $(this).attr('code');
 				$('#day'+numeroJour+' .temperature .min').html("min "+low+"&deg;");
 				$('#day'+numeroJour+' .temperature .max').html("max "+high+"&deg;");
