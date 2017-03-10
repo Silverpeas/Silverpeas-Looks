@@ -29,6 +29,7 @@
 <%@ page import="org.silverpeas.core.web.look.LookHelper"%>
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
@@ -80,6 +81,10 @@ String loginHomepage = helper.getSettings("loginHomepage", "");
 if (StringUtil.isDefined(loginHomepage) && StringUtil.isDefined(login) &&
     (!StringUtil.isDefined(spaceId) && !StringUtil.isDefined(subSpaceId) && !StringUtil.isDefined(componentId) && !StringUtil.isDefined(strGoToNew))) {
 	displayLoginHomepage = true;
+}
+
+if (displayLoginHomepage) {
+  displayLoginHomepage = ((LookAuroraHelper) helper).isUserCanDisplayMainHomePage();
 }
 
 String frameURL = "";

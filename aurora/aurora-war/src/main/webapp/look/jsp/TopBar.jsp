@@ -278,9 +278,10 @@ $(document).ready(function() {
     </div>
     <div id="nav">
       <ul id="main-menu" class="sm ${smartmenusSkin} displayMenuAppIcons-${settings.displayMenuAppIcons}">
-      	<li class="selected">
-        	<a href="javascript:goToHome();"><span>${labelHome}</span></a>
-        </li>
+      	<c:if test="${lookHelper.userCanDisplayMainHomePage}">
+          <li class="selected"><a href="javascript:goToHome();"><span>${labelHome}</span></a></li>
+        </c:if>
+
         <c:forEach var="item" items="${mainItems}">
           <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}" displayAppIcon="${settings.displayMenuAppIcons}" callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"/>
         </c:forEach>
