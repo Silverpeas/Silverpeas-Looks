@@ -277,9 +277,11 @@ body {
     </div>
     <div id="nav">
       <ul>
-      	<li>
+      	<% if (helper.userCanDisplayMainHomePage()) { %>
+        <li>
         	<div class="selected"> <a href="#" onclick="javaScript:goToHome();"><span><%=helper.getString("look.banner.home") %></span></a> </div>
         </li>
+        <% } %>
         <% for (BannerMainItem item : mainItems) { %>
         <li id="<%=item.getSpace().getFullId()%>"> 
         	<div>
