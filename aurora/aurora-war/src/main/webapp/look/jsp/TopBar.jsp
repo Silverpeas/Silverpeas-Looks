@@ -41,8 +41,9 @@
 
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
 
+<view:includePlugin name="userSession"/>
 <view:includePlugin name="ticker" />
-<view:loadScript src="/util/javaScript/lookV5/connectedUsers.js" jsPromiseName="connectedUsersPromise"/>
+
 <view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise"/>
 <link href="css/sm-core-css.css" rel="stylesheet" type="text/css" />
 <link href='css/${smartmenusSkin}/${smartmenusSkin}.css' rel='stylesheet' type='text/css' />
@@ -117,19 +118,6 @@ function goToProject(projectSpaceId) {
   goToSpace(projectSpaceId)
 }
 
-function setConnectedUsers(nb) {
-	if (nb <= 0) {
-		$("#connectedUsers").hide();
-	} else {
-		var label = " ${labelConnectedUsers}";
-		if (nb == 1) {
-		    label = " ${labelConnectedUser}";
-		}
-		$("#connectedUsers").show();
-		$("#connectedUsers a").text(nb + label);
-	}
-}
-
 function searchEngine() {
   if (document.searchForm.query.value !== "") {
     executeSearchActionToBodyPartTarget("AdvancedSearch", true);
@@ -155,8 +143,6 @@ $(document).ready(function() {
   <c:if test="${silfn:isDefined(currentHeading)}">
     selectHeading('${currentHeading}');
   </c:if>
-
-	setConnectedUsers(${lookHelper.NBConnectedUsers});
 
   $('#show-menu-spacePerso').hover(function() {
 		 $('.spacePerso').show();
@@ -202,6 +188,23 @@ $(document).ready(function() {
 				}
 			});
 
+});
+
+window.USERSESSION_PROMISE.then(function() {
+  spUserSession.addEventListener('connectedUsersChanged', function(event) {
+    var nb = event.detail.data.nb;
+    var $container = jQuery("#connectedUsers");
+    if (nb <= 0) {
+      $container.hide();
+    } else {
+      var label = " ${labelConnectedUsers}";
+      if (nb === 1) {
+        label = " ${labelConnectedUser}";
+      }
+      $container.show();
+      jQuery("a", $container).text(nb + label);
+    }
+  });
 });
 </script>
 <viewTags:displayTicker/>
