@@ -335,7 +335,14 @@ $(document).ready(function() {
             <c:forEach var="news" items="${listOfNews}">
               <li>
                 <a href="${news.permalink}">
-                  <view:image src="${news.publication.thumbnail.URL}" alt="" size="${newsImageSize}"/>
+                  <c:choose>
+                    <c:when test="${not empty news.publication.thumbnail}">
+                      <view:image src="${news.publication.thumbnail.URL}" alt="" size="${newsImageSize}"/>
+                    </c:when>
+                    <c:otherwise>
+                      <view:image src="/look/jsp/imgDesign/emptyNews.png" alt="" />
+                    </c:otherwise>
+                  </c:choose>
                 </a>
                 <div class="caption">
                   <h2><a href="${news.permalink}">${news.title}</a></h2>
