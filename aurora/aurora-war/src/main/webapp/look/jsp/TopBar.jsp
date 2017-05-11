@@ -36,7 +36,6 @@
 <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
 <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
 
-<c:url var="urlLogout" value="/LogoutServlet"/>
 <c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
 
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
@@ -110,7 +109,7 @@ function goToPersonalSpace() {
 
 function goToApplication(url) {
 	unselectHeadings();
-  changeBody(url);
+  changeBody(webContext+url);
 }
 
 function goToProject(projectSpaceId) {
@@ -224,7 +223,7 @@ window.USERSESSION_PROMISE.then(function() {
               <li><a id="link-settings" href="javascript:changeBody(webContext+'/RMyProfil/jsp/MySettings')">${labelProfileSettings}</a> </li>
               <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
               <li><a id="link-feed" href="javascript:changeBody(webContext+'/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
-              <li><a id="link-logout" id="logOut-link" target="_top" href="${urlLogout}">${labelLogout}</a> </li>
+              <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
             </ul>
           </div>
         </div>
@@ -259,7 +258,7 @@ window.USERSESSION_PROMISE.then(function() {
       </div>
       <ul id="outils">
         <c:if test="${settings.displayConnectedUsers}">
-          <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#">X autres utilisateurs connectés</a></li>
+          <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#"></a></li>
         </c:if>
         <li id="map-link-header"><a href="javascript:changeBody(webContext+'/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
         <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>

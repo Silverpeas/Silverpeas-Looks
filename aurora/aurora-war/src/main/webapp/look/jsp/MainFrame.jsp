@@ -5,6 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
+<%@ taglib tagdir="/WEB-INF/tags/silverpeas/chat" prefix="chatTags" %>
 
 <%
 	response.setHeader( "Expires", "Tue, 21 Dec 1993 23:59:59 GMT" );
@@ -170,6 +171,7 @@ if (m_MainSessionCtrl == null) {
   <iframe src="<c:url value='/Ragenda/jsp/importCalendar'/>" name="importFrame" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
 </div>
 
+<view:progressMessage/>
 <script type="text/javascript">
   (function() {
     if (!top.window.mainFrameOnLoad) {
@@ -188,6 +190,6 @@ if (m_MainSessionCtrl == null) {
     });
   })();
 </script>
-<view:progressMessage/>
+<chatTags:silverChatInitialization/>
 </body>
 </html>
