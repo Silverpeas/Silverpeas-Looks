@@ -20,6 +20,7 @@
 <c:set var="someBookmarks" value="${not empty bookmarks}"/>
 <c:set var="showBookmarksAreaWhenEmpty" value="${settings.displayBookmarksAreaWhenEmpty}"/>
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
+<c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
 <c:set var="now" value="<%=new java.util.Date()%>" />
 
@@ -168,7 +169,9 @@ $(document).ready(function() {
     showWeather(woeid);
 	</c:if>
 	
-	$('#used_pdc').pdc('used');
+	$('#used_pdc').pdc('used', {
+	  labelInsideSelect : ${labelInsideSelectOnTaxonomy}
+  });
 });
 </script>
 </head>

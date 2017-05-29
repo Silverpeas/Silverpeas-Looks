@@ -91,4 +91,8 @@ public class LookSettings {
     return settings.getBoolean("displayPDCFrame", false);
   }
 
+  public boolean isLabelsInsideSelectOnTaxonomy() {
+    return settings.getBoolean("home.search.taxonomy.labelsInside", false);
+  }
+
 }
