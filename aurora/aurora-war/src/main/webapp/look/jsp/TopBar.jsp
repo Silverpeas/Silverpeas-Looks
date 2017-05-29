@@ -36,11 +36,16 @@
 <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
 <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
 
+<fmt:message var="labelUserNotifications" key="look.banner.notifications"/>
+<fmt:message var="labelUnreadUserNotification" key="look.banner.notifications.unread.one"/>
+<fmt:message var="labelUnreadUserNotifications" key="look.banner.notifications.unread.many"/>
+
 <c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
 
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
 
 <view:includePlugin name="userSession"/>
+<view:includePlugin name="userNotification"/>
 <view:includePlugin name="ticker" />
 
 <view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise"/>
@@ -161,33 +166,24 @@ $(document).ready(function() {
     });
   });
   </c:if>
-
-	$.getJSON(webContext+"/PersonalSpace?Action=GetTools&IEFix="+new Date().getTime(),
-			function(data){
-				try {
-					// display tools
-					for (var i = 0; i < data.length; ++i) {
-		                var tool = data[i];
-		                if (tool.id === "notification") {
-		                	if (tool.nb === 0) {
-		                		$("#notification-count").hide();
-		                	} else {
-		                		$("#notification-count span").text(tool.nb);
-		                		if (tool.nb === 1) {
-		                			$("#notification-label").text("notification");
-		                		} else {
-		                			$("#notification-label").text("notifications");
-		                		}
-		                	}
-		                }
-					}
-				} catch (e) {
-					//do nothing
-					alert("ici "+e);
-				}
-			});
-
 });
+
+window.USERNOTIFICATION_PROMISE.then(function() {
+  var $container = jQuery("#notification-count");
+  spUserNotification.addEventListener('unreadUserNotificationsChanged', function(event) {
+    var unreadUserNotificationCount = event.detail.data.nbUnread;
+    $container.show();
+    var label = unreadUserNotificationCount + " ${labelUnreadUserNotifications}";
+    if (unreadUserNotificationCount === 1) {
+      label = unreadUserNotificationCount + " ${labelUnreadUserNotification}";
+    } else if (unreadUserNotificationCount === 0) {
+      label = "${labelUserNotifications}";
+      $container.hide();
+    }
+    jQuery("a", $container).text(label);
+  }, 'unreadUserNotificationsChanged@TopBar');
+});
+
 
 window.USERSESSION_PROMISE.then(function() {
   spUserSession.addEventListener('connectedUsersChanged', function(event) {
@@ -228,7 +224,7 @@ window.USERSESSION_PROMISE.then(function() {
           </div>
         </div>
         
-        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody(webContext+'/RSILVERMAIL/jsp/Main')"><span>...</span> <span id="notification-label">notifications</span></a> </div>
+        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody(webContext+'/RSILVERMAIL/jsp/Main')"></a> </div>
 
         <c:if test="${not empty projects}">
         <div class="btn-header">
@@ -258,7 +254,7 @@ window.USERSESSION_PROMISE.then(function() {
       </div>
       <ul id="outils">
         <c:if test="${settings.displayConnectedUsers}">
-          <li id="connectedUsers"><a onclick="openConnectedUsers();" href="#"></a></li>
+          <li id="connectedUsers"><a onclick="javascript:onClick=spUserSession.viewConnectedUsers();" href="#"></a></li>
         </c:if>
         <li id="map-link-header"><a href="javascript:changeBody(webContext+'/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
         <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
