@@ -116,6 +116,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
   }
 
+  public boolean isUserCanDisplayMainHomePage() {
+    boolean accessMainHome = true;
+    List<News> news = getNews();
+    if (!news.isEmpty()) {
+      accessMainHome = news.get(0).getPublication().canBeAccessedBy(getUserDetail());
+    }
+    return accessMainHome;
+  }
+
   public List<Shortcut> getMainShortcuts() {
     return getShortcuts("home");
   }
