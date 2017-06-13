@@ -279,7 +279,7 @@ window.USERSESSION_PROMISE.then(function() {
     <div id="nav">
       <ul id="main-menu" class="sm ${smartmenusSkin} displayMenuAppIcons-${settings.displayMenuAppIcons}">
         <c:if test="${lookHelper.userCanDisplayMainHomePage}">
-          <li class="selected">
+          <li class="selected" id="home">
             <a href="javascript:goToHome();"><span>${labelHome}</span></a>
           </li>
         </c:if>
