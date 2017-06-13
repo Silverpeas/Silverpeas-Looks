@@ -27,8 +27,8 @@
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ page import="org.silverpeas.core.web.look.LookHelper"%>
-<%@ page import="org.silverpeas.core.util.StringUtil" %>
-<%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
+<%@ page import="org.silverpeas.looks.aurora.BodyPartSettings" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
@@ -40,77 +40,13 @@
 <fmt:message var="redExtLabel" key="look.layout.reduce" />
 
 <%
-String strGoToNew 	= (String) session.getAttribute("gotoNew");
-String spaceId 		= request.getParameter("SpaceId");
-String subSpaceId 	= request.getParameter("SubSpaceId");
-String fromTopBar 	= request.getParameter("FromTopBar");
-String componentId	= request.getParameter("ComponentId");
-String login		= request.getParameter("Login");
+  LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
+  String navigationWidth = helper.getSettings("domainsBarFramesetWidth", "260") + "px";
 
-String fromMySpace 	= request.getParameter("FromMySpace");
-
-LookHelper helper = LookHelper.getLookHelper(session);
-
-String navigationWidth = helper.getSettings("domainsBarFramesetWidth", "260") + "px";
-
-  StringBuilder paramsForDomainsBar = new StringBuilder().append("{");
-  if ("1".equals(request.getParameter("FromTopBar"))) {
-    if (spaceId != null) {
-      paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("', privateSubDomain:'")
-          .append(subSpaceId).append("', FromTopBar:'1'");
-    }
-  } else if (componentId != null) {
-    paramsForDomainsBar.append("privateDomain:'', component_id:'").append(componentId).append("'");
-  } else {
-    paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("'");
-  }
-
-  if ("1".equals(fromMySpace)) {
-    paramsForDomainsBar.append(",FromMySpace:'1'");
-  }
-
-  if (StringUtil.isDefined(strGoToNew) || StringUtil.isDefined(spaceId) || StringUtil.isDefined(subSpaceId) || StringUtil.isDefined(componentId)) {
-    // ignore login page when try to access a direct resource
-    login = null;
-  }
-
-//Allow to force a page only on login and when user clicks on logo
-boolean displayLoginHomepage = false;
-String loginHomepage = helper.getSettings("loginHomepage", "");
-if (StringUtil.isDefined(loginHomepage) && StringUtil.isDefined(login) &&
-    (!StringUtil.isDefined(spaceId) && !StringUtil.isDefined(subSpaceId) && !StringUtil.isDefined(componentId) && !StringUtil.isDefined(strGoToNew))) {
-	displayLoginHomepage = true;
-}
-
-String frameURL = "";
-if (displayLoginHomepage) {
-	frameURL = loginHomepage;
-  navigationWidth = "0px";
-} else if (strGoToNew == null) {
-	if (StringUtil.isDefined(componentId)) {
-		frameURL = URLUtil.getApplicationURL()+ URLUtil.getURL(null, componentId)+"Main";
-	} else {
-		String homePage = helper.getSettings("defaultHomepage", "/dt");
-		String param = "";
-		if (StringUtil.isDefined(spaceId)) {
-		    param = "?SpaceId=" + spaceId;
-		}
-		frameURL = URLUtil.getApplicationURL()+homePage+param;
-	}
-} else {
-    frameURL = URLUtil.getApplicationURL()+strGoToNew;
-    if(strGoToNew.startsWith(URLUtil.getApplicationURL())) {
-      frameURL = strGoToNew;
-    }
-}
-
-session.removeAttribute("goto");
-session.removeAttribute("gotoNew");
-session.removeAttribute("RedirectToComponentId");
-session.removeAttribute("RedirectToSpaceId");
-
-  boolean hideMenu = "1".equals(fromTopBar) || "1".equals(login);
-  if (hideMenu) {
+  BodyPartSettings bodyPartSettings = helper.getBodyPartSettings(request);
+  String paramsForDomainsBar = bodyPartSettings.getDomainsBarParams();
+  String frameURL = bodyPartSettings.getMainPartURL();
+  if (bodyPartSettings.isHideMenu()) {
     navigationWidth = "0px";
   }
 %>
@@ -160,7 +96,7 @@ session.removeAttribute("RedirectToSpaceId");
   (function() {
     // bodyPart Aurora
     spLayout.getBody().ready(function() {
-      spLayout.getBody().getNavigation().load(<%=paramsForDomainsBar.append('}')%>);
+      spLayout.getBody().getNavigation().load(<%=paramsForDomainsBar%>);
     });
   })();
 </script>

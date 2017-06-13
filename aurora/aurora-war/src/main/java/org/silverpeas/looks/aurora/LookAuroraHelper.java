@@ -19,13 +19,19 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
 import org.silverpeas.core.mylinks.service.MyLinksService;
-import org.silverpeas.core.util.*;
+import org.silverpeas.core.util.CollectionUtil;
+import org.silverpeas.core.util.DateUtil;
+import org.silverpeas.core.util.LocalizationBundle;
+import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.core.util.StringUtil;
+import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
 import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.look.Shortcut;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +69,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public List<BannerMainItem> getBannerMainItems() {
     String param = getSettings("banner.spaces", null);
     if (param != null) {
-      List<BannerMainItem> items = new ArrayList<BannerMainItem>();
+      List<BannerMainItem> items = new ArrayList<>();
       OrganizationController oc = getOrganisationController();
       String[] spaceIds = StringUtil.split(param);
       for (String spaceId : spaceIds) {
@@ -393,5 +399,100 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private boolean isComponentAvailable(String componentId) {
     return getOrganisationController().isComponentAvailable(componentId, getUserId());
+  }
+
+  public BodyPartSettings getBodyPartSettings(HttpServletRequest request) {
+    BodyPartSettings bodyPartSettings = new BodyPartSettings();
+
+    HttpSession session = request.getSession();
+    String strGoToNew = (String) session.getAttribute("gotoNew");
+    String spaceId = request.getParameter("SpaceId");
+    String subSpaceId = request.getParameter("SubSpaceId");
+    String fromTopBar = request.getParameter("FromTopBar");
+    String componentId = request.getParameter("ComponentId");
+    String login = request.getParameter("Login");
+    String fromMySpace 	= request.getParameter("FromMySpace");
+
+    if (StringUtil.isDefined(strGoToNew) || StringUtil.isDefined(spaceId) ||
+        StringUtil.isDefined(subSpaceId) || StringUtil.isDefined(componentId)) {
+      // ignore login page when try to access a direct resource
+      login = null;
+    }
+
+    //Allow to force a page only on login and when user clicks on logo
+    boolean displayLoginHomepage = false;
+    String loginHomepage = getSettings("loginHomepage", "");
+    if (StringUtil.isDefined(loginHomepage) && StringUtil.isDefined(login) &&
+        !StringUtil.isDefined(spaceId) && !StringUtil.isDefined(subSpaceId) &&
+        !StringUtil.isDefined(componentId) && !StringUtil.isDefined(strGoToNew)) {
+      displayLoginHomepage = true;
+
+      if (!isUserCanDisplayMainHomePage()) {
+        spaceId = getBannerMainItems().get(0).getSpace().getId();
+        displayLoginHomepage = false;
+        login = null;
+      }
+    }
+
+    StringBuilder paramsForDomainsBar = new StringBuilder().append("{");
+    if ("1".equals(fromTopBar)) {
+      if (spaceId != null) {
+        paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("', privateSubDomain:'")
+            .append(subSpaceId).append("', FromTopBar:'1'");
+      }
+    } else if (componentId != null) {
+      paramsForDomainsBar.append("privateDomain:'', component_id:'").append(componentId).append("'");
+    } else {
+      paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("'");
+    }
+    if ("1".equals(fromMySpace)) {
+      paramsForDomainsBar.append(",FromMySpace:'1'");
+    }
+    paramsForDomainsBar.append('}');
+
+    String webContext = URLUtil.getApplicationURL();
+    String frameURL = "";
+    if (displayLoginHomepage) {
+      frameURL = loginHomepage;
+      bodyPartSettings.setHideMenu(true);
+    } else if (strGoToNew == null) {
+      if (StringUtil.isDefined(componentId)) {
+        frameURL = webContext + URLUtil.getURL(null, componentId)+"Main";
+      } else {
+        String homePage = getSettings("defaultHomepage", "/dt");
+        String param = "";
+        if (StringUtil.isDefined(spaceId)) {
+          param = "?SpaceId=" + spaceId;
+        }
+        frameURL = webContext+homePage+param;
+      }
+    } else {
+      frameURL = webContext+strGoToNew;
+      if(strGoToNew.startsWith(webContext)) {
+        frameURL = strGoToNew;
+      }
+    }
+
+    session.removeAttribute("goto");
+    session.removeAttribute("gotoNew");
+    session.removeAttribute("RedirectToComponentId");
+    session.removeAttribute("RedirectToSpaceId");
+
+    boolean hideMenu = "1".equals(fromTopBar) || "1".equals(login);
+    if (hideMenu) {
+      bodyPartSettings.setHideMenu(true);
+    }
+
+    bodyPartSettings.setDomainsBarParams(paramsForDomainsBar.toString());
+    bodyPartSettings.setMainPartURL(frameURL);
+    return bodyPartSettings;
+  }
+
+  public boolean isUserCanDisplayMainHomePage() {
+    if (getSettings("home.displayedWhenNoNews", true) || getUserDetail().isAccessAdmin()) {
+      return true;
+    }
+    List<News> news = getNews();
+    return !news.isEmpty();
   }
 }
