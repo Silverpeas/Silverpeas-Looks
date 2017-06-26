@@ -262,7 +262,7 @@ window.USERSESSION_PROMISE.then(function() {
           <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
         </c:if>
         <c:if test="${lookHelper.backOfficeVisible}">
-          <li id="adminstration-link-header"> <a target="_top" href="${urlAdmin}">${labelBackoffice}</a></li>
+          <li id="adminstration-link-header"> <a target="_top" href="${urlAdmin}" title="${labelBackoffice}">${labelBackoffice}</a></li>
         </c:if>
       </ul>
       <div id="search-zone-header">
@@ -272,8 +272,8 @@ window.USERSESSION_PROMISE.then(function() {
           <input type="hidden" value="clear" name="mode"/>
           <a href="javascript:searchEngine()">Go</a>
         </form>
-        <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()"><span>${labelSearchResults}</span></a>
-        <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()"><span>${labelSearchAdvanced}</span></a>
+        <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()" title="${labelSearchResults}"><span>${labelSearchResults}</span></a>
+        <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
       </div>
     </div>
     <div id="nav">
