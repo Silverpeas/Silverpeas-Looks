@@ -254,25 +254,28 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<NextEventsDate> getNextEvents() {
-    return getNextEvents(true, getAlmanachIds());
-  }
-  
-  private List<NextEventsDate> getNextEvents(boolean fetchOnlyImportant, String... almanachIds) {
+    String[] almanachIds = StringUtil.split(getSettings("home.events.appId", ""), ' ');
+
     List<NextEventsDate> result = new ArrayList<NextEventsDate>();
 
     // get allowed components first
     String[] allowedComponentIds = getAllowedComponents(almanachIds).toArray(new String[0]);
-    if (allowedComponentIds != null && allowedComponentIds.length > 0) {
+    if (allowedComponentIds.length > 0) {
       List<EventOccurrence> events = getAlmanachBm().getNextEventOccurrences(allowedComponentIds);
       Date today = new Date();
       Date date = null;
       NextEventsDate nextEventsDate = null;
+      int nbDays = getSettings("home.events.maxDays", 2);
+      boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
       for (EventOccurrence event : events) {
         if (!fetchOnlyImportant || (fetchOnlyImportant && event.isPriority())) {
           Date eventDate = event.getStartDate().asDate();
           if (DateUtil.compareTo(today, eventDate, true) != 0) {
             if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
               nextEventsDate = new NextEventsDate(eventDate);
+              if (result.size() == nbDays) {
+                return result;
+              }
               result.add(nextEventsDate);
               date = eventDate;
             }
@@ -296,11 +299,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   
   private AlmanachService getAlmanachBm() {
     return AlmanachService.get();
-  }
-  
-  private String[] getAlmanachIds() {
-    String[] almanachIds = {getSettings("home.events.appId", "")};
-    return almanachIds;
   }
   
   private PublicationHelper getPublicationHelper() throws ClassNotFoundException,

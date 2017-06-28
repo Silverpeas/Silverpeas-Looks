@@ -192,7 +192,7 @@ $(document).ready(function() {
                   <div class="eventLongDate"><fmt:formatDate value="${date.date}" pattern="EEEE dd MMMM yyyy"/></div>
                   <c:forEach var="eventOccurence" items="${date.events}">
                     <c:set var="event" value="${eventOccurence.eventDetail}"/>
-                    <div class="event">
+                    <div class="event eventFrom-${event.instanceId}">
                       <div class="eventName"> > <a href="${event.permalink}">${event.name}</a>
                         <span class="clock-events">
                         <c:if test="${silfn:isDefined(event.startHour)}">
