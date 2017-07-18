@@ -1205,3 +1205,42 @@ padding-left:1em;
 	top: 36%;
 	margin-top:0;
 }
+
+/*********** News as list *******************/
+#carrousel-actualite .list-news {
+  padding:0;
+  height:auto
+}
+
+#carrousel-actualite .list-news li {
+  width:100%;
+  height:100px;
+}
+
+#carrousel-actualite .list-news li img{
+  width: 200px;
+  float: left;
+}
+
+#carrousel-actualite .list-news .caption {
+  margin-left: 206px;
+  margin-right: 50px;
+}
+
+#carrousel-actualite .list-news .caption h2 a,
+#carrousel-actualite .list-news .caption p{
+  color:#444;
+  font-size:13px;
+  font-weight:100;
+}
+#carrousel-actualite .list-news .caption h2 a {
+  font-size:16px;
+  font-weight:bold;
+}
+#carrousel-actualite .list-news .caption h2 {
+  margin: 0px;
+}
+
+#carrousel-actualite .list-news .caption .news-date:after {
+  content: " - ";
+}

@@ -22,6 +22,11 @@
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
 <c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
+<c:set var="newsClass" value="list-news"/>
+<c:set var="newsWithCarrousel" value="${settings.displayNewsWithCarrousel}"/>
+<c:if test="${newsWithCarrousel}">
+  <c:set var="newsClass" value="rslides"/>
+</c:if>
 <c:set var="now" value="<%=new java.util.Date()%>" />
 
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
@@ -47,8 +52,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Homepage</title>
-<link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
+<c:if test="${newsWithCarrousel}">
+  <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
+</c:if>
 <view:looknfeel/>
 <view:includePlugin name="pdc" />
 <view:includePlugin name="popup"/>
@@ -150,6 +157,7 @@ $(document).ready(function() {
 
   $("#ephemeride").html(ephemeris.getTodayEphemerisName());
 
+  <c:if test="${newsWithCarrousel}">
 	$("#slider").responsiveSlides({
         auto: true,
         pager: false,
@@ -159,7 +167,8 @@ $(document).ready(function() {
         timeout: 6000,
         namespace: "centered-btns"
     });
-	
+  </c:if>
+
 	<c:if test="${showWeather}">
     // init weather
     var woeid = $.cookie(weatherCookieName);
@@ -243,7 +252,7 @@ $(document).ready(function() {
 					
       <c:if test="${showEphemeris}">
 			  <div class="secteur-container weather" id="weather-home">
-				  <h4><span class="title">${labelWeather}</span><span class="date-today"><fmt:formatDate value="${now}" pattern="dd MMM yyyy"/></span></h4>
+				  <h4><span class="title">${labelWeather}</span><span class="date-today"> <fmt:formatDate value="${now}" pattern="dd MMMMM yyyy"/></span></h4>
 					<div id="ephemeride">Brigitte</div>
           <c:if test="${showWeather}">
 				    <div id="localisation-weather"> <span class="label">&Agrave; : </span>
@@ -334,7 +343,7 @@ $(document).ready(function() {
 
 			<c:if test="${not empty listOfNews}">
         <div id="carrousel-actualite">
-				  <ul class="rslides" id="slider">
+				  <ul class="${newsClass}" id="slider">
             <c:forEach var="news" items="${listOfNews}">
               <li>
                 <a href="${news.permalink}">
@@ -349,7 +358,7 @@ $(document).ready(function() {
                 </a>
                 <div class="caption">
                   <h2><a href="${news.permalink}">${news.title}</a></h2>
-                  <p>${news.description}</p>
+                  <p><span class="news-date"><view:formatDate value="${news.onlineDate}"/></span>${news.description}</p>
                 </div>
               </li>
             </c:forEach>

@@ -63,6 +63,10 @@ public class LookSettings {
         settings.getString("home.news.height", "");
   }
 
+  public boolean isDisplayNewsWithCarrousel() {
+    return "carrousel".equalsIgnoreCase(settings.getString("home.news.displayer", "carrousel"));
+  }
+
   public String getEventsAppURL() {
     return URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, settings.getString("home.events.appId", ""));
   }

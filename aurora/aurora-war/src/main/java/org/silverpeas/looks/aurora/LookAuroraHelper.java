@@ -10,6 +10,7 @@ import org.silverpeas.components.questionreply.service.QuestionManager;
 import org.silverpeas.components.questionreply.service.QuestionManagerProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.components.quickinfo.service.QuickInfoDateComparatorDesc;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -221,13 +222,20 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public List<News> getNews() {
     String newsType = getSettings("home.news", "");
     if (StringUtil.isDefined(newsType)) {
+      List<News> news = new ArrayList<>();
       if ("delegated".equalsIgnoreCase(newsType)) {
-        return getDelegatedNews();
+        news = getDelegatedNews();
       } else {
-        return getNewsByComponentId(newsType);
+        news = getNewsByComponentIds(StringUtil.split(newsType, ' '));
       }
+      int nbNews = getSettings("home.news.size", -1);
+      if (nbNews != -1 && news.size() > nbNews) {
+        return news.subList(0, nbNews);
+      }
+      return news;
+    } else {
+      return Collections.emptyList();
     }
-    return Collections.emptyList();
   }
 
   private List<News> getDelegatedNews() {
@@ -245,21 +253,37 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return news;
   }
   
-  private List<News> getNewsByComponentId(String appId) {
-    if (!isComponentAvailable(appId)) {
+  private List<News> getNewsByComponentIds(String[] appIds) {
+    String[] allowedComponentIds = getAllowedComponents(appIds).toArray(new String[0]);
+
+    if (allowedComponentIds.length == 0) {
       return Collections.emptyList();
     }
+
+    // getting news from allowed components
     QuickInfoService service = QuickInfoService.get();
-    return service.getVisibleNews(appId);
+    List<News> allNews = new ArrayList<>();
+    for (String appId : allowedComponentIds) {
+      allNews.addAll(service.getVisibleNews(appId));
+    }
+
+    // sorting news
+    Collections.sort(allNews, QuickInfoDateComparatorDesc.comparator);
+
+    return allNews;
+  }
+
+  private String[] getAllowedComponentIds(String param) {
+    String[] appIds = StringUtil.split(getSettings(param, ""), ' ');
+
+    return getAllowedComponents(appIds).toArray(new String[0]);
   }
 
   public List<NextEventsDate> getNextEvents() {
-    String[] almanachIds = StringUtil.split(getSettings("home.events.appId", ""), ' ');
+    String[] allowedComponentIds = getAllowedComponentIds("home.events.appId");
 
     List<NextEventsDate> result = new ArrayList<NextEventsDate>();
 
-    // get allowed components first
-    String[] allowedComponentIds = getAllowedComponents(almanachIds).toArray(new String[0]);
     if (allowedComponentIds.length > 0) {
       List<EventOccurrence> events = getAlmanachBm().getNextEventOccurrences(allowedComponentIds);
       Date today = new Date();
