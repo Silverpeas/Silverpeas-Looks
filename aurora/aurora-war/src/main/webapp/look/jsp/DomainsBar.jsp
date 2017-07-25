@@ -149,7 +149,7 @@ gef.setSpaceIdForCurrentRequest(spaceId);
     }
 
     function notifyAdministrators() {
-      SP_openWindow('/silverpeas/RnotificationUser/jsp/Main?popupMode=Yes&editTargets=No&theTargetsUsers=Administrators', 'notifyUserPopup', '700', '400', 'menubar=no,scrollbars=no,statusbar=no');
+      SP_openWindow('/silverpeas/RnotificationUser/jsp/Main?popupMode=Yes&editTargets=No&theTargetsUsers=Administrators', 'notifyUserPopup', '900', '400', 'menubar=no,scrollbars=no,statusbar=no');
     }
 
   /**

@@ -31,6 +31,8 @@
 
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
+<fmt:message var="labelNews" key="look.home.news"/>
+<fmt:message var="labelNewsMore" key="look.home.news.more"/>
 <fmt:message var="labelEvents" key="look.home.events.next"/>
 <fmt:message var="labelEventsMore" key="look.home.events.more"/>
 <fmt:message var="labelQuestions" key="look.home.faq.title"/>
@@ -56,6 +58,7 @@
   <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
 </c:if>
+<view:link href="/look/jsp/css/aurora.css"/>
 <view:looknfeel/>
 <view:includePlugin name="pdc" />
 <view:includePlugin name="popup"/>
@@ -195,12 +198,13 @@ $(document).ready(function() {
           </div>
           <div class="portlet-content" id="calendar">
             <ul class="eventList" id="eventList">
-              <c:forEach var="date" items="${nextEvents}">
+              <c:forEach var="date" items="${nextEvents.nextEventsDates}">
                 <li class="events">
                   <div class="eventShortDate"><span class="number">${date.dayInMonth}</span>/<span class="month">${date.month}</span></div>
                   <div class="eventLongDate"><fmt:formatDate value="${date.date}" pattern="EEEE dd MMMM yyyy"/></div>
-                  <c:forEach var="eventOccurence" items="${date.events}">
-                    <c:set var="event" value="${eventOccurence.eventDetail}"/>
+                  <c:forEach var="eventFull" items="${date.events}">
+                    <c:set var="event" value="${eventFull.detail}"/>
+                    <c:set var="eventAppShortcut" value="${eventFull.appShortcut}"/>
                     <div class="event eventFrom-${event.instanceId}">
                       <div class="eventName"> > <a href="${event.permalink}">${event.name}</a>
                         <span class="clock-events">
@@ -215,12 +219,18 @@ $(document).ready(function() {
                         </c:if>
                         </span>
                       </div>
-                      <c:if test="${silfn:isDefined(event.place)}">
+                      <c:if test="${silfn:isDefined(event.place) || empty nextEvents.uniqueAppURL}">
                         <div class="eventInfo">
-                          <div class="eventPlace">
-                            <div class="bloc"><span>${event.place}</span></div>
-                          </div>
-                          <br clear="left"/>
+                          <c:if test="${silfn:isDefined(event.place)}">
+                            <div class="eventPlace">
+                              <div class="bloc"><span>${event.place}</span></div>
+                            </div>
+                          </c:if>
+                          <c:if test="${empty nextEvents.uniqueAppURL}">
+                            <div class="eventApp">
+                              <a href="${eventAppShortcut.url}" title="${labelEventsMore}" class="event-app-link">${eventAppShortcut.altText}</a>
+                            </div>
+                          </c:if>
                         </div>
                       </c:if>
                     </div>
@@ -229,7 +239,18 @@ $(document).ready(function() {
               </c:forEach>
             </ul>
           </div>
-					<a title="${labelEventsMore}" href="${settings.eventsAppURL}" class="link-more"><span>${labelEventsMore}</span> </a>
+          <c:choose>
+            <c:when test="${not empty nextEvents.uniqueAppURL}">
+              <a title="${labelEventsMore}" href="${nextEvents.uniqueAppURL}" class="link-more"><span>${labelEventsMore}</span> </a>
+            </c:when>
+            <c:otherwise>
+              <div id="events-link-apps">
+              <c:forEach items="${nextEvents.appShortcuts}" var="appAlmanachShortcut">
+                <a title="${labelEventsMore}" href="${appAlmanachShortcut.url}" class="link-more" id="link-app-${appAlmanachShortcut.target}"><span>${appAlmanachShortcut.altText}</span> </a>
+              </c:forEach>
+              </div>
+            </c:otherwise>
+          </c:choose>
         </div>
       </c:if>
 
@@ -341,15 +362,16 @@ $(document).ready(function() {
 				</div>
       </c:if>
 
-			<c:if test="${not empty listOfNews}">
-        <div id="carrousel-actualite">
+			<c:if test="${not empty listOfNews.news}">
+        <div class="secteur-container" id="carrousel-actualite">
+          <h4>${labelNews}</h4>
 				  <ul class="${newsClass}" id="slider">
-            <c:forEach var="news" items="${listOfNews}">
-              <li>
+            <c:forEach var="news" items="${listOfNews.news}">
+              <li class="news-${news.appShortcut.target}">
                 <a href="${news.permalink}">
                   <c:choose>
-                    <c:when test="${not empty news.publication.thumbnail}">
-                      <view:image src="${news.publication.thumbnail.URL}" alt="" size="${newsImageSize}"/>
+                    <c:when test="${not empty news.thumbnailURL}">
+                      <view:image src="${news.thumbnailURL}" alt="" size="${newsImageSize}"/>
                     </c:when>
                     <c:otherwise>
                       <view:image src="/look/jsp/imgDesign/emptyNews.png" alt="" />
@@ -358,11 +380,29 @@ $(document).ready(function() {
                 </a>
                 <div class="caption">
                   <h2><a href="${news.permalink}">${news.title}</a></h2>
-                  <p><span class="news-date"><view:formatDate value="${news.onlineDate}"/></span>${news.description}</p>
+                  <p>
+                    <span class="news-date"><view:formatDate value="${news.date}"/></span>
+                    <c:if test="${empty listOfNews.uniqueAppURL}">
+                      <span class="news-app"><a href="${news.appShortcut.url}" title="${labelNewsMore}">${news.appShortcut.altText}</a></span>
+                    </c:if>
+                    ${news.description}
+                  </p>
                 </div>
               </li>
             </c:forEach>
 				  </ul>
+          <c:choose>
+            <c:when test="${not empty listOfNews.uniqueAppURL}">
+              <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more"><span>${labelNewsMore}</span> </a>
+            </c:when>
+            <c:otherwise>
+              <div id="news-link-apps">
+              <c:forEach items="${listOfNews.appShortcuts}" var="appNewsShortcut">
+                <a title="${labelNewsMore}" href="${appNewsShortcut.url}" class="link-more" id="link-app-${appNewsShortcut.target}"><span>${appNewsShortcut.altText}</span> </a>
+              </c:forEach>
+              </div>
+            </c:otherwise>
+          </c:choose>
 				</div>
       </c:if>
 				

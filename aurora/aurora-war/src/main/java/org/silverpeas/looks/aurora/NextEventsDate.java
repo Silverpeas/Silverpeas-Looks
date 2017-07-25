@@ -5,27 +5,28 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.silverpeas.components.almanach.model.EventDetail;
 import org.silverpeas.components.almanach.model.EventOccurrence;
 
 public class NextEventsDate {
   
   public Date date;
-  public List<EventOccurrence> events = new ArrayList<EventOccurrence>();
+  public List<Event> events = new ArrayList<Event>();
   Calendar calendar;
   
   public NextEventsDate(Date date) {
     this.date = date;
   }
   
-  public void addEvent(EventOccurrence event) {
-    events.add(event);
+  public void addEvent(EventDetail event) {
+    events.add(new Event(event));
   }
 
   public Date getDate() {
     return date;
   }
 
-  public List<EventOccurrence> getEvents() {
+  public List<Event> getEvents() {
     return events;
   }
 
@@ -45,7 +46,5 @@ public class NextEventsDate {
       calendar.setTime(date);
     }
   }
-
-
 
 }

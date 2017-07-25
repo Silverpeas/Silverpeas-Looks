@@ -219,23 +219,27 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return componentId.startsWith("quickinfo");
   }
   
-  public List<News> getNews() {
+  public NewsList getNews() {
     String newsType = getSettings("home.news", "");
+    List<News> news = new ArrayList<>();
+    String uniqueAppId = "";
     if (StringUtil.isDefined(newsType)) {
-      List<News> news = new ArrayList<>();
       if ("delegated".equalsIgnoreCase(newsType)) {
         news = getDelegatedNews();
       } else {
-        news = getNewsByComponentIds(StringUtil.split(newsType, ' '));
+        String[] allowedComponentIds =
+            getAllowedComponents(StringUtil.split(newsType, ' ')).toArray(new String[0]);
+        if (allowedComponentIds.length == 1) {
+          uniqueAppId = allowedComponentIds[0];
+        }
+        news = getNewsByComponentIds(allowedComponentIds);
       }
       int nbNews = getSettings("home.news.size", -1);
       if (nbNews != -1 && news.size() > nbNews) {
-        return news.subList(0, nbNews);
+        return new NewsList(news.subList(0, nbNews), uniqueAppId);
       }
-      return news;
-    } else {
-      return Collections.emptyList();
     }
+    return new NewsList(news, uniqueAppId);
   }
 
   private List<News> getDelegatedNews() {
@@ -253,9 +257,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return news;
   }
   
-  private List<News> getNewsByComponentIds(String[] appIds) {
-    String[] allowedComponentIds = getAllowedComponents(appIds).toArray(new String[0]);
-
+  private List<News> getNewsByComponentIds(String[] allowedComponentIds) {
     if (allowedComponentIds.length == 0) {
       return Collections.emptyList();
     }
@@ -279,7 +281,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getAllowedComponents(appIds).toArray(new String[0]);
   }
 
-  public List<NextEventsDate> getNextEvents() {
+  public NextEvents getNextEvents() {
     String[] allowedComponentIds = getAllowedComponentIds("home.events.appId");
 
     List<NextEventsDate> result = new ArrayList<NextEventsDate>();
@@ -298,17 +300,21 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
               nextEventsDate = new NextEventsDate(eventDate);
               if (result.size() == nbDays) {
-                return result;
+                break;
               }
               result.add(nextEventsDate);
               date = eventDate;
             }
-            nextEventsDate.addEvent(event);
+            nextEventsDate.addEvent(event.getEventDetail());
           }
         }
       }
     }
-    return result;
+    NextEvents nextEvents = new NextEvents(result);
+    if (allowedComponentIds.length == 1) {
+      nextEvents.setUniqueAppId(allowedComponentIds[0]);
+    }
+    return nextEvents;
   }
 
   private List<String> getAllowedComponents(String... componentIds) {
@@ -514,7 +520,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (getSettings("home.displayedWhenNoNews", true) || getUserDetail().isAccessAdmin()) {
       return true;
     }
-    List<News> news = getNews();
+    NewsList news = getNews();
     return !news.isEmpty();
   }
 }

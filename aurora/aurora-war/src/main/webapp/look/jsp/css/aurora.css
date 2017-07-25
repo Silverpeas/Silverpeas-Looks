@@ -1,0 +1,11 @@
+#carrousel-actualite .link-more {
+  display: none;
+}
+
+#carrousel-actualite h4 {
+  display: none;
+}
+
+.portlet .eventInfo div.eventApp {
+  display: none;
+}
