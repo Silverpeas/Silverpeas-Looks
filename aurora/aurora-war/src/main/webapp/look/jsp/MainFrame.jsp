@@ -105,6 +105,7 @@ if (m_MainSessionCtrl == null) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title><%=generalMessage.getString("GML.popupTitle")%></title>
+  <view:link href="/look/jsp/css/aurora.css"/>
   <view:looknfeel/>
   <style type="text/css">
     body {

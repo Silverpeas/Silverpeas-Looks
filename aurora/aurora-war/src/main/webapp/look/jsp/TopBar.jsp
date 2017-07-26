@@ -161,8 +161,13 @@ $(document).ready(function() {
 
 	<c:if test="${settings.displayMenuSubElements}">
   smartMenuPromise.then(function() {
-    $('#main-menu').smartmenus({
+    /*$('#main-menu').smartmenus({
       showOnClick : false
+    });*/
+
+    $('#main-menu').smartmenus({
+      subMenusMinWidth:"15em",
+      subMenusMinWidth:"30em"
     });
   });
   </c:if>
@@ -284,7 +289,7 @@ window.USERSESSION_PROMISE.then(function() {
           </li>
         </c:if>
         <c:forEach var="item" items="${mainItems}">
-          <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}" displayAppIcon="${settings.displayMenuAppIcons}" callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"/>
+          <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}" displayAppIcon="${settings.displayMenuAppIcons}" megaMenu="${settings.displayMegaMenu}" callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"/>
         </c:forEach>
       </ul>
     </div>

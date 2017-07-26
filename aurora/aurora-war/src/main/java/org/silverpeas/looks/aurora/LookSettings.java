@@ -99,4 +99,8 @@ public class LookSettings {
     return settings.getBoolean("home.search.taxonomy.labelsInside", false);
   }
 
+  public boolean isDisplayMegaMenu() {
+    return settings.getBoolean("banner.menu.mega", false);
+  }
+
 }
