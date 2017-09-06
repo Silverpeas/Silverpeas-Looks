@@ -250,6 +250,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         News aNews = new News(delegated.getPublicationDetail());
         if (delegated.getPublicationDetail() != null) {
           aNews.setPublicationId(delegated.getPublicationDetail().getId());
+          aNews.setComponentInstanceId(delegated.getPublicationDetail().getComponentInstanceId());
           news.add(aNews);
         }
       }
