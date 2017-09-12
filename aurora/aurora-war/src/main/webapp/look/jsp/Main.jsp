@@ -79,17 +79,19 @@ html, body {
 var weatherCookieName = "Silverpeas_Intranet_LastVisitedCity";
 
 function addPrefix(str) {
-	if($.browser.msie || $.browser.mozilla) {
-		return "yweather\\:"+str;
+	if($.browser.edge || $.browser.safari) {
+	  return str;
 	}
-	return str;
+	return "yweather\\:"+str;
 }
 
 jQuery.browser = {};
-jQuery.browser.mozilla = /mozilla/.test(navigator.userAgent.toLowerCase()) && !/webkit/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.edge = /edge/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.safari = /safari/.test(navigator.userAgent.toLowerCase());
+if (jQuery.browser.chrome && jQuery.browser.safari) {
+  jQuery.browser.safari = false;
+}
 
 function showWeather(woeid) {
 	$.cookie(weatherCookieName, woeid);
