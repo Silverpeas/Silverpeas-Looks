@@ -156,7 +156,7 @@ border-color: #555555 transparent transparent transparent;
 	position:relative;
 }
 .sm-silverpeas > li.has-mega-menu {
-  position: initial;
+  position: static;
 }
 
 .sm-silverpeas .mega-menu[aria-expanded="true"]{	
@@ -166,8 +166,8 @@ border-color: #555555 transparent transparent transparent;
 .sm-silverpeas .mega-menu{
 	left:3em !important;
 	right:3em !important;
-	width:initial !important;
-	max-width:initial !important;
+	width:inherit !important;
+	max-width:inherit !important;
 	margin-left:0 !important;
     position: absolute !important;
    font-size:1em !important;
@@ -195,7 +195,7 @@ border-color: #555555 transparent transparent transparent;
 }
 
 .sm-silverpeas .mega-menu ul {
-    position:initial;
+    position:inherit;
 	width: 100%;
 }
 
@@ -229,7 +229,7 @@ border-color: #555555 transparent transparent transparent;
 	font-weight:bold;
 	text-transform:uppercase;
 	padding:0;
-	white-space: initial;
+	white-space: inherit;
 }
 
 .sm-silverpeas > li > .mega-menu > li.app{
@@ -244,7 +244,7 @@ border-color: #555555 transparent transparent transparent;
 }
 
 .sm-silverpeas > li > .mega-menu > li.app > a{
-	text-transform:initial;
+	text-transform:inherit;
 	font-weight:normal;
 }
 
