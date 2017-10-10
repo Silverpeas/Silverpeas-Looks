@@ -13,6 +13,11 @@
   <name>Look Aurora Web Application</name>
 
   <dependencies>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jaxb-annotations</artifactId>
+    </dependency>
+
 	 <dependency>
       <groupId>org.silverpeas.components.quickinfo</groupId>
       <artifactId>silverpeas-quickinfo</artifactId>
