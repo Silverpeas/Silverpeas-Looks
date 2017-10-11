@@ -1,7 +1,5 @@
 package org.silverpeas.looks.aurora;
 
-import org.silverpeas.components.almanach.model.EventOccurrence;
-import org.silverpeas.components.almanach.service.AlmanachService;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
 import org.silverpeas.components.questionreply.QuestionReplyException;
@@ -16,6 +14,7 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
+import org.silverpeas.core.calendar.Priority;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
@@ -31,14 +30,20 @@ import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
 import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.look.Shortcut;
+import org.silverpeas.core.webapi.calendar.CalendarEventEntity;
+import org.silverpeas.looks.aurora.service.almanach.AlmanachWebServiceProvider;
+import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
@@ -285,19 +290,24 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public NextEvents getNextEvents() {
     String[] allowedComponentIds = getAllowedComponentIds("home.events.appId");
 
-    List<NextEventsDate> result = new ArrayList<NextEventsDate>();
+    final List<NextEventsDate> result = new ArrayList<>();
 
     if (allowedComponentIds.length > 0) {
-      List<EventOccurrence> events = getAlmanachBm().getNextEventOccurrences(allowedComponentIds);
+      List<CalendarEventOccurrenceEntity> events = Arrays.stream(allowedComponentIds)
+          .flatMap(AlmanachWebServiceProvider::getNextEventOccurrences)
+          .distinct()
+          .sorted(Comparator.comparing(CalendarEventEntity::getStartDate))
+          .collect(Collectors.toList());
       Date today = new Date();
+      boolean includeToday = getSettings("home.events.today.include", true);
       Date date = null;
       NextEventsDate nextEventsDate = null;
       int nbDays = getSettings("home.events.maxDays", 2);
       boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
-      for (EventOccurrence event : events) {
-        if (!fetchOnlyImportant || (fetchOnlyImportant && event.isPriority())) {
-          Date eventDate = event.getStartDate().asDate();
-          if (DateUtil.compareTo(today, eventDate, true) != 0) {
+      for (CalendarEventOccurrenceEntity event : events) {
+        if (!fetchOnlyImportant || Priority.HIGH == event.getPriority()) {
+          Date eventDate = event.getStartDateAsDate();
+          if (includeToday || (!includeToday && DateUtil.compareTo(today, eventDate, true) != 0)) {
             if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
               nextEventsDate = new NextEventsDate(eventDate);
               if (result.size() == nbDays) {
@@ -306,7 +316,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
               result.add(nextEventsDate);
               date = eventDate;
             }
-            nextEventsDate.addEvent(event.getEventDetail());
+            nextEventsDate.addEvent(event);
           }
         }
       }
@@ -326,10 +336,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     return allowedComponentIds;
-  }
-  
-  private AlmanachService getAlmanachBm() {
-    return AlmanachService.get();
   }
   
   private PublicationHelper getPublicationHelper() throws ClassNotFoundException,
