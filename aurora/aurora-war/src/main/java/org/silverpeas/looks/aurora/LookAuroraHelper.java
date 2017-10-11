@@ -299,15 +299,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .sorted(Comparator.comparing(CalendarEventEntity::getStartDate))
           .collect(Collectors.toList());
       Date today = new Date();
+      boolean includeToday = getSettings("home.events.today.include", true);
       Date date = null;
       NextEventsDate nextEventsDate = null;
       int nbDays = getSettings("home.events.maxDays", 2);
       boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
       for (CalendarEventOccurrenceEntity event : events) {
         if (!fetchOnlyImportant || Priority.HIGH == event.getPriority()) {
-
           Date eventDate = event.getStartDateAsDate();
-          if (DateUtil.compareTo(today, eventDate, true) != 0) {
+          if (includeToday || (!includeToday && DateUtil.compareTo(today, eventDate, true) != 0)) {
             if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
               nextEventsDate = new NextEventsDate(eventDate);
               if (result.size() == nbDays) {
