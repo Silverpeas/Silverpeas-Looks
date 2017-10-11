@@ -1,21 +1,21 @@
 package org.silverpeas.looks.aurora;
 
-import org.silverpeas.components.almanach.model.EventDetail;
 import org.silverpeas.core.web.look.Shortcut;
+import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
 
 /**
  * Created by Nicolas on 19/07/2017.
  */
 public class Event {
 
-  private EventDetail event;
+  private CalendarEventOccurrenceEntity event;
   private Shortcut appShortcut;
 
-  public Event(EventDetail event) {
+  public Event(CalendarEventOccurrenceEntity event) {
     this.event = event;
   }
 
-  public EventDetail getDetail() {
+  public CalendarEventOccurrenceEntity getDetail() {
     return this.event;
   }
 

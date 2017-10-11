@@ -11,6 +11,7 @@
 <c:set var="showEphemeris" value="${settings.displayEphemeris}"/>
 
 <c:set var="nextEvents" value="${lookHelper.nextEvents}"/>
+<jsp:useBean id="nextEvents" type="org.silverpeas.looks.aurora.NextEvents"/>
 <c:set var="listOfNews" value="${lookHelper.news}"/>
 <c:set var="newsImageSize" value="${settings.newsImageSize}"/>
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
@@ -208,24 +209,20 @@ $(document).ready(function() {
                     <c:set var="event" value="${eventFull.detail}"/>
                     <c:set var="eventAppShortcut" value="${eventFull.appShortcut}"/>
                     <div class="event eventFrom-${event.instanceId}">
-                      <div class="eventName"> > <a href="${event.permalink}">${event.name}</a>
+                      <div class="eventName"> > <a href="${event.occurrencePermalinkUrl}">${event.title}</a>
                         <span class="clock-events">
-                        <c:if test="${silfn:isDefined(event.startHour)}">
-                          ${event.startHour}
-                        </c:if>
-                        <c:if test="${silfn:isDefined(event.startHour) && silfn:isDefined(event.endHour) && event.endHour != event.startHour}">
+                        <c:if test="${not event.onAllDay}">
+                          <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
                           -
-                        </c:if>
-                        <c:if test="${silfn:isDefined(event.endHour) && event.endHour != event.startHour}">
-                          ${event.endHour}
+                          <fmt:formatDate value="${event.endDateAsDate}" pattern="HH:mm"/>
                         </c:if>
                         </span>
                       </div>
-                      <c:if test="${silfn:isDefined(event.place) || empty nextEvents.uniqueAppURL}">
+                      <c:if test="${silfn:isDefined(event.location) || empty nextEvents.uniqueAppURL}">
                         <div class="eventInfo">
-                          <c:if test="${silfn:isDefined(event.place)}">
+                          <c:if test="${silfn:isDefined(event.location)}">
                             <div class="eventPlace">
-                              <div class="bloc"><span>${event.place}</span></div>
+                              <div class="bloc"><span>${event.location}</span></div>
                             </div>
                           </c:if>
                           <c:if test="${empty nextEvents.uniqueAppURL}">

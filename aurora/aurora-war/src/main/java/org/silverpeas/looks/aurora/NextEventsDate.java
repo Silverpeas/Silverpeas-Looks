@@ -1,24 +1,23 @@
 package org.silverpeas.looks.aurora;
 
+import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.silverpeas.components.almanach.model.EventDetail;
-import org.silverpeas.components.almanach.model.EventOccurrence;
-
 public class NextEventsDate {
   
   public Date date;
-  public List<Event> events = new ArrayList<Event>();
+  public List<Event> events = new ArrayList<>();
   Calendar calendar;
   
   public NextEventsDate(Date date) {
     this.date = date;
   }
-  
-  public void addEvent(EventDetail event) {
+
+  public void addEvent(CalendarEventOccurrenceEntity event) {
     events.add(new Event(event));
   }
 
