@@ -31,7 +31,7 @@ import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.look.Shortcut;
 import org.silverpeas.core.webapi.calendar.CalendarEventEntity;
-import org.silverpeas.looks.aurora.service.almanach.AlmanachWebServiceProvider;
+import org.silverpeas.looks.aurora.service.almanach.AlmanachWebManager;
 import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -294,7 +294,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
     if (allowedComponentIds.length > 0) {
       List<CalendarEventOccurrenceEntity> events = Arrays.stream(allowedComponentIds)
-          .flatMap(AlmanachWebServiceProvider::getNextEventOccurrences)
+          .flatMap(AlmanachWebManager::getNextEventOccurrences)
           .distinct()
           .sorted(Comparator.comparing(CalendarEventEntity::getStartDate))
           .collect(Collectors.toList());

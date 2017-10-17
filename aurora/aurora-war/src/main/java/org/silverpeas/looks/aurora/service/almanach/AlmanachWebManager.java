@@ -56,11 +56,11 @@ import java.util.stream.Stream;
  * </p>
  * @author silveryocha
  */
-public class AlmanachWebServiceProvider {
+public class AlmanachWebManager {
 
   private static final String[] jsonParametersToAvoidWhenEmpty = {"attachmentParameters"};
 
-  private AlmanachWebServiceProvider() {
+  private AlmanachWebManager() {
   }
 
   /**
@@ -71,7 +71,7 @@ public class AlmanachWebServiceProvider {
    */
   public static Stream<CalendarEventOccurrenceEntity> getNextEventOccurrences(String almanachId) {
     final String jsonResponse = httpGetAsString(
-        UriBuilder.fromPath(URLUtil.getAbsoluteApplicationURL()).path("/services/almanach/")
+        UriBuilder.fromPath(URLUtil.getAbsoluteLocalApplicationURL()).path("/services/almanach/")
             .path(almanachId).path("/events/occurrences/next")
             .queryParam("limit", AlmanachSettings.getNbOccurrenceLimitOfNextEventView()));
     return Arrays.stream(JSONCodec.decode(jsonResponse, CalendarEventOccurrenceEntity[].class));
@@ -91,11 +91,11 @@ public class AlmanachWebServiceProvider {
       final String jsonResponse = httpGet.getResponseBodyAsString();
       return removeJsonParts(jsonResponse);
     } catch (WebApplicationException wae) {
-      SilverLogger.getLogger(AlmanachWebServiceProvider.class)
+      SilverLogger.getLogger(AlmanachWebManager.class)
           .error("{0} -> HTTP ERROR {1}", serviceUrl, wae.getMessage());
       throw wae;
     } catch (Exception e) {
-      SilverLogger.getLogger(AlmanachWebServiceProvider.class)
+      SilverLogger.getLogger(AlmanachWebManager.class)
           .error("{0} -> {1}", serviceUrl, e.getMessage());
       throw new WebApplicationException(e);
     } finally {
