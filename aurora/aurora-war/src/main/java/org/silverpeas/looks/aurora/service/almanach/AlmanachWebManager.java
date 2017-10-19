@@ -31,9 +31,7 @@ import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.util.JSONCodec;
-import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
-import org.silverpeas.core.util.lang.SystemWrapper;
 import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.ws.rs.WebApplicationException;
@@ -116,12 +114,6 @@ public class AlmanachWebManager {
   }
 
   private static HttpClient initHttpClient() {
-    HttpClient client = new HttpClient();
-    final String proxyHost = SystemWrapper.get().getProperty("http.proxyHost");
-    final String proxyPort = SystemWrapper.get().getProperty("http.proxyPort");
-    if (StringUtil.isDefined(proxyHost) && StringUtil.isInteger(proxyPort)) {
-      client.getHostConfiguration().setProxy(proxyHost, Integer.valueOf(proxyPort));
-    }
-    return client;
+    return new HttpClient();
   }
 }
