@@ -10,7 +10,6 @@ import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.service.QuickInfoDateComparatorDesc;
 import org.silverpeas.core.admin.component.model.ComponentInst;
-import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
@@ -51,6 +50,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private PublicationHelper kmeliaTransversal = null;
   private LocalizationBundle messages;
   private LookSettings settings;
+  private static final String BANNER_ALL_SPACES = "*";
   
   public LookAuroraHelper(HttpSession session) {
     super(session);
@@ -73,31 +73,50 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<BannerMainItem> getBannerMainItems() {
-    String param = getSettings("banner.spaces", null);
-    if (param != null) {
+    String param = getSettings("banner.spaces", "*");
+    if (StringUtil.isDefined(param)) {
+      List<String> definedSpaceIds = new ArrayList<>();
+      if (param.contains("*")) {
+        definedSpaceIds = getExplicitlyDefinedSpaceIds();
+      }
       List<BannerMainItem> items = new ArrayList<>();
       OrganizationController oc = getOrganisationController();
       String[] spaceIds = StringUtil.split(param);
       for (String spaceId : spaceIds) {
-        if (oc.isSpaceAvailable(spaceId, getUserId())) {
-          BannerMainItem item = new BannerMainItem(oc.getSpaceInstLightById(spaceId));
-          String[] subspaceIds = oc.getAllSubSpaceIds(spaceId, getUserId());
-          for (String subspaceId : subspaceIds) {
-            item.addSubspace(oc.getSpaceInstLightById(subspaceId));
+        if (BANNER_ALL_SPACES.equals(spaceId)) {
+          List<String> allRootSpaceIds =
+              new ArrayList<>(Arrays.asList(oc.getAllRootSpaceIds(getUserId())));
+          allRootSpaceIds.removeAll(definedSpaceIds);
+          for (String rootSpaceId : allRootSpaceIds) {
+            items.add(getBannerMainItem(rootSpaceId));
           }
-          String[] appIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserId());
-          for (String appId : appIds) {
-            ComponentInstLight app = oc.getComponentInstLight(appId);
-            if (!app.isHidden()) {
-              item.addApp(app);
-            }
+        } else {
+          if (oc.isSpaceAvailable(spaceId, getUserId())) {
+            items.add(getBannerMainItem(spaceId));
           }
-          items.add(item);
         }
       }
       return items;
     }
     return new ArrayList<BannerMainItem>();
+  }
+
+  private BannerMainItem getBannerMainItem(String spaceId) {
+    OrganizationController oc = getOrganisationController();
+    return new BannerMainItem(oc.getSpaceInstLightById(spaceId));
+  }
+
+  private List<String> getExplicitlyDefinedSpaceIds() {
+    List<String> spaceIds = new ArrayList<>();
+    spaceIds.add(getProjectsSpaceId());
+    spaceIds.add(getSettings("applications.spaceId", ""));
+    String bannerSpaceIds = getSettings("banner.spaces", "*");
+    for (String bannerSpaceId : StringUtil.split(bannerSpaceIds)) {
+      if (!BANNER_ALL_SPACES.equals(bannerSpaceId)) {
+        spaceIds.add(bannerSpaceId);
+      }
+    }
+    return spaceIds;
   }
 
   public String getProjectsSpaceId() {

@@ -289,7 +289,10 @@ window.USERSESSION_PROMISE.then(function() {
           </li>
         </c:if>
         <c:forEach var="item" items="${mainItems}">
-          <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}" displayAppIcon="${settings.displayMenuAppIcons}" megaMenu="${settings.displayMegaMenu}" callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"/>
+          <view:map spaceId="${item.space.id}" displayAppsFirst="${settings.displayMenuAppsFirst}"
+                    displayAppIcon="${settings.displayMenuAppIcons}" megaMenu="${settings.displayMegaMenu}"
+                    callbackJSForMainSpace="goToMainSpace" callbackJSForSubspaces="goToSpace" callbackJSForApps="goToSpaceApp"
+                    forceHidingComponents="true"/>
         </c:forEach>
       </ul>
     </div>
