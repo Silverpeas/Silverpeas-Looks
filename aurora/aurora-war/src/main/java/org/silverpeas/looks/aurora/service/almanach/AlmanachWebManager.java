@@ -36,8 +36,12 @@ import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.stream.Stream;
+
+import static org.silverpeas.core.util.URLUtil.getAbsoluteApplicationURL;
+import static org.silverpeas.core.util.URLUtil.getApplicationURL;
 
 /**
  * <p>
@@ -72,7 +76,16 @@ public class AlmanachWebManager {
         UriBuilder.fromPath(URLUtil.getAbsoluteLocalApplicationURL()).path("/services/almanach/")
             .path(almanachId).path("/events/occurrences/next")
             .queryParam("limit", AlmanachSettings.getNbOccurrenceLimitOfNextEventView()));
-    return Arrays.stream(JSONCodec.decode(jsonResponse, CalendarEventOccurrenceEntity[].class));
+    return Arrays.stream(JSONCodec.decode(jsonResponse, CalendarEventOccurrenceEntity[].class)).peek(e->{
+      e.setEventPermalinkUrl(getRightApplicationUrl(e.getEventPermalinkUrl()));
+      e.setOccurrencePermalinkUrl(getRightApplicationUrl(e.getOccurrencePermalinkUrl()));
+    });
+  }
+
+  private static URI getRightApplicationUrl(final URI localURL) {
+    String previousLink = localURL.toString();
+    return URI.create(
+        previousLink.replaceFirst(".+" + getApplicationURL(), getAbsoluteApplicationURL()));
   }
 
   private static String httpGetAsString(UriBuilder uriBuilder) {
