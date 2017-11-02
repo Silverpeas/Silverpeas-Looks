@@ -169,6 +169,9 @@ $(document).ready(function() {
       subMenusMinWidth:"15em",
       subMenusMinWidth:"30em"
     });
+    setTimeout(function() {
+      $('#nav').show();
+    }, 0);
   });
   </c:if>
 });
@@ -281,7 +284,7 @@ window.USERSESSION_PROMISE.then(function() {
         <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
       </div>
     </div>
-    <div id="nav">
+    <div id="nav" style="display: none;">
       <ul id="main-menu" class="sm ${smartmenusSkin} displayMenuAppIcons-${settings.displayMenuAppIcons}">
         <c:if test="${lookHelper.userCanDisplayMainHomePage}">
           <li class="selected" id="home">
