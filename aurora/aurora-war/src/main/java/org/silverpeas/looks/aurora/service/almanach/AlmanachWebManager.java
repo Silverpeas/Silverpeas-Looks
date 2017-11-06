@@ -24,9 +24,13 @@
 
 package org.silverpeas.looks.aurora.service.almanach;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
+
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.admin.user.model.UserDetail;
@@ -90,16 +94,16 @@ public class AlmanachWebManager {
 
   private static String httpGetAsString(UriBuilder uriBuilder) {
     final String serviceUrl = uriBuilder.build().toString();
-    final GetMethod httpGet = new GetMethod(serviceUrl);
-    httpGet.addRequestHeader("Accept", "application/json");
-    httpGet.addRequestHeader("X-Silverpeas-Session",
+    final HttpGet httpGet = new HttpGet(serviceUrl);
+    httpGet.addHeader("Accept", "application/json");
+    httpGet.addHeader("X-Silverpeas-Session",
         UserDetail.getById(User.getCurrentRequester().getId()).getToken());
-    try {
-      int statusCode = initHttpClient().executeMethod(httpGet);
-      if (statusCode != HttpStatus.SC_OK) {
-        throw new WebApplicationException(statusCode);
+    try (CloseableHttpClient httpClient = HttpClients.createDefault();
+         CloseableHttpResponse response = httpClient.execute(httpGet)) {
+      if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+        throw new WebApplicationException(response.getStatusLine().getStatusCode());
       }
-      final String jsonResponse = httpGet.getResponseBodyAsString();
+      String jsonResponse = EntityUtils.toString(response.getEntity());
       return removeJsonParts(jsonResponse);
     } catch (WebApplicationException wae) {
       SilverLogger.getLogger(AlmanachWebManager.class)
@@ -124,9 +128,5 @@ public class AlmanachWebManager {
       result = result.replaceAll(",\"" + jsonParameterToAvoidWhenEmpty + "\"[:][{][}]", "");
     }
     return result;
-  }
-
-  private static HttpClient initHttpClient() {
-    return new HttpClient();
   }
 }
