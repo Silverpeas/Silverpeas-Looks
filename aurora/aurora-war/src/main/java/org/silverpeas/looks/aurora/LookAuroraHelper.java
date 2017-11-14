@@ -18,6 +18,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
 import org.silverpeas.core.mylinks.service.MyLinksService;
+import org.silverpeas.core.util.ArrayUtil;
 import org.silverpeas.core.util.CollectionUtil;
 import org.silverpeas.core.util.DateUtil;
 import org.silverpeas.core.util.LocalizationBundle;
@@ -226,10 +227,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   @Override
   public List<PublicationDetail> getLatestPublications(String spaceId, int nbPublis) {
-    List<PublicationDetail> publications = super.getLatestPublications(spaceId, nbPublis*2);
+    String[] excludedComponentIds =
+        StringUtil.split(getSettings("home.publications.components.excluded", ""));
+    List<PublicationDetail> publications =
+        super.getLatestPublications(spaceId, Arrays.asList(excludedComponentIds), nbPublis * 2);
     List<PublicationDetail> result = new ArrayList<PublicationDetail>();
     for (PublicationDetail publication : publications) {
-      if (!isComponentForNews(publication.getPK().getInstanceId())) {
+      String componentId = publication.getPK().getInstanceId();
+      boolean excluded = ArrayUtil.contains(excludedComponentIds, componentId);
+      if (!isComponentForNews(componentId) && !excluded) {
         result.add(publication);
       }
       if (result.size() == nbPublis) {
