@@ -153,11 +153,20 @@ label.select-header:before {
   white-space: pre-wrap;             
 }
 
+.sp_button.logOn,
+.header-container #infoConnection .sp_button.logOn {
+  padding:0.25em 1em;
+  text-transform:inherit;
+}
+.header-container #infoConnection .sp_button.logOn span {
+  font-size:12px
+}
+
 .header-container #infoConnection {
 	color: #262626;
-    left: 0;
-    position: absolute;
-    top: 0;
+  left: 0;
+  position: absolute;
+  top: 0;
 	padding:8px 174px 0 40px;
 	/*background:transparent url(../imgDesign/outlook.png) top right no-repeat;*/
 }

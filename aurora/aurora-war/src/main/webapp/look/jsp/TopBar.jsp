@@ -13,6 +13,11 @@
 <c:set var="directoryURL" value="${lookHelper.directoryURL}"/>
 <c:set var="directoryDomains" value="${lookHelper.directoryDomains}"/>
 <c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
+<c:set var="isAnonymous" value="${lookHelper.anonymousUser}"/>
+<c:set var="anonymousMode" value=""/>
+<c:if test="${isAnonymous}">
+  <c:set var="anonymousMode" value="anonymousMode"/>
+</c:if>
 
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
@@ -33,6 +38,7 @@
 <fmt:message var="labelHelp" key="look.banner.help"/>
 <fmt:message var="labelDirectory" key="look.banner.directory"/>
 <fmt:message var="labelBackoffice" key="look.banner.backoffice"/>
+<fmt:message var="labelLogin" key="look.banner.login"/>
 
 <fmt:message var="labelSearch" key="look.banner.search"/>
 <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
@@ -47,6 +53,7 @@
 <fmt:message var="labelUnreadUserNotifications" key="look.banner.notifications.unread.many"/>
 
 <c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
+<c:url var="urlLogin" value="/Login"/>
 
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
 
@@ -66,16 +73,8 @@ function goToHome() {
   spLayout.getBody().load(params);
 }
 
-function getDomainsBarPage() {
-	return "DomainsBar.jsp";
-}
-
 function getTopBarPage() {
 	return "TopBar.jsp";
-}
-
-function reloadTopBar() {
-	//Silverpeas V4 compatibility
 }
 
 function selectHeading(id) {
@@ -121,6 +120,7 @@ function goToPersonalSpace() {
 function goToApplication(url) {
 	unselectHeadings();
   changeBody(url);
+	$("#application-select").val("");
 }
 
 function goToProject(projectSpaceId) {
@@ -266,29 +266,34 @@ window.USERSESSION_PROMISE.then(function() {
 });
 </script>
 <viewTags:displayTicker/>
-<div class="header-container">
+<div class="header-container ${anonymousMode}">
   <div class="wrapper clearfix">
     <h1 class="title">Intranet</h1>
     <a id="logo-header" href="#" onclick="javascript:goToHome();"> <img alt="" src="${settings.logo}" /> </a>
     <div id="topar-header">
-      <div id="infoConnection"> <a href="javascript:goToPersonalSpace()"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="${lookHelper.userDetail.avatar}" /></a>
-        <div class="avatarName">
-          <div class="btn-header">	
-          	<a title="${labelProfile}" href="javascript:goToPersonalSpace()">${lookHelper.userFullName}</a>
-            <a id="show-menu-spacePerso" href="#"> Mon espace perso</a>
+      <div id="infoConnection">
+        <c:if test="${isAnonymous}">
+          <a href="${urlLogin}" id="login" class="sp_button logOn"><span>${labelLogin}</span></a>
+        </c:if>
+        <c:if test="${not isAnonymous}">
+          <a href="javascript:goToPersonalSpace()"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="${lookHelper.userDetail.avatar}" /></a>
+          <div class="avatarName">
+            <div class="btn-header">
+              <a title="${labelProfile}" href="javascript:goToPersonalSpace()">${lookHelper.userFullName}</a>
+              <a id="show-menu-spacePerso" href="#"> Mon espace perso</a>
+            </div>
+            <div class="spacePerso">
+              <ul>
+                <li><a id="link-settings" href="javascript:changeBody('/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
+                <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
+                <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
+                <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
+              </ul>
+            </div>
           </div>
-          <div class="spacePerso">
-            <ul>
-              <li><a id="link-settings" href="javascript:changeBody('/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
-              <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
-              <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
-              <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
-            </ul>
-          </div>
-        </div>
-        
-        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody('/RSILVERMAIL/jsp/Main')"></a> </div>
 
+          <div id="notification-count" class="btn-header"> <a href="javascript:changeBody('/RSILVERMAIL/jsp/Main')"></a> </div>
+        </c:if>
         <c:if test="${not empty projects}">
         <div class="btn-header">
           <label class="select-header">
