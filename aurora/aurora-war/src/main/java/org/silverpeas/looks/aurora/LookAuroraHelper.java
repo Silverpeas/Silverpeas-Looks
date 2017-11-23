@@ -1,5 +1,6 @@
 package org.silverpeas.looks.aurora;
 
+import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
 import org.silverpeas.components.questionreply.QuestionReplyException;
@@ -308,7 +309,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private String[] getAllowedComponentIds(String param) {
     String[] appIds = StringUtil.split(getSettings(param, ""), ' ');
-
     return getAllowedComponents(appIds).toArray(new String[0]);
   }
 
@@ -322,6 +322,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .flatMap(AlmanachWebManager::getNextEventOccurrences)
           .distinct()
           .sorted(Comparator.comparing(CalendarEventEntity::getStartDate))
+          .limit(AlmanachSettings.getNbOccurrenceLimitOfShortNextEventView())
           .collect(Collectors.toList());
       Date today = new Date();
       boolean includeToday = getSettings("home.events.today.include", true);

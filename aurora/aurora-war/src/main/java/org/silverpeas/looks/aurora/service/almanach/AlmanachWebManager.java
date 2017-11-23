@@ -79,7 +79,7 @@ public class AlmanachWebManager {
     final String jsonResponse = httpGetAsString(
         UriBuilder.fromPath(URLUtil.getAbsoluteLocalApplicationURL()).path("/services/almanach/")
             .path(almanachId).path("/events/occurrences/next")
-            .queryParam("limit", AlmanachSettings.getNbOccurrenceLimitOfNextEventView()));
+            .queryParam("limit", AlmanachSettings.getNbOccurrenceLimitOfShortNextEventView()));
     return Arrays.stream(JSONCodec.decode(jsonResponse, CalendarEventOccurrenceEntity[].class)).peek(e->{
       e.setEventPermalinkUrl(getRightApplicationUrl(e.getEventPermalinkUrl()));
       e.setOccurrencePermalinkUrl(getRightApplicationUrl(e.getOccurrencePermalinkUrl()));

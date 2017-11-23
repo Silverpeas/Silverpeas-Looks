@@ -10,8 +10,6 @@
 <c:set var="showWeather" value="${not empty weatherCities}"/>
 <c:set var="showEphemeris" value="${settings.displayEphemeris}"/>
 
-<c:set var="nextEvents" value="${lookHelper.nextEvents}"/>
-<jsp:useBean id="nextEvents" type="org.silverpeas.looks.aurora.NextEvents"/>
 <c:set var="listOfNews" value="${lookHelper.news}"/>
 <c:set var="newsImageSize" value="${settings.newsImageSize}"/>
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
@@ -34,8 +32,6 @@
 
 <fmt:message var="labelNews" key="look.home.news"/>
 <fmt:message var="labelNewsMore" key="look.home.news.more"/>
-<fmt:message var="labelEvents" key="look.home.events.next"/>
-<fmt:message var="labelEventsMore" key="look.home.events.more"/>
 <fmt:message var="labelQuestions" key="look.home.faq.title"/>
 <fmt:message var="labelQuestionsPost" key="look.home.faq.post"/>
 <fmt:message var="labelQuestionsMore" key="look.home.faq.more"/>
@@ -161,6 +157,8 @@ function toggleBookmarks() {
 
 $(document).ready(function() {
 
+  sp.load('#next-event-part','parts/MainNextEventsPart.jsp');
+
   $("#ephemeride").html(ephemeris.getTodayEphemerisName());
 
   <c:if test="${newsWithCarrousel}">
@@ -194,65 +192,7 @@ $(document).ready(function() {
 <div class="main-container">
   <div class="main wrapper clearfix">
     <div class="right-main-container">
-      <c:if test="${not empty nextEvents}">
-		    <div class="secteur-container events portlet" id="home-event">
-          <div class="header">
-            <h2 class="portlet-title">${labelEvents}</h2>
-          </div>
-          <div class="portlet-content" id="calendar">
-            <ul class="eventList" id="eventList">
-              <c:forEach var="date" items="${nextEvents.nextEventsDates}">
-                <li class="events">
-                  <div class="eventShortDate"><span class="number">${date.dayInMonth}</span>/<span class="month">${date.month}</span></div>
-                  <div class="eventLongDate"><fmt:formatDate value="${date.date}" pattern="EEEE dd MMMM yyyy"/></div>
-                  <c:forEach var="eventFull" items="${date.events}">
-                    <c:set var="event" value="${eventFull.detail}"/>
-                    <c:set var="eventAppShortcut" value="${eventFull.appShortcut}"/>
-                    <div class="event eventFrom-${event.instanceId}">
-                      <div class="eventName"> > <a href="${event.occurrencePermalinkUrl}">${event.title}</a>
-                        <span class="clock-events">
-                        <c:if test="${not event.onAllDay}">
-                          <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
-                          -
-                          <fmt:formatDate value="${event.endDateAsDate}" pattern="HH:mm"/>
-                        </c:if>
-                        </span>
-                      </div>
-                      <c:if test="${silfn:isDefined(event.location) || empty nextEvents.uniqueAppURL}">
-                        <div class="eventInfo">
-                          <c:if test="${silfn:isDefined(event.location)}">
-                            <div class="eventPlace">
-                              <div class="bloc"><span>${event.location}</span></div>
-                            </div>
-                          </c:if>
-                          <c:if test="${empty nextEvents.uniqueAppURL}">
-                            <div class="eventApp">
-                              <a href="${eventAppShortcut.url}" title="${labelEventsMore}" class="event-app-link">${eventAppShortcut.altText}</a>
-                            </div>
-                          </c:if>
-                        </div>
-                      </c:if>
-                    </div>
-                  </c:forEach>
-                </li>
-              </c:forEach>
-            </ul>
-          </div>
-          <c:choose>
-            <c:when test="${not empty nextEvents.uniqueAppURL}">
-              <a title="${labelEventsMore}" href="${nextEvents.uniqueAppURL}" class="link-more"><span>${labelEventsMore}</span> </a>
-            </c:when>
-            <c:otherwise>
-              <div id="events-link-apps">
-              <c:forEach items="${nextEvents.appShortcuts}" var="appAlmanachShortcut">
-                <a title="${labelEventsMore}" href="${appAlmanachShortcut.url}" class="link-more" id="link-app-${appAlmanachShortcut.target}"><span>${appAlmanachShortcut.altText}</span> </a>
-              </c:forEach>
-              </div>
-            </c:otherwise>
-          </c:choose>
-        </div>
-      </c:if>
-
+      <div id="next-event-part"></div>
       <c:if test="${not empty questions.list}">
 			  <div class="secteur-container faq" id="faq-home">
 				  <h4>${labelQuestions}</h4>
