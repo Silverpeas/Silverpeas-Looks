@@ -31,8 +31,8 @@ import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
 import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.look.Shortcut;
-import org.silverpeas.core.webapi.calendar.CalendarEventEntity;
-import org.silverpeas.looks.aurora.service.almanach.AlmanachWebManager;
+import org.silverpeas.core.webapi.calendar.CalendarResourceURIs;
+import org.silverpeas.core.webapi.calendar.CalendarWebManager;
 import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,11 +40,13 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
@@ -64,6 +66,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             getMainSessionController().getFavoriteLanguage());
   }
 
+  @Override
   public void initLayoutConfiguration() {
     super.initLayoutConfiguration();
     DefaultLayoutConfiguration layout = (DefaultLayoutConfiguration) super.getLayoutConfiguration();
@@ -100,7 +103,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
       return items;
     }
-    return new ArrayList<BannerMainItem>();
+    return new ArrayList<>();
   }
 
   private BannerMainItem getBannerMainItem(String spaceId) {
@@ -126,7 +129,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
   
   public List<Project> getProjects() {
-    List<Project> projects = new ArrayList<Project>();
+    List<Project> projects = new ArrayList<>();
     String[] spaceIds = getOrganisationController().getAllowedSubSpaceIds(getUserId(), getProjectsSpaceId());
     for (String spaceId : spaceIds) {
       SpaceInstLight space = getOrganisationController().getSpaceInstLightById(spaceId);
@@ -154,7 +157,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<Shortcut> getShortcuts(String id) {
-    List<Shortcut> shortcuts = new ArrayList<Shortcut>();
+    List<Shortcut> shortcuts = new ArrayList<>();
     boolean end = false;
     int i = 1;
     while (!end) {
@@ -179,7 +182,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return Collections.emptyList();
     }
     
-    List<City> cities = new ArrayList<City>();
+    List<City> cities = new ArrayList<>();
     
     String[] woeids = StringUtil.split(getSettings("home.weather.woeid", ""), ",");
     String[] labels = StringUtil.split(getSettings("home.weather.cities", ""), ",");
@@ -211,7 +214,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
    * @return
    */
   public List<ComponentInst> getApplications() {
-    List<ComponentInst> hyperLinks = new ArrayList<ComponentInst>();
+    List<ComponentInst> hyperLinks = new ArrayList<>();
     String[] asAvailCompoForCurUser =
         getOrganisationController().getAvailCompoIds(
             getSettings("applications.spaceId", "toBeDefined"),
@@ -232,7 +235,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         StringUtil.split(getSettings("home.publications.components.excluded", ""));
     List<PublicationDetail> publications =
         super.getLatestPublications(spaceId, Arrays.asList(excludedComponentIds), nbPublis * 2);
-    List<PublicationDetail> result = new ArrayList<PublicationDetail>();
+    List<PublicationDetail> result = new ArrayList<>();
     for (PublicationDetail publication : publications) {
       String componentId = publication.getPK().getInstanceId();
       boolean excluded = ArrayUtil.contains(excludedComponentIds, componentId);
@@ -274,7 +277,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private List<News> getDelegatedNews() {
-    List<News> news = new ArrayList<News>();
+    List<News> news = new ArrayList<>();
     List<DelegatedNews> delegatedNews = delegatedNewsService.getAllValidDelegatedNews();
     for (DelegatedNews delegated : delegatedNews) {
       if (delegated != null && isComponentAvailable(delegated.getInstanceId())) {
@@ -313,16 +316,20 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public NextEvents getNextEvents() {
-    String[] allowedComponentIds = getAllowedComponentIds("home.events.appId");
-
+    List<String> allowedComponentIds = asList(getAllowedComponentIds("home.events.appId"));
     final List<NextEventsDate> result = new ArrayList<>();
-
-    if (allowedComponentIds.length > 0) {
-      List<CalendarEventOccurrenceEntity> events = Arrays.stream(allowedComponentIds)
-          .flatMap(AlmanachWebManager::getNextEventOccurrences)
-          .distinct()
-          .sorted(Comparator.comparing(CalendarEventEntity::getStartDate))
-          .limit(AlmanachSettings.getNbOccurrenceLimitOfShortNextEventView())
+    if (!allowedComponentIds.isEmpty()) {
+      final CalendarResourceURIs uri = CalendarResourceURIs.get();
+      List<CalendarEventOccurrenceEntity> events =
+          CalendarWebManager.get(allowedComponentIds.get(0))
+              .getNextEventOccurrences(allowedComponentIds, emptySet(), emptySet(), emptySet(),
+                  AlmanachSettings.getZoneId(),
+                  AlmanachSettings.getNbOccurrenceLimitOfShortNextEventView())
+          .map(o -> {
+            final CalendarEventOccurrenceEntity entity = new CalendarEventOccurrenceEntity(o);
+            entity.withOccurrencePermalinkUrl(uri.ofOccurrencePermalink(o));
+            return entity;
+          })
           .collect(Collectors.toList());
       Date today = new Date();
       boolean includeToday = getSettings("home.events.today.include", true);
@@ -333,7 +340,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       for (CalendarEventOccurrenceEntity event : events) {
         if (!fetchOnlyImportant || Priority.HIGH == event.getPriority()) {
           Date eventDate = event.getStartDateAsDate();
-          if (includeToday || (!includeToday && DateUtil.compareTo(today, eventDate, true) != 0)) {
+          if (includeToday || DateUtil.compareTo(today, eventDate, true) != 0) {
             if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
               nextEventsDate = new NextEventsDate(eventDate);
               if (result.size() == nbDays) {
@@ -348,8 +355,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     NextEvents nextEvents = new NextEvents(result);
-    if (allowedComponentIds.length == 1) {
-      nextEvents.setUniqueAppId(allowedComponentIds[0]);
+    if (allowedComponentIds.size() == 1) {
+      nextEvents.setUniqueAppId(allowedComponentIds.get(0));
     }
     return nextEvents;
   }
@@ -392,7 +399,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public List<LinkDetail> getBookmarks() {
     MyLinksService myLinksService = new DefaultMyLinksService();
     List<LinkDetail> links = myLinksService.getAllLinks(getUserId());
-    List<LinkDetail> bookmarks = new ArrayList<LinkDetail>();
+    List<LinkDetail> bookmarks = new ArrayList<>();
     for (LinkDetail link : links) {
       if (link.isVisible()) {
         bookmarks.add(link);
@@ -412,7 +419,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
         SilverpeasRole role = SilverpeasRole.getHighestFrom(SilverpeasRole.from(profiles));
         faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
-        List<Question> questions = (List<Question>) qm.getQuestions(appId);
+        List<Question> questions = qm.getQuestions(appId);
         if (CollectionUtil.isNotEmpty(questions)) {
           if (nb > questions.size()) {
             nb = questions.size();

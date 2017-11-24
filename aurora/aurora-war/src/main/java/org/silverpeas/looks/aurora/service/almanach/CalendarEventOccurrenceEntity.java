@@ -24,40 +24,72 @@
 
 package org.silverpeas.looks.aurora.service.almanach;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.silverpeas.core.calendar.Calendar;
+import org.silverpeas.core.calendar.CalendarEventOccurrence;
+import org.silverpeas.core.calendar.Priority;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import static org.silverpeas.core.calendar.CalendarEventUtil.formatDateWithOffset;
+
 /**
  * @author silveryocha
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CalendarEventOccurrenceEntity
-    extends org.silverpeas.core.webapi.calendar.CalendarEventOccurrenceEntity {
+public class CalendarEventOccurrenceEntity {
 
-  @XmlTransient
-  private Calendar calendar;
+  private final CalendarEventOccurrence occurrence;
+  private URI occurrencePermalinkUrl;
+
+  public CalendarEventOccurrenceEntity(final CalendarEventOccurrence occurrence) {
+    this.occurrence = occurrence;
+  }
 
   public Date getStartDateAsDate() {
-    return asDate(getStartDate());
+    return asDate(formatStartDate());
   }
 
   public Date getEndDateAsDate() {
-    return asDate(getEndDate());
+    return asDate(formatEndDate());
+  }
+
+  public Priority getPriority() {
+    return occurrence.getPriority();
+  }
+
+  private Calendar getCalendar() {
+    return occurrence.getCalendarEvent().getCalendar();
+  }
+
+  public URI getOccurrencePermalinkUrl() {
+    return occurrencePermalinkUrl;
+  }
+
+  public void withOccurrencePermalinkUrl(URI occurrencePermalinkUrl) {
+    this.occurrencePermalinkUrl = occurrencePermalinkUrl;
+  }
+
+  public String getTitle() {
+    return occurrence.getTitle();
+  }
+
+  public boolean isOnAllDay() {
+    return occurrence.isOnAllDay();
+  }
+
+  public String getLocation() {
+    return occurrence.getLocation();
+  }
+
+  public String getInstanceId() {
+    return getCalendar().getComponentInstanceId();
   }
 
   private Date asDate(final String isoDateAsString) {
-    if (isOnAllDay()) {
+    if (occurrence.isOnAllDay()) {
       final ZoneId zoneId = getCalendar().getZoneId();
       return Date.from(LocalDate.parse(isoDateAsString).atStartOfDay(zoneId).toInstant());
     } else {
@@ -65,14 +97,13 @@ public class CalendarEventOccurrenceEntity
     }
   }
 
-  public String getInstanceId() {
-    return getCalendar().getComponentInstanceId();
+  private String formatStartDate() {
+    return formatDateWithOffset(occurrence.asCalendarComponent(), occurrence.getStartDate(),
+        getCalendar().getZoneId());
   }
 
-  private Calendar getCalendar() {
-    if (calendar == null) {
-      calendar = Calendar.getById(getCalendarId());
-    }
-    return calendar;
+  private String formatEndDate() {
+    return formatDateWithOffset(occurrence.asCalendarComponent(), occurrence.getEndDate(),
+        getCalendar().getZoneId());
   }
 }
