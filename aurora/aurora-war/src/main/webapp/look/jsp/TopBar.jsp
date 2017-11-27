@@ -224,7 +224,7 @@ window.USERSESSION_PROMISE.then(function() {
           </div>
           <div class="spacePerso">
             <ul>
-              <li><a id="link-settings" href="javascript:changeBody(webContext+'/RMyProfil/jsp/MySettings')">${labelProfileSettings}</a> </li>
+              <li><a id="link-settings" href="javascript:changeBody(webContext+'/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
               <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
               <li><a id="link-feed" href="javascript:changeBody(webContext+'/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
               <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
