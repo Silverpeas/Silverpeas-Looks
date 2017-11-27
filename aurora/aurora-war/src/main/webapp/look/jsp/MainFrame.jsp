@@ -2,6 +2,7 @@
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
 <%@ page import="org.silverpeas.core.util.ResourceLocator" %>
 <%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
+<%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
@@ -29,17 +30,16 @@ StringBuilder			frameBottomParams		= new StringBuilder().append("{");
 boolean			login					= StringUtil.getBooleanValue(request.getParameter("Login"));
 String thisFrame = "/look/jsp/MainFrame.jsp";
 
-if (m_MainSessionCtrl == null) {
-  request.getRequestDispatcher("../../Login.jsp").forward(request, response);
-}
-
-  LookAuroraHelper helper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+if (m_MainSessionCtrl == null) { %>
+  <script type="text/javascript">
+    top.location = '<c:url value="/Login"/>';
+  </script>
+<% } else {
+  LookHelper helper = LookHelper.getLookHelper(session);
 	if (helper == null) {
-		helper = new LookAuroraHelper(session);
-		helper.setMainFrame(thisFrame);
-		
-		session.setAttribute("Silverpeas_LookHelper", helper);
-		login = true;
+	  helper = LookAuroraHelper.newLookHelper(session);
+	  helper.setMainFrame(thisFrame);
+	  login = true;
 	}
 	
 	boolean componentExists = false;
@@ -194,3 +194,4 @@ if (m_MainSessionCtrl == null) {
 <chatTags:silverChatInitialization/>
 </body>
 </html>
+<% } %>

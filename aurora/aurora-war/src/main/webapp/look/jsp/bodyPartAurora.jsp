@@ -34,21 +34,19 @@
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ include file="../../admin/jsp/importFrameSet.jsp" %>
 
-<c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
-<view:setBundle bundle="${lookHelper.localizedBundle}"/>
-
-<fmt:message var="redExtLabel" key="look.layout.reduce" />
-
 <%
   LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
-  String navigationWidth = helper.getSettings("domainsBarFramesetWidth", "260") + "px";
+  if (helper != null) {
+    String navigationWidth = helper.getSettings("domainsBarFramesetWidth", "260") + "px";
 
-  BodyPartSettings bodyPartSettings = helper.getBodyPartSettings(request);
-  String paramsForDomainsBar = bodyPartSettings.getDomainsBarParams();
-  String frameURL = bodyPartSettings.getMainPartURL();
-  if (bodyPartSettings.isHideMenu()) {
-    navigationWidth = "0px";
-  }
+    String redExtLabel = helper.getString("look.layout.reduce");
+
+    BodyPartSettings bodyPartSettings = helper.getBodyPartSettings(request);
+    String paramsForDomainsBar = bodyPartSettings.getDomainsBarParams();
+    String frameURL = bodyPartSettings.getMainPartURL();
+    if (bodyPartSettings.isHideMenu()) {
+      navigationWidth = "0px";
+    }
 %>
 <style type="text/css">
 
@@ -83,8 +81,8 @@
   }
 </style>
 <div id="sp-layout-body-part-layout-toggle-part" style="display: none">
-  <div id="navigation-toggle"><img src="icons/silverpeasV5/reduct.gif" alt="${redExtLabel}" title="${redExtLabel}"/></div>
-  <div id="header-toggle"><img src="icons/silverpeasV5/reductTopBar.gif" alt="${redExtLabel}" title="${redExtLabel}"/></div>
+  <div id="navigation-toggle"><img src="icons/silverpeasV5/reduct.gif" alt="<%=redExtLabel%>" title="<%=redExtLabel%>"/></div>
+  <div id="header-toggle"><img src="icons/silverpeasV5/reductTopBar.gif" alt="<%=redExtLabel%>" title="<%=redExtLabel%>"/></div>
 </div>
 <div id="sp-layout-body-part-layout">
   <div id="sp-layout-body-part-layout-navigation-part"></div>
@@ -100,3 +98,4 @@
     });
   })();
 </script>
+<% } %>

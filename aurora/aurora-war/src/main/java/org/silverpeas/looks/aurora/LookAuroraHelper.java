@@ -11,6 +11,7 @@ import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.service.QuickInfoDateComparatorDesc;
 import org.silverpeas.core.admin.component.model.ComponentInst;
+import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
@@ -28,6 +29,7 @@ import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
+import org.silverpeas.core.web.look.LookHelper;
 import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.look.Shortcut;
@@ -55,15 +57,22 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private LocalizationBundle messages;
   private LookSettings settings;
   private static final String BANNER_ALL_SPACES = "*";
+
+  public static LookHelper newLookHelper(HttpSession session) {
+    LookHelper lookHelper = new LookAuroraHelper(session);
+    session.setAttribute(LookHelper.SESSION_ATT, lookHelper);
+    return lookHelper;
+  }
   
   public LookAuroraHelper(HttpSession session) {
     super(session);
 
     delegatedNewsService = DelegatedNewsService.get();
 
+    String language = getMainSessionController().getFavoriteLanguage();
+
     messages = ResourceLocator
-        .getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
-            getMainSessionController().getFavoriteLanguage());
+        .getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle", language);
   }
 
   @Override
@@ -127,25 +136,39 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public String getProjectsSpaceId() {
     return getSettings("projects.spaceId", "0");
   }
-  
+
   public List<Project> getProjects() {
-    List<Project> projects = new ArrayList<>();
-    String[] spaceIds = getOrganisationController().getAllowedSubSpaceIds(getUserId(), getProjectsSpaceId());
+    return getProjects(false);
+  }
+
+  public List<Project> getProjects(boolean includeApps) {
+    List<Project> projects = new ArrayList<Project>();
+    OrganizationController controller = getOrganisationController();
+    String[] spaceIds = controller.getAllowedSubSpaceIds(getUserId(), getProjectsSpaceId());
     for (String spaceId : spaceIds) {
-      SpaceInstLight space = getOrganisationController().getSpaceInstLightById(spaceId);
+      SpaceInstLight space = controller.getSpaceInstLightById(spaceId);
       if (space != null) {
         Project project = new Project(space);
-        String[] componentIds = getOrganisationController().getAvailCompoIdsAtRoot(space.getId(), getUserId());
-        for (String componentId : componentIds) {
-          ComponentInst component = getOrganisationController().getComponentInst(componentId);
-          if (component != null && !component.isHidden()) {
-            project.addComponent(component);
-          }
+        if (includeApps) {
+          project.setComponents(getComponents(space.getId()));
         }
         projects.add(project);
       }
     }
     return projects;
+  }
+
+  private List<SilverpeasComponentInstance> getComponents(String spaceId) {
+    List<SilverpeasComponentInstance> components = new ArrayList<>();
+    OrganizationController controller = getOrganisationController();
+    String[] componentIds = controller.getAvailCompoIdsAtRoot(spaceId, getUserId());
+    for (String componentId : componentIds) {
+      SilverpeasComponentInstance component = controller.getComponentInstLight(componentId);
+      if (component != null && !component.isHidden()) {
+        components.add(component);
+      }
+    }
+    return components;
   }
   
   public String getLoginHomePage() {

@@ -1,6 +1,6 @@
 package org.silverpeas.looks.aurora;
 
-import org.silverpeas.core.admin.component.model.ComponentInst;
+import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 
 import java.util.ArrayList;
@@ -9,7 +9,8 @@ import java.util.List;
 public class Project {
 
   private SpaceInstLight space;
-  private List<ComponentInst> components = new ArrayList<ComponentInst>();
+  private List<SilverpeasComponentInstance> components =
+      new ArrayList<SilverpeasComponentInstance>();
   
   public Project(SpaceInstLight space) {
     this.space = space;
@@ -22,14 +23,11 @@ public class Project {
     return space;
   }
   
-  public void setComponents(List<ComponentInst> components) {
+  public void setComponents(List<SilverpeasComponentInstance> components) {
     this.components = components;
   }
-  public List<ComponentInst> getComponents() {
+  public List<SilverpeasComponentInstance> getComponents() {
     return components;
-  }
-  public void addComponent(ComponentInst component) {
-    components.add(component);
   }
   
   public String getName() {
