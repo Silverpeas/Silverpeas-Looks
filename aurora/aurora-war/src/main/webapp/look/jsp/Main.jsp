@@ -128,7 +128,7 @@ function showWeather(woeid) {
 				$('#day'+numeroJour+' .temperature .min').html("min "+low+"&deg;");
 				$('#day'+numeroJour+' .temperature .max').html("max "+high+"&deg;");
 				$('#day'+numeroJour+' img').attr("alt", $(this).attr('text'));
-				$('#day'+numeroJour+' img').attr("src", "/silverpeas/look/jsp/imgDesign/meteo/meteo_"+code+".png");
+				$('#day'+numeroJour+' img').attr("src", webContext+"/look/jsp/imgDesign/meteo/meteo_"+code+".png");
 			});
 	 	},
 	 
@@ -199,11 +199,13 @@ $(document).ready(function() {
 					<div class="FAQ-entry-main-container">
 					  <div class="FAQ-entry">
               <c:forEach var="question" items="${questions.list}">
-					      <p><a href="/silverpeas${question._getPermalink()}">${question.title}</a></p>
+                <c:url var="questionURL" value="${question._getPermalink()}"/>
+					      <p><a href="${questionURL}">${question.title}</a></p>
               </c:forEach>
             </div>
             <c:if test="${questions.canAskAQuestion}">
-    				  <a href="${questions.requestURL}" class="link-add"><span>${labelQuestionsPost}</span> </a>
+              <c:url var="newQuestionURL" value="${questions.requestURL}"/>
+    				  <a href="${newQuestionURL}" class="link-add"><span>${labelQuestionsPost}</span> </a>
             </c:if>
           </div>
 					<a title="${labelQuestionsMore}" href="${questions.appURL}" class="link-more"><span>${labelQuestionsMore}</span> </a>
@@ -242,7 +244,8 @@ $(document).ready(function() {
 			<c:if test="${settings.displaySearchOnHome}">
 				<div class="secteur-container search" id="bloc-advancedSeach">
 			    <h4>${labelSearch}</h4>
-          <form method="post" action="/silverpeas/RpdcSearch/jsp/AdvancedSearch" name="AdvancedSearch">
+          <c:url var="searchActionURL" value="/RpdcSearch/jsp/AdvancedSearch"/>
+          <form method="post" action="${searchActionURL}" name="AdvancedSearch">
             <input type="text" id="query" value="" size="60" name="query" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input"/>
 				    <input type="hidden" name="AxisValueCouples"/><input type="hidden" name="mode" value="clear"/>
 				    <fieldset id="used_pdc" class="skinFieldset"></fieldset>
@@ -266,7 +269,7 @@ $(document).ready(function() {
                   <c:set var="bookmarkUrl" value="${bookmark.url}"/>
                   <c:set var="target" value="_blank"/>
                   <c:if test="${not bookmarkUrl.toLowerCase().startsWith('http')}">
-                    <c:set var="bookmarkUrl" value="/silverpeas${bookmark.url}"/>
+                    <c:url var="bookmarkUrl" value="${bookmark.url}"/>
                     <c:set var="target" value=""/>
                   </c:if>
 								  <li class="${classFrag}"><a href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
