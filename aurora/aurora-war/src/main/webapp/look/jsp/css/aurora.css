@@ -9,3 +9,81 @@
 .portlet .eventInfo div.eventApp {
   display: none;
 }
+
+#directory #indexAndSearch #search input {
+    width: 214px;
+}
+
+
+#search-form-header #select-user-group-queryDirectory {
+  vertical-align:middle;
+  text-align: left;
+  z-index: 1002;
+}
+
+#search-form-header #select-user-group-queryDirectory .search-input-container {
+  display: inline-block;
+  align-items: center;
+  min-width: auto;
+}
+
+#search-form-header input#query ,
+#search-form-header #select-user-group-queryDirectory .search-input-container input{
+  width:18em;
+  padding:0 1em;
+  margin:0 !important;
+}
+
+#search-zone-header a, #search-zone-header label {
+  vertical-align: middle;
+}
+
+#search-form-header #select-user-group-queryDirectory .selectize-input {
+  padding: 0;
+}
+
+#search-zone-header #inputSearchSwitchable {
+  display:inline-block;
+  position:relative;
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode{
+  position:absolute;
+  right:0.5em;
+  top:0.6em;
+  background:transparent url(../icons/switchSearchMode.png) 0 0 ;
+  width:15px;
+  min-width:15px;
+  padding:0;
+  height:16px;
+  display:block;
+  cursor:pointer;
+  z-index: 1003;
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode:hover,
+#search-zone-header #inputSearchSwitchable .switchSearchMode:focus{
+  box-shadow:inherit;
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode span{
+  display:none;
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode.platform.on{
+  background:transparent url(../icons/switchSearchMode.png) 0 0 ;
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode.directory.off{
+  background:transparent url(../icons/switchSearchMode.png) right 0 ;
+  right:2.5em
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode.platform.off{
+  background:transparent url(../icons/switchSearchMode.png) 0 bottom ;
+}
+
+#search-zone-header #inputSearchSwitchable .switchSearchMode.directory.on{
+  background:transparent url(../icons/switchSearchMode.png) right bottom ;
+  right:2.5em
+}
