@@ -33,7 +33,7 @@ textarea {
 
    =================== */
 
-  body#top {
+body#top {
 	background-repeat: no-repeat;
 	background-position:0 0px;
 }  
@@ -81,8 +81,8 @@ textarea {
 	line-height:23px;
 	float:left;
 	margin-right:8px;
-  overflow:hidden;
-  width:150px;
+	overflow:hidden;
+	width:150px;
 }
 .btn-header a {
 	color:#2f3135;
@@ -332,20 +332,10 @@ label.select-header:before {
 	color: #2a2a2a;
 	margin:0;
 }
-
-#search-zone-header label:after {
-	color: #2a2a2a;
-	content:" :";
-}
-
-#search-zone-header a{
-}
-#search-zone-header > a span {
-
-}
 #search-zone-header > a {
 	padding:4px 0 0 5px;
 	float:right;
+	line-height: 24px;
 }
 #search-zone-header > * {
 	display: inline-block;
@@ -354,17 +344,23 @@ label.select-header:before {
 #search-form-header {
 	display:inline-block;
 }
-#search-form-header input {
+
+/* pour les 2 type d'input platforme et directory */
+#search-form-header .selectize-control{
 	border:0;
-	border:1px solid #ccc;
+}
+#search-form-header input ,
+#search-form-header .selectize-control input{
+	border:1px solid #ccc !important;
 	background:#fff url() ;
 	padding:0 8px;
 	margin:0;
-	width:182px;
+	width:200px !important;
 	height:29px;
 	color:#999;
-	font-size: 0.90em;
+	font-size:13px;
 	vertical-align:middle;
+	padding:0 8px  !important;
 }
 
 #search-form-header a {

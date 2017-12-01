@@ -35,6 +35,10 @@
 <fmt:message var="labelSearch" key="look.banner.search"/>
 <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
 <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
+<fmt:message var="labelSearchPlatform" key="look.banner.search.scope.platform"/>
+<fmt:message var="labelSearchPlatformShort" key="look.banner.search.scope.platform.short"/>
+<fmt:message var="labelSearchDirectory" key="look.banner.search.scope.directory"/>
+<fmt:message var="labelSearchDirectoryShort" key="look.banner.search.scope.directory.short"/>
 
 <fmt:message var="labelUserNotifications" key="look.banner.notifications"/>
 <fmt:message var="labelUnreadUserNotification" key="look.banner.notifications.unread.one"/>
@@ -123,7 +127,7 @@ function goToProject(projectSpaceId) {
 }
 
 function searchEngine() {
-  if (document.searchForm.query.value !== "") {
+  if (document.searchForm.query.value !== "" || document.searchForm.queryDirectory.value !== "") {
     executeSearchActionToBodyPartTarget("AdvancedSearch", true);
   }
 }
@@ -137,16 +141,69 @@ function lastResultsSearchEngine(){
 }
 
 function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
-  var urlParameters = hasToSerializeForm ?
-      jQuery(document.searchForm).serializeFormJSON() : {};
-  var url = sp.formatUrl(webContext+"/RpdcSearch/jsp/" + action, urlParameters);
+  var urlParameters = hasToSerializeForm ? jQuery(document.searchForm).serializeFormJSON() : {};
+  var url = "";
+  if (searchScope === searchEngineScope) {
+    url = sp.formatUrl(webContext + "/RpdcSearch/jsp/" + action, urlParameters);
+  } else if (searchScope === directoryScope) {
+    url = sp.formatUrl(webContext + "/Rdirectory/jsp/searchByKey", urlParameters);
+  }
   spLayout.getBody().getContent().load(url);
 }
+
+function jumpToUser(selectionUserAPI) {
+  var userIds = selectionUserAPI.getSelectedUserIds();
+  if (userIds.length) {
+    var url = webContext+"/Rprofil/jsp/Main?userId="+userIds[0];
+    spLayout.getBody().getContent().load(url);
+  }
+}
+
+$("#inputSearchSwitchable").keypress(function(e) {
+  if (e.which == 13) {
+    e.preventDefault();
+    searchEngine();
+    return false;
+  }
+  return true;
+});
+
+var searchEngineScope = "SearchEngineScope";
+var directoryScope = "DirectoryScope";
+var searchScope = searchEngineScope;
 
 $(document).ready(function() {
   <c:if test="${silfn:isDefined(currentHeading)}">
     selectHeading('${currentHeading}');
   </c:if>
+
+  $('#select-user-group-queryDirectory').hide();
+
+  $('#searchEngineScope').click(function() {
+    searchScope = searchEngineScope;
+    $(this).removeClass('off').addClass('on');
+    $('#directoryScope').removeClass('on').addClass('off');
+    $('#select-user-group-queryDirectory').hide();
+    $('#lastResult-link-header').css('visibility', 'visible');
+    $('#advancedSearch-link-header').css('visibility', 'visible');
+    $('#query').show();
+  });
+
+  $('#directoryScope').click(function() {
+    searchScope = directoryScope;
+    $(this).removeClass('off').addClass('on');
+    $('#searchEngineScope').removeClass('on').addClass('off');
+    $('#select-user-group-queryDirectory').css('display', 'inline-block');
+    $('#lastResult-link-header').css('visibility', 'hidden');
+    $('#advancedSearch-link-header').css('visibility', 'hidden');
+    $('#query').hide();
+    // setting 'platform' query as 'directory' query
+    var directoryInput = $("input[name='queryDirectory']");
+    var query = directoryInput.val();
+    if (query.isNotDefined()) {
+      directoryInput.val($('#query').val())
+    }
+  });
 
   $('#show-menu-spacePerso').hover(function() {
 		 $('.spacePerso').show();
@@ -161,10 +218,6 @@ $(document).ready(function() {
 
 	<c:if test="${settings.displayMenuSubElements}">
   smartMenuPromise.then(function() {
-    /*$('#main-menu').smartmenus({
-      showOnClick : false
-    });*/
-
     $('#main-menu').smartmenus({
       subMenusMinWidth:"15em",
       subMenusMinWidth:"30em"
@@ -274,10 +327,18 @@ window.USERSESSION_PROMISE.then(function() {
         </c:if>
       </ul>
       <div id="search-zone-header">
-        <form id="search-form-header" method="get" action="javascript:searchEngine()" name="searchForm">
-          <label for="query">${labelSearch}</label>
-          <input id="query" size="30" name="query" />
-          <input type="hidden" value="clear" name="mode"/>
+        <form id="search-form-header" method="get" name="searchForm">
+          <div id="inputSearchSwitchable">
+            <label for="query">${labelSearch}</label>
+            <input id="query" size="30" name="query" />
+            <viewTags:selectUsersAndGroups selectionType="USER" noUserPanel="true" noSelectionClear="true"
+                                         doNotSelectAutomaticallyOnDropDownOpen="true"
+                                         queryInputName="queryDirectory" id="queryDirectory"
+                                         navigationalBehavior="true" onChangeJsCallback="jumpToUser"/>
+            <input type="hidden" value="clear" name="mode"/>
+            <a href="#" id="searchEngineScope" class="switchSearchMode platform on" title="${labelSearchPlatform}"><span>${labelSearchPlatformShort}</span></a>
+            <a href="#" id="directoryScope" class="switchSearchMode directory off" title="${labelSearchDirectory}"><span>${labelSearchDirectoryShort}</span></a>
+          </div>
           <a href="javascript:searchEngine()">Go</a>
         </form>
         <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()" title="${labelSearchResults}"><span>${labelSearchResults}</span></a>
