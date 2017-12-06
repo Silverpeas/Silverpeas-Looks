@@ -1,5 +1,6 @@
 package org.silverpeas.looks.aurora;
 
+import org.apache.ecs.wml.Do;
 import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
@@ -12,8 +13,10 @@ import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.service.QuickInfoDateComparatorDesc;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
+import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
 import org.silverpeas.core.calendar.Priority;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -57,6 +60,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private LocalizationBundle messages;
   private LookSettings settings;
   private static final String BANNER_ALL_SPACES = "*";
+  private List<Domain> directoryDomains = null;
+  private List<Group> directoryGroups = null;
 
   public static LookHelper newLookHelper(HttpSession session) {
     LookHelper lookHelper = new LookAuroraHelper(session);
@@ -585,5 +590,48 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     NewsList news = getNews();
     return !news.isEmpty();
+  }
+
+  public List<Domain> getDirectoryDomains() {
+    if (directoryDomains == null) {
+      directoryDomains = new ArrayList<>();
+      String[] domainIds = getSettings("directory.domains", "").split(",");
+      for (String domainId : domainIds) {
+        if (StringUtil.isDefined(domainId)) {
+          Domain domain = getOrganisationController().getDomain(domainId);
+          if (domain != null) {
+            directoryDomains.add(domain);
+          }
+        }
+      }
+    }
+    return directoryDomains;
+  }
+
+  public List<Group> getDirectoryGroups() {
+    if (directoryGroups == null) {
+      directoryGroups = new ArrayList<>();
+      String[] groupIds = getSettings("directory.groups", "").split(",");
+      for (String groupId : groupIds) {
+        if (StringUtil.isDefined(groupId)) {
+          Group group = Group.getById(groupId);
+          if (group != null) {
+            directoryGroups.add(group);
+          }
+        }
+      }
+    }
+    return directoryGroups;
+  }
+
+  public String getDirectoryURL() {
+    if (!getSettings("directory.enabled", true)) {
+      return null;
+    }
+    String url = "/Rdirectory/jsp/Main";
+    url += "?DomainIds="+getSettings("directory.domains", "");
+    url += "&GroupIds="+getSettings("directory.groups", "");
+    url += "&Sort="+getSettings("directory.sort", "ALPHA");
+    return url;
   }
 }
