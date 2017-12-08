@@ -10,7 +10,9 @@
 <c:set var="apps" value="${lookHelper.applications}"/>
 <c:set var="projects" value="${lookHelper.projects}"/>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
-<c:set var="directoryURL" value="${settings.directoryURL}"/>
+<c:set var="directoryURL" value="${lookHelper.directoryURL}"/>
+<c:set var="directoryDomains" value="${lookHelper.directoryDomains}"/>
+<c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
 
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
@@ -106,7 +108,7 @@ function goToSpaceApp(id) {
 
 function changeBody(url) {
   if (StringUtil.isDefined(url)) {
-    spLayout.getBody().getContent().load(url);
+    spLayout.getBody().getContent().load(webContext+url);
   }
 }
 
@@ -118,7 +120,7 @@ function goToPersonalSpace() {
 
 function goToApplication(url) {
 	unselectHeadings();
-  changeBody(webContext+url);
+  changeBody(url);
 }
 
 function goToProject(projectSpaceId) {
@@ -277,15 +279,15 @@ window.USERSESSION_PROMISE.then(function() {
           </div>
           <div class="spacePerso">
             <ul>
-              <li><a id="link-settings" href="javascript:changeBody(webContext+'/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
+              <li><a id="link-settings" href="javascript:changeBody('/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
               <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
-              <li><a id="link-feed" href="javascript:changeBody(webContext+'/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
+              <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
               <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
             </ul>
           </div>
         </div>
         
-        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody(webContext+'/RSILVERMAIL/jsp/Main')"></a> </div>
+        <div id="notification-count" class="btn-header"> <a href="javascript:changeBody('/RSILVERMAIL/jsp/Main')"></a> </div>
 
         <c:if test="${not empty projects}">
         <div class="btn-header">
@@ -317,7 +319,7 @@ window.USERSESSION_PROMISE.then(function() {
         <c:if test="${settings.displayConnectedUsers}">
           <li id="connectedUsers"><a onclick="javascript:onClick=spUserSession.viewConnectedUsers();" href="#"></a></li>
         </c:if>
-        <li id="map-link-header"><a href="javascript:changeBody(webContext+'/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
+        <li id="map-link-header"><a href="javascript:changeBody('/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
         <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
         <c:if test="${silfn:isDefined(directoryURL)}">
           <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
@@ -332,9 +334,10 @@ window.USERSESSION_PROMISE.then(function() {
             <label for="query">${labelSearch}</label>
             <input id="query" size="30" name="query" />
             <viewTags:selectUsersAndGroups selectionType="USER" noUserPanel="true" noSelectionClear="true"
-                                         doNotSelectAutomaticallyOnDropDownOpen="true"
-                                         queryInputName="queryDirectory" id="queryDirectory"
-                                         navigationalBehavior="true" onChangeJsCallback="jumpToUser"/>
+                                           doNotSelectAutomaticallyOnDropDownOpen="true"
+                                           queryInputName="queryDirectory" id="queryDirectory"
+                                           navigationalBehavior="true" onChangeJsCallback="jumpToUser"
+                                           domainsFilter="${directoryDomains}" groupsFilter="${directoryGroups}" />
             <input type="hidden" value="clear" name="mode"/>
             <a href="#" id="searchEngineScope" class="switchSearchMode platform on" title="${labelSearchPlatform}"><span>${labelSearchPlatformShort}</span></a>
             <a href="#" id="directoryScope" class="switchSearchMode directory off" title="${labelSearchDirectory}"><span>${labelSearchDirectoryShort}</span></a>

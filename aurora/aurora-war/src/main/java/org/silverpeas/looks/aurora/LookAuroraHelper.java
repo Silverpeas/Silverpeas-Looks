@@ -12,8 +12,10 @@ import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.service.QuickInfoDateComparatorDesc;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
+import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
+import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
 import org.silverpeas.core.calendar.Priority;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -44,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -57,6 +60,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private LocalizationBundle messages;
   private LookSettings settings;
   private static final String BANNER_ALL_SPACES = "*";
+  private List<Domain> directoryDomains = null;
+  private List<Group> directoryGroups = null;
 
   public static LookHelper newLookHelper(HttpSession session) {
     LookHelper lookHelper = new LookAuroraHelper(session);
@@ -585,5 +590,40 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     NewsList news = getNews();
     return !news.isEmpty();
+  }
+
+  public List<Domain> getDirectoryDomains() {
+    if (directoryDomains == null) {
+      directoryDomains = Arrays.stream(getSettings("directory.domains", "").split(","))
+          .filter(StringUtil::isDefined)
+          .map(i -> getOrganisationController().getDomain(i.trim()))
+          .filter(Objects::nonNull)
+          .distinct()
+          .collect(Collectors.toList());
+    }
+    return directoryDomains;
+  }
+
+  public List<Group> getDirectoryGroups() {
+    if (directoryGroups == null) {
+      directoryGroups = Arrays.stream(getSettings("directory.groups", "").split(","))
+          .filter(StringUtil::isDefined)
+          .map(groupId -> Group.getById(groupId.trim()))
+          .filter(Objects::nonNull)
+          .distinct()
+          .collect(Collectors.toList());
+    }
+    return directoryGroups;
+  }
+
+  public String getDirectoryURL() {
+    if (!getSettings("directory.enabled", true)) {
+      return null;
+    }
+    String url = "/Rdirectory/jsp/Main";
+    url += "?DomainIds="+getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
+    url += "&GroupIds="+getDirectoryGroups().stream().map(Group::getId).collect(Collectors.joining(","));
+    url += "&Sort="+getSettings("directory.sort", "ALPHA");
+    return url;
   }
 }

@@ -14,10 +14,6 @@ public class LookSettings {
     this.settings = settings;
   }
 
-  public String getDirectoryURL() {
-    return settings.getString("directoryURL", null);
-  }
-
   public String getHelpURL() {
     return settings.getString("helpURL", "https://extranet.silverpeas.com/help_fr/");
   }
