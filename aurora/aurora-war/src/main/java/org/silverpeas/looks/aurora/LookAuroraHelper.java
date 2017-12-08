@@ -1,6 +1,5 @@
 package org.silverpeas.looks.aurora;
 
-import org.apache.ecs.wml.Do;
 import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
@@ -47,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -594,32 +594,24 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   public List<Domain> getDirectoryDomains() {
     if (directoryDomains == null) {
-      directoryDomains = new ArrayList<>();
-      String[] domainIds = getSettings("directory.domains", "").split(",");
-      for (String domainId : domainIds) {
-        if (StringUtil.isDefined(domainId)) {
-          Domain domain = getOrganisationController().getDomain(domainId);
-          if (domain != null) {
-            directoryDomains.add(domain);
-          }
-        }
-      }
+      directoryDomains = Arrays.stream(getSettings("directory.domains", "").split(","))
+          .filter(StringUtil::isDefined)
+          .map(i -> getOrganisationController().getDomain(i.trim()))
+          .filter(Objects::nonNull)
+          .distinct()
+          .collect(Collectors.toList());
     }
     return directoryDomains;
   }
 
   public List<Group> getDirectoryGroups() {
     if (directoryGroups == null) {
-      directoryGroups = new ArrayList<>();
-      String[] groupIds = getSettings("directory.groups", "").split(",");
-      for (String groupId : groupIds) {
-        if (StringUtil.isDefined(groupId)) {
-          Group group = Group.getById(groupId);
-          if (group != null) {
-            directoryGroups.add(group);
-          }
-        }
-      }
+      directoryGroups = Arrays.stream(getSettings("directory.groups", "").split(","))
+          .filter(StringUtil::isDefined)
+          .map(groupId -> Group.getById(groupId.trim()))
+          .filter(Objects::nonNull)
+          .distinct()
+          .collect(Collectors.toList());
     }
     return directoryGroups;
   }
@@ -629,8 +621,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return null;
     }
     String url = "/Rdirectory/jsp/Main";
-    url += "?DomainIds="+getSettings("directory.domains", "");
-    url += "&GroupIds="+getSettings("directory.groups", "");
+    url += "?DomainIds="+getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
+    url += "&GroupIds="+getDirectoryGroups().stream().map(Group::getId).collect(Collectors.joining(","));
     url += "&Sort="+getSettings("directory.sort", "ALPHA");
     return url;
   }

@@ -334,9 +334,9 @@ window.USERSESSION_PROMISE.then(function() {
             <label for="query">${labelSearch}</label>
             <input id="query" size="30" name="query" />
             <viewTags:selectUsersAndGroups selectionType="USER" noUserPanel="true" noSelectionClear="true"
-                                         doNotSelectAutomaticallyOnDropDownOpen="true"
-                                         queryInputName="queryDirectory" id="queryDirectory"
-                                         navigationalBehavior="true" onChangeJsCallback="jumpToUser"
+                                           doNotSelectAutomaticallyOnDropDownOpen="true"
+                                           queryInputName="queryDirectory" id="queryDirectory"
+                                           navigationalBehavior="true" onChangeJsCallback="jumpToUser"
                                            domainsFilter="${directoryDomains}" groupsFilter="${directoryGroups}" />
             <input type="hidden" value="clear" name="mode"/>
             <a href="#" id="searchEngineScope" class="switchSearchMode platform on" title="${labelSearchPlatform}"><span>${labelSearchPlatformShort}</span></a>
