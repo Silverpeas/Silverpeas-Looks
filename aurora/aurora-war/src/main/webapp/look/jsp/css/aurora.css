@@ -87,3 +87,16 @@
   background:transparent url(../icons/switchSearchMode.png) right bottom ;
   right:2.5em
 }
+
+#user-favorit-home .link-add.manage {
+	display:none;
+	float:none;
+	margin-top:0;
+}
+
+#localisation-weather a span::after {
+	content:" /";
+}
+#localisation-weather a::last-child span::after {
+	content:"";
+}

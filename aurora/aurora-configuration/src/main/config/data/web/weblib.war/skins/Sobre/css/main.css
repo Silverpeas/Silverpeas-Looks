@@ -224,15 +224,18 @@ label.select-header:before {
 	z-index:104;
 }
 #infoConnection ul li {
-	padding:3px;
+	padding:0;
+	margin:0;
 }
 #infoConnection ul li a {
 	color:#2f3135;
 	font-size:9pt;
 	display:block;
+	padding:5px;
 }
 #infoConnection ul li a:hover, #infoConnection .directoryLink:hover, #infoConnection .logOut:hover {
-	text-decoration: underline;
+	background-color:#0078d7;
+	color:#FFF
 }
 
  .header-container #outils {
@@ -557,6 +560,22 @@ label.select-header:before {
 	padding-bottom:4px;
 }
 
+
+#user-favorit-home .link-add.manage {
+	display:inline-block;
+	clear:both;
+	margin-top:1em;
+    float: left;
+	background:-moz-linear-gradient(top,#fff,#f0eeee);
+	background:linear-gradient(top,#fff,#f0eeee);
+	border:1px solid #d8d8d8;
+	border-radius:6px;
+}
+
+#user-favorit-home .link-add.manage span{
+	background:none;
+	padding-right: 12px;
+}
 #user-favorit-home .link-more.less{
 	background:#FFF url(../imgDesign/packImages.png)  -4px -422px no-repeat;    
 	margin-top: -10px;
@@ -788,7 +807,7 @@ label.select-header:before {
 .link-add span,
 #submit-AdvancedSearch span {
     background:transparent url(../imgDesign/packBtn.png) right 0 no-repeat;
-    color: #8D5C9F;
+    color: #333;
     display: block;
     line-height: 32px;
     padding-right: 50px;

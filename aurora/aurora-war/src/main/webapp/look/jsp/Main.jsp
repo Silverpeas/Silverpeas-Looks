@@ -43,6 +43,7 @@
 <fmt:message var="labelSearch" key="look.home.search.title"/>
 <fmt:message var="labelSearchButton" key="look.home.search.button"/>
 <fmt:message var="labelBookmarks" key="look.home.bookmarks.title"/>
+<fmt:message var="labelBookmarksManage" key="look.home.bookmarks.manage"/>
 <fmt:message var="labelBookmarksMore" key="look.home.bookmarks.more"/>
 <fmt:message var="labelShortcuts" key="look.home.shortcuts"/>
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
@@ -74,6 +75,12 @@ html, body {
 <script type="text/javascript" src="js/ephemeris.min.js"></script>
 <script type="text/javascript">
 var weatherCookieName = "Silverpeas_Intranet_LastVisitedCity";
+
+function changeBody(url) {
+  if (StringUtil.isDefined(url)) {
+    spLayout.getBody().getContent().load(webContext+url);
+  }
+}
 
 function addPrefix(str) {
 	if($.browser.edge || $.browser.safari) {
@@ -188,7 +195,7 @@ $(document).ready(function() {
 });
 </script>
 </head>
-<body>
+<body class="main-home-page">
 <div class="main-container">
   <div class="main wrapper clearfix">
     <div class="right-main-container">
@@ -205,7 +212,7 @@ $(document).ready(function() {
             </div>
             <c:if test="${questions.canAskAQuestion}">
               <c:url var="newQuestionURL" value="${questions.requestURL}"/>
-    				  <a href="${newQuestionURL}" class="link-add"><span>${labelQuestionsPost}</span> </a>
+    				  <a title="${labelQuestionsPost}" href="${newQuestionURL}" class="link-add"><span>${labelQuestionsPost}</span> </a>
             </c:if>
           </div>
 					<a title="${labelQuestionsMore}" href="${questions.appURL}" class="link-more"><span>${labelQuestionsMore}</span> </a>
@@ -217,26 +224,22 @@ $(document).ready(function() {
 				  <h4><span class="title">${labelWeather}</span><span class="date-today"> <fmt:formatDate value="${now}" pattern="dd MMMMM yyyy"/></span></h4>
 					<div id="ephemeride">Brigitte</div>
           <c:if test="${showWeather}">
-				    <div id="localisation-weather"> <span class="label">&Agrave; : </span>
-              <c:set var="firstCity" value="true"/>
-              <c:forEach var="city" items="${weatherCities}">
-                <c:if test="${not firstCity}">
-                  /
-                </c:if>
-				        <a class="select" id="${city.woeid}" href="#" onclick="javascript:showWeather(${city.woeid});return false;">${city.label}</a>
-                <c:set var="firstCity" value="false"/>
-              </c:forEach>
-            </div>
+				    <div id="localisation-weather">
+					  <c:set var="firstCity" value="true"/>
+					  <c:forEach var="city" items="${weatherCities}">
+								<a class="select" id="${city.woeid}" href="#" onclick="javascript:showWeather(${city.woeid});return false;"><span>${city.label}</span></a>
+					  </c:forEach>
+					</div>
 				    <div class="day" id="day1"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
 				      <div class="temperature"><span class="min">min XX&deg;</span> <br />
 				        <span class="max">max XX&deg;</span> </div>
-              <div class="label">${labelWeatherToday}</div>
+              <div class="label"><span>${labelWeatherToday}</span></div>
             </div>
 				    <div class="day" id="day2"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
 				      <div class="temperature"><span class="min">min XX&deg;</span> <br />
 				        <span class="max">max XX&deg;</span> </div>
-              <div class="label">${labelWeatherTomorrow}</div>
-            </div>
+					  <div class="label"><span>${labelWeatherTomorrow}</span></div>
+					</div>
           </c:if>
         </div>
       </c:if>
@@ -265,6 +268,7 @@ $(document).ready(function() {
                 <c:forEach var="bookmark" items="${bookmarks}">
                   <c:if test="${bId > 4}">
                     <c:set var="classFrag" value="other-bookmark"/>
+					<c:set var="areaNeedLinkMore" value="true"/>
                   </c:if>
                   <c:set var="bookmarkUrl" value="${bookmark.url}"/>
                   <c:set var="target" value="_blank"/>
@@ -281,10 +285,12 @@ $(document).ready(function() {
               <c:import var="htmlFragment" url="${noBookmarksFragment}" charEncoding="UTF-8"/>
               <c:out value="${htmlFragment}" escapeXml="false"/>
             </c:if>
-          </div>
-          <c:if test="${someBookmarks}">
-            <a title="${labelBookmarksMore}" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>${labelBookmarksMore}</span> </a>
+		 
+		   <c:if test="${areaNeedLinkMore}">
+           <a title="${labelBookmarksMore}" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>${labelBookmarksMore}</span> </a>
           </c:if>
+          </div>
+          <a title="${labelBookmarksManage}" href="javaScript:javascript:changeBody('/RmyLinksPeas/jsp/Main')" class="link-add manage" ><span>${labelBookmarksManage}</span></a>
         </div>
       </c:if>
     </div>
@@ -297,7 +303,7 @@ $(document).ready(function() {
 					<div class="cg-favorit-main-container">
 						<ul class="cg-favorit-list">
               <c:forEach var="shortcut" items="${shortcuts}">
-							   <li><a href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}"><img alt="${shortcut.altText}" src="${shortcut.iconURL}" /> <span>${shortcut.altText}</span></a></li>
+							<li><a href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}"><img alt="${shortcut.altText}" src="${shortcut.iconURL}" /> <span>${shortcut.altText}</span></a></li>
               </c:forEach>
 						</ul>
 					</div>
@@ -325,7 +331,7 @@ $(document).ready(function() {
                   <p>
                     <span class="news-date"><view:formatDate value="${news.date}"/></span>
                     <c:if test="${empty listOfNews.uniqueAppURL}">
-                      <span class="news-app"><a href="${news.appShortcut.url}" title="${labelNewsMore}">${news.appShortcut.altText}</a></span>
+                      <a href="${news.appShortcut.url}" title="${labelNewsMore}"><span class="news-app">${news.appShortcut.altText}</span></a>
                     </c:if>
                     ${news.description}
                   </p>
@@ -335,12 +341,12 @@ $(document).ready(function() {
 				  </ul>
           <c:choose>
             <c:when test="${not empty listOfNews.uniqueAppURL}">
-              <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more"><span>${labelNewsMore}</span> </a>
+              <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more"><span>${labelNewsMore}</span></a>
             </c:when>
             <c:otherwise>
               <div id="news-link-apps">
               <c:forEach items="${listOfNews.appShortcuts}" var="appNewsShortcut">
-                <a title="${labelNewsMore}" href="${appNewsShortcut.url}" class="link-more" id="link-app-${appNewsShortcut.target}"><span>${appNewsShortcut.altText}</span> </a>
+                <a title="${labelNewsMore}" href="${appNewsShortcut.url}" class="link-more" id="link-app-${appNewsShortcut.target}"><span>${appNewsShortcut.altText}</span></a>
               </c:forEach>
               </div>
             </c:otherwise>
