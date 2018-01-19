@@ -55,7 +55,7 @@
               <c:set var="event" value="${eventFull.detail}"/>
               <c:set var="eventAppShortcut" value="${eventFull.appShortcut}"/>
               <div class="event eventFrom-${event.instanceId}">
-                <div class="eventName"> >
+                <div class="eventName">
                   <a href="${event.occurrencePermalinkUrl}">${event.title}</a>
                   <span class="clock-events">
                         <c:if test="${not event.onAllDay}">

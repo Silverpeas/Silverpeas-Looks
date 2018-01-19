@@ -430,6 +430,9 @@ text-transform:uppercase;
 }
 
 /* MenuToogle Yuimenu*/
+.cellOperation {
+    width: auto;
+}
 #menutoggle {
 	display:block;
 	padding:0 20px 0 30px;
