@@ -1148,22 +1148,22 @@ h3 {
 
 
 /****** Ticker ******/
-#top #desktop-notifications-permission {
-background: url('/silverpeas/util/icons/cog.png') no-repeat scroll 0 0 transparent;
-    line-height: 17px;
-    padding-left: 20px;
-position: absolute;
-right: 0;
-top:1px;
-padding-right:1em;
-font-weight:bold;
-}
+#sp-layout-header-part #desktop-notifications-permission {
+	background: url('/silverpeas/util/icons/cog.png') no-repeat scroll 0 0 transparent;
+	line-height: 17px;
+	padding-left: 20px;
+	position: absolute;
+	right: 0;
+	top:1px;
+	padding-right:1em;
+	font-weight:bold;
+	}
 
-#top #ticker {
+#sp-layout-header-part #ticker {
 	display:none;
     background-color: #FFF;
     height: 22px;
-    left: 157px;
+    left: 0;
     position: absolute;
     right: 0;
     top: 57px;
@@ -1196,24 +1196,24 @@ font-weight:bold;
 }
 
 #sp-ticker .ticker-title {
-padding-top: 2px;
-padding-left:1em;
-color: #333;
-font-weight: bold;
-background-color: transparent;
-text-transform: uppercase;
+	padding-top: 2px;
+	padding-left:1em;
+	color: #333;
+	font-weight: bold;
+	background-color: transparent;
+	text-transform: uppercase;
 }
 #sp-ticker .ticker-content {
-margin: 0px;
-padding-top: 3px;
-position: absolute;
-color: #7eb73b;
-font-weight: 100;
-background-color: transparent;
-overflow: hidden;
-white-space: nowrap;
-line-height: 1.2em;
-padding-left:1em;
+	margin: 0px;
+	padding-top: 3px;
+	position: absolute;
+	color: #7eb73b;
+	font-weight: 100;
+	background-color: transparent;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 1.2em;
+	padding-left:1em;
 }
 
 #sp-ticker .ticker-content .ticker-item-date {
