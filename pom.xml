@@ -44,6 +44,8 @@
   </pluginRepositories>
 
   <properties>
+    <!-- property used by the CI to both deploy a build version and release the next stable version -->
+    <next.release>6.0</next.release>
     <!-- Version of Silverpeas on which it depends -->
     <silverpeas.version>6.0-SNAPSHOT</silverpeas.version>
   </properties>
@@ -93,6 +95,59 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Build-Version>${project.version}</Build-Version>
+              <Git-Commit>${git.commit.id.abbrev}</Git-Commit>
+              <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Build-Version>${project.version}</Build-Version>
+              <Git-Commit>${git.commit.id.abbrev}</Git-Commit>
+              <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Build-Version>${project.version}</Build-Version>
+              <Logging-Profile>silverpeas</Logging-Profile>
+              <Git-Commit>${git.commit.id.abbrev}</Git-Commit>
+              <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+          <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+          <generateGitPropertiesFile>false</generateGitPropertiesFile>
+        </configuration>
       </plugin>
     </plugins>
   </build>
