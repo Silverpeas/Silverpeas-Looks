@@ -146,9 +146,9 @@ function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
   var urlParameters = hasToSerializeForm ? jQuery(document.searchForm).serializeFormJSON() : {};
   var url = "";
   if (searchScope === searchEngineScope) {
-    url = sp.formatUrl(webContext + "/RpdcSearch/jsp/" + action, urlParameters);
+    url = sp.url.format(webContext + "/RpdcSearch/jsp/" + action, urlParameters);
   } else if (searchScope === directoryScope) {
-    url = sp.formatUrl(webContext + "/Rdirectory/jsp/searchByKey", urlParameters);
+    url = sp.url.format(webContext + "/Rdirectory/jsp/searchByKey", urlParameters);
   }
   spLayout.getBody().getContent().load(url);
 }
