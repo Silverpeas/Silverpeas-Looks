@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
+<%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
@@ -26,6 +27,9 @@
 <c:if test="${newsWithCarrousel}">
   <c:set var="newsClass" value="rslides"/>
 </c:if>
+
+<c:set var="rssFeeds" value="${lookHelper.RSSFeeds}"/>
+
 <c:set var="now" value="<%=new java.util.Date()%>" />
 
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
@@ -369,6 +373,9 @@ $(document).ready(function() {
           </ul>
         </div>
     	</div>
+
+      <viewTags:displayRSSFeeds rssFeeds="${rssFeeds}"/>
+
     </div>
   </div>
 </div>

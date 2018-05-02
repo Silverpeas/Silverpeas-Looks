@@ -1377,4 +1377,6 @@ color:#000
 
 /********************** ***************************/
 
-   
+#rssNews.onceChannel-true h4 {
+  border-bottom: none;
+}
