@@ -78,7 +78,7 @@ var weatherCookieName = "Silverpeas_Intranet_LastVisitedCity";
 
 function changeBody(url) {
   if (StringUtil.isDefined(url)) {
-    spLayout.getBody().getContent().load(webContext+url);
+    spWindow.loadLink(webContext+url);
   }
 }
 
@@ -207,15 +207,15 @@ $(document).ready(function() {
 					  <div class="FAQ-entry">
               <c:forEach var="question" items="${questions.list}">
                 <c:url var="questionURL" value="${question._getPermalink()}"/>
-					      <p><a href="${questionURL}">${question.title}</a></p>
+					      <p><a class="sp-permalink" href="${questionURL}">${question.title}</a></p>
               </c:forEach>
             </div>
             <c:if test="${questions.canAskAQuestion}">
               <c:url var="newQuestionURL" value="${questions.requestURL}"/>
-    				  <a title="${labelQuestionsPost}" href="${newQuestionURL}" class="link-add"><span>${labelQuestionsPost}</span> </a>
+    				  <a title="${labelQuestionsPost}" href="${newQuestionURL}" class="link-add sp-link"><span>${labelQuestionsPost}</span> </a>
             </c:if>
           </div>
-					<a title="${labelQuestionsMore}" href="${questions.appURL}" class="link-more"><span>${labelQuestionsMore}</span> </a>
+					<a title="${labelQuestionsMore}" href="${questions.appURL}" class="link-more sp-link"><span>${labelQuestionsMore}</span> </a>
         </div>
       </c:if>
 					
@@ -276,7 +276,7 @@ $(document).ready(function() {
                     <c:url var="bookmarkUrl" value="${bookmark.url}"/>
                     <c:set var="target" value=""/>
                   </c:if>
-								  <li class="${classFrag}"><a href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
+								  <li class="${classFrag}"><a class="sp-link" href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
                   <c:set var="bId" value="${bId+1}"/>
                 </c:forEach>
 							</ul>
@@ -290,7 +290,7 @@ $(document).ready(function() {
            <a title="${labelBookmarksMore}" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>${labelBookmarksMore}</span> </a>
           </c:if>
           </div>
-          <a title="${labelBookmarksManage}" href="javaScript:javascript:changeBody('/RmyLinksPeas/jsp/Main')" class="link-add manage" ><span>${labelBookmarksManage}</span></a>
+          <a title="${labelBookmarksManage}" href="javaScript:changeBody('/RmyLinksPeas/jsp/Main')" class="link-add manage" ><span>${labelBookmarksManage}</span></a>
         </div>
       </c:if>
     </div>
@@ -303,7 +303,7 @@ $(document).ready(function() {
 					<div class="cg-favorit-main-container">
 						<ul class="cg-favorit-list">
               <c:forEach var="shortcut" items="${shortcuts}">
-							<li><a href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}"><img alt="${shortcut.altText}" src="${shortcut.iconURL}" /> <span>${shortcut.altText}</span></a></li>
+							<li><a class="sp-link" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}"><img alt="${shortcut.altText}" src="${shortcut.iconURL}" /> <span>${shortcut.altText}</span></a></li>
               </c:forEach>
 						</ul>
 					</div>
@@ -316,7 +316,7 @@ $(document).ready(function() {
 				  <ul class="${newsClass}" id="slider">
             <c:forEach var="news" items="${listOfNews.news}">
               <li class="news-${news.appShortcut.target}">
-                <a href="${news.permalink}">
+                <a class="sp-permalink" href="${news.permalink}">
                   <c:choose>
                     <c:when test="${not empty news.thumbnailURL}">
                       <view:image src="${news.thumbnailURL}" alt="" size="${newsImageSize}"/>
@@ -327,11 +327,11 @@ $(document).ready(function() {
                   </c:choose>
                 </a>
                 <div class="caption">
-                  <h2><a href="${news.permalink}">${news.title}</a></h2>
+                  <h2><a class="sp-permalink" href="${news.permalink}">${news.title}</a></h2>
                   <p>
                     <span class="news-date"><view:formatDate value="${news.date}"/></span>
                     <c:if test="${empty listOfNews.uniqueAppURL}">
-                      <a href="${news.appShortcut.url}" title="${labelNewsMore}"><span class="news-app">${news.appShortcut.altText}</span></a>
+                      <a class="sp-link" href="${news.appShortcut.url}" title="${labelNewsMore}"><span class="news-app">${news.appShortcut.altText}</span></a>
                     </c:if>
                     ${news.description}
                   </p>
@@ -341,12 +341,12 @@ $(document).ready(function() {
 				  </ul>
           <c:choose>
             <c:when test="${not empty listOfNews.uniqueAppURL}">
-              <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more"><span>${labelNewsMore}</span></a>
+              <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more sp-link"><span>${labelNewsMore}</span></a>
             </c:when>
             <c:otherwise>
               <div id="news-link-apps">
               <c:forEach items="${listOfNews.appShortcuts}" var="appNewsShortcut">
-                <a title="${labelNewsMore}" href="${appNewsShortcut.url}" class="link-more" id="link-app-${appNewsShortcut.target}"><span>${appNewsShortcut.altText}</span></a>
+                <a title="${labelNewsMore}" href="${appNewsShortcut.url}" class="link-more sp-link" id="link-app-${appNewsShortcut.target}"><span>${appNewsShortcut.altText}</span></a>
               </c:forEach>
               </div>
             </c:otherwise>
@@ -360,7 +360,7 @@ $(document).ready(function() {
 		      <ul class="last-publication-list">
             <c:forEach var="publication" items="${publications}">
 		          <li onclick="location.href='${publication.permalink}'">
-			          <a href="${publication.permalink}">${publication.name}</a>
+			          <a class="sp-link" href="${publication.permalink}">${publication.name}</a>
 			          <view:username userId="${publication.updaterId}" />
 			          <span class="date-publication"><view:formatDate value="${publication.updateDate}"/></span>
 			          <p class="description-publication">${publication.description}</p>
