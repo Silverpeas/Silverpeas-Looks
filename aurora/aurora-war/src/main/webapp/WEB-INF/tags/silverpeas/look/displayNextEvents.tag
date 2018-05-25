@@ -56,7 +56,7 @@
               <c:set var="eventAppShortcut" value="${eventFull.appShortcut}"/>
               <div class="event eventFrom-${event.instanceId}">
                 <div class="eventName">
-                  <a href="${event.occurrencePermalinkUrl}">${event.title}</a>
+                  <a class="sp-permalink" href="${event.occurrencePermalinkUrl}">${event.title}</a>
                   <span class="clock-events">
                         <c:if test="${not event.onAllDay}">
                           <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
@@ -74,7 +74,7 @@
                     </c:if>
                     <c:if test="${empty nextEvents.uniqueAppURL}">
                       <div class="eventApp">
-                        <a href="${eventAppShortcut.url}" title="${labelEventsMore}" class="event-app-link">${eventAppShortcut.altText}</a>
+                        <a href="${eventAppShortcut.url}" title="${labelEventsMore}" class="event-app-link sp-permalink">${eventAppShortcut.altText}</a>
                       </div>
                     </c:if>
                   </div>
@@ -87,14 +87,14 @@
     </div>
     <c:choose>
       <c:when test="${not empty nextEvents.uniqueAppURL}">
-        <a title="${labelEventsMore}" href="${nextEvents.uniqueAppURL}" class="link-more">
+        <a title="${labelEventsMore}" href="${nextEvents.uniqueAppURL}" class="link-more sp-permalink">
           <span>${labelEventsMore}</span>
         </a>
       </c:when>
       <c:otherwise>
         <div id="events-link-apps">
           <c:forEach items="${nextEvents.appShortcuts}" var="appAlmanachShortcut">
-            <a title="${labelEventsMore}" href="${appAlmanachShortcut.url}" class="link-more" id="link-app-${appAlmanachShortcut.target}">
+            <a title="${labelEventsMore}" href="${appAlmanachShortcut.url}" class="link-more sp-permalink" id="link-app-${appAlmanachShortcut.target}">
               <span>${appAlmanachShortcut.altText}</span>
             </a>
           </c:forEach>

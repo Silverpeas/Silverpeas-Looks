@@ -29,6 +29,7 @@
 <%@ page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
+<%@ page import="org.silverpeas.core.util.URLUtil" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -37,12 +38,11 @@
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+<jsp:useBean id="lookHelper" type="org.silverpeas.looks.aurora.LookAuroraHelper"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
-
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 
 <fmt:message var="labelLoading" key="look.loading"/>
-
 <fmt:message var="labelPersonal" key="look.personalSpace"/>
 <fmt:message var="labelPersonalAdd" key="look.personalSpace.add"/>
 <fmt:message var="labelPersonalRemove" key="look.personalSpace.remove.confirm"/>
@@ -152,6 +152,13 @@ gef.setSpaceIdForCurrentRequest(spaceId);
       SP_openWindow('/silverpeas/RnotificationUser/jsp/Main?popupMode=Yes&editTargets=No&theTargetsUsers=Administrators', 'notifyUserPopup', '900', '400', 'menubar=no,scrollbars=no,statusbar=no');
     }
 
+    function openClipboard() {
+      sp.formRequest('${silfn:applicationURL()}<%=URLUtil.getURL(URLUtil.CMP_CLIPBOARD)%>Idle.jsp')
+          .withParam('message','SHOWCLIPBOARD')
+          .toTarget('IdleFrame')
+          .submit();
+    }
+
   /**
    * Using "jQuery" instead of "$" at this level prevents of getting conficts with another
    * javascript plugin.
@@ -159,7 +166,9 @@ gef.setSpaceIdForCurrentRequest(spaceId);
   jQuery(document).ready(function() {
 	  <% if (displayPersonalSpace) { %>
 	    jQuery("#spacePerso .spaceURL").css("display", "block");
-	    openMySpace();
+      openMySpace({
+        itemIdToSelect : '<%=componentId%>'
+      });
 	  <% } %>
   });
 
@@ -195,9 +204,6 @@ gef.setSpaceIdForCurrentRequest(spaceId);
     </div>
 
 </div>
-<form name="clipboardForm" action="../../clipboard/jsp/Idle.jsp" method="post" target="IdleFrame">
-<input type="hidden" name="message" value="SHOWCLIPBOARD"/>
-</form>
 
   <!-- Custom domains bar javascript -->
   <view:loadScript src="/util/javaScript/lookV5/navigation.js"/>

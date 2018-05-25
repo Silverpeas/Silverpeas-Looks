@@ -67,10 +67,9 @@
 <script type="text/javascript">
 function goToHome() {
 	selectHeading('home');
-  var params = {};
-  params.Login = "1";
-  params.FromTopBar = "1";
-  spLayout.getBody().load(params);
+  spWindow.loadHomePage({
+    "FromTopBar" : '1'
+  });
 }
 
 function getTopBarPage() {
@@ -94,27 +93,21 @@ function goToMainSpace(id) {
 }
 
 function goToSpace(id) {
-  var params = {};
-  params.SpaceId = id;
-  spLayout.getBody().load(params);
+  spWindow.loadSpace(id);
 }
 
 function goToSpaceApp(id) {
-  var params = {};
-  params.ComponentId = id;
-  spLayout.getBody().load(params);
+  spWindow.loadComponent(id);
 }
 
 function changeBody(url) {
   if (StringUtil.isDefined(url)) {
-    spLayout.getBody().getContent().load(webContext+url);
+    spWindow.loadLink(webContext+url);
   }
 }
 
 function goToPersonalSpace() {
-  var params = {};
-  params.FromMySpace = '1';
-  spLayout.getBody().load(params);
+  spWindow.loadPersonalSpace();
 }
 
 function goToApplication(url) {
@@ -150,14 +143,14 @@ function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
   } else if (searchScope === directoryScope) {
     url = sp.url.format(webContext + "/Rdirectory/jsp/searchByKey", urlParameters);
   }
-  spLayout.getBody().getContent().load(url);
+  spWindow.loadContent(url);
 }
 
 function jumpToUser(selectionUserAPI) {
   var userIds = selectionUserAPI.getSelectedUserIds();
   if (userIds.length) {
     var url = webContext+"/Rprofil/jsp/Main?userId="+userIds[0];
-    spLayout.getBody().getContent().load(url);
+    spWindow.loadContent(url);
   }
 }
 
@@ -220,13 +213,26 @@ $(document).ready(function() {
 
 	<c:if test="${settings.displayMenuSubElements}">
   smartMenuPromise.then(function() {
-    $('#main-menu').smartmenus({
-      subMenusMinWidth:"15em",
-      subMenusMinWidth:"30em"
-    });
     setTimeout(function() {
+      $('#main-menu').smartmenus({
+        subMenusMinWidth:"15em",
+        subMenusMinWidth:"30em"
+      });
       $('#nav').show();
     }, 0);
+    spLayout.getBody().ready(function() {
+      var __menuTimeout;
+      var __enableMenu = function() {
+        clearTimeout(__menuTimeout);
+        $('#main-menu').smartmenus('enable');
+      };
+      spLayout.getBody().getContent().addEventListener('start-load', function() {
+        $('#main-menu').smartmenus('disable', true);
+        clearTimeout(__menuTimeout);
+        __menuTimeout = setTimeout(__enableMenu, 3000);
+      }, '__id__top-bar');
+      spLayout.getBody().getContent().addEventListener('load', __enableMenu, '__id__top-bar');
+    });
   });
   </c:if>
 });
@@ -292,7 +298,7 @@ window.USERSESSION_PROMISE.then(function() {
             </div>
           </div>
 
-          <div id="notification-count" class="btn-header"> <a href="javascript:changeBody('/RSILVERMAIL/jsp/Main')"></a> </div>
+          <div id="notification-count" class="btn-header"> <a href="javascript:void(0)" onclick="spUserNotification.view();"></a> </div>
         </c:if>
         <c:if test="${not empty projects}">
         <div class="btn-header">
