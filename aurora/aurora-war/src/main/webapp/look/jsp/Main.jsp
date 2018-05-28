@@ -359,7 +359,7 @@ $(document).ready(function() {
 		    <div id="last-publicationt-main-container">
 		      <ul class="last-publication-list">
             <c:forEach var="publication" items="${publications}">
-		          <li onclick="location.href='${publication.permalink}'">
+		          <li onclick="spWindow.loadLink('${publication.permalink}')">
 			          <a class="sp-link" href="${publication.permalink}">${publication.name}</a>
 			          <view:username userId="${publication.updaterId}" />
 			          <span class="date-publication"><view:formatDate value="${publication.updateDate}"/></span>
