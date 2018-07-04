@@ -10,6 +10,10 @@ import org.silverpeas.components.questionreply.service.QuestionManagerProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
 import org.silverpeas.components.quickinfo.service.QuickInfoDateComparatorDesc;
+import org.silverpeas.components.rssaggregator.model.RSSItem;
+import org.silverpeas.components.rssaggregator.model.SPChannel;
+import org.silverpeas.components.rssaggregator.service.RSSService;
+import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.domain.model.Domain;
@@ -625,5 +629,22 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     url += "&GroupIds="+getDirectoryGroups().stream().map(Group::getId).collect(Collectors.joining(","));
     url += "&Sort="+getSettings("directory.sort", "ALPHA");
     return url;
+  }
+
+  public RSSFeeds getRSSFeeds() {
+    String componentId = getSettings("home.rss.appId", "");
+    if (StringUtil.isDefined(componentId)) {
+      RSSService rssService = RSSServiceProvider.getRSSService();
+      try {
+        List<RSSItem> allItems = rssService.getApplicationItems(componentId, true);
+        List<SPChannel> channels = rssService.getAllChannels(componentId);
+        RSSFeeds rssFeeds = new RSSFeeds(channels, allItems);
+        rssFeeds.setDisplayer(getSettings("home.rss.displayer", "aggregate"));
+        return rssFeeds;
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+    return null;
   }
 }

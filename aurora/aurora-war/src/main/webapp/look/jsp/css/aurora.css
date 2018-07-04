@@ -11,7 +11,7 @@
 }
 
 #directory #indexAndSearch #search input {
-    width: 214px;
+  width: 214px;
 }
 
 
@@ -89,14 +89,180 @@
 }
 
 #user-favorit-home .link-add.manage {
-	display:none;
-	float:none;
-	margin-top:0;
+  display:none;
+  float:none;
+  margin-top:0;
 }
 
 #localisation-weather a span::after {
-	content:" /";
+  content:" /";
 }
 #localisation-weather a:last-child span::after {
-	content:"";
+  content:"";
 }
+
+/* pour le flux rss presentation .aggregate ou .rss_tab */
+#rssNews .rss_type {
+  margin-bottom:0.5em
+}
+
+#rssNews.onceChannel-true .rss_type {
+  display: none;
+}
+
+#rssNews .rss_type a {
+  margin: 0 .25em .15em 0;
+  background-color: #5c5c5c;
+  color: #FFF;
+  padding: .35em .5em;
+  line-height: 1em;
+  font-size: .9em;
+  display:inline-block;
+  border: 1px solid #5c5c5c;
+  border-radius: 3px;
+  position: relative;
+}
+
+#rssNews .rss_type a:hover{
+  background-color:#acacac;
+  border:1px solid #acacac;
+  cursor:pointer;
+}
+
+#rssNews.aggregate .rss_type a:hover::after{
+  content:'x';
+  padding-left:1em;
+}
+#rssNews .rss_type a.off {
+  background-color: #acacac;
+  border: 1px solid #acacac;
+}
+#rssNews.aggregate .rss_type a.off::after{
+  content:'x';
+  padding-left:1em;
+}
+#rssNews .rss_type a.off:hover{
+  background-color:#5c5c5c;
+  border:1px solid #5c5c5c;
+}
+
+#rssNews ul {
+  list-style-type:none;
+  padding:0 0 20px 0;
+  margin:0;
+  border-top:1px solid #CCC;
+}
+
+#rssNews ul#rss-slider {
+  border-top:0;
+}
+
+#rssNews ul li.item-channel{
+  min-height:22px;
+  margin:0;
+  position:relative;
+  border-bottom:1px solid #CCC;
+  padding:8px;
+  background-color: #fdfdfd;
+}
+
+#rssNews ul#rss-slider li.item-channel{
+  border-bottom:0;
+}
+
+#rssNews ul li.deploy-item:hover{
+  cursor:pointer;
+  background-color:#e6e6e6;
+  background-position:5px 15px;
+  background-repeat:no-repeat;
+  background-image:url(../../../util/icons/arrow/arrowBottom.gif);
+}
+
+#rssNews ul li.open:hover{
+  background-image:url(../../../util/icons/arrow/arrowTop.gif);
+}
+
+#rssNews.rss_tab .rss_type{
+  margin-bottom:0;
+  padding-bottom:0;
+}
+#rssNews.rss_tab .rss_type a{
+  font-size:1em;
+  border-radius:10px 10px 0 0;
+  background-color:#EEE;
+  display:inline-block;
+  line-height:1em;
+  padding:1em;
+  color:#333;
+  border:0;
+  margin:0 1em 0 0;
+}
+
+#rssNews.rss_tab .rss_type a.selected {
+  background-color:#5c5c5c;
+  color:#FFF
+}
+
+#rssNews.rss_tab .channelName-rssNews {
+  display: none;
+}
+
+#rssNews.rss_tab ul  {
+  padding:0;
+  margin:0;
+  border-right:1px solid #ccc;
+  border-left:1px solid #ccc;
+}
+
+.title-item-rssNews {
+  margin:0;
+  padding:3px 0 0 13px;
+}
+
+.title-item-rssNews a {
+  color:#333;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:500;
+}
+
+.title-item-rssNews a:hover {
+  color:#1c94d4;
+}
+
+.title-item-rssNews a:hover::after {
+  opacity:1;
+  content:' ';
+  background:transparent url(../../../util/icons/arrow/link-blank.png) no-repeat;
+  width:15px;
+  height:15px;
+  display:inline-block;
+  vertical-align:top;
+}
+
+.channelName-rssNews {
+  position:absolute;
+  right:9px;
+  top:3px;
+  text-align:right;
+  font-size:13px;
+  color:#333;
+  max-width:20%;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.lastUpdate-item-rssNews {
+  position:absolute;
+  right:9px;
+  top:19px;
+  text-align:right;
+  font-size:11px;
+  color:#333;
+}
+
+.description-item-rssNews {
+  padding:1.5%  0 0 1.5% ;
+}
+/* FIN flux rss */

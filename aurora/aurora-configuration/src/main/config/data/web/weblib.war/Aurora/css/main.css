@@ -1308,3 +1308,7 @@ h3 {
 #carrousel-actualite .list-news .caption .news-date:after {
   content: " - ";
 }
+
+#rssNews.onceChannel-true h4 {
+  border-bottom: none;
+}
