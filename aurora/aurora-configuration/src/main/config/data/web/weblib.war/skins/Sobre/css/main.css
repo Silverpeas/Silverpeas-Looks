@@ -968,7 +968,7 @@ label.select-header:before {
 	width:240px;
 	position:absolute;
 	left:0;
-	top:344px;
+	top:357px;
  }
  
  
@@ -1110,12 +1110,12 @@ label.select-header:before {
 	position:relative;
 	overflow:hidden;
  }
- #last-publication-home {
-    clear: left;
-    float: left;
+
+#last-publication-home ,
+#rssNews,
+#freeZone {
     margin-left: 260px;
-    margin-right: 0;
-    margin-top: 1em;
+    margin-top:1em;
  }
  
  #carrousel-actualite li>a {

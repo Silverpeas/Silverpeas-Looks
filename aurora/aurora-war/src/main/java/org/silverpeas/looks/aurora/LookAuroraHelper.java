@@ -15,6 +15,7 @@ import org.silverpeas.components.rssaggregator.model.SPChannel;
 import org.silverpeas.components.rssaggregator.service.RSSService;
 import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInst;
+import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.OrganizationController;
@@ -22,6 +23,8 @@ import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
 import org.silverpeas.core.calendar.Priority;
+import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
+import org.silverpeas.core.contribution.model.WysiwygContent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
@@ -643,6 +646,26 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         return rssFeeds;
       } catch (Exception e) {
         SilverLogger.getLogger(this).error(e);
+      }
+    }
+    return null;
+  }
+
+  public FreeZone getFreeZone() {
+    String componentId = getSettings("home.freezone.appId", "");
+    if (StringUtil.isDefined(componentId)) {
+      WysiwygContent content = WysiwygController.get(componentId, componentId, getLanguage());
+      if (content != null) {
+        FreeZone freeZone = new FreeZone(content.getData());
+        if (getSettings("home.freezone.app.useLabel", true)) {
+          ComponentInstLight component = getOrganisationController().getComponentInstLight(componentId);
+          if (component != null) {
+            freeZone.setTitle(component.getLabel(getLanguage()));
+          }
+        } else {
+          freeZone.setTitle(getString("look.home.freezone"));
+        }
+        return freeZone;
       }
     }
     return null;

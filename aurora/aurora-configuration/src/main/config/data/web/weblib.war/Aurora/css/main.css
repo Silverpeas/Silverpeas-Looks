@@ -798,10 +798,6 @@ label.select-header:before {
 	
 }
 #weather-home {
-   position: absolute;
-    right: 25%;
-    top: 344px;
-	padding-right:3em;
 }
 
 #weather-home.secteur-container  h4::first-letter {
@@ -963,21 +959,18 @@ label.select-header:before {
  
  #carrousel-actualite  {
 	margin-left:260px;
-	float:left;
 	height:314px;
 	position:relative;
 	overflow:hidden;
  }
- #last-publication-home {
-    clear: left;
-    float: left;
-    margin-left: 260px;
-    margin-right: 320px;
-    margin-top: 1em;
- }
- 
 
- 
+#last-publication-home ,
+#rssNews,
+#freeZone {
+    margin-left: 260px;
+    margin-top: 2.5em;
+ }
+
  #carrousel-actualite li>a {
  	font-weight: bold;
  }

@@ -376,6 +376,8 @@ $(document).ready(function() {
 
       <viewTags:displayRSSFeeds rssFeeds="${rssFeeds}"/>
 
+      <viewTags:displayFreeZone/>
+
     </div>
   </div>
 </div>
