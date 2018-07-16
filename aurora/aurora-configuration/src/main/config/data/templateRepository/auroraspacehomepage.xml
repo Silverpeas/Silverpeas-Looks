@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<publicationTemplate>
+    <name>Aurora - Page d'accueil d'espace</name>
+    <description></description>
+    <directoryUsage>false</directoryUsage>
+    <visible>true</visible>
+    <locked>true</locked>
+    <dataEncrypted>false</dataEncrypted>
+    <applications>
+        <application>webPages</application>
+    </applications>
+    <viewFileName>auroraspacehomepage\view.xml</viewFileName>
+    <updateFileName>auroraspacehomepage\update.xml</updateFileName>
+    <dataFileName>auroraspacehomepage\data.xml</dataFileName>
+    <viewTypeFile></viewTypeFile>
+    <updateTypeFile></updateTypeFile>
+    <searchResultFileName>auroraspacehomepage\searchresult.xml</searchResultFileName>
+</publicationTemplate>

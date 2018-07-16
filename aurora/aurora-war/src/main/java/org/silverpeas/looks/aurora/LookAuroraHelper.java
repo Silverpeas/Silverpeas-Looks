@@ -40,7 +40,6 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.DefaultLayoutConfiguration;
 import org.silverpeas.core.web.look.LookHelper;
 import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
-import org.silverpeas.core.web.look.PublicationHelper;
 import org.silverpeas.core.web.look.Shortcut;
 import org.silverpeas.core.webapi.calendar.CalendarResourceURIs;
 import org.silverpeas.core.webapi.calendar.CalendarWebManager;
@@ -59,11 +58,11 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private DelegatedNewsService delegatedNewsService = null;
-  private PublicationHelper kmeliaTransversal = null;
   private LocalizationBundle messages;
   private LookSettings settings;
   private static final String BANNER_ALL_SPACES = "*";
@@ -154,7 +153,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<Project> getProjects(boolean includeApps) {
-    List<Project> projects = new ArrayList<Project>();
+    List<Project> projects = new ArrayList<>();
     OrganizationController controller = getOrganisationController();
     String[] spaceIds = controller.getAllowedSubSpaceIds(getUserId(), getProjectsSpaceId());
     for (String spaceId : spaceIds) {
@@ -352,6 +351,18 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   public NextEvents getNextEvents() {
     List<String> allowedComponentIds = asList(getAllowedComponentIds("home.events.appId"));
+    return getNextEvents(allowedComponentIds);
+  }
+
+  public NextEvents getNextEvents(List<String> allowedComponentIds) {
+    boolean includeToday = getSettings("home.events.today.include", true);
+    int nbDays = getSettings("home.events.maxDays", 2);
+    boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
+    return getNextEvents(allowedComponentIds, includeToday, nbDays, fetchOnlyImportant);
+  }
+
+  public NextEvents getNextEvents(List<String> allowedComponentIds, boolean includeToday,
+      int nbDays, boolean onlyImportant) {
     final List<NextEventsDate> result = new ArrayList<>();
     if (!allowedComponentIds.isEmpty()) {
       final CalendarResourceURIs uri = CalendarResourceURIs.get();
@@ -367,13 +378,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           })
           .collect(Collectors.toList());
       Date today = new Date();
-      boolean includeToday = getSettings("home.events.today.include", true);
+
       Date date = null;
       NextEventsDate nextEventsDate = null;
-      int nbDays = getSettings("home.events.maxDays", 2);
-      boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
       for (CalendarEventOccurrenceEntity event : events) {
-        if (!fetchOnlyImportant || Priority.HIGH == event.getPriority()) {
+        if (!onlyImportant || Priority.HIGH == event.getPriority()) {
           Date eventDate = event.getStartDateAsDate();
           if (includeToday || DateUtil.compareTo(today, eventDate, true) != 0) {
             if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
@@ -405,18 +414,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return allowedComponentIds;
   }
-  
-  private PublicationHelper getPublicationHelper() throws ClassNotFoundException,
-      InstantiationException, IllegalAccessException {
-    if (kmeliaTransversal == null) {
-      Class<?> helperClass = Class.forName("com.stratelia.webactiv.kmelia.KmeliaTransversal");
-      kmeliaTransversal = (PublicationHelper) helperClass.newInstance();
-      kmeliaTransversal.setMainSessionController(this.getMainSessionController());
-    }
-    return kmeliaTransversal;
-  }
 
-  private List<PublicationDetail> getLastUpdatedPublicationsSince(String spaceId, int sinceNbDays,
+  public List<PublicationDetail> getLastUpdatedPublicationsSince(String spaceId, int sinceNbDays,
       int nbPublis) {
     try {
       return getPublicationHelper().getUpdatedPublications(spaceId, sinceNbDays, nbPublis);
@@ -669,5 +668,48 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     return null;
+  }
+
+  public AuroraSpaceHomePage getHomePage(String spaceId) {
+    setSpaceIdAndSubSpaceId(spaceId);
+    String currentSpaceId = getSubSpaceId();
+
+    // get main information of space
+    SpaceInstLight space = getOrganisationController().getSpaceInstLightById(currentSpaceId);
+    AuroraSpaceHomePage homepage = new AuroraSpaceHomePage(this, space);
+
+    return homepage;
+  }
+
+  public ComponentInstLight getConfigurationApp(String spaceId) {
+    OrganizationController oc = OrganizationController.get();
+    List<ComponentInstLight> apps = getAppsByName(spaceId, "webPages");
+    for (ComponentInstLight app : apps) {
+      String xmlFormName = oc.getComponentParameterValue(app.getId(), "xmlTemplate");
+      if (StringUtil.isDefined(xmlFormName) && xmlFormName.equals(TEMPLATE_NAME)) {
+        return app;
+      }
+    }
+    return null;
+  }
+
+  private List<ComponentInstLight> getAppsByName(String spaceId, String name) {
+    List<ComponentInstLight> apps = new ArrayList();
+    OrganizationController oc = OrganizationController.get();
+    String[] appsIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserId());
+    for (String appId : appsIds) {
+      ComponentInstLight app = oc.getComponentInstLight(appId);
+      if (app.getName().equals(name)) {
+        apps.add(app);
+      }
+    }
+    return apps;
+  }
+
+  public boolean isSpaceAdmin(String spaceId) {
+    if (getUserDetail().isAccessAdmin()) {
+      return true;
+    }
+    return getSpaceAdmins(spaceId).contains(getUserDetail());
   }
 }

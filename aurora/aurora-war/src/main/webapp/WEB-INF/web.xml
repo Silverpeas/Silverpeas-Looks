@@ -2,14 +2,21 @@
 
 <web-app  xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 version="2.4" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-  <display-name>lookSDIS84 War</display-name>
-  <description>Look SDIS84</description>
+  <display-name>Look Aurora</display-name>
   <servlet>
     <servlet-name>AjaxServletMeteo</servlet-name>
-    <servlet-class>org.silverpeas.looks.aurora.AjaxServletMeteo</servlet-class>
+    <servlet-class>org.silverpeas.looks.aurora.servlets.AjaxServletMeteo</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GoToSpaceHomepageBackoffice</servlet-name>
+    <servlet-class>org.silverpeas.looks.aurora.servlets.GoToSpaceHomepageBackOffice</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AjaxServletMeteo</servlet-name>
     <url-pattern>/RAjaxMeteo/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GoToSpaceHomepageBackoffice</servlet-name>
+    <url-pattern>/AuroraSpaceHomepageBackoffice</url-pattern>
   </servlet-mapping>
 </web-app>

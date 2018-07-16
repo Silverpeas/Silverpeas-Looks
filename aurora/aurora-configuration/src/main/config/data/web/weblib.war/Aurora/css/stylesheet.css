@@ -23,25 +23,25 @@
 */
 
 @font-face {
-    font-family: 'texgyreadventor';
-    src: url('../font/texgyreadventor-regular-webfont.eot');
-    src: url('../font/texgyreadventor-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../font/texgyreadventor-regular-webfont.woff') format('woff'),
-         url('../font/texgyreadventor-regular-webfont.ttf') format('truetype'),
-         url('../font/texgyreadventor-regular-webfont.svg#texgyreadventor') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'texgyreadventor';
+  src: url('../font/texgyreadventor-regular-webfont.eot');
+  src: url('../font/texgyreadventor-regular-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../font/texgyreadventor-regular-webfont.woff') format('woff'),
+  url('../font/texgyreadventor-regular-webfont.ttf') format('truetype'),
+  url('../font/texgyreadventor-regular-webfont.svg#texgyreadventor') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 body {
-	background:#FFFFFF fixed no-repeat;
-	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
-	color:#082E4A;
+  background:#FFFFFF fixed no-repeat;
+  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
+  color:#082E4A;
 }
 
 html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut, .textePetitBold{
-	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
-	font-size:9pt;
+  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
+  font-size:9pt;
 }
 
 
@@ -51,169 +51,169 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 #domainsBar #spaces a,
 #domainsBar #spaceTransverse a,
 #domainsBar #spacePerso a {
-	display:block;
+  display:block;
 }
 
-#spacePerso .contentSpace, 
+#spacePerso .contentSpace,
 .spaceLevel1On .contentSpace{
-	margin-left:0;
+  margin-left:0;
 }
 
 .contentSpace .contentSpace {
-	padding:0;
-	border:0;
+  padding:0;
+  border:0;
 }
 
 .contentSpace .contentSpace .browseSpace {
-	padding-right:0;
+  padding-right:0;
 }
 
 .spaceLevel1 {
-	display:none;
+  display:none;
 }
 
- .spaceLevel1On {
-	margin-right:0;
-	padding:0;
-	height:auto;
-	position:relative;
-	border: 0;
+.spaceLevel1On {
+  margin-right:0;
+  padding:0;
+  height:auto;
+  position:relative;
+  border: 0;
 }
 
 #spaces {
-	border: none;
-	position:relative;
-	height:auto;
-	background:#FFF none bottom;
-	padding:0 1px 0 0;
-	border-radius: 0 0 12px 0;
+  border: none;
+  position:relative;
+  height:auto;
+  background:#FFF none bottom;
+  padding:0 1px 0 0;
+  border-radius: 0 0 12px 0;
 }
 
 #spaceTransverse {
-	border: none;
-	position:relative;
-	height:auto;
-	background:#FFF none bottom;
-	padding:0 1px 35px 0;
-	border-radius: 0 0 12px 0;
+  border: none;
+  position:relative;
+  height:auto;
+  background:#FFF none bottom;
+  padding:0 1px 35px 0;
+  border-radius: 0 0 12px 0;
 }
 
 .spaceLevel1 .browseComponent a,
 .spaceLevel1On .browseComponent a ,
 .spaceLevel1On .browseComponentActiv a{
-	padding:2px 10px 4px 36px;
-	border-bottom:0;
+  padding:2px 10px 4px 36px;
+  border-bottom:0;
 }
 
 #domainsBar .spaceLevel1On .browseComponentActiv a{
-	color:#7eb73b;
+  color:#7eb73b;
 }
 
 .spaceLevel1On .browseComponentActiv img.browseIconComponent {
-	display:block;
+  display:block;
 }
 
 .browseSpace {
-	position:relative;
+  position:relative;
 }
 
 #basSpaces ,
 #basSpaceTransverse {
-	display: none;
+  display: none;
 }
 
 .spaceLevel1On .browseSpace .browseComponent a,
 .spaceLevel1On .browseSpace .browseComponentActiv a{
-	border:0;
-	text-transform:inherit;
-	padding:7px 10px 9px 12px;
-	border-bottom:1px solid #c6c6c6;
-	background-image:none;
+  border:0;
+  text-transform:inherit;
+  padding:7px 10px 9px 12px;
+  border-bottom:1px solid #c6c6c6;
+  background-image:none;
 }
 .spaceLevel1On .browseSpace .browseComponent a	,
 .spaceLevel1On .spaceOn .browseComponent a{
-	background-image:none;
-	background-color:transparent;
+  background-image:none;
+  background-color:transparent;
 }
 
 .spaceLevel1On .browseSpace .browseComponent a,
 .spaceLevel1On .browseSpace .browseComponentActiv a{
-	border:0;
-	text-transform:inherit;
-	padding:7px 10px 9px 50px;
-	border-bottom:1px solid #c6c6c6;
+  border:0;
+  text-transform:inherit;
+  padding:7px 10px 9px 50px;
+  border-bottom:1px solid #c6c6c6;
 }
 
 .spaceLevel1On .browseSpace .browseComponent img.browseIconComponent,
 .spaceLevel1On .browseSpace .browseComponentActiv img.browseIconComponent{
-	top:4px;
-	left:26px;
+  top:4px;
+  left:26px;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseComponent a,
 .spaceLevel1On .browseSpace .browseSpace .browseComponentActiv a{
-	border:0;
-	text-transform:inherit;
-	padding:7px 10px 9px 70px;
-	border-bottom:1px solid #c6c6c6;
+  border:0;
+  text-transform:inherit;
+  padding:7px 10px 9px 70px;
+  border-bottom:1px solid #c6c6c6;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseComponent a{
-	background:transparent url();
+  background:transparent url();
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseComponent img.browseIconComponent,
 .spaceLevel1On .browseSpace .browseSpace .browseComponentActiv img.browseIconComponent {
-	top:4px;
-	left:46px;
+  top:4px;
+  left:46px;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponent a,
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponentActiv a{
-	border:0;
-	text-transform:inherit;
-	padding:7px 10px 9px 92px;
-	border-bottom:1px solid #c6c6c6;
+  border:0;
+  text-transform:inherit;
+  padding:7px 10px 9px 92px;
+  border-bottom:1px solid #c6c6c6;
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponent a {
-	background:transparent url();
+  background:transparent url();
 }
 
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponent img.browseIconComponent,
 .spaceLevel1On .browseSpace .browseSpace .browseSpace .browseComponentActiv img.browseIconComponent{
-	top:4px;
-	left:66px;
+  top:4px;
+  left:66px;
 }
 
 .browseComponent, .browseComponentActiv {
-	position:relative;
+  position:relative;
 }
 
 .browseComponent .browseIconComponent{
-	position:absolute;
+  position:absolute;
 }
 
 .browseComponent .browseIconComponent, .browseComponentActiv .browseIconComponent{
-	left: 10px;
-    top: 2px;
+  left: 10px;
+  top: 2px;
 }
 
 /*spacePerso*/
 .spaceLevelPerso {
-	padding:0;
-	padding:0;
+  padding:0;
+  padding:0;
 }
 
 #domainsBar #contentSpacespacePerso a {
-	line-height:16px;
-	padding-left:35px;
+  line-height:16px;
+  padding-left:35px;
 }
 
 #contentSpacespacePerso .browseComponent img, .browseComponentActiv img {
-	position:absolute;
-	right:10px;
-	top:10px;	
+  position:absolute;
+  right:10px;
+  top:10px;
 }
 
 #sp-layout-body-part-layout-toggle-part {
@@ -226,54 +226,54 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 
 /* fil ariane */
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information{
-	font-weight: normal;
+  font-weight: normal;
 }
 
 #browseBar {
-	margin:3px 0 0;
-	padding-top:8px;
+  margin:3px 0 0;
+  padding-top:8px;
 }
 
 #browseBar #breadCrumb {
-	margin-left:3px;
+  margin-left:3px;
 }
 
 #browseBar #i18n {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 #TreeDiv1 {
-	background-color: #FFFFFF;
+  background-color: #FFFFFF;
 }
 
 #blog #titresTopics , #blog #titresArchives, #blog #titresLiens {
-	background-image: none;
-	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
+  background-image: none;
+  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 .navigationListTitle {
-	background-color:#E1E1E1;
-	background-image:none;
-	border-radius:8px 8px 0 0;
+  background-color:#E1E1E1;
+  background-image:none;
+  border-radius:8px 8px 0 0;
 }
 
 .tableNavigationList {
-background-color:#D6D7D9;
-border:none;
+  background-color:#D6D7D9;
+  border:none;
 }
 
 .sousTitreFenetre {
-font-weight:100;}
+  font-weight:100;}
 
 .titreFenetre {
-color:#262827;
-text-transform:uppercase;
+  color:#262827;
+  text-transform:uppercase;
 }
 
 .question {
-	border-radius: 5px;
-	border-color: 1px solid #FFFFFF;
-	margin:2px;
+  border-radius: 5px;
+  border-color: 1px solid #FFFFFF;
+  margin:2px;
 }
 
 .listinUsers .message_list li.intfdcolor,
@@ -281,105 +281,105 @@ text-transform:uppercase;
 #navBlog , #viewPostDraft, #viewPost, #blog #blogContainer #postsList div.post,
 #classified-view #commentaires,
 #agenda #navigation, #agenda #agendaView, #agenda #footer{
-	border-radius:0;
-	border:0;
-	background-image:url();
+  border-radius:0;
+  border:0;
+  background-image:url();
 }
 
 .listinUsers .message_list li.intfdcolor {
-	border:1px solid #ccc;
+  border:1px solid #ccc;
 }
 
 #classified-view #commentaires {margin:0 auto;}
 
- #blog #blogContainer{
-	padding-left:10px;
+#blog #blogContainer{
+  padding-left:10px;
 }
 
 #blog #blogContainer #bandeau {
-	background:transparent url();
+  background:transparent url();
 }
 
 .btn-deploy-all-item.bgDegradeGris, .sousNavBulle p, #agenda #navigation, #agenda #agendaView, #agenda #footer, #richContent, #blog #blogContainer, #navBlog, #viewPostDraft, #blog #blogContainer #postsList div.post, #viewPost, #whitePagesSheet .sheet .sousNavBulle p, #publicProfileContenu .sousNavBulle p{
-	padding:8px;
+  padding:8px;
 }
 
 .newsFeed , #identity table, #ReceiveInvitation{
-	margin:0;
-	border-radius:0 0 12px 12px;
+  margin:0;
+  border-radius:0 0 12px 12px;
 }
 
 #identity table{
-	width:100%;
+  width:100%;
 }
- 
-.principalContent{ 
-	min-height:150px; 
-	padding:0 12px;
+
+.principalContent{
+  min-height:150px;
+  padding:0 12px;
 }
 
 #pagination{
-	padding:3px;
+  padding:3px;
 }
- 
+
 #preview .tableBoard {
-	background-color:#ECECEC;
+  background-color:#ECECEC;
 }
 
 .arrayPane {
-	box-shadow:none;
+  box-shadow:none;
 }
 
 #portletPages h2.portlet-title {
-	border-bottom: 0px solid #CCCCCC;
-	color:#ec8601;
-	font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
-	text-transform:normal;
-	font-variant: normal;
-	font-weight:100;
-	margin-bottom: 0px;
-	padding: 2px 0 0 ;
+  border-bottom: 0px solid #CCCCCC;
+  color:#ec8601;
+  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
+  text-transform:normal;
+  font-variant: normal;
+  font-weight:100;
+  margin-bottom: 0px;
+  padding: 2px 0 0 ;
 }
 
 #portletPages div.portlet-content {
-	background-color:#F0F0F0;
-	border:1px dotted #BBB;
+  background-color:#F0F0F0;
+  border:1px dotted #BBB;
 }
 
 .portlet-content ul{
-	padding:0 10px;
-	margin:0 10px;
-	list-style-image:url(../imgDesign/puce.png);
+  padding:0 10px;
+  margin:0 10px;
+  list-style-image:url(../imgDesign/puce.png);
 }
 
 #portletPages dl.sort dt {
-	line-height:20px;
-	background:#FFF url();
-	border:0;
+  line-height:20px;
+  background:#FFF url();
+  border:0;
 }
 
 #portletPages dl.sort dd{
-	background-color:#FFF;
-	margin-bottom:10px;
+  background-color:#FFF;
+  margin-bottom:10px;
 }
 
 #facetSearchDivId {
-	border: none;
+  border: none;
 }
 
 .facet div {
-	background-color:#f2f2f2;
-	padding:0 0 10px 0px;
+  background-color:#f2f2f2;
+  padding:0 0 10px 0px;
 }
 
 .facet div:first-child {
-	background-color:transparent;
-	border-radius: 5px;
-	margin-bottom:0;
-	margin-top:10px;
-	border-left: 1px solid #cccccc;
-	border-right: 1px solid #cccccc;
-	border-bottom: 1px solid #cccccc;
+  background-color:transparent;
+  border-radius: 5px;
+  margin-bottom:0;
+  margin-top:10px;
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
 }
 
 #facetSearchDivId #searchGroupTitle span {
@@ -392,150 +392,150 @@ text-transform:uppercase;
 }
 
 #searchGroupTitle {
-	background-image: none;
-	background-color: #E1E1E1;
-	color: #222222;
-	border-radius:8px 8px 0 0;
-	border-left: 1px solid #cccccc;
-	border-right: 1px solid #cccccc;
-	border-top: 1px solid #cccccc;
+  background-image: none;
+  background-color: #E1E1E1;
+  color: #222222;
+  border-radius:8px 8px 0 0;
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
 }
 
 #searchGroupValues {
-	padding-left:6px;
+  padding-left:6px;
 }
 
 #searchGroupValues ul li.selected {
-	background-color:#FFF;
+  background-color:#FFF;
 }
 
 #searchGroupValues ul li.selected a{
-	color:#00395A;
+  color:#00395A;
 }
 
 .intfdcolor {
-	background-image: none;
-	background-color:#FFFFFF;
+  background-image: none;
+  background-color:#FFFFFF;
 }
 
 .ArrayNavigation {
-	background-image: none;
+  background-image: none;
 }
 
 /* Boutons et onglets*/
 .ui-widget-header {
-	background-color:#353535 ;
-	border-color:#353535 ;
-	font-weight:100;
+  background-color:#353535 ;
+  border-color:#353535 ;
+  font-weight:100;
 }
 
 /* MenuToogle Yuimenu*/
 .cellOperation {
-    width: auto;
+  width: auto;
 }
 #menutoggle {
-	display:block;
-	padding:0 20px 0 30px;
-	text-align:right;
-	color: #FFF;
-	line-height: 25px;
-	border-right:0;
+  display:block;
+  padding:0 20px 0 30px;
+  text-align:right;
+  color: #FFF;
+  line-height: 25px;
+  border-right:0;
 }
 
-#menutoggle img{ 
-	display:none;
+#menutoggle img{
+  display:none;
 }
 
 #topPage .yuimenu, #kmelia .yuimenu, #attachmentList .yuimenu{
-	padding:6px 0;
-	border-radius: 8px 0 8px 8px;
-	margin-top:-3px;
+  padding:6px 0;
+  border-radius: 8px 0 8px 8px;
+  margin-top:-3px;
 }
 
 .yuimenu a , #portletPages .yuimenu a {
-	font-weight:100;
+  font-weight:100;
 }
 
 .yuimenu .yuimenuitem{
-	border-bottom:0px solid #262827 ;
+  border-bottom:0px solid #262827 ;
 }
 
 #spaceMenuDivId {
-	margin:10px 0 0 ;
-	background-color:#FFF;
+  margin:10px 0 0 ;
+  background-color:#FFF;
 }
 
 #preview .publiDesc {
-	font-weight:normal;
-	color:#575757;
+  font-weight:normal;
+  color:#575757;
 }
 
 .cadrePhoto {
-	background-color:#E1E1E1;
-	border-radius: 5px;
-	box-shadow:0;
-	padding:7px;
-	behavior: url("/silverpeas/util/styleSheets/PIE.htc");
-	position:relative;
+  background-color:#E1E1E1;
+  border-radius: 5px;
+  box-shadow:0;
+  padding:7px;
+  behavior: url("/silverpeas/util/styleSheets/PIE.htc");
+  position:relative;
 }
 
 .fondPhoto {
-	background-color:#FFF;
-	padding:0 0 18px;
-	background-position:bottom right;
-	background-repeat:no-repeat;
+  background-color:#FFF;
+  padding:0 0 18px;
+  background-position:bottom right;
+  background-repeat:no-repeat;
 }
 
-.ArrayColumn, .ArrayCell,  
+.ArrayColumn, .ArrayCell,
 #classifieds .tableFrame #categories .categoryTitle{
-	background-image:none;
-	padding-left:8px;
-	padding-right:8px;
+  background-image:none;
+  padding-left:8px;
+  padding-right:8px;
 }
 
 .ArrayColumn .ArrayColumn,
 .ArrayCell .ArrayCell {
-	padding-left:0;
-	padding-right:0;
+  padding-left:0;
+  padding-right:0;
 }
 
 .pageNav , .pageNav .ArrayNavigation, .pageNav .pageOff {
-background-image: none;
+  background-image: none;
 }
 
 .pageNav {
-	border-radius: 5px;
-	box-shadow:0;
-	padding-top:3px;
-	padding-left:5px;
-	padding-right:5px;
+  border-radius: 5px;
+  box-shadow:0;
+  padding-top:3px;
+  padding-left:5px;
+  padding-right:5px;
 }
 
 .pageNav .pageIndex {
-	margin:0 10px 0 0;
-	padding:3px 0 0 0;
+  margin:0 10px 0 0;
+  padding:3px 0 0 0;
 }
 
 .bgDegradeGris {
-	border-radius:12px;
-	padding:0 0 8px 0;
+  border-radius:12px;
+  padding:0 0 8px 0;
 }
 
 .btn-deploy-all-item.bgDegradeGris, #displaying.bgDegradeGris {
-	font-size:100%;
+  font-size:100%;
 }
 
 .bgDegradeGris .bgDegradeGris {
-	border-radius:12px 12px 0 0;
+  border-radius:12px 12px 0 0;
 }
 
 .sousNavBulle {
-	border-radius:12px 12px 0 0;
-	margin-top:12px;
+  border-radius:12px 12px 0 0;
+  margin-top:12px;
 }
 
 #backToSearch .button {
-	font-size:90%;
+  font-size:90%;
 }
 
 #agenda #currentScope, #agenda #jump, #agenda #today ,#agenda #categories, #agenda #invitations, #agenda #alert, #agenda #caption, #agenda #rss {
@@ -544,21 +544,21 @@ background-image: none;
 }
 
 #subTopics ul li a {
-	position:relative;
+  position:relative;
 }
 
 .eventBeginDate .number {
-	top:19px;
+  top:19px;
 }
 
 .portlet .title-item-rssNews a,
 .portlet .title-item-rssNews .channelName-rssNews {
-	font-size:80%;
+  font-size:80%;
 }
 
 #pdcFrame td{
-	font-size:11px;
-	padding:0;
+  font-size:11px;
+  padding:0;
 }
 
 #pdcFrame table{
@@ -573,13 +573,13 @@ background-image: none;
 }
 
 .ongletAdminOn .txtPetitBlanc {
-	font-weight:bold;
-	color:#000;
+  font-weight:bold;
+  color:#000;
 }
 
 .ongletAdminOn strong {
-	font-weight:100;
-	color:#666;
+  font-weight:100;
+  color:#666;
 }
 
 .ongletAdminOn strong a:hover{
@@ -587,44 +587,44 @@ background-image: none;
 }
 
 #i18n .ArrayNavigationOn {
-	padding:0 3px;
-	background-color:#353535;
-	letter-spacing:1px;
+  padding:0 3px;
+  background-color:#353535;
+  letter-spacing:1px;
 }
 
 #i18n .ArrayNavigationOn:hover {
-	background-color:#EC9C01;
-	color:#FFF;
+  background-color:#EC9C01;
+  color:#FFF;
 }
 
 .selectNS select {
-	width:150px;
+  width:150px;
 }
 
 @media only screen and (max-width: 650px), only screen and (max-device-width: 650px){
-	.rightContent {
-		clear: both;
-		float: none;
-		margin-top: 40px;
-		width: auto;
-	}
-	.rightContent .attachments {
-		min-width:auto;
-	}
-	.principalContent {
+  .rightContent {
+    clear: both;
+    float: none;
+    margin-top: 40px;
+    width: auto;
+  }
+  .rightContent .attachments {
+    min-width:auto;
+  }
+  .principalContent {
     margin-right: 0;
     margin-top: 10px;
-	}
-	.header h4 {
-    	min-width: auto;
-	}
+  }
+  .header h4 {
+    min-width: auto;
+  }
 }
 a:hover {
   color: #444443;
 }
 
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information {
-     color: #575757;
+  color: #575757;
 }
 
 .spaceLevel1On .contentSpace {
@@ -637,7 +637,7 @@ a:hover {
 }
 
 #domainsBar #spaces a:hover, #domainsBar #spaceTransverse a:hover {
-     color: #7EB73B;
+  color: #7EB73B;
 }
 
 #domainsBar .spaceLevel1 a.spaceURL, #domainsBar .spaceLevel1On a.spaceURL,
@@ -751,7 +751,7 @@ a:hover {
 }
 
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL {
-	display:none;
+  display:none;
 }
 
 #contentSpacespacePerso{
@@ -818,29 +818,29 @@ a:hover {
 }
 
 #myProfileFiche .action .link, #publicProfileFiche #contactCommun .link, #publicProfileFiche #allContact .link, .txtnav, .txtbigdate, .txttitrecol, #directory .link {
-     border-color: #EC8601;
-     color: #EC8601;
-     line-height: 12px;
+  border-color: #EC8601;
+  color: #EC8601;
+  line-height: 12px;
 }
 
 
 /************ TAILLE DES POLICES CENTRALISEE ***************/
 
-.ArrayColumn, 
+.ArrayColumn,
 #classifieds .tableFrame #categories .categoryTitle{
-	font-size:8pt;
+  font-size:8pt;
 }
 
 .commentaires #edition-box .title, .commentaires .oneComment p.author,
 #portletPages div.portlet-content ,
 #domainsBar a,
 .sousNavBulle, .container-filter, .sousNavBulle a,
-.txtnav, .txtlibform, 
+.txtnav, .txtlibform,
 .txtnote,
 .txtBaseline,
 caption,
 Label, legend{
-     font-size:9pt;
+  font-size:9pt;
 }
 
 
@@ -868,66 +868,66 @@ button,
 #menubar-creation-actions .menubar-creation-actions-item, #attachment-creation-actions .menubar-creation-actions-item,
 #nav ul.nav-niveau-2 li a,
 .last-publication-list li{
-     font-size:10pt !important;
+  font-size:10pt !important;
 }
 
-.sousTitreFenetre, 
+.sousTitreFenetre,
 #menutoggle,
 #administration a,
 .spaceHome .list-responsible-user .userName,
 .spaceHome .spaceNavigation li a,
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information {
-	font-size: 10.5pt;
-	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+  font-size: 10.5pt;
+  font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 #nav ul  ul > li > a,
- #nav ul  ul > li > a span{
-	font-size: 10.5pt;
-	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+#nav ul  ul > li > a span{
+  font-size: 10.5pt;
+  font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 .spaceHome #spaceQuiskInfo li.slide > h4 ,
 .spaceHome #publication li a b,
 .spaceHome #publication .header h4,
 .last-publication-list li a{
-	font-size: 11.5pt;
-	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+  font-size: 11.5pt;
+  font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 #facetSearchDivId #searchGroupTitle span ,
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL,
 #topBar #outils div.avatarName a {
-    font-size: 12pt;
-	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+  font-size: 12pt;
+  font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 #portletPages h2.portlet-title,
 #shortcuts a , #shortcuts a:hover, #shortcuts a:focus, #shortcuts td.activeShortcut a,
 #nav >  ul > li > a,
- #nav >  ul > li > a span {
-	font-size:12pt;
-	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+#nav >  ul > li > a span {
+  font-size:12pt;
+  font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 .spaceHome .spaceName ,
 #domainsBar .spaceLevel1 a.spaceURL, #domainsBar .spaceLevel1On a.spaceURL{
-	font-size:14pt;
-	font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
+  font-size:14pt;
+  font-family:"texgyreadventor","Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 /************ END TAILLE DES POLICES CENTRALISEE ***************/
 
 
 .ongletAdminOn span.textePetitBold, .ongletAdminOff span.txtPetitBlanc {
-	 font-weight:100;
+  font-weight:100;
 }
 .ArrayColumn, #classifieds .tableFrame #categories .categoryTitle, .tableArrayPane thead {
-     background-color: #D6D7D9;
-     color: #000000;
+  background-color: #D6D7D9;
+  color: #000000;
 }
 
 .ArrayColumn a {
-     color: #000000;
+  color: #000000;
 }
 
 .ArrayColumn a:hover {
@@ -949,24 +949,24 @@ button,
 }
 
 .rightContent #dNdActionLabel {
-     color: #333333;
+  color: #333333;
 }
 
 #settings .txtlibform, #settings .textePetitBold, .pdcPosition h3, #blog #blogContainer #bandeau a, #backHomeBlog a {
-     color: #444443;
+  color: #444443;
 }
 
 .eventName a {
-     color: #444443 ! important;
+  color: #444443 ! important;
 }
 
 .eventMonth {
-     background-color: #FFFFFF;
-     color: #212322 ! important;
+  background-color: #FFFFFF;
+  color: #212322 ! important;
 }
 
 .eventsView #navigation {
-     background-color: transparent;
+  background-color: transparent;
 }
 
 #menubar-creation-actions, #attachment-creation-actions {
@@ -1046,7 +1046,7 @@ button,
 
 .portlet li.event .eventDesc, .portlet li.event  .eventURL{
   display:none;
-  
+
 }
 .portlet .eventInfo div {
   width: 90%;
@@ -1082,8 +1082,8 @@ button,
 /************* PAGE d'ACCUEIL D'ESPACE ****************/
 .spaceHome h1.spaceName,
 .spaceHome #portletPages #spaceEvent h2.portlet-title {
-	padding-top:0;
-	margin-top:0;
+  padding-top:0;
+  margin-top:0;
 }
 
 .spaceHome .spaceDescription {
@@ -1119,17 +1119,17 @@ button,
 }
 
 .spaceHome .rightContent {
-	margin-top:8px;
+  margin-top:8px;
 }
 
 .spaceHome  #portletPages div:first-child  .header  h2 {
-	margin-top:0;
+  margin-top:0;
 }
 
 .portlet #calendar li.events {
-	background: none repeat scroll 0% 0% transparent;
-	border-bottom: 0;
-	margin:0;
+  background: none repeat scroll 0% 0% transparent;
+  border-bottom: 0;
+  margin:0;
 }
 
 .portlet #calendar .eventInfo {
@@ -1162,7 +1162,7 @@ button,
 }
 
 .header h4 {
-    font-size: 100%;
+  font-size: 100%;
 }
 
 .spaceHome #publication li,
@@ -1182,11 +1182,11 @@ button,
 
 .spaceHome #publication li a:hover b,
 .last-publication-list li a:hover b {
-color:#1C94D4;
+  color:#1C94D4;
 }
 
 .last-publication-list .description-publication {
-	margin:0 0 1em 0;
+  margin:0 0 1em 0;
 }
 
 .spaceHome #publication li .userToZoom ,
@@ -1218,3 +1218,19 @@ color:#1C94D4;
 
 .btn-deploy-all-item, #dynamicalLoad, #displaying, #displaying a {width:auto}
 #displaying {width:228px;}
+
+.spaceHome .spaceNavigation::after,
+.spaceHome .cg-favorit-list::after {
+  content:' ';
+  clear:left;
+  display:block;
+}
+.spaceHome .cg-favorit-list li {
+  display:inline-block;
+  float:left;
+  margin-right:1em;
+}
+.spaceHome .cg-favorit-list li a span {
+  display: block;
+  text-align: center;
+}
