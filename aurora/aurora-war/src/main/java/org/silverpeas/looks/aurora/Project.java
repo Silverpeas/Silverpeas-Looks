@@ -9,8 +9,7 @@ import java.util.List;
 public class Project {
 
   private SpaceInstLight space;
-  private List<SilverpeasComponentInstance> components =
-      new ArrayList<SilverpeasComponentInstance>();
+  private List<SilverpeasComponentInstance> components = new ArrayList<>();
   
   public Project(SpaceInstLight space) {
     this.space = space;

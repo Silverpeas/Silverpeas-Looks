@@ -6,27 +6,27 @@ import org.silverpeas.core.util.WebEncodeHelper;
 
 public class Space {
 
-  private SpaceInstLight space;
+  private SpaceInstLight spaceInst;
   private String intro;
   private String picture;
   private String userLanguage;
 
   public Space(SpaceInstLight space, String userLanguage) {
-    this.space = space;
+    this.spaceInst = space;
     this.userLanguage = userLanguage;
   }
 
   public String getId() {
-    return space.getId();
+    return spaceInst.getId();
   }
 
   public String getName() {
-    return Encode.forHtml(space.getName(userLanguage));
+    return Encode.forHtml(spaceInst.getName(userLanguage));
   }
 
   public String getDescription() {
     return WebEncodeHelper
-        .convertWhiteSpacesForHTMLDisplay(Encode.forHtml(space.getDescription(userLanguage)));
+        .convertWhiteSpacesForHTMLDisplay(Encode.forHtml(spaceInst.getDescription(userLanguage)));
   }
 
   public void setIntro(String intro) {
@@ -38,7 +38,7 @@ public class Space {
   }
 
   public SpaceInstLight getSpace() {
-    return space;
+    return spaceInst;
   }
 
   public String getPicture() {

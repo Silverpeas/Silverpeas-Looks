@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -62,6 +63,7 @@ import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
+  private static final String DEFAULT_VALUE = "toBeDefined";
   private DelegatedNewsService delegatedNewsService = null;
   private LocalizationBundle messages;
   private LookSettings settings;
@@ -74,7 +76,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     session.setAttribute(LookHelper.SESSION_ATT, lookHelper);
     return lookHelper;
   }
-  
+
   public LookAuroraHelper(HttpSession session) {
     super(session);
 
@@ -82,8 +84,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
     String language = getMainSessionController().getFavoriteLanguage();
 
-    messages = ResourceLocator
-        .getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle", language);
+    messages =
+        ResourceLocator.getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
+            language);
   }
 
   @Override
@@ -104,26 +107,31 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (param.contains("*")) {
         definedSpaceIds = getExplicitlyDefinedSpaceIds();
       }
-      List<BannerMainItem> items = new ArrayList<>();
-      OrganizationController oc = getOrganisationController();
       String[] spaceIds = StringUtil.split(param);
-      for (String spaceId : spaceIds) {
-        if (BANNER_ALL_SPACES.equals(spaceId)) {
-          List<String> allRootSpaceIds =
-              new ArrayList<>(Arrays.asList(oc.getAllRootSpaceIds(getUserId())));
-          allRootSpaceIds.removeAll(definedSpaceIds);
-          for (String rootSpaceId : allRootSpaceIds) {
-            items.add(getBannerMainItem(rootSpaceId));
-          }
-        } else {
-          if (oc.isSpaceAvailable(spaceId, getUserId())) {
-            items.add(getBannerMainItem(spaceId));
-          }
-        }
-      }
-      return items;
+      return getBannerMainItemOfSpaces(spaceIds, definedSpaceIds);
     }
     return new ArrayList<>();
+  }
+
+  private List<BannerMainItem> getBannerMainItemOfSpaces(final String[] spaceIds,
+      final List<String> definedSpaceIds) {
+    List<BannerMainItem> items = new ArrayList<>();
+    OrganizationController oc = getOrganisationController();
+    for (String spaceId : spaceIds) {
+      if (BANNER_ALL_SPACES.equals(spaceId)) {
+        List<String> allRootSpaceIds =
+            new ArrayList<>(Arrays.asList(oc.getAllRootSpaceIds(getUserId())));
+        allRootSpaceIds.removeAll(definedSpaceIds);
+        for (String rootSpaceId : allRootSpaceIds) {
+          items.add(getBannerMainItem(rootSpaceId));
+        }
+      } else {
+        if (oc.isSpaceAvailable(spaceId, getUserId())) {
+          items.add(getBannerMainItem(spaceId));
+        }
+      }
+    }
+    return items;
   }
 
   private BannerMainItem getBannerMainItem(String spaceId) {
@@ -181,7 +189,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return components;
   }
-  
+
   public String getLoginHomePage() {
     return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
   }
@@ -198,9 +206,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       String prefix = "Shortcut." + id + "." + i;
       String url = getSettings(prefix + ".Url", null);
       if (StringUtil.isDefined(url)) {
-        String target = getSettings(prefix + ".Target", "toBeDefined");
-        String altText = getSettings(prefix + ".AltText", "toBeDefined");
-        String iconUrl = getSettings(prefix + ".IconUrl", "toBeDefined");
+        String target = getSettings(prefix + ".Target", DEFAULT_VALUE);
+        String altText = getSettings(prefix + ".AltText", DEFAULT_VALUE);
+        String iconUrl = getSettings(prefix + ".IconUrl", DEFAULT_VALUE);
         Shortcut shortcut = new Shortcut(iconUrl, target, url, altText);
         shortcuts.add(shortcut);
         i++;
@@ -215,12 +223,12 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (!getSettings("home.weather", false)) {
       return Collections.emptyList();
     }
-    
+
     List<City> cities = new ArrayList<>();
-    
+
     String[] woeids = StringUtil.split(getSettings("home.weather.woeid", ""), ",");
     String[] labels = StringUtil.split(getSettings("home.weather.cities", ""), ",");
-    
+
     for (int i=0; i<woeids.length; i++) {
       try {
         cities.add(new City(woeids[i], labels[i]));
@@ -249,10 +257,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
    */
   public List<ComponentInst> getApplications() {
     List<ComponentInst> hyperLinks = new ArrayList<>();
-    String[] asAvailCompoForCurUser =
-        getOrganisationController().getAvailCompoIds(
-            getSettings("applications.spaceId", "toBeDefined"),
-            getMainSessionController().getUserId());
+    String[] asAvailCompoForCurUser = getOrganisationController().getAvailCompoIds(
+        getSettings("applications.spaceId", DEFAULT_VALUE), getMainSessionController().getUserId());
     for (String componentId : asAvailCompoForCurUser) {
       ComponentInst componentInst = getOrganisationController().getComponentInst(componentId);
       if ("hyperlink".equals(componentInst.getName())) {
@@ -282,11 +288,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return result;
   }
-  
+
   private boolean isComponentForNews(String componentId) {
     return componentId.startsWith("quickinfo");
   }
-  
+
   public NewsList getNews() {
     String newsType = getSettings("home.news", "");
     List<News> news = new ArrayList<>();
@@ -325,7 +331,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return news;
   }
-  
+
   private List<News> getNewsByComponentIds(String[] allowedComponentIds) {
     if (allowedComponentIds.length == 0) {
       return Collections.emptyList();
@@ -363,7 +369,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   public NextEvents getNextEvents(List<String> allowedComponentIds, boolean includeToday,
       int nbDays, boolean onlyImportant) {
-    final List<NextEventsDate> result = new ArrayList<>();
+    List<NextEventsDate> result = new ArrayList<>();
     if (!allowedComponentIds.isEmpty()) {
       final CalendarResourceURIs uri = CalendarResourceURIs.get();
       List<CalendarEventOccurrenceEntity> events =
@@ -377,32 +383,38 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             return entity;
           })
           .collect(Collectors.toList());
-      Date today = new Date();
 
-      Date date = null;
-      NextEventsDate nextEventsDate = null;
-      for (CalendarEventOccurrenceEntity event : events) {
-        if (!onlyImportant || Priority.HIGH == event.getPriority()) {
-          Date eventDate = event.getStartDateAsDate();
-          if (includeToday || DateUtil.compareTo(today, eventDate, true) != 0) {
-            if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
-              nextEventsDate = new NextEventsDate(eventDate);
-              if (result.size() == nbDays) {
-                break;
-              }
-              result.add(nextEventsDate);
-              date = eventDate;
-            }
-            nextEventsDate.addEvent(event);
-          }
-        }
-      }
+      result = filterNextEvents(events, nbDays, includeToday, onlyImportant);
     }
     NextEvents nextEvents = new NextEvents(result);
     if (allowedComponentIds.size() == 1) {
       nextEvents.setUniqueAppId(allowedComponentIds.get(0));
     }
     return nextEvents;
+  }
+
+  private List<NextEventsDate> filterNextEvents(final List<CalendarEventOccurrenceEntity> events,
+      final int nbDays, final boolean includeToday, final boolean onlyImportant) {
+    Date date = null;
+    Date today = new Date();
+    NextEventsDate nextEventsDate = null;
+    List<NextEventsDate> filteredEventDates = new ArrayList<>();
+    for (CalendarEventOccurrenceEntity event : events) {
+      Date eventDate = event.getStartDateAsDate();
+      if ((!onlyImportant || Priority.HIGH == event.getPriority()) &&
+          (includeToday || DateUtil.compareTo(today, eventDate, true) != 0)) {
+        if (date == null || DateUtil.compareTo(date, eventDate, true) != 0) {
+          nextEventsDate = new NextEventsDate(eventDate);
+          if (filteredEventDates.size() == nbDays) {
+            break;
+          }
+          filteredEventDates.add(nextEventsDate);
+          date = eventDate;
+        }
+        nextEventsDate.addEvent(event);
+      }
+    }
+    return filteredEventDates;
   }
 
   private List<String> getAllowedComponents(String... componentIds) {
@@ -429,7 +441,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getLastUpdatedPublicationsSince(spaceId, Integer.parseInt(getSettings(
         "publications.page.since.days", "30")), 10000);
   }
-  
+
   public List<LinkDetail> getBookmarks() {
     MyLinksService myLinksService = new DefaultMyLinksService();
     List<LinkDetail> links = myLinksService.getAllLinks(getUserId());
@@ -441,12 +453,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return bookmarks;
   }
-  
+
   public Questions getQuestions() {
     Questions faqs = new Questions();
     QuestionManager qm = QuestionManagerProvider.getQuestionManager();
     String appId = getSettings("home.faq.appId", "");
-    int nb = getSettings("home.faq.nb", 1);
     if (StringUtil.isDefined(appId) && isComponentAvailable(appId)) {
       faqs.setAppId(appId);
       try {
@@ -455,40 +466,42 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
         List<Question> questions = qm.getQuestions(appId);
         if (CollectionUtil.isNotEmpty(questions)) {
-          if (nb > questions.size()) {
-            nb = questions.size();
-          }
-          if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
-              questions.size() > 1 && questions.size() > nb) {
-            Random random = new Random();
-            int j = 0;
-            while (j < nb) {
-              int i = random.nextInt(questions.size()-1);
-              Question question = questions.get(i);
-              boolean tryagain = false;
-              for (Question q : faqs.getList()) {
-                if (question.getPK().getId().equals(q.getPK().getId())) {
-                  tryagain = true;
-                  break;
-                }
-              }
-              if (!tryagain) {
-                faqs.add(question);
-                j++;
-              }
-            }
-          } else {
-            for (int i = 0; i < nb; i++) {
-              faqs.add(questions.get(i));
-            }
-          }
-          return faqs;
+          return filterFAQsMatchingQuestions(faqs, questions);
         }
       } catch (QuestionReplyException e) {
         SilverLogger.getLogger(this).error(e);
       }
     }
     return null;
+  }
+
+  private Questions filterFAQsMatchingQuestions(final Questions faqs,
+      final List<Question> questions) {
+    int nb = getSettings("home.faq.nb", 1);
+    if (nb > questions.size()) {
+      nb = questions.size();
+    }
+    if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
+        questions.size() > 1 && questions.size() > nb) {
+      Random random = new Random();
+      Predicate<Question> shouldTryAgain =
+          q -> faqs.getList().stream().anyMatch(f -> q.getPK().getId().equals(f.getPK().getId()));
+      int j = 0;
+      while (j < nb) {
+        int i = random.nextInt(questions.size() - 1);
+        Question question = questions.get(i);
+        boolean tryAgain = shouldTryAgain.test(question);
+        if (!tryAgain) {
+          faqs.add(question);
+          j++;
+        }
+      }
+    } else {
+      for (int i = 0; i < nb; i++) {
+        faqs.add(questions.get(i));
+      }
+    }
+    return faqs;
   }
 
   public LocalizationBundle getLocalizedBundle() {
@@ -537,23 +550,31 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
 
     StringBuilder paramsForDomainsBar = new StringBuilder().append("{");
-    if ("1".equals(fromTopBar)) {
-      if (spaceId != null) {
-        paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("', privateSubDomain:'")
-            .append(subSpaceId).append("', FromTopBar:'1'");
-      }
-    } else if (componentId != null) {
-      paramsForDomainsBar.append("privateDomain:'', component_id:'").append(componentId).append("'");
-    } else {
-      paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("'");
-    }
-    if ("1".equals(fromMySpace)) {
-      paramsForDomainsBar.append(",FromMySpace:'1'");
-    }
-    paramsForDomainsBar.append('}');
+    buildDomainsBar(paramsForDomainsBar, spaceId, subSpaceId, fromTopBar, componentId, fromMySpace);
 
+    String frameURL = getFrameURL(bodyPartSettings, strGoToNew, spaceId, componentId,
+        displayLoginHomepage, loginHomepage);
+
+    session.removeAttribute("goto");
+    session.removeAttribute("gotoNew");
+    session.removeAttribute("RedirectToComponentId");
+    session.removeAttribute("RedirectToSpaceId");
+
+    boolean hideMenu = "1".equals(fromTopBar) || "1".equals(login);
+    if (hideMenu) {
+      bodyPartSettings.setHideMenu(true);
+    }
+
+    bodyPartSettings.setDomainsBarParams(paramsForDomainsBar.toString());
+    bodyPartSettings.setMainPartURL(frameURL);
+    return bodyPartSettings;
+  }
+
+  private String getFrameURL(final BodyPartSettings bodyPartSettings,
+      final String strGoToNew, final String spaceId, final String componentId,
+      final boolean displayLoginHomepage, final String loginHomepage) {
     String webContext = URLUtil.getApplicationURL();
-    String frameURL = "";
+    String frameURL;
     if (displayLoginHomepage) {
       frameURL = loginHomepage;
       bodyPartSettings.setHideMenu(true);
@@ -574,20 +595,26 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         frameURL = strGoToNew;
       }
     }
+    return frameURL;
+  }
 
-    session.removeAttribute("goto");
-    session.removeAttribute("gotoNew");
-    session.removeAttribute("RedirectToComponentId");
-    session.removeAttribute("RedirectToSpaceId");
-
-    boolean hideMenu = "1".equals(fromTopBar) || "1".equals(login);
-    if (hideMenu) {
-      bodyPartSettings.setHideMenu(true);
+  private void buildDomainsBar(final StringBuilder paramsForDomainsBar, final String spaceId,
+      final String subSpaceId, final String fromTopBar, final String componentId,
+      final String fromMySpace) {
+    if ("1".equals(fromTopBar)) {
+      if (spaceId != null) {
+        paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("', privateSubDomain:'")
+            .append(subSpaceId).append("', FromTopBar:'1'");
+      }
+    } else if (componentId != null) {
+      paramsForDomainsBar.append("privateDomain:'', component_id:'").append(componentId).append("'");
+    } else {
+      paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("'");
     }
-
-    bodyPartSettings.setDomainsBarParams(paramsForDomainsBar.toString());
-    bodyPartSettings.setMainPartURL(frameURL);
-    return bodyPartSettings;
+    if ("1".equals(fromMySpace)) {
+      paramsForDomainsBar.append(",FromMySpace:'1'");
+    }
+    paramsForDomainsBar.append('}');
   }
 
   public boolean isUserCanDisplayMainHomePage() {
@@ -676,9 +703,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
     // get main information of space
     SpaceInstLight space = getOrganisationController().getSpaceInstLightById(currentSpaceId);
-    AuroraSpaceHomePage homepage = new AuroraSpaceHomePage(this, space);
-
-    return homepage;
+    return new AuroraSpaceHomePage(this, space);
   }
 
   public ComponentInstLight getConfigurationApp(String spaceId) {

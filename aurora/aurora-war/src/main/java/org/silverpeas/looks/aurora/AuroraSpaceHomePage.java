@@ -50,6 +50,8 @@ import org.silverpeas.core.web.look.Shortcut;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class AuroraSpaceHomePage {
 
@@ -155,12 +157,13 @@ public class AuroraSpaceHomePage {
     OrganizationController oc = OrganizationController.get();
     String[] appIds = oc.getAvailCompoIdsAtRoot(getSpace().getId(), look.getUserId());
     List<ComponentInstLight> components = new ArrayList<>();
+    Predicate<ComponentInstLight> canBeGet = c -> !visibleOnly || !c.isHidden();
+    Predicate<ComponentInstLight> matchesName =
+        c -> StringUtil.isNotDefined(name) || c.getName().equals(name);
     for (String appId : appIds) {
       ComponentInstLight component = oc.getComponentInstLight(appId);
-      if (!visibleOnly || (visibleOnly && !component.isHidden())) {
-        if (StringUtil.isNotDefined(name) || (StringUtil.isDefined(name) && component.getName().equals(name))) {
+      if (canBeGet.test(component) && matchesName.test(component)) {
           components.add(component);
-        }
       }
     }
     return components;
@@ -308,17 +311,9 @@ public class AuroraSpaceHomePage {
         if (fieldValue != null) {
           String attachmentId =
               fieldValue.substring(fieldValue.indexOf('_') + 1, fieldValue.length());
-          if (StringUtil.isDefined(attachmentId)) {
-            if (attachmentId.startsWith("/")) {
-              // case of an image provided by a gallery
-              return attachmentId;
-            } else {
-              SimpleDocument attachment = AttachmentService.get().searchDocumentById(
-                  new SimpleDocumentPK(attachmentId, getBackOfficeApp().getId()), null);
-              if (attachment != null) {
-                return URLUtil.getApplicationURL() + attachment.getAttachmentURL();
-              }
-            }
+          Optional<String> attachmentUrl = getAttachmentURL(attachmentId);
+          if (attachmentUrl.isPresent()) {
+            return attachmentUrl.get();
           }
         }
       }
@@ -326,6 +321,22 @@ public class AuroraSpaceHomePage {
       SilverLogger.getLogger(this).error(e);
     }
     return "";
+  }
+
+  private Optional<String> getAttachmentURL(final String attachmentId) {
+    if (StringUtil.isDefined(attachmentId)) {
+      if (attachmentId.startsWith("/")) {
+        // case of an image provided by a gallery
+        return Optional.of(attachmentId);
+      } else {
+        SimpleDocument attachment = AttachmentService.get().searchDocumentById(
+            new SimpleDocumentPK(attachmentId, getBackOfficeApp().getId()), null);
+        if (attachment != null) {
+          return Optional.of(URLUtil.getApplicationURL() + attachment.getAttachmentURL());
+        }
+      }
+    }
+    return Optional.empty();
   }
 
   private String getFieldWysiwygValue(String name) {

@@ -6,6 +6,7 @@ import org.silverpeas.core.web.look.Shortcut;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nicolas on 19/07/2017.
@@ -32,17 +33,13 @@ public class NewsList extends ListOfContributions {
   }
 
   private void processShortcuts() {
-    HashMap<String, Shortcut> map = new HashMap();
+    Map<String, Shortcut> shortcuts = new HashMap();
     for (AuroraNews aNews : news) {
       String componentId = aNews.getNews().getComponentInstanceId();
-      Shortcut appShortcut = map.get(componentId);
-      if (appShortcut == null) {
-        appShortcut = getAppShortcut(componentId);
-        map.put(componentId, appShortcut);
-      }
+      Shortcut appShortcut = shortcuts.computeIfAbsent(componentId, this::getAppShortcut);
       aNews.setAppShortcut(appShortcut);
     }
-    setAppShortcuts(new ArrayList<>(map.values()));
+    setAppShortcuts(new ArrayList<>(shortcuts.values()));
   }
 
 }

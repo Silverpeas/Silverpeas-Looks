@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Questions {
 
-  private List<Question> list = new ArrayList<Question>();
+  private List<Question> list = new ArrayList<>();
   private boolean canAskAQuestion = false;
   private String appId;
 

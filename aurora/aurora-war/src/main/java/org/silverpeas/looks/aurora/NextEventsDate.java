@@ -9,9 +9,9 @@ import java.util.List;
 
 public class NextEventsDate {
   
-  public Date date;
-  public List<Event> events = new ArrayList<>();
-  Calendar calendar;
+  private Date date;
+  private List<Event> events = new ArrayList<>();
+  private Calendar calendar;
   
   public NextEventsDate(Date date) {
     this.date = date;
