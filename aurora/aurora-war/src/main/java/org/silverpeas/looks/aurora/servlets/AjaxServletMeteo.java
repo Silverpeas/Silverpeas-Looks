@@ -1,4 +1,4 @@
-package org.silverpeas.looks.aurora;
+package org.silverpeas.looks.aurora.servlets;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -9,7 +9,6 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,12 +17,12 @@ public class AjaxServletMeteo extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		doPost(req, res);
 	}
 
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException 
-	{
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String woeid = req.getParameter("woeid");
 
 		res.setContentType("text/xml");
