@@ -66,11 +66,13 @@
             </c:if>
             <c:set var="bookmarkUrl" value="${bookmark.url}"/>
             <c:set var="target" value="_blank"/>
+            <c:set var="bookmarkClass" value=""/>
             <c:if test="${not bookmarkUrl.toLowerCase().startsWith('http')}">
               <c:url var="bookmarkUrl" value="${bookmark.url}"/>
               <c:set var="target" value=""/>
+              <c:set var="bookmarkClass" value="sp-link"/>
             </c:if>
-            <li class="${classFrag}"><a class="sp-link" href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
+            <li class="${classFrag}"><a class="${bookmarkClass}" href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
             <c:set var="bId" value="${bId+1}"/>
           </c:forEach>
         </ul>
