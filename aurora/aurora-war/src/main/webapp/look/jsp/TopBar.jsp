@@ -52,7 +52,6 @@
 <fmt:message var="labelUnreadUserNotification" key="look.banner.notifications.unread.one"/>
 <fmt:message var="labelUnreadUserNotifications" key="look.banner.notifications.unread.many"/>
 
-<c:url var="urlAdmin" value="/RjobManagerPeas/jsp/Main"/>
 <c:url var="urlLogin" value="/Login"/>
 
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
@@ -336,7 +335,7 @@ window.USERSESSION_PROMISE.then(function() {
           <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
         </c:if>
         <c:if test="${lookHelper.backOfficeVisible}">
-          <li id="adminstration-link-header"> <a target="_top" href="${urlAdmin}" title="${labelBackoffice}">${labelBackoffice}</a></li>
+          <li id="adminstration-link-header"> <a href="javascript:void(0)" onclick="spWindow.loadAdminHomePage();" title="${labelBackoffice}">${labelBackoffice}</a></li>
         </c:if>
       </ul>
       <div id="search-zone-header">
