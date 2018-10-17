@@ -463,7 +463,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       try {
         String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
         SilverpeasRole role = SilverpeasRole.getHighestFrom(SilverpeasRole.from(profiles));
-        faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
+        if (role != null) {
+          faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.writer));
+        }
         List<Question> questions = qm.getQuestions(appId);
         if (CollectionUtil.isNotEmpty(questions)) {
           return filterFAQsMatchingQuestions(faqs, questions);
