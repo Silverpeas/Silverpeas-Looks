@@ -35,6 +35,7 @@
 
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
 
+<c:if test="${not empty publications}">
 <div id="last-publication-home" class="secteur-container">
   <h4>${labelPublications}</h4>
   <div id="last-publicationt-main-container">
@@ -50,3 +51,4 @@
     </ul>
   </div>
 </div>
+</c:if>
