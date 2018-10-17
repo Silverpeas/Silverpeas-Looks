@@ -10,7 +10,7 @@
         <application>webPages</application>
     </applications>
     <viewFileName>auroraspacehomepage\view.xml</viewFileName>
-    <updateFileName>auroraspacehomepage\update.xml</updateFileName>
+    <updateFileName>auroraspacehomepage\update.html</updateFileName>
     <dataFileName>auroraspacehomepage\data.xml</dataFileName>
     <viewTypeFile></viewTypeFile>
     <updateTypeFile></updateTypeFile>
