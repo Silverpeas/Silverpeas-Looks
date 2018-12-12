@@ -24,7 +24,7 @@
 <c:set var="newsWithCarrousel" value="${settings.displayNewsWithCarrousel}"/>
 
 <c:set var="rssFeeds" value="${lookHelper.RSSFeeds}"/>
-
+<c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -72,7 +72,9 @@ $(document).ready(function() {
 
       <viewTags:displayWeather showEphemeris="${showEphemeris}" showWeather="${showWeather}" cities="${weatherCities}"/>
 
-      <viewTags:displayTaxonomy enabled="${settings.displaySearchOnHome}" labelsInsideSelect="${labelInsideSelectOnTaxonomy}"/>
+      <viewTags:displayTaxonomy enabled="${settings.displaySearchOnHome}" labelsInsideSelect="${labelInsideSelectOnTaxonomy}" />
+
+      <viewTags:displayFormSearch searchForm="${searchForm}"/>
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
     </div>

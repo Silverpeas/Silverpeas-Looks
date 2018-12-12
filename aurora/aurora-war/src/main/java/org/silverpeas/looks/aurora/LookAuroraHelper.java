@@ -23,9 +23,12 @@ import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
 import org.silverpeas.core.calendar.Priority;
+import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
 import org.silverpeas.core.contribution.model.WysiwygContent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
 import org.silverpeas.core.mylinks.service.MyLinksService;
@@ -64,12 +67,16 @@ import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private static final String DEFAULT_VALUE = "toBeDefined";
-  private DelegatedNewsService delegatedNewsService = null;
+  private DelegatedNewsService delegatedNewsService;
   private LocalizationBundle messages;
   private LookSettings settings;
   private static final String BANNER_ALL_SPACES = "*";
   private List<Domain> directoryDomains = null;
   private List<Group> directoryGroups = null;
+
+  // Main search form session objects
+  private PublicationTemplate mainSearchTemplate = null;
+  private boolean mainSearchTemplateLoaded = false;
 
   public static LookHelper newLookHelper(HttpSession session) {
     LookHelper lookHelper = new LookAuroraHelper(session);
@@ -738,5 +745,35 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return true;
     }
     return getSpaceAdmins(spaceId).contains(getUserDetail());
+  }
+
+  public Form getMainSearchForm() {
+    PublicationTemplate template = getMainSearchTemplate();
+    if (template != null) {
+      try {
+        Form form = template.getSearchForm();
+        form.setData(template.getRecordSet().getEmptyRecord());
+        return form;
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+    return null;
+  }
+
+  private PublicationTemplate getMainSearchTemplate() {
+    if (mainSearchTemplate == null && !mainSearchTemplateLoaded) {
+      String templateFilename = getSettings("home.search.template", "");
+      if (StringUtil.isDefined(templateFilename)) {
+        PublicationTemplateManager templateManager = PublicationTemplateManager.getInstance();
+        try {
+          mainSearchTemplate = templateManager.loadPublicationTemplate(templateFilename);
+        } catch (Exception e) {
+          SilverLogger.getLogger(this).error(e);
+        }
+      }
+      mainSearchTemplateLoaded = true;
+    }
+    return mainSearchTemplate;
   }
 }
