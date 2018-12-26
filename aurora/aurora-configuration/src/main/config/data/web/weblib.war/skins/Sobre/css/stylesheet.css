@@ -608,10 +608,7 @@ button.ui-button.ui-widget:hover {
   padding-top:3px;
   padding-left:5px;
   padding-right:5px;
-}
-.pageNav .pageIndex {
-  margin:0 10px 0 0;
-  padding:3px 0 0 0;
+  background-color: #FFFFFF;
 }
 
 .bgDegradeGris {
@@ -1079,15 +1076,6 @@ button,
   color: #444444;
 }
 
-.pageNav {
-  background-color: #FFFFFF;
-}
-
-.pageNav .pageIndex {
-  background-color: transparent;
-  border-right: 1px solid #444443;
-}
-
 .skinFieldset legend {
   background-color: #FFFFFF ! important;
   border-radius: 5px;
@@ -1127,7 +1115,7 @@ button,
 }
 
 #classified_contact_link {
-  width: 166px;
+  width: 190px;
 }
 
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL {
