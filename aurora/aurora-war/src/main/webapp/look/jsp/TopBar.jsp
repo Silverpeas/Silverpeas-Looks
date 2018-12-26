@@ -210,30 +210,35 @@ $(document).ready(function() {
 		$('.spacePerso').hide();
 	});
 
-	<c:if test="${settings.displayMenuSubElements}">
-  smartMenuPromise.then(function() {
-    setTimeout(function() {
-      $('#main-menu').smartmenus({
-        subMenusMinWidth:"15em",
-        subMenusMinWidth:"30em"
+	<c:choose>
+  <c:when test="${settings.displayMenuSubElements}">
+    smartMenuPromise.then(function() {
+      setTimeout(function() {
+        $('#main-menu').smartmenus({
+          subMenusMinWidth:"15em",
+          subMenusMinWidth:"30em"
+        });
+        $('#nav').show();
+      }, 0);
+      spLayout.getBody().ready(function() {
+        var __menuTimeout;
+        var __enableMenu = function() {
+          clearTimeout(__menuTimeout);
+          $('#main-menu').smartmenus('enable');
+        };
+        spLayout.getBody().getContent().addEventListener('start-load', function() {
+          $('#main-menu').smartmenus('disable', true);
+          clearTimeout(__menuTimeout);
+          __menuTimeout = setTimeout(__enableMenu, 3000);
+        }, '__id__top-bar');
+        spLayout.getBody().getContent().addEventListener('load', __enableMenu, '__id__top-bar');
       });
-      $('#nav').show();
-    }, 0);
-    spLayout.getBody().ready(function() {
-      var __menuTimeout;
-      var __enableMenu = function() {
-        clearTimeout(__menuTimeout);
-        $('#main-menu').smartmenus('enable');
-      };
-      spLayout.getBody().getContent().addEventListener('start-load', function() {
-        $('#main-menu').smartmenus('disable', true);
-        clearTimeout(__menuTimeout);
-        __menuTimeout = setTimeout(__enableMenu, 3000);
-      }, '__id__top-bar');
-      spLayout.getBody().getContent().addEventListener('load', __enableMenu, '__id__top-bar');
     });
-  });
-  </c:if>
+  </c:when>
+  <c:otherwise>
+    $('#nav').show();
+  </c:otherwise>
+  </c:choose>
 });
 
 window.USERNOTIFICATION_PROMISE.then(function() {
