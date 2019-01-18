@@ -15,7 +15,7 @@
 <c:set var="newsImageSize" value="${settings.newsImageSize}"/>
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
 <c:set var="questions" value="${lookHelper.questions}"/>
-<c:set var="publications" value="${lookHelper.dernieresPublications}"/>
+<c:set var="publications" value="${lookHelper.latestPublications}"/>
 <c:set var="bookmarks" value="${lookHelper.bookmarks}"/>
 <c:set var="showBookmarksAreaWhenEmpty" value="${settings.displayBookmarksAreaWhenEmpty}"/>
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
@@ -55,11 +55,10 @@ function changeBody(url) {
   }
 }
 
-$(document).ready(function() {
-
+whenSilverpeasReady(function() {
   sp.load('#next-event-part','parts/MainNextEventsPart.jsp');
-
 });
+
 </script>
 </head>
 <body class="main-home-page">

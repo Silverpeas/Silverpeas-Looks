@@ -92,7 +92,7 @@
   </div>
 
   <script type="text/javascript">
-    $(document).ready(function() {
+    whenSilverpeasReady(function() {
 
       <c:if test="${rssFeeds.carrousel}">
         $("#rss-slider").responsiveSlides({

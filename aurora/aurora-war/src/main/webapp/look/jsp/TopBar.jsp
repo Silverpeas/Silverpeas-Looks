@@ -166,7 +166,7 @@ var searchEngineScope = "SearchEngineScope";
 var directoryScope = "DirectoryScope";
 var searchScope = searchEngineScope;
 
-$(document).ready(function() {
+whenSilverpeasReady(function() {
   <c:if test="${silfn:isDefined(currentHeading)}">
     selectHeading('${currentHeading}');
   </c:if>

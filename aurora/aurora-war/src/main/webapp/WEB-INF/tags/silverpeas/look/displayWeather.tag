@@ -46,6 +46,7 @@
 <fmt:message var="labelWeather" key="look.home.weather.title"/>
 <fmt:message var="labelWeatherToday" key="look.home.weather.today"/>
 <fmt:message var="labelWeatherTomorrow" key="look.home.weather.tomorrow"/>
+<fmt:message var="unvailableWeather" key="look.message.weatherUnvailable"/>
 
 <c:if test="${showEphemeris}">
   <div class="secteur-container weather" id="weather-home">
@@ -55,7 +56,7 @@
       <div id="localisation-weather">
         <c:set var="firstCity" value="true"/>
         <c:forEach var="city" items="${cities}">
-          <a class="select" id="${city.woeid}" href="#" onclick="showWeather(${city.woeid});return false;"><span>${city.label}</span></a>
+          <a class="select" id="${city.id}" href="#" onclick="showWeather(${city.id});return false;"><span>${city.name}</span></a>
         </c:forEach>
       </div>
       <div class="day" id="day1"> <img alt="soleil et nuage" src="imgDesign/meteo/meteo_44.png" />
@@ -72,80 +73,67 @@
   </div>
 
   <script type="text/javascript" src="js/ephemeris.min.js"></script>
+  <script type="text/javascript" src="js/silverpeas-weather.js"></script>
+  <script type="text/javascript" src="js/silverpeas-weather-yahoo.js"></script>
+  <script type="text/javascript" src="js/silverpeas-weather-openweathermap.js"></script>
+  <script type="text/javascript" src="js/silverpeas-weather-accuweather.js"></script>
   <script type="text/javascript">
     var weatherCookieName = "Silverpeas_Intranet_LastVisitedCity";
 
-    function addPrefix(str) {
-      if ($.browser.edge || $.browser.safari) {
-        return str;
-      }
-      return "yweather\\:" + str;
-    }
-
-    jQuery.browser = {};
-    jQuery.browser.edge = /edge/.test(navigator.userAgent.toLowerCase());
-    jQuery.browser.chrome = /chrome/.test(navigator.userAgent.toLowerCase());
-    jQuery.browser.safari = /safari/.test(navigator.userAgent.toLowerCase());
-    if (jQuery.browser.chrome && jQuery.browser.safari) {
-      jQuery.browser.safari = false;
-    }
-
-    function showWeather(woeid) {
-      $.cookie(weatherCookieName, woeid);
-      $('#localisation-weather a').removeClass("select");
-      $('#' + woeid).addClass("select");
-      var url = "http://fr.meteo.yahoo.com/france/dummy/unknown-" + woeid;
-      $('#external_meteo').attr("href", url);
-      $.ajax({
-        url : webContext + "/RAjaxMeteo/", type : "get", dataType : "xml", cache : false,
-
-        // As part of the data, we have to pass in the
-        // the target url for our server-side AJAX request.
-        data : {
-          woeid : woeid
-        },
-
-        // Alert when content has been loaded.
-        success : function(xmlData) {
-          // Get the content from the response XML.
-          var city = $(xmlData).find(addPrefix("location")).attr('city');
-          var numeroJour = 0;
-          var strData = $(xmlData).find(addPrefix("forecast")).each(function() {
-            numeroJour++;
-            var date = $(this).attr('date');
-            var day = $(this).attr('day');
-            var low = $(this).attr('low');
-            var high = $(this).attr('high');
-
-            // Convert F to C°
-            low = Math.round((low - 32) / 1.8);
-            high = Math.round((high - 32) / 1.8);
-
-            var code = $(this).attr('code');
-            $('#day' + numeroJour + ' .temperature .min').html("min " + low + "&deg;");
-            $('#day' + numeroJour + ' .temperature .max').html("max " + high + "&deg;");
-            $('#day' + numeroJour + ' img').attr("alt", $(this).attr('text'));
-            $('#day' + numeroJour + ' img').attr("src", webContext +
-                "/look/jsp/imgDesign/meteo/meteo_" + code + ".png");
-          });
-        },
-
-        error : function(text) {
-          $('#day1').html("M&eacute;t&eacute;o indisponible");
-        }
+    function showWeather(cityId) {
+       jQuery.cookie(weatherCookieName, cityId);
+       jQuery('#localisation-weather a').removeClass("select");
+       jQuery('#' + cityId).addClass("select");
+       jQuery('span#hour').remove();
+       spWeather.load(cityId, function(weather) {
+          var indexes = [0];
+          var time = false;
+          if (weather.api.includes('hourly')) {
+             time = true;
+             for (var i = 1; i < weather.forecasts.length; i++) {
+                if (weather.forecasts[i].date.dayOfYear() > weather.forecasts[0].date.dayOfYear()
+                  && weather.forecasts[i].date.hours() >= 8) {
+                   console.log('TOMORROW: ', weather.forecasts[i].date);
+                   indexes.push(i);
+                   break;
+                }
+             }
+          } else {
+             indexes.push(1);
+          }
+          for (var i = 0; i < indexes.length; i++) {
+             var dayNb = i + 1;
+             jQuery('#day' + dayNb + ' .temperature .min').html(
+                 "min " + weather.forecasts[indexes[i]].temperature.min + "&deg;");
+             jQuery('#day' + dayNb + ' .temperature .max').html(
+                 "max " + weather.forecasts[indexes[i]].temperature.max + "&deg;");
+             jQuery('#day' + dayNb + ' img').attr("alt", weather.forecasts[indexes[i]].description).attr(
+                 "src", weather.forecasts[indexes[i]].icon);
+             if (time) {
+                jQuery('#day' + dayNb + ' .label').append(
+                    $('<span>', {id: 'hour'}).html(' ' + weather.forecasts[indexes[i]].date.hours() + 'H'));
+             }
+          }
+       }, function() {
+          jQuery('#day1').html("${unvailableWeather}");
       });
     }
 
-    $(document).ready(function() {
+    whenSilverpeasReady(function() {
       $("#ephemeride").html(ephemeris.getTodayEphemerisName());
 
       <c:if test="${showWeather}">
       // init weather
-      var woeid = $.cookie(weatherCookieName);
-      if(woeid == null){
-        woeid = $("#localisation-weather a:first").attr("id");
+       var cities = [];
+       <c:forEach var="city" items="${cities}">
+       cities.push('${city.id}');
+       </c:forEach>
+       var cityId = $.cookie(weatherCookieName);
+       if (!cityId || !cities.includes(cityId)) {
+          cityId = $("#localisation-weather a:first").attr("id");
+       } else {
       }
-      showWeather(woeid);
+       showWeather(cityId);
       </c:if>
     });
   </script>
