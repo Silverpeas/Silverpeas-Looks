@@ -58,7 +58,7 @@
   </div>
 
   <script type="text/javascript">
-    $(document).ready(function() {
+    whenSilverpeasReady(function() {
         $("#medias-slider").responsiveSlides({
           auto: true,
           pager: false,

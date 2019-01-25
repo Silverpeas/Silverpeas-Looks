@@ -102,7 +102,7 @@
       spWindow.loadComponent(spaceId);
     }
 
-    $(document).ready(function() {
+    whenSilverpeasReady(function() {
       // if right column is empty
       if ($.trim($(".rightContent").text()).length === 0) {
         $(".rightContent").css("display", "none");

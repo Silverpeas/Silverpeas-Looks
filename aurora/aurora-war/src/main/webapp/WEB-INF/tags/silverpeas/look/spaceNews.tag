@@ -38,7 +38,7 @@
 
 <script type="text/javascript">
   <!--
-  $(document).ready(function() {
+  whenSilverpeasReady(function() {
     var $s = $('.slideshow').slides();
   });
   -->

@@ -69,7 +69,7 @@ function search() {
   document.AdvancedSearch.submit();
 }
 
-$(document).ready(function() {
+whenSilverpeasReady(function() {
   $('#used_pdc').pdc('used', {
     <c:if test="${not empty spaceId}">
       workspace : '${spaceId}',

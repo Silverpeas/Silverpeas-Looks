@@ -47,6 +47,8 @@ import org.silverpeas.core.web.look.Shortcut;
 import org.silverpeas.core.webapi.calendar.CalendarResourceURIs;
 import org.silverpeas.core.webapi.calendar.CalendarWebManager;
 import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
+import org.silverpeas.looks.aurora.service.weather.City;
+import org.silverpeas.looks.aurora.service.weather.WeatherSettings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -67,10 +69,11 @@ import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private static final String DEFAULT_VALUE = "toBeDefined";
+  private static final Random RANDOM = new Random();
+  private static final String BANNER_ALL_SPACES = "*";
   private DelegatedNewsService delegatedNewsService;
   private LocalizationBundle messages;
   private LookSettings settings;
-  private static final String BANNER_ALL_SPACES = "*";
   private List<Domain> directoryDomains = null;
   private List<Group> directoryGroups = null;
 
@@ -84,7 +87,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return lookHelper;
   }
 
-  public LookAuroraHelper(HttpSession session) {
+  private LookAuroraHelper(HttpSession session) {
     super(session);
 
     delegatedNewsService = DelegatedNewsService.get();
@@ -94,6 +97,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     messages =
         ResourceLocator.getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
             language);
+
+    final WeatherSettings weatherSettings = WeatherSettings.get();
+    final String basePath = "org.silverpeas.weather.settings.";
+    weatherSettings.setSettingsFilePath(
+        basePath + getSettings("home.weather.settings", basePath + "weather.properties"));
   }
 
   @Override
@@ -231,26 +239,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return Collections.emptyList();
     }
 
-    List<City> cities = new ArrayList<>();
-
-    String[] woeids = StringUtil.split(getSettings("home.weather.woeid", ""), ",");
-    String[] labels = StringUtil.split(getSettings("home.weather.cities", ""), ",");
-
-    for (int i=0; i<woeids.length; i++) {
-      try {
-        cities.add(new City(woeids[i], labels[i]));
-      } catch (Exception e) {
-        SilverLogger.getLogger(this).error(e);
-      }
-    }
-    return cities;
+    return WeatherSettings.get().getCities();
   }
 
-  /**
-   * Dernières publications
-   * @return
-   */
-  public List<PublicationDetail> getDernieresPublications() {
+  public List<PublicationDetail> getLatestPublications() {
     String spaceId = getSettings("home.publications.spaceid", "");
     if (!StringUtil.isDefined(spaceId)) {
       spaceId = null;
@@ -259,9 +251,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         Integer.parseInt(getSettings("home.publications.nb", "3")));
   }
 
-  /**
-   * @return
-   */
   public List<ComponentInst> getApplications() {
     List<ComponentInst> hyperLinks = new ArrayList<>();
     String[] asAvailCompoForCurUser = getOrganisationController().getAvailCompoIds(
@@ -492,12 +481,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
         questions.size() > 1 && questions.size() > nb) {
-      Random random = new Random();
       Predicate<Question> shouldTryAgain =
           q -> faqs.getList().stream().anyMatch(f -> q.getPK().getId().equals(f.getPK().getId()));
       int j = 0;
       while (j < nb) {
-        int i = random.nextInt(questions.size() - 1);
+        int i = RANDOM.nextInt(questions.size() - 1);
         Question question = questions.get(i);
         boolean tryAgain = shouldTryAgain.test(question);
         if (!tryAgain) {
