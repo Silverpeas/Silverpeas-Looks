@@ -94,7 +94,14 @@ public class AuroraSpaceHomePage {
   public List<PublicationDetail> getNews() {
     boolean displayNews = isEnabled("space.homepage.news", "displayNews");
     if (displayNews) {
-      return look.getNews(getSpace().getId());
+      List<PublicationDetail> news = look.getNews(getSpace().getId());
+      if (CollectionUtil.isNotEmpty(news)) {
+        int nbNews = look.getSettings("space.homepage.news.nb", 10);
+        if (news.size() > nbNews) {
+          return news.subList(0, nbNews);
+        }
+        return news;
+      }
     }
     return Collections.emptyList();
   }
