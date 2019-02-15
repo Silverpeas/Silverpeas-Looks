@@ -308,7 +308,7 @@ public class AuroraSpaceHomePage {
   }
 
   private String getFieldImageURL(String name) {
-    if (getBackOfficeApp() == null) {
+    if (getBackOfficeApp() == null || data == null) {
       return "";
     }
     try {
@@ -362,7 +362,7 @@ public class AuroraSpaceHomePage {
   }
 
   private String getFieldValue(String name) {
-    if (getBackOfficeApp() == null) {
+    if (getBackOfficeApp() == null || data == null) {
       return "";
     }
     try {
