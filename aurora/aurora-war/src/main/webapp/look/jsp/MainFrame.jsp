@@ -38,7 +38,6 @@ if (m_MainSessionCtrl == null) { %>
   LookHelper helper = LookHelper.getLookHelper(session);
 	if (helper == null) {
 	  helper = LookAuroraHelper.newLookHelper(session);
-	  helper.setMainFrame(thisFrame);
 	  login = true;
 	}
 	

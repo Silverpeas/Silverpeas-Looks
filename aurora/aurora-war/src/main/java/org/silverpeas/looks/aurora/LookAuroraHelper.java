@@ -71,8 +71,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private static final String DEFAULT_VALUE = "toBeDefined";
   private static final Random RANDOM = new Random();
   private static final String BANNER_ALL_SPACES = "*";
-  private DelegatedNewsService delegatedNewsService;
-  private LocalizationBundle messages;
   private LookSettings settings;
   private List<Domain> directoryDomains = null;
   private List<Group> directoryGroups = null;
@@ -83,21 +81,21 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   public static LookHelper newLookHelper(HttpSession session) {
     LookHelper lookHelper = new LookAuroraHelper(session);
+    lookHelper.setMainFrame("/look/jsp/MainFrame.jsp");
     session.setAttribute(LookHelper.SESSION_ATT, lookHelper);
+    return lookHelper;
+  }
+
+  public static LookHelper getLookHelper(final HttpSession session) {
+    final LookHelper lookHelper = LookHelper.getLookHelper(session);
+    if (lookHelper == null) {
+      return newLookHelper(session);
+    }
     return lookHelper;
   }
 
   private LookAuroraHelper(HttpSession session) {
     super(session);
-
-    delegatedNewsService = DelegatedNewsService.get();
-
-    String language = getMainSessionController().getFavoriteLanguage();
-
-    messages =
-        ResourceLocator.getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
-            language);
-
     final WeatherSettings weatherSettings = WeatherSettings.get();
     final String basePath = "org.silverpeas.weather.settings.";
     weatherSettings.setSettingsFilePath(
@@ -313,8 +311,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private List<News> getDelegatedNews() {
-    List<News> news = new ArrayList<>();
-    List<DelegatedNews> delegatedNews = delegatedNewsService.getAllValidDelegatedNews();
+    final DelegatedNewsService delegatedNewsService = DelegatedNewsService.get();
+    final List<News> news = new ArrayList<>();
+    final List<DelegatedNews> delegatedNews = delegatedNewsService.getAllValidDelegatedNews();
     for (DelegatedNews delegated : delegatedNews) {
       if (delegated != null && isComponentAvailable(delegated.getInstanceId())) {
         News aNews = new News(delegated.getPublicationDetail());
@@ -502,7 +501,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public LocalizationBundle getLocalizedBundle() {
-    return messages;
+    final String language = getMainSessionController().getFavoriteLanguage();
+    return ResourceLocator.getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
+        language);
   }
 
   public LookSettings getLookSettings() {

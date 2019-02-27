@@ -26,13 +26,13 @@
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%@ page import="org.silverpeas.core.web.look.LookHelper"%>
+<%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ include file="../../admin/jsp/importFrameSet.jsp" %>
 
-<c:set var="lookHelper" value="<%=LookHelper.getLookHelper(session)%>"/>
+<c:set var="lookHelper" value="<%=LookAuroraHelper.getLookHelper(session)%>"/>
 <c:if test="${lookHelper != null}">
   <jsp:useBean id="lookHelper" type="org.silverpeas.looks.aurora.LookAuroraHelper"/>
   <c:set var="navigationWidth" value="${lookHelper.getSettings('domainsBarFramesetWidth','260')}px"/>

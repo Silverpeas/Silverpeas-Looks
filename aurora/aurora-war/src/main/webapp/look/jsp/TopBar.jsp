@@ -1,10 +1,11 @@
+<%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/util" prefix="viewTags" %>
 
-<c:set var="lookHelper" value="${sessionScope.Silverpeas_LookHelper}" />
+<c:set var="lookHelper" value="<%= LookAuroraHelper.getLookHelper(session) %>"/>
 <c:set var="currentHeading" value="${lookHelper.spaceId}"/>
 <c:set var="mainItems" value="${lookHelper.bannerMainItems}"/>
 <c:set var="apps" value="${lookHelper.applications}"/>

@@ -50,7 +50,7 @@
 <view:timeout/>
 
 <%
-  LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
+  LookAuroraHelper helper = (LookAuroraHelper) LookAuroraHelper.getLookHelper(session);
   AuroraSpaceHomePage homepage = helper.getHomePage(request.getParameter("SpaceId"));
   List<PublicationDetail> publications = homepage.getPublications();
   List<PublicationDetail> news = homepage.getNews();

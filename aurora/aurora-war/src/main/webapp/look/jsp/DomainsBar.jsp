@@ -30,6 +30,7 @@
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -50,7 +51,7 @@
 
 <%
 GraphicElementFactory gef = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
-LookHelper helper = LookHelper.getLookHelper(session);
+LookHelper helper = LookAuroraHelper.getLookHelper(session);
 
 String spaceId    	= request.getParameter("privateDomain");
 String subSpaceId   = request.getParameter("privateSubDomain");
