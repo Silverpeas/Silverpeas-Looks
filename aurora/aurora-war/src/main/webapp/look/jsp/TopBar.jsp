@@ -18,6 +18,15 @@
 <c:if test="${isAnonymous}">
   <c:set var="anonymousMode" value="anonymousMode"/>
 </c:if>
+<c:url var="urlLogin" value="/Login"/>
+
+<c:choose>
+<c:when test="${lookHelper == null or lookHelper.localizedBundle == null}">
+  <script type="text/javascript">
+    top.location = '${urlLogin}';
+  </script>
+</c:when>
+<c:otherwise>
 
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
@@ -51,8 +60,6 @@
 <fmt:message var="labelUserNotifications" key="look.banner.notifications"/>
 <fmt:message var="labelUnreadUserNotification" key="look.banner.notifications.unread.one"/>
 <fmt:message var="labelUnreadUserNotifications" key="look.banner.notifications.unread.many"/>
-
-<c:url var="urlLogin" value="/Login"/>
 
 <c:set var="smartmenusSkin" value="sm-silverpeas"/>
 
@@ -381,3 +388,6 @@ window.USERSESSION_PROMISE.then(function() {
     <div id="deco-header"> </div>
   </div>
 </div>
+
+</c:otherwise>
+</c:choose>
