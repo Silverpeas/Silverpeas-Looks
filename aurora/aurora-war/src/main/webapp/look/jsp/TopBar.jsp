@@ -124,7 +124,8 @@ function goToApplication(url) {
 
 function goToProject(projectSpaceId) {
 	unselectHeadings();
-  goToSpace(projectSpaceId)
+  goToSpace(projectSpaceId);
+  $("#project-select").val("");
 }
 
 function searchEngine() {
