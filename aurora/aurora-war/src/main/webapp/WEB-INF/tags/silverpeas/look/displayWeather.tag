@@ -1,4 +1,4 @@
-<%--
+<%@ tag import="org.silverpeas.core.web.http.HttpRequest" %><%--
   ~ Copyright (C) 2000 - 2018 Silverpeas
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -81,7 +81,7 @@
     var weatherCookieName = "Silverpeas_Intranet_LastVisitedCity";
 
     function showWeather(cityId) {
-       jQuery.cookie(weatherCookieName, cityId);
+       jQuery.cookie(weatherCookieName, cityId, {secure: <%= HttpRequest.isCurrentRequestSecure() %>});
        jQuery('#localisation-weather a').removeClass("select");
        jQuery('#' + cityId).addClass("select");
        jQuery('span#hour').remove();
