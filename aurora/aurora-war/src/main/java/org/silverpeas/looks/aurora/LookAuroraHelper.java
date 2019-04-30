@@ -257,7 +257,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         getSettings("applications.spaceId", DEFAULT_VALUE), getMainSessionController().getUserId());
     for (String componentId : asAvailCompoForCurUser) {
       ComponentInst componentInst = getOrganisationController().getComponentInst(componentId);
-      if ("hyperlink".equals(componentInst.getName())) {
+      if ("hyperlink".equals(componentInst.getName()) && !componentInst.isHidden()) {
         hyperLinks.add(componentInst);
       }
     }
