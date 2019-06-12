@@ -16,10 +16,12 @@ node {
             env.CHANGE_URL?.startsWith('https://github.com/Silverpeas')) {
           withSonarQubeEnv {
             sh """
-mvn ${SONAR_MAVEN_GOAL} -Dsonar.analysis.mode=issues \\
-    -Dsonar.github.pullRequest=${env.CHANGE_ID} \\
-    -Dsonar.github.repository=Silverpeas/Silverpeas-Looks \\
-    -Dsonar.github.oauth=${SONAR_GITHUB_OAUTH} \\
+mvn ${SONAR_MAVEN_GOAL} -Dsonar.projectKey=Silverpeas_Silverpeas-Looks \\
+    -Dsonar.organization=silverpeas \\
+    -Dsonar.pullrequest.branch=${env.BRANCH_NAME} \\
+    -Dsonar.pullrequest.key=${env.CHANGE_ID} \\
+    -Dsonar.pullrequest.base=master \\
+    -Dsonar.pullrequest.provider=github \\
     -Dsonar.host.url=${SONAR_HOST_URL} \\
     -Dsonar.login=${SONAR_AUTH_TOKEN}
 """
