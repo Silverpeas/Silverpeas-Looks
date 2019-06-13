@@ -353,8 +353,11 @@ public class AuroraSpaceHomePage {
     try {
       String text =
           WysiwygFCKFieldDisplayer.getContentFromFile(getBackOfficeApp().getId(), "0", name);
-      return WysiwygContentTransformer.on(text).modifyImageUrlAccordingToHtmlSizeDirective()
-          .resolveVariablesDirective().transform();
+      return WysiwygContentTransformer.on(text)
+          .modifyImageUrlAccordingToHtmlSizeDirective()
+          .resolveVariablesDirective()
+          .applySilverpeasLinkCssDirective()
+          .transform();
     } catch (Exception e) {
       SilverLogger.getLogger(this).error(e);
       return "";
