@@ -249,23 +249,6 @@ whenSilverpeasReady(function() {
   </c:choose>
 });
 
-window.USERNOTIFICATION_PROMISE.then(function() {
-  var $container = jQuery("#notification-count");
-  spUserNotification.addEventListener('unreadUserNotificationsChanged', function(event) {
-    var unreadUserNotificationCount = event.detail.data.nbUnread;
-    $container.show();
-    var label = unreadUserNotificationCount + " ${labelUnreadUserNotifications}";
-    if (unreadUserNotificationCount === 1) {
-      label = unreadUserNotificationCount + " ${labelUnreadUserNotification}";
-    } else if (unreadUserNotificationCount === 0) {
-      label = "${labelUserNotifications}";
-      $container.hide();
-    }
-    jQuery("a", $container).text(label);
-  }, 'unreadUserNotificationsChanged@TopBar');
-});
-
-
 window.USERSESSION_PROMISE.then(function() {
   spUserSession.addEventListener('connectedUsersChanged', function(event) {
     var nb = event.detail.data.nb;
@@ -309,8 +292,18 @@ window.USERSESSION_PROMISE.then(function() {
               </ul>
             </div>
           </div>
-
-          <div id="notification-count" class="btn-header"> <a href="javascript:void(0)" onclick="spUserNotification.view();"></a> </div>
+          <silverpeas-user-notifications no-unread-label="${labelUserNotifications}"
+                                         one-unread-label="${labelUnreadUserNotification}"
+                                         several-unread-label="${labelUnreadUserNotifications}">
+            <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
+          </silverpeas-user-notifications>
+          <script type="text/javascript">
+            whenSilverpeasReady(function() {
+              new Vue({
+                el : 'silverpeas-user-notifications'
+              });
+            });
+          </script>
         </c:if>
         <c:if test="${not empty projects}">
         <div class="btn-header">
