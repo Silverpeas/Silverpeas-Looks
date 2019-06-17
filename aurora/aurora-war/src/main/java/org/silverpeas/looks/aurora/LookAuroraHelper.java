@@ -62,7 +62,6 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
@@ -297,10 +296,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if ("delegated".equalsIgnoreCase(newsType)) {
         news = getDelegatedNews();
       } else {
-        String[] allowedComponentIds =
-            getAllowedComponents(StringUtil.split(newsType, ' ')).toArray(new String[0]);
-        if (allowedComponentIds.length == 1) {
-          uniqueAppId = allowedComponentIds[0];
+        List<String> allowedComponentIds =
+            getAllowedComponents("quickinfo", StringUtil.split(newsType, ' '));
+        if (allowedComponentIds.size() == 1) {
+          uniqueAppId = allowedComponentIds.get(0);
         }
         news = getNewsByComponentIds(allowedComponentIds);
       }
@@ -328,16 +327,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return news;
   }
 
-  private List<News> getNewsByComponentIds(String[] allowedComponentIds) {
-    if (allowedComponentIds.length == 0) {
+  private List<News> getNewsByComponentIds(List<String> allowedComponentIds) {
+    if (CollectionUtil.isEmpty(allowedComponentIds)) {
       return Collections.emptyList();
     }
 
     // getting news from allowed components
-    QuickInfoService service = QuickInfoService.get();
     List<News> allNews = new ArrayList<>();
     for (String appId : allowedComponentIds) {
-      allNews.addAll(service.getVisibleNews(appId));
+      allNews.addAll(getNewsByComponentId(appId));
     }
 
     // sorting news
@@ -346,24 +344,36 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return allNews;
   }
 
-  private String[] getAllowedComponentIds(String param) {
-    String[] appIds = StringUtil.split(getSettings(param, ""), ' ');
-    return getAllowedComponents(appIds).toArray(new String[0]);
+  private List<News> getNewsByComponentId(String allowedComponentId) {
+    // getting news from allowed component
+    boolean importantOnly = getSettings("home.news.importantOnly", false);
+    List<News> allNews = QuickInfoService.get().getVisibleNews(allowedComponentId);
+    if (!importantOnly) {
+      return allNews;
+    }
+    List<News> importantNews = new ArrayList<>();
+    for (News news : allNews) {
+      if (news.isImportant()) {
+        importantNews.add(news);
+      }
+    }
+    return importantNews;
   }
 
   public NextEvents getNextEvents() {
-    List<String> allowedComponentIds = asList(getAllowedComponentIds("home.events.appId"));
+    String[] appIds = StringUtil.split(getSettings("home.events.appId", ""), ' ');
+    List<String> allowedComponentIds = getAllowedComponents("almanach", appIds);
     return getNextEvents(allowedComponentIds);
   }
 
-  public NextEvents getNextEvents(List<String> allowedComponentIds) {
+  private NextEvents getNextEvents(List<String> allowedComponentIds) {
     boolean includeToday = getSettings("home.events.today.include", true);
     int nbDays = getSettings("home.events.maxDays", 2);
     boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
     return getNextEvents(allowedComponentIds, includeToday, nbDays, fetchOnlyImportant);
   }
 
-  public NextEvents getNextEvents(List<String> allowedComponentIds, boolean includeToday,
+  protected NextEvents getNextEvents(List<String> allowedComponentIds, boolean includeToday,
       int nbDays, boolean onlyImportant) {
     List<NextEventsDate> result = new ArrayList<>();
     if (!allowedComponentIds.isEmpty()) {
@@ -413,7 +423,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return filteredEventDates;
   }
 
-  private List<String> getAllowedComponents(String... componentIds) {
+  private List<String> getAllowedComponents(String componentName, String... componentIds) {
+    if (ArrayUtil.contains(componentIds, "*")) {
+      return Arrays
+          .asList(getOrganisationController().getComponentIdsForUser(getUserId(), componentName));
+    }
     List<String> allowedComponentIds = new ArrayList<>();
     for (String componentId : componentIds) {
       if (isComponentAvailable(componentId)) {
