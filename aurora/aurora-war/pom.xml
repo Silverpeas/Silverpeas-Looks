@@ -21,43 +21,43 @@
 	 <dependency>
       <groupId>org.silverpeas.components.quickinfo</groupId>
       <artifactId>silverpeas-quickinfo</artifactId>
-	    <version>${silverpeas.version}</version>
+	    <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
 	  <dependency>
       <groupId>org.silverpeas.components.delegatednews</groupId>
       <artifactId>silverpeas-delegatednews</artifactId>
-	    <version>${silverpeas.version}</version>
+	    <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
 	  <dependency>
       <groupId>org.silverpeas.components.almanach</groupId>
       <artifactId>silverpeas-almanach</artifactId>
-	    <version>${silverpeas.version}</version>
+	    <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
 	  <dependency>
       <groupId>org.silverpeas.components.questionreply</groupId>
       <artifactId>silverpeas-questionreply</artifactId>
-	    <version>${silverpeas.version}</version>
+	    <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.components.rssaggregator</groupId>
       <artifactId>silverpeas-rssaggregator</artifactId>
-      <version>${silverpeas.version}</version>
+      <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.components.gallery</groupId>
       <artifactId>silverpeas-gallery</artifactId>
-      <version>${silverpeas.version}</version>
+      <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
 	  <dependency>
       <groupId>org.silverpeas.core.services</groupId>
 	    <artifactId>silverpeas-core-mylinks</artifactId>
-	    <version>${silverpeas.version}</version>
+	    <version>${core.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

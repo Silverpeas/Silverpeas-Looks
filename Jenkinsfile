@@ -1,13 +1,38 @@
+import java.util.regex.Matcher
+
 node {
-  catchError {
-    def nexusRepo = 'https://www.silverpeas.org/nexus/content/repositories/snapshots/'
+  def lockFilePath
+  try {
+    def version
     docker.image('silverpeas/silverbuild')
-        .inside('-u root -v $HOME/.m2/settings.xml:/root/.m2/settings.xml -v $HOME/.m2/settings-security.xml:/root/.m2/settings-security.xml -v $HOME/.gitconfig:/root/.gitconfig -v $HOME/.ssh:/root/.ssh -v $HOME/.gnupg:/root/.gnupg') {
+        .inside('-u root -v $HOME/.m2:/root/.m2 -v $HOME/.gitconfig:/root/.gitconfig -v $HOME/.ssh:/root/.ssh -v $HOME/.gnupg:/root/.gnupg') {
       stage('Preparation') {
         checkout scm
       }
       stage('Build') {
-        sh "mvn clean install -Pdeployment -Djava.awt.headless=true -Dcontext=ci"
+        version = computeSnapshotVersion()
+        lockFilePath = createLockFile(version, 'looks')
+        waitForDependencyRunningBuildIfAny(version, 'core')
+        waitForDependencyRunningBuildIfAny(version, 'components')
+        def pom = readMavenPom()
+        def current = pom.version
+        boolean coreDependencyExists = existsDependency(version, 'core')
+        if (!coreDependencyExists) {
+          sh """
+sed -i -e "s/<core.version>[\\\${}0-9a-zA-Z.-]\\+/<core.version>${current}/g" pom.xml
+"""
+        }
+        boolean componentDependencyExists = existsDependency(version, 'components')
+        if (!componentDependencyExists) {
+          sh """
+sed -i -e "s/<components.version>[\\\${}0-9a-zA-Z.-]\\+/<components.version>${current}/g" pom.xml
+"""
+        }
+        sh """
+mvn -U versions:set -DgenerateBackupPoms=false -DnewVersion=${version}
+mvn clean install -Pdeployment -Djava.awt.headless=true -Dcontext=ci
+"""
+        deleteLockFile(lockFilePath)
       }
       stage('Quality Analysis') {
         // quality analyse with our SonarQube service is performed only for PR against our main
@@ -30,16 +55,68 @@ mvn ${SONAR_MAVEN_GOAL} -Dsonar.projectKey=Silverpeas_Silverpeas-Looks \\
           echo "It isn't a PR validation for the Silverpeas organization. Nothing to analyse."
         }
       }
-      stage('Deployment') {
-        // deployment to ensure dependencies on this snapshot version of Silverpeas Core for other
-        // projects to build downstream. By doing so, we keep clean the local maven repository for
-        // reproducibility reason
-        sh "mvn deploy -DaltDeploymentRepository=silverpeas::default::${nexusRepo} -Pdeployment -Djava.awt.headless=true -Dmaven.test.skip=true"
-      }
     }
+  } catch (err) {
+    echo "Caught: ${err}"
+    currentBuild.result = 'FAILURE'
+  } finally {
+    deleteLockFile(lockFilePath)
   }
   step([$class                  : 'Mailer',
         notifyEveryUnstableBuild: true,
         recipients              : "miguel.moquillon@silverpeas.org, yohann.chastagnier@silverpeas.org, nicolas.eysseric@silverpeas.org",
         sendToIndividuals       : true])
+}
+
+def computeSnapshotVersion() {
+  def pom = readMavenPom()
+  final String version = pom.version
+  final String defaultVersion = env.BRANCH_NAME == 'master' ? version :
+      env.BRANCH_NAME.toLowerCase().replaceAll('[# -]', '')
+  Matcher m = env.CHANGE_TITLE =~ /^(Bug #\d+|Feature #\d+).*$/
+  final String snapshot =
+      m.matches() ? m.group(1).toLowerCase().replaceAll(' #', '') : ''
+  return snapshot.isEmpty() ? defaultVersion : "${pom.properties['next.release']}-${snapshot}"
+}
+
+def existsDependency(version, projectName) {
+  def exitCode = sh script: "test -d \$HOME/.m2/repository/org/silverpeas/${projectName}/${version}", returnStatus: true
+  return exitCode == 0
+}
+
+static def createLockFilePath(version, projectName) {
+  final String lockFilePath = "\$HOME/.m2/${version}_${projectName}_build.lock"
+  return lockFilePath
+}
+
+def createLockFile(version, projectName) {
+  final String lockFilePath = createLockFilePath(version, projectName)
+  sh "touch ${lockFilePath}"
+  return lockFilePath
+}
+
+def deleteLockFile(lockFilePath) {
+  if (isLockFileExisting(lockFilePath)) {
+    sh "rm -f ${lockFilePath}"
+  }
+}
+
+def isLockFileExisting(lockFilePath) {
+  if (lockFilePath?.trim()?.length() > 0) {
+    def exitCode = sh script: "test -e ${lockFilePath}", returnStatus: true
+    return exitCode == 0
+  }
+  return false
+}
+
+def waitForDependencyRunningBuildIfAny(version, projectName) {
+  final String dependencyLockFilePath = createLockFilePath(version, projectName)
+  timeout(time: 3, unit: 'HOURS') {
+    waitUntil {
+      return !isLockFileExisting(dependencyLockFilePath)
+    }
+  }
+  if (isLockFileExisting(dependencyLockFilePath)) {
+    error "After timeout dependency lock file ${dependencyLockFilePath} is yet existing!!!!"
+  }
 }

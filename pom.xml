@@ -7,7 +7,6 @@
     <version>1.1-build190617</version>
   </parent>
   
-  <groupId>org.silverpeas</groupId>
   <artifactId>looks</artifactId>
   <version>6.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -47,7 +46,9 @@
     <!-- property used by the CI to both deploy a build version and release the next stable version -->
     <next.release>6.1</next.release>
     <!-- Version of Silverpeas on which it depends -->
-    <silverpeas.version>6.1-SNAPSHOT</silverpeas.version>
+    <silverpeas.version>${project.version}</silverpeas.version>
+    <core.version>${silverpeas.version}</core.version>
+    <components.version>${silverpeas.version}</components.version>
   </properties>
 
   <dependencies>
@@ -70,13 +71,13 @@
     <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core-web</artifactId>
-      <version>${silverpeas.version}</version>
+      <version>${core.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.silverpeas.core</groupId>
       <artifactId>silverpeas-core</artifactId>
-      <version>${silverpeas.version}</version>
+      <version>${core.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
