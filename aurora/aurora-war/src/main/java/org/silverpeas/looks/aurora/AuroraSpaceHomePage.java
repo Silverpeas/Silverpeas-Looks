@@ -46,12 +46,15 @@ import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.Shortcut;
+import org.silverpeas.core.webapi.profile.UserProfilesSearchCriteriaBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import static java.util.Collections.emptyList;
+import static org.silverpeas.core.webapi.profile.UserProfilesSearchCriteriaBuilder.aSearchCriteria;
 
 public class AuroraSpaceHomePage {
 
@@ -88,7 +91,7 @@ public class AuroraSpaceHomePage {
     if (nbPublicationsToDisplay > 0) {
       return look.getLastUpdatedPublicationsSince(getSpace().getId(), 0, nbPublicationsToDisplay);
     }
-    return Collections.emptyList();
+    return emptyList();
   }
 
   public List<PublicationDetail> getNews() {
@@ -103,7 +106,7 @@ public class AuroraSpaceHomePage {
         return news;
       }
     }
-    return Collections.emptyList();
+    return emptyList();
   }
 
   public boolean isTaxonomyEnabled() {
@@ -122,7 +125,7 @@ public class AuroraSpaceHomePage {
       }
       return subspaces;
     }
-    return Collections.emptyList();
+    return emptyList();
   }
 
   public List<App> getApps() {
@@ -135,7 +138,7 @@ public class AuroraSpaceHomePage {
       }
       return apps;
     }
-    return Collections.emptyList();
+    return emptyList();
   }
 
   public List<UserDetail> getAdmins() {
@@ -143,7 +146,7 @@ public class AuroraSpaceHomePage {
     if (displayAdmins) {
       return look.getSpaceAdmins(getSpace().getId());
     }
-    return Collections.emptyList();
+    return emptyList();
   }
 
   public NextEvents getNextEvents() {
@@ -185,7 +188,7 @@ public class AuroraSpaceHomePage {
         return MediaServiceProvider.getMediaService().getLastRegisteredMedia(gallery.getId());
       }
     }
-    return Collections.emptyList();
+    return emptyList();
   }
 
   public String getSecondPicture() {
@@ -193,18 +196,13 @@ public class AuroraSpaceHomePage {
   }
 
   public List<User> getUsers() {
-    List<User> users = new ArrayList<>();
-    String userIds = getFieldValue("users");
+    final String userIds = getFieldValue("users");
     if (StringUtil.isDefined(userIds)) {
-      String[] ids = userIds.split(",");
-      for (String id : ids) {
-        User user = User.getById(id);
-        if (user.isActivatedState()) {
-          users.add(user);
-        }
-      }
+      final String[] ids = userIds.split(",");
+      final UserProfilesSearchCriteriaBuilder criteriaBuilder = aSearchCriteria().withUserIds(ids);
+      return OrganizationController.get().searchUsers(criteriaBuilder.build());
     }
-    return users;
+    return emptyList();
   }
 
   public String getUsersLabel() {
