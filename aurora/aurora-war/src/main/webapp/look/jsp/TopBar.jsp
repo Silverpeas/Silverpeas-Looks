@@ -291,6 +291,9 @@ window.USERSESSION_PROMISE.then(function() {
                 <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
               </ul>
             </div>
+            <div id="btn-logout">
+              <a href="javascript:onClick=spUserSession.logout();">${labelLogout}</a>
+            </div>
           </div>
           <silverpeas-user-notifications no-unread-label="${labelUserNotifications}"
                                          one-unread-label="${labelUnreadUserNotification}"

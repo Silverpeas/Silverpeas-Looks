@@ -294,3 +294,7 @@
 #spaceUsers  div.user-card {
   width:276px
 }
+
+#topar-header #btn-logout {
+  display: none;
+}
