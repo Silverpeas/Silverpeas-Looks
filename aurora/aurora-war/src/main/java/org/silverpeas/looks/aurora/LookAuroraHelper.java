@@ -16,12 +16,15 @@ import org.silverpeas.components.rssaggregator.service.RSSService;
 import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
+import org.silverpeas.core.admin.component.model.PersonalComponent;
+import org.silverpeas.core.admin.component.model.PersonalComponentInstance;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.calendar.Priority;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
@@ -361,8 +364,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public NextEvents getNextEvents() {
-    String[] appIds = StringUtil.split(getSettings("home.events.appId", ""), ' ');
-    List<String> allowedComponentIds = getAllowedComponents("almanach", appIds);
+    final String[] appIds = StringUtil.split(getSettings("home.events.appId", ""), ' ');
+    final List<String> allowedComponentIds = getAllowedComponents("almanach", appIds);
+    PersonalComponent.getByName("userCalendar").ifPresent(c -> allowedComponentIds
+        .add(PersonalComponentInstance.from(User.getCurrentRequester(), c).getId()));
     return getNextEvents(allowedComponentIds);
   }
 
