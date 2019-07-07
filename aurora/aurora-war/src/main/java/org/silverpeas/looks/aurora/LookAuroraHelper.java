@@ -432,7 +432,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private List<String> getAllowedComponents(String componentName, String... componentIds) {
     if (ArrayUtil.contains(componentIds, "*")) {
-      return Arrays
+      return CollectionUtil
           .asList(getOrganisationController().getComponentIdsForUser(getUserId(), componentName));
     }
     List<String> allowedComponentIds = new ArrayList<>();
