@@ -46,7 +46,6 @@ import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.Shortcut;
-import org.silverpeas.core.webapi.profile.UserProfilesSearchCriteriaBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
-import static org.silverpeas.core.webapi.profile.UserProfilesSearchCriteriaBuilder.aSearchCriteria;
 
 public class AuroraSpaceHomePage {
 
@@ -196,13 +194,18 @@ public class AuroraSpaceHomePage {
   }
 
   public List<User> getUsers() {
+    List<User> users = new ArrayList<>();
     final String userIds = getFieldValue("users");
     if (StringUtil.isDefined(userIds)) {
-      final String[] ids = userIds.split(",");
-      final UserProfilesSearchCriteriaBuilder criteriaBuilder = aSearchCriteria().withUserIds(ids);
-      return OrganizationController.get().searchUsers(criteriaBuilder.build());
+      String[] ids = userIds.split(",");
+      for (String id : ids) {
+        User user = User.getById(id);
+        if (user.isActivatedState()) {
+          users.add(user);
+        }
+      }
     }
-    return emptyList();
+    return users;
   }
 
   public String getUsersLabel() {
