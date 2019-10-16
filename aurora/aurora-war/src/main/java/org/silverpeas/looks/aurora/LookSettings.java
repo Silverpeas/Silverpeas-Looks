@@ -15,7 +15,7 @@ public class LookSettings {
   }
 
   public String getHelpURL() {
-    return settings.getString("helpURL", "https://extranet.silverpeas.com/help_fr/");
+    return settings.getString("helpURL", "");
   }
 
   public boolean isDisplayMenuSubElements() {

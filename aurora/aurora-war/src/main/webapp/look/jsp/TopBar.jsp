@@ -339,7 +339,9 @@ window.USERSESSION_PROMISE.then(function() {
           <li id="connectedUsers"><a onclick="javascript:onClick=spUserSession.viewConnectedUsers();" href="#"></a></li>
         </c:if>
         <li id="map-link-header"><a href="javascript:changeBody('/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
-        <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
+        <c:if test="${silfn:isDefined(settings.helpURL)}">
+          <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
+        </c:if>
         <c:if test="${silfn:isDefined(directoryURL)}">
           <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
         </c:if>
