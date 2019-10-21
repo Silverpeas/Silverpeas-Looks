@@ -77,10 +77,6 @@
           </c:forEach>
         </ul>
       </c:if>
-      <c:if test="${empty bookmarks and silfn:isDefined(noBookmarksFragment)}">
-        <c:import var="htmlFragment" url="${noBookmarksFragment}" charEncoding="UTF-8"/>
-        <c:out value="${htmlFragment}" escapeXml="false"/>
-      </c:if>
 
       <c:if test="${areaNeedLinkMore}">
         <a title="${labelBookmarksMore}" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>${labelBookmarksMore}</span> </a>
@@ -99,4 +95,10 @@
       $("#user-favorit-home a").addClass("less");
     }
   }
+
+  whenSilverpeasReady(function() {
+    <c:if test="${empty bookmarks and showWhenEmpty and silfn:isDefined(noBookmarksFragment)}">
+      sp.ajaxRequest('${noBookmarksFragment}').loadTarget('.user-favorit-main-container');
+    </c:if>
+  });
 </script>
