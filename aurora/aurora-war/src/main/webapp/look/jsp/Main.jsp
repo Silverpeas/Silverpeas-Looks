@@ -23,7 +23,6 @@
 
 <c:set var="newsWithCarrousel" value="${settings.displayNewsWithCarrousel}"/>
 
-<c:set var="rssFeeds" value="${lookHelper.RSSFeeds}"/>
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
@@ -56,7 +55,8 @@ function changeBody(url) {
 }
 
 whenSilverpeasReady(function() {
-  sp.load('#next-event-part','parts/MainNextEventsPart.jsp');
+  sp.ajaxRequest('parts/MainNextEventsPart.jsp').loadTarget('#next-event-part');
+  sp.ajaxRequest('parts/MainRSSPart.jsp').loadTarget('#rss-part');
 });
 
 </script>
@@ -86,7 +86,7 @@ whenSilverpeasReady(function() {
 
       <viewTags:displayPublications publications="${publications}"/>
 
-      <viewTags:displayRSSFeeds rssFeeds="${rssFeeds}"/>
+      <div id="rss-part"></div>
 
       <viewTags:displayFreeZone/>
 
