@@ -131,6 +131,7 @@ body#top {
 label.select-header {
   position:relative;
   padding: 0;
+  display:block;
 }
 label.select-header:after {
 
