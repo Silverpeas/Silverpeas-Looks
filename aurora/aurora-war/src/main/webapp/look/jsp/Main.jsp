@@ -87,7 +87,7 @@ whenSilverpeasReady(function() {
 
       <viewTags:displayNews listOfNews="${listOfNews}" carrousel="${newsWithCarrousel}" imageSize="${newsImageSize}"/>
 
-      <viewTags:displayPublications publications="${publications}"/>
+      <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 
       <div id="rss-part"></div>
 
