@@ -672,10 +672,14 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return null;
     }
     String url = "/Rdirectory/jsp/Main";
-    url += "?DomainIds="+getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
+    url += "?DomainIds="+getDirectoryDomainIds();
     url += "&GroupIds="+getDirectoryGroups().stream().map(Group::getId).collect(Collectors.joining(","));
     url += "&Sort="+getSettings("directory.sort", "ALPHA");
     return url;
+  }
+
+  public String getDirectoryDomainIds() {
+    return getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
   }
 
   public RSSFeeds getRSSFeeds() {
