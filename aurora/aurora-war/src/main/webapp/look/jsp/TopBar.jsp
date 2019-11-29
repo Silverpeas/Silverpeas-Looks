@@ -12,6 +12,7 @@
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 <c:set var="directoryURL" value="${lookHelper.directoryURL}"/>
 <c:set var="directoryDomains" value="${lookHelper.directoryDomains}"/>
+<c:set var="directoryDomainIds" value="${lookHelper.directoryDomainIds}"/>
 <c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
 <c:set var="isAnonymous" value="${lookHelper.anonymousUser}"/>
 <c:set var="anonymousMode" value=""/>
@@ -360,6 +361,8 @@ window.USERSESSION_PROMISE.then(function() {
                                            navigationalBehavior="true" onChangeJsCallback="jumpToUser"
                                            domainsFilter="${directoryDomains}" groupsFilter="${directoryGroups}" />
             <input type="hidden" value="clear" name="mode"/>
+            <input type="hidden" value="${directoryDomainIds}" name="DomainIds"/>
+            <input type="hidden" value="true" name="Global"/>
             <a href="#" id="searchEngineScope" class="switchSearchMode platform on" title="${labelSearchPlatform}"><span>${labelSearchPlatformShort}</span></a>
             <a href="#" id="directoryScope" class="switchSearchMode directory off" title="${labelSearchDirectory}"><span>${labelSearchDirectoryShort}</span></a>
           </div>
