@@ -61,6 +61,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -701,23 +702,40 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   public FreeZone getFreeZone() {
     String componentId = getSettings("home.freezone.appId", "");
+    boolean useLabel = getSettings("home.freezone.app.useLabel", true);
+    String defaultLabel = getString("look.home.freezone");
+    return getAFreeZone(componentId, useLabel, defaultLabel);
+  }
+
+  public FreeZone getThinFreeZone() {
+    String componentId = getSettings("home.freezone.thin.appId", "");
+    boolean useLabel = getSettings("home.freezone.thin.app.useLabel", true);
+    String defaultLabel = getString("look.home.freezone.thin");
+    return getAFreeZone(componentId, useLabel, defaultLabel);
+  }
+
+  private FreeZone getAFreeZone(String componentId, boolean useComponentLabel,
+      String defaultLabel) {
     if (StringUtil.isDefined(componentId)) {
       WysiwygContent content = WysiwygController.get(componentId, componentId, getLanguage());
       if (content != null) {
         FreeZone freeZone = new FreeZone(content.getData());
-        if (getSettings("home.freezone.app.useLabel", true)) {
-          ComponentInstLight component = getOrganisationController().getComponentInstLight(componentId);
-          if (component != null) {
-            freeZone.setTitle(component.getLabel(getLanguage()));
+        if (useComponentLabel) {
+          Optional<SilverpeasComponentInstance> component =
+              getOrganisationController().getComponentInstance(componentId);
+          if (component.isPresent()) {
+            freeZone.setTitle(component.get().getLabel(getLanguage()));
           }
         } else {
-          freeZone.setTitle(getString("look.home.freezone"));
+          freeZone.setTitle(defaultLabel);
         }
         return freeZone;
       }
     }
     return null;
   }
+
+
 
   public AuroraSpaceHomePage getHomePage(String spaceId) {
     setSpaceIdAndSubSpaceId(spaceId);

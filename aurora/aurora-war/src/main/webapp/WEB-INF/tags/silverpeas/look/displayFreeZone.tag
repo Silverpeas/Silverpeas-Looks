@@ -30,14 +30,20 @@
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
-<c:set var="freeZone" value="${lookHelper.freeZone}"/>
+<%@ attribute name="freeZone"
+              required="true"
+              type="org.silverpeas.looks.aurora.FreeZone" %>
+
+<%@ attribute name="freeZoneId"
+              required="true"
+              type="java.lang.String" %>
 
 <c:if test="${not empty freeZone}">
-  <div id="freeZone" class="secteur-container">
+  <div id="${freeZoneId}" class="secteur-container">
     <c:if test="${not empty freeZone.title}">
       <h4>${freeZone.title}</h4>
     </c:if>
-    <div id="freeZone-content">
+    <div id="${freeZoneId}-content">
       ${freeZone.content}
     </div>
   </div>

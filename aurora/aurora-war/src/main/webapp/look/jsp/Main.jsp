@@ -65,6 +65,9 @@ whenSilverpeasReady(function() {
 <div class="main-container">
   <div class="main wrapper clearfix">
     <div class="right-main-container">
+
+      <viewTags:displayFreeZone freeZone="${lookHelper.thinFreeZone}" freeZoneId="thinFreeZone"/>
+
       <div id="next-event-part"></div>
 
       <viewTags:displayFAQ questions="${questions}"/>
@@ -88,7 +91,7 @@ whenSilverpeasReady(function() {
 
       <div id="rss-part"></div>
 
-      <viewTags:displayFreeZone/>
+      <viewTags:displayFreeZone freeZone="${lookHelper.freeZone}" freeZoneId="freeZone"/>
 
     </div>
   </div>
