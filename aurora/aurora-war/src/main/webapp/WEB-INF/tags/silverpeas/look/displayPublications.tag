@@ -48,7 +48,7 @@
         <li onclick="spWindow.loadLink('${publication.permalink}')">
           <a class="sp-link" href="${publication.permalink}">${publication.name}</a>
           <view:username userId="${publication.updaterId}" />
-          <span class="date-publication">${silfn:formatTemporal(publication.visibility.period.getLocalStartDate(lookHelper.zoneId), lookHelper.zoneId, lookHelper.language)}</span>
+          <span class="date-publication">${silfn:formatAsLocalDate(publication.visibility.period.startDate, lookHelper.zoneId, lookHelper.language)}</span>
           <p class="description-publication">${publication.description}</p>
         </li>
       </c:forEach>
