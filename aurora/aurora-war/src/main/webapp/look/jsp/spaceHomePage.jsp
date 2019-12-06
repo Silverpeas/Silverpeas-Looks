@@ -144,7 +144,7 @@
 
     <viewTags:displayShortcuts shortcuts="<%=homepage.getShortcuts()%>"/>
 
-    <viewTags:displayPublications publications="<%=publications%>"/>
+    <viewTags:displayPublications lookHelper="${lookHelper}" publications="<%=publications%>"/>
   </div>
 </view:window>
 

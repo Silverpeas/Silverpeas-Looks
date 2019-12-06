@@ -29,9 +29,13 @@
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
+<%@ attribute name="lookHelper"
+              required="true"
+              type="org.silverpeas.core.web.look.LookHelper" %>
+
 <%@ attribute name="publications"
               required="true"
-              type="java.util.List" %>
+              type="java.util.List<org.silverpeas.core.contribution.publication.model.PublicationDetail>" %>
 
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
 
@@ -44,7 +48,7 @@
         <li onclick="spWindow.loadLink('${publication.permalink}')">
           <a class="sp-link" href="${publication.permalink}">${publication.name}</a>
           <view:username userId="${publication.updaterId}" />
-          <span class="date-publication"><view:formatDate value="${publication.updateDate}"/></span>
+          <span class="date-publication">${silfn:formatAsLocalDate(publication.visibility.period.startDate, lookHelper.zoneId, lookHelper.language)}</span>
           <p class="description-publication">${publication.description}</p>
         </li>
       </c:forEach>
