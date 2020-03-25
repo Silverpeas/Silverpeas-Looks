@@ -96,6 +96,7 @@ input[type=checkbox] {
     width: 15px !important;
     background: #fff !important;
     border: 1px solid #ccc;
+	margin:0px;
 }
 input[type="checkbox"]:hover,
 input[type="checkbox"]:checked :hover {	
