@@ -362,20 +362,22 @@ label.select-header:before {
 #search-form-header .selectize-control{
   border:0;
 }
-#search-form-header input ,
+#search-form-header > input ,
+#search-form-header input#query,
 #search-form-header .selectize-control input{
-  border:1px solid #ccc !important;
-  background:#fff url() ;
-  padding:0 8px;
-  margin:0;
   width:200px !important;
-  height:29px;
   color:#999;
-  font-size:13px;
   vertical-align:middle;
-  padding:0 8px  !important;
+  padding:0 0.25em !important;
+  font-size:13px  !important;
+  line-height:27px  !important;
+  height:27px  !important;
 }
-
+#search-form-header .selectize-control input{
+  line-height:25px  !important;
+  height:25px  !important;
+  width:198px !important;
+}
 #search-form-header a {
   color:#FFF;
   display:inline-block;

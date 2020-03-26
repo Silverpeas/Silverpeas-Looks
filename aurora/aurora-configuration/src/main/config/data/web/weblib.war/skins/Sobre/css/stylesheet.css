@@ -37,6 +37,106 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 
 
 
+/************* personnalisation des formulaires ********************/
+
+input,.selectize-control .selectize-input, select, button {vertical-align: middle; margin-top: 1px; margin-bottom: 1px; min-height: 24px; padding: 0 7px; font-size:13px;}
+input,.selectize-control .selectize-input, select, textarea, button { color: #333; background-color: #fff; border:1px solid #ccc; border-radius:3px; box-sizing: border-box;}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: url(../imgDesign/arrow_down-grey.png);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 7px) 50%;
+  padding-right: 20px;
+}
+input[type="file"] {border: 0; padding-left: 0; padding-right: 0; background-color: initial; }
+input[type="submit"], button[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  background-color: #fff;
+  min-height: 28px;
+  -webkit-transition: background-color 100ms linear;
+  -moz-transition: background-color 100ms linear;
+  -o-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+}
+input[type="submit"]:hover, button[type="submit"]:hover {
+  background-color: #ddd;
+}
+
+input[type="text"] {
+  min-width:90px;
+}
+input[type="text"]:focus, input[type="text"]:active,
+input[type="password"]:focus, input[type="password"]:active,
+input[type="date"]:focus, input[type="date"]:active,
+input[type="number"]:focus, input[type="number"]:active,
+select:focus, select:active,
+textarea:focus, textarea:active {
+  border: 1px solid #5ad;
+  outline: none;
+}
+
+select[multiple=multiple] {background: #fff; padding-right: initial; height: auto;}
+fieldset {border: 1px solid #e4e4e4; margin:0; min-width: inherit;}
+
+
+input[type=checkbox] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+	appearance: none;
+    border-radius: 4px;
+    height: 15px;
+    min-height: 15px;
+    width: 15px !important;
+    background: #fff !important;
+    border: 1px solid #ccc;
+	margin:0 0.25em 0 0;
+}
+input[type="checkbox"]:hover,
+input[type="checkbox"]:checked :hover {	
+	border: 1px solid #55aadd;
+}
+input[type="checkbox"]:checked {
+	border: 1px solid #AAA;	
+	margin:0 0.25em 0 0;
+	position: relative;
+}
+input[type="checkbox"]:checked:before {
+    font-family: Comic Sans MS;
+	width: 12px;
+	height: 11px;
+	border-radius: 4px;
+	top: 0px;
+	left: 0px;
+	border:1px solid transparent;
+    content: 'x';
+	display: block;
+	color:#2a2a2a;
+	font-size: 11px;
+	position: absolute;
+	line-height: 9px;
+	text-align: center;
+	border-top: 1px solid #DDD;
+	border-left: 1px solid #DDD;
+  }
+input[type="checkbox"]:checked:hover:before {
+	border-top: 1px solid #bbe3f8;
+	border-left: 1px solid #bbe3f8;
+  }
+#search-form-header .selectize-control,
+.selectize-control.search-input,
+.selectize-control .selectize-input input{
+  border:0;
+  padding:0;
+}
+
+
 /********************************** ELMTS COLONNE GAUCHE *******************************/
 .fondDomainsBar {
   border-right:1px solid #ccc;
