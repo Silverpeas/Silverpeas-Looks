@@ -99,4 +99,8 @@ public class LookSettings {
     return settings.getBoolean("banner.menu.mega", false);
   }
 
+  public String getDateFormat() {
+    return settings.getString("home.ephemeris.date.format", "dd MMMMM yyyy");
+  }
+
 }

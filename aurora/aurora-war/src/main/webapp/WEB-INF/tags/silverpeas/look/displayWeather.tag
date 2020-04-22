@@ -27,6 +27,7 @@
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
 <%@ attribute name="showEphemeris"
@@ -50,8 +51,8 @@
 
 <c:if test="${showEphemeris}">
   <div class="secteur-container weather" id="weather-home">
-    <h4><span class="title">${labelWeather}</span><span class="date-today"> <fmt:formatDate value="${now}" pattern="dd MMMMM yyyy"/></span></h4>
-    <div id="ephemeride">Brigitte</div>
+    <h4><span class="title">${labelWeather}</span><span class="date-today"> <fmt:formatDate value="${now}" pattern="${settings.dateFormat}"/></span></h4>
+    <div id="ephemeride"></div>
     <c:if test="${showWeather}">
       <div id="localisation-weather">
         <c:set var="firstCity" value="true"/>
