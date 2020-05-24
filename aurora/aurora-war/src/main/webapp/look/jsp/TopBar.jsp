@@ -73,7 +73,7 @@
 <link href='css/${smartmenusSkin}/${smartmenusSkin}.css' rel='stylesheet' type='text/css' />
 <script type="text/javascript">
 function goToHome() {
-	selectHeading('home');
+  selectHeading('home');
   spWindow.loadHomePage({
     "FromTopBar" : '1'
   });
@@ -85,7 +85,7 @@ function getTopBarPage() {
 
 function selectHeading(id) {
 	unselectHeadings();
-	$('#space-'+id).addClass("selected");
+	$('#'+id).addClass("selected");
 }
 
 function unselectHeadings() {
@@ -95,15 +95,25 @@ function unselectHeadings() {
 }
 
 function goToMainSpace(id) {
-  selectHeading(id);
-  goToSpace(id);
+  selectHeading("space-"+id);
+  spWindow.loadSpace(id);
+}
+
+function selectMainSpace(id) {
+  $('#'+id).parents().map(function() {
+    if ($(this).parent() && $(this).parent().attr("id") === "main-menu") {
+      selectHeading($(this).attr("id"));
+    }
+  });
 }
 
 function goToSpace(id) {
+  selectMainSpace("space-"+id);
   spWindow.loadSpace(id);
 }
 
 function goToSpaceApp(id) {
+  selectMainSpace("app-"+id);
   spWindow.loadComponent(id);
 }
 
@@ -177,7 +187,7 @@ var searchScope = searchEngineScope;
 
 whenSilverpeasReady(function() {
   <c:if test="${silfn:isDefined(currentHeading)}">
-    selectHeading('${currentHeading}');
+    selectHeading('space-${currentHeading}');
   </c:if>
 
   $('#select-user-group-queryDirectory').hide();
@@ -271,7 +281,7 @@ window.USERSESSION_PROMISE.then(function() {
 <div class="header-container ${anonymousMode}">
   <div class="wrapper clearfix">
     <h1 class="title">Intranet</h1>
-    <a id="logo-header" href="#" onclick="javascript:goToHome();"> <img alt="" src="${settings.logo}" /> </a>
+    <a id="logo-header" href="#" onclick="goToHome();"> <img alt="" src="${settings.logo}" /> </a>
     <div id="topar-header">
       <div id="infoConnection">
         <c:if test="${isAnonymous}">
