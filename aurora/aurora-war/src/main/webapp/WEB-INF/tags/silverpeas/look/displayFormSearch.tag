@@ -39,13 +39,14 @@
 
 <fmt:message var="labelSearch" key="look.home.search.title"/>
 <fmt:message var="labelSearchButton" key="look.home.search.button"/>
+<fmt:message var="labelSearchInput" key="look.home.search.input"/>
 
 <c:if test="${not empty searchForm}">
   <div class="secteur-container search" id="bloc-advancedSeach">
     <h4>${labelSearch}</h4>
     <c:url var="searchActionURL" value="/RpdcSearch/jsp/XMLSearch"/>
     <form method="post" action="${searchActionURL}" name="TemplateSearch" enctype="multipart/form-data">
-      <input type="text" id="query" value="" size="60" name="TitleNotInXMLForm" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input"/>
+      <input type="text" id="query" value="" size="60" name="TitleNotInXMLForm" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
       <input type="hidden" name="mode" value="clear"/>
       <input type="hidden" name="xmlSearchSelectedForm" value="<%=searchForm.getFormName()%>.xml"/>
       <%

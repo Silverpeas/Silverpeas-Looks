@@ -44,13 +44,14 @@
 
 <fmt:message var="labelSearch" key="look.home.search.title"/>
 <fmt:message var="labelSearchButton" key="look.home.search.button"/>
+<fmt:message var="labelSearchInput" key="look.home.search.input"/>
 
 <c:if test="${enabled}">
   <div class="secteur-container search" id="bloc-advancedSeach">
     <h4>${labelSearch}</h4>
     <c:url var="searchActionURL" value="/RpdcSearch/jsp/AdvancedSearch"/>
     <form method="get" action="${searchActionURL}" name="AdvancedSearch">
-      <input type="text" id="query" value="" size="60" name="query" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input"/>
+      <input type="text" id="query" value="" size="60" name="query" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
       <input type="hidden" name="AxisValueCouples"/><input type="hidden" name="mode" value="clear"/>
       <c:if test="${not empty spaceId}">
         <input type="hidden" name="spaces" value="${spaceId}"/>
