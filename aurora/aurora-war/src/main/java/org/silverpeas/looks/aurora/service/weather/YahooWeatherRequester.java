@@ -1,11 +1,11 @@
 package org.silverpeas.looks.aurora.service.weather;
 
+import org.silverpeas.core.annotation.Service;
 import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
@@ -24,8 +24,8 @@ import java.util.stream.Stream;
  * Requester of the Yahoo weather service.
  * @author mmoquillon
  */
-@Singleton
 @Named("Yahoo")
+@Service
 public class YahooWeatherRequester implements WeatherServiceRequester {
 
   private static final String API_URL = "http://weather-ydn-yql.media.yahoo.com/forecastrss";

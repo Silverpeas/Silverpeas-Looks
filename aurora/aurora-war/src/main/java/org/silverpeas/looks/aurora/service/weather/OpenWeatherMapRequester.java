@@ -1,11 +1,11 @@
 package org.silverpeas.looks.aurora.service.weather;
 
 import org.silverpeas.core.admin.user.model.User;
+import org.silverpeas.core.annotation.Service;
 import org.silverpeas.core.util.logging.SilverLogger;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 
@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Named("OpenWeatherMap")
 @Default
-@Singleton
+@Service
 public class OpenWeatherMapRequester implements WeatherServiceRequester {
 
   private static final String API_URL = "http://api.openweathermap.org/data/2.5/forecast";
