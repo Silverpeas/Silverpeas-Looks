@@ -1,0 +1,68 @@
+/**
+ * Copyright (C) 2000 - 2009 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://repository.silverpeas.com/legal/licensing"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+/**********************************************************/
+/**** WYSIWYG Styles **************************************/
+/**********************************************************/
+
+h2.wysiwyg-title1 {
+  border-color:#249f98;
+  color:#249f98;
+}
+
+h3.wysiwyg-title2 {
+  border:0;
+  background: transparent url(../imgDesign/greenCorner.png) left top no-repeat;
+  padding-left:18px;
+  color:#7d3382;
+}
+
+p.wysiwyg-important {
+  background:#cbe9ea;
+  border:0;
+  border-radius:8px 8px 8px 0;
+ }
+ 
+ 
+p.wysiwyg-important::before {
+  color: #249f98;
+  content: "\201C";
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.20em;
+  vertical-align: -0.4em;
+}
+p.wysiwyg-important::after {
+  color: #249f98;
+  content: "\201D";
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-left: 0.20em;
+  vertical-align: -0.6em;
+}
+
+strong.wysiwyg-focus {
+  background-color: #7d3382;
+  padding:0.1em 0.5em;
+}
