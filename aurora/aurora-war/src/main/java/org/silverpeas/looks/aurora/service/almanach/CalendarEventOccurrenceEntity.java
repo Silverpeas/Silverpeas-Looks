@@ -56,6 +56,13 @@ public class CalendarEventOccurrenceEntity {
     return asDate(formatEndDate());
   }
 
+  public Date getEndDateAsDateMinusOnSec() {
+    Date d = asDate(formatEndDate());
+    long t = d.getTime() - 1000;
+    d = new Date(t);
+    return d;
+  }
+
   public Priority getPriority() {
     return occurrence.getPriority();
   }

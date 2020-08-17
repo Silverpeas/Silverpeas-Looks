@@ -58,12 +58,29 @@
                 <div class="eventName">
                   <a class="sp-permalink" href="${event.occurrencePermalinkUrl}">${event.title}</a>
                   <span class="clock-events">
-                        <c:if test="${not event.onAllDay}">
-                          <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
-                          -
-                          <fmt:formatDate value="${event.endDateAsDate}" pattern="HH:mm"/>
-                        </c:if>
-                        </span>
+                    <fmt:formatDate var="startDate" value="${event.startDateAsDate}" pattern="EEEE dd MMMM yyyy"/>
+                    <fmt:formatDate var="stopDate" value="${event.endDateAsDate}" pattern="EEEE dd MMMM yyyy"/>
+                    <c:if test="${not event.onAllDay}">
+                      <c:if test="${startDate.equals(stopDate)}">
+                        <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
+                        -
+                        <fmt:formatDate value="${event.endDateAsDate}" pattern="HH:mm"/>
+                      </c:if>
+                      <c:if test="${not startDate.equals(stopDate)}">
+                        <fmt:formatDate value="${event.startDateAsDate}" pattern="EEEE dd MMMM yyyy HH:mm"/>
+                        -
+                        <fmt:formatDate value="${event.endDateAsDate}" pattern="EEEE dd MMMM yyyy HH:mm"/>
+                      </c:if>
+                    </c:if>
+                    <c:if test="${event.onAllDay}">
+                      <fmt:formatDate var="stopDate" value="${event.endDateAsDateMinusOnSec}" pattern="EEEE dd MMMM yyyy"/>
+                      <c:if test="${not startDate.equals(stopDate)}">
+                        <fmt:formatDate value="${event.startDateAsDate}" pattern="EEEE dd MMMM yyyy"/>
+                        -
+                        <fmt:formatDate value="${event.endDateAsDateMinusOnSec}" pattern="EEEE dd MMMM yyyy"/>
+                      </c:if>
+                    </c:if>
+                  </span>
                 </div>
                 <c:if test="${silfn:isDefined(event.location) || empty nextEvents.uniqueAppURL}">
                   <div class="eventInfo">
