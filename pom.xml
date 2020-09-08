@@ -38,7 +38,7 @@
     <pluginRepository>
       <id>Silverpeas</id>
       <name>Silverpeas Maven 3.x Repository</name>
-      <url>http://www.silverpeas.org/nexus/content/groups/silverpeas</url>
+      <url>https://www.silverpeas.org/nexus/content/groups/silverpeas</url>
     </pluginRepository>
   </pluginRepositories>
 
