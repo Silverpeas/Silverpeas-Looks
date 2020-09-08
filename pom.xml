@@ -15,7 +15,7 @@
   <scm>
     <connection>scm:git:git@github.com:Silverpeas/Silverpeas-Looks.git</connection>
     <developerConnection>scm:git:git@github.com:Silverpeas/Silverpeas-Looks.git</developerConnection>
-    <url>http://github.com/Silverpeas/Silverpeas-Looks</url>
+    <url>https://github.com/Silverpeas/Silverpeas-Looks</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -24,7 +24,7 @@
       <id>Silverpeas</id>
       <layout>default</layout>
       <name>Silverpeas Repository</name>
-      <url>http://www.silverpeas.org/nexus/content/groups/silverpeas</url>
+      <url>https://www.silverpeas.org/nexus/content/groups/silverpeas</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -38,7 +38,7 @@
     <pluginRepository>
       <id>Silverpeas</id>
       <name>Silverpeas Maven 3.x Repository</name>
-      <url>http://www.silverpeas.org/nexus/content/groups/silverpeas</url>
+      <url>https://www.silverpeas.org/nexus/content/groups/silverpeas</url>
     </pluginRepository>
   </pluginRepositories>
 
