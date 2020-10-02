@@ -1,9 +1,9 @@
 package org.silverpeas.looks.aurora.service.weather;
 
 import org.silverpeas.core.admin.user.model.User;
+import org.silverpeas.core.annotation.Service;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 
@@ -11,8 +11,8 @@ import javax.ws.rs.core.MediaType;
  * Requester of the AccuWeather API service.
  * @author mmoquillon
  */
-@Singleton
 @Named("AccuWeather")
+@Service
 public class AccuWeatherRequester implements WeatherServiceRequester {
 
   private static final String API_URL =

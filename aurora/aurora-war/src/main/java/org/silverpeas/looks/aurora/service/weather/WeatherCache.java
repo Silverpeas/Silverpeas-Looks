@@ -1,5 +1,7 @@
 package org.silverpeas.looks.aurora.service.weather;
 
+import org.silverpeas.core.annotation.Bean;
+import org.silverpeas.core.annotation.Technical;
 import org.silverpeas.core.cache.model.Cache;
 import org.silverpeas.core.cache.service.CacheServiceProvider;
 import org.silverpeas.core.util.ResourceLocator;
@@ -11,6 +13,8 @@ import java.util.function.Supplier;
  * Cache of weather forecast data coming from a weather service.
  * @author mmoquillon
  */
+@Technical
+@Bean
 @Singleton
 public class WeatherCache {
 
