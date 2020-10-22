@@ -51,6 +51,7 @@
 <fmt:message var="labelLogin" key="look.banner.login"/>
 
 <fmt:message var="labelSearch" key="look.banner.search"/>
+<fmt:message var="labelSearchPlaceholder" key="look.banner.search.input.placeholder"/>
 <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
 <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
 <fmt:message var="labelSearchPlatform" key="look.banner.search.scope.platform"/>
@@ -364,7 +365,7 @@ window.USERSESSION_PROMISE.then(function() {
         <form id="search-form-header" method="get" name="searchForm">
           <div id="inputSearchSwitchable">
             <label for="query">${labelSearch}</label>
-            <input id="query" size="30" name="query" />
+            <input id="query" size="30" name="query" placeholder="${labelSearchPlaceholder}"/>
             <viewTags:selectUsersAndGroups selectionType="USER" noUserPanel="true" noSelectionClear="true"
                                            doNotSelectAutomaticallyOnDropDownOpen="true"
                                            queryInputName="queryDirectory" id="queryDirectory"
