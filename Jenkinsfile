@@ -4,6 +4,7 @@ pipeline {
   environment {
     lockFilePath = null
     version = null
+    silverpeas = 'Master'
   }
   agent {
     docker {
@@ -109,7 +110,7 @@ def computeSnapshotVersion() {
 }
 
 def getSilverpeasLastBuildVersion() {
-  copyArtifacts projectName: 'Silverpeas_Master_AutoDeploy', flatten: true
+  copyArtifacts projectName: "Silverpeas_${silverpeas}_AutoDeploy", flatten: true
   def lastBuild = readYaml file: 'build.yaml'
   return lastBuild.version
 }
