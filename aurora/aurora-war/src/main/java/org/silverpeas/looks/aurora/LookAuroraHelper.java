@@ -212,6 +212,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
   }
 
+  public List<Shortcut> getToolsShortcuts() {
+    return getShortcuts("tool");
+  }
+
   public List<Shortcut> getMainShortcuts() {
     return getShortcuts("home");
   }

@@ -16,6 +16,9 @@
 <c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
 <c:set var="isAnonymous" value="${lookHelper.anonymousUser}"/>
 <c:set var="anonymousMode" value=""/>
+
+<c:set var="shortcuts" value="${lookHelper.toolsShortcuts}"/>
+
 <c:if test="${isAnonymous}">
   <c:set var="anonymousMode" value="anonymousMode"/>
 </c:if>
@@ -360,6 +363,22 @@ window.USERSESSION_PROMISE.then(function() {
         <c:if test="${lookHelper.backOfficeVisible}">
           <li id="adminstration-link-header"> <a href="javascript:void(0)" onclick="spWindow.loadAdminHomePage();" title="${labelBackoffice}">${labelBackoffice}</a></li>
         </c:if>
+
+        <c:forEach var="shortcut" items="${shortcuts}">
+          <c:set var="className" value="sp-link"/>
+          <c:if test="${shortcut.target == '_blank'}">
+            <c:set var="className" value=""/>
+          </c:if>
+          <li>
+            <a class="${className}" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}">
+            <c:if test="${empty shortcut.iconURL}">
+              <img alt="${shortcut.altText}" src="${shortcut.iconURL}" />
+            </c:if>
+            <span>${shortcut.altText}</span></a>
+          </li>
+        </c:forEach>
+
+
       </ul>
       <div id="search-zone-header">
         <form id="search-form-header" method="get" name="searchForm">
