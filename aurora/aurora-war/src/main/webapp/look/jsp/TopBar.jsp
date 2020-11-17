@@ -364,12 +364,12 @@ window.USERSESSION_PROMISE.then(function() {
           <li id="adminstration-link-header"> <a href="javascript:void(0)" onclick="spWindow.loadAdminHomePage();" title="${labelBackoffice}">${labelBackoffice}</a></li>
         </c:if>
 
-        <c:forEach var="shortcut" items="${shortcuts}">
+        <c:forEach var="shortcut" items="${shortcuts}" varStatus="count">
           <c:set var="className" value="sp-link"/>
           <c:if test="${shortcut.target == '_blank'}">
             <c:set var="className" value=""/>
           </c:if>
-          <li>
+          <li id="tools-shorcut${count.index}">
             <a class="${className}" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}">
             <c:if test="${empty shortcut.iconURL}">
               <img alt="${shortcut.altText}" src="${shortcut.iconURL}" />
