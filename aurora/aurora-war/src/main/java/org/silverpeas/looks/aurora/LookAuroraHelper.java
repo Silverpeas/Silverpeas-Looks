@@ -212,6 +212,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
   }
 
+  public List<Shortcut> getToolsShortcuts() {
+    return getShortcuts("tool");
+  }
+
   public List<Shortcut> getMainShortcuts() {
     return getShortcuts("home");
   }
@@ -226,7 +230,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (StringUtil.isDefined(url)) {
         String target = getSettings(prefix + ".Target", DEFAULT_VALUE);
         String altText = getSettings(prefix + ".AltText", DEFAULT_VALUE);
-        String iconUrl = getSettings(prefix + ".IconUrl", DEFAULT_VALUE);
+        String iconUrl = getSettings(prefix + ".IconUrl", null);
         Shortcut shortcut = new Shortcut(iconUrl, target, url, altText);
         shortcuts.add(shortcut);
         i++;
