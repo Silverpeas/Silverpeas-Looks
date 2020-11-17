@@ -230,7 +230,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (StringUtil.isDefined(url)) {
         String target = getSettings(prefix + ".Target", DEFAULT_VALUE);
         String altText = getSettings(prefix + ".AltText", DEFAULT_VALUE);
-        String iconUrl = getSettings(prefix + ".IconUrl", DEFAULT_VALUE);
+        String iconUrl = getSettings(prefix + ".IconUrl", null);
         Shortcut shortcut = new Shortcut(iconUrl, target, url, altText);
         shortcuts.add(shortcut);
         i++;

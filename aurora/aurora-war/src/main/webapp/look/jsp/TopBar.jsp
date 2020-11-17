@@ -371,13 +371,12 @@ window.USERSESSION_PROMISE.then(function() {
           </c:if>
           <li id="tools-shorcut${count.index}">
             <a class="${className}" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}">
-            <c:if test="${empty shortcut.iconURL}">
+            <c:if test="${not empty shortcut.iconURL}">
               <img alt="${shortcut.altText}" src="${shortcut.iconURL}" />
             </c:if>
             <span>${shortcut.altText}</span></a>
           </li>
         </c:forEach>
-
 
       </ul>
       <div id="search-zone-header">
