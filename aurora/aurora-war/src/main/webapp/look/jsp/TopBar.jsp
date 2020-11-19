@@ -54,6 +54,7 @@
 <fmt:message var="labelLogin" key="look.banner.login"/>
 
 <fmt:message var="labelSearch" key="look.banner.search"/>
+<fmt:message var="labelSearchButton" key="look.banner.search.button"/>
 <fmt:message var="labelSearchPlaceholder" key="look.banner.search.input.placeholder"/>
 <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
 <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
@@ -123,11 +124,13 @@ function goToSpaceApp(id) {
 
 function changeBody(url) {
   if (StringUtil.isDefined(url)) {
+    unselectHeadings();
     spWindow.loadLink(webContext+url);
   }
 }
 
 function goToPersonalSpace() {
+  unselectHeadings();
   spWindow.loadPersonalSpace();
 }
 
@@ -395,7 +398,7 @@ window.USERSESSION_PROMISE.then(function() {
             <a href="#" id="searchEngineScope" class="switchSearchMode platform on" title="${labelSearchPlatform}"><span>${labelSearchPlatformShort}</span></a>
             <a href="#" id="directoryScope" class="switchSearchMode directory off" title="${labelSearchDirectory}"><span>${labelSearchDirectoryShort}</span></a>
           </div>
-          <a href="javascript:searchEngine()">Go</a>
+          <a href="javascript:searchEngine()">${labelSearchButton}</a>
         </form>
         <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()" title="${labelSearchResults}"><span>${labelSearchResults}</span></a>
         <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
