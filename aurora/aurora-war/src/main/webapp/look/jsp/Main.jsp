@@ -26,42 +26,43 @@
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>Homepage</title>
-<c:if test="${newsWithCarrousel}">
-  <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
-  <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
-</c:if>
-<view:link href="/look/jsp/css/aurora.css"/>
-<view:looknfeel/>
-<view:includePlugin name="pdc" />
-<view:includePlugin name="popup"/>
-<style type="text/css">
-html, body {
-	height:100%;
-	min-height:644px;
-}
-</style>
-<script type="text/javascript" src="js/responsiveslides.min.js"></script>
-<script type="text/javascript" src="js/jquery.cookie.js"></script>
-<script type="text/javascript" src="js/ephemeris.min.js"></script>
-<script type="text/javascript">
-function changeBody(url) {
-  if (StringUtil.isDefined(url)) {
-    spWindow.loadLink(webContext+url);
-  }
-}
+<view:sp-page>
+<view:sp-head-part>
+  <jsp:attribute name="atTop">
+    <c:if test="${newsWithCarrousel}">
+      <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
+      <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
+    </c:if>
+    <view:link href="/look/jsp/css/aurora.css"/>
+  </jsp:attribute>
+  <jsp:body>
+    <view:includePlugin name="pdc" />
+    <view:includePlugin name="popup"/>
+    <style type="text/css">
+    html, body {
+      height:100%;
+      min-height:644px;
+    }
+    </style>
+    <script type="text/javascript" src="js/responsiveslides.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="js/ephemeris.min.js"></script>
+    <script type="text/javascript">
+    function changeBody(url) {
+      if (StringUtil.isDefined(url)) {
+        spWindow.loadLink(webContext+url);
+      }
+    }
 
-whenSilverpeasReady(function() {
-  sp.ajaxRequest('parts/MainNextEventsPart.jsp').loadTarget('#next-event-part');
-  sp.ajaxRequest('parts/MainRSSPart.jsp').loadTarget('#rss-part');
-});
+    whenSilverpeasReady(function() {
+      sp.ajaxRequest('parts/MainNextEventsPart.jsp').loadTarget('#next-event-part');
+      sp.ajaxRequest('parts/MainRSSPart.jsp').loadTarget('#rss-part');
+    });
 
-</script>
-</head>
-<body class="main-home-page">
+    </script>
+  </jsp:body>
+</view:sp-head-part>
+<view:sp-body-part cssClass="main-home-page">
 <div class="main-container">
   <div class="main wrapper clearfix">
     <div class="right-main-container">
@@ -80,7 +81,7 @@ whenSilverpeasReady(function() {
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
     </div>
-                
+
     <div class="principal-main-container">
 
       <viewTags:displayShortcuts shortcuts="${shortcuts}"/>
@@ -96,5 +97,5 @@ whenSilverpeasReady(function() {
     </div>
   </div>
 </div>
-</body>
-</html>
+</view:sp-body-part>
+</view:sp-page>

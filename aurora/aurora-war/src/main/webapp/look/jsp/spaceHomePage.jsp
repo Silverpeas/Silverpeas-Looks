@@ -72,47 +72,48 @@
 
 <fmt:message var="actionUpdate" key="look.space.home.update"/>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" id="ng-app" ng-app="silverpeas.spaceHomepage">
-<head>
-  <title>${space.name}</title>
-  <!-- CSS SpaceHome -->
-  <style type="text/css">
-    .spaceHome .portlet {
-      margin-bottom: 0.5em;
-    }
-  </style>
-  <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
-  <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
-  <viewTags:spaceNewsCSS/>
-  <viewTags:spaceNavigationCSS/>
-  <viewTags:spacePublicationsCSS/>
-  <view:link href="/look/jsp/css/aurora.css"/>
-  <view:looknfeel/>
-  <view:includePlugin name="pdc" />
-  <view:includePlugin name="lightslideshow"/>
-  <view:includePlugin name="toggle"/>
-  <script type="text/javascript" src="js/responsiveslides.min.js"></script>
-  <script type="text/javascript">
-    <!--
-    function goToSpaceItem(spaceId) {
-      spWindow.loadSpace(spaceId);
-    }
-    function goToComponentItem(spaceId) {
-      spWindow.loadComponent(spaceId);
-    }
-
-    whenSilverpeasReady(function() {
-      // if right column is empty
-      if ($.trim($(".rightContent").text()).length === 0) {
-        $(".rightContent").css("display", "none");
-        $(".principalContent").css("margin-right", "0");
+<view:sp-page angularJsAppName="silverpeas.spaceHomepage">
+<view:sp-head-part>
+  <jsp:attribute name="atTop">
+    <!-- CSS SpaceHome -->
+    <style type="text/css">
+      .spaceHome .portlet {
+        margin-bottom: 0.5em;
       }
-    });
-    -->
-  </script>
-</head>
-<body class="spaceHome ${spaceId}">
+    </style>
+    <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
+    <viewTags:spaceNewsCSS/>
+    <viewTags:spaceNavigationCSS/>
+    <viewTags:spacePublicationsCSS/>
+    <view:link href="/look/jsp/css/aurora.css"/>
+  </jsp:attribute>
+  <jsp:body>
+    <view:includePlugin name="pdc" />
+    <view:includePlugin name="lightslideshow"/>
+    <view:includePlugin name="toggle"/>
+    <script type="text/javascript" src="js/responsiveslides.min.js"></script>
+    <script type="text/javascript">
+      <!--
+      function goToSpaceItem(spaceId) {
+        spWindow.loadSpace(spaceId);
+      }
+      function goToComponentItem(spaceId) {
+        spWindow.loadComponent(spaceId);
+      }
+
+      whenSilverpeasReady(function() {
+        // if right column is empty
+        if ($.trim($(".rightContent").text()).length === 0) {
+          $(".rightContent").css("display", "none");
+          $(".principalContent").css("margin-right", "0");
+        }
+      });
+      -->
+    </script>
+  </jsp:body>
+</view:sp-head-part>
+<view:sp-body-part cssClass="spaceHome ${spaceId}">
 <view:browseBar spaceId="${spaceId}"/>
 <view:operationPane type="<%=OperationPaneType.space %>">
   <c:if test="${not empty backOfficeURL}">
@@ -147,11 +148,5 @@
     <viewTags:displayPublications lookHelper="${lookHelper}" publications="<%=publications%>"/>
   </div>
 </view:window>
-
-<script type="text/javascript">
-  /* declare the module myapp and its dependencies (here in the silverpeas module) */
-  var myapp = angular.module('silverpeas.spaceHomepage', ['silverpeas.services', 'silverpeas.directives']);
-</script>
-
-</body>
-</html>
+</view:sp-body-part>
+</view:sp-page>

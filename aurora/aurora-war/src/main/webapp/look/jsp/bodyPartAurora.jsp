@@ -73,6 +73,11 @@
       display: table-cell;
       cursor: pointer;
     }
+
+    #MyMain {
+      margin: 0;
+      border: 0;
+    }
   </style>
   <div id="sp-layout-body-part-layout-toggle-part" style="display: none">
     <div id="navigation-toggle" style="display: none"><img src="icons/silverpeasV5/reduct.gif" alt="${redExtLabel}" title="${redExtLabel}"/></div>
@@ -81,7 +86,7 @@
   <div id="sp-layout-body-part-layout">
     <div id="sp-layout-body-part-layout-navigation-part"></div>
     <div id="sp-layout-body-part-layout-content-part">
-      <iframe src="${frameURL}" marginwidth="0" id="MyMain" name="MyMain" marginheight="0" frameborder="0" scrolling="auto" width="100%" height="100%"></iframe>
+      <iframe src="${frameURL}" id="MyMain" name="MyMain" width="100%" height="100%" title=""></iframe>
     </div>
   </div>
   <script type="text/javascript">

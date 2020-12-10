@@ -30,6 +30,7 @@
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ page import="org.silverpeas.core.util.StringUtil" %>
 <%@ page import="org.silverpeas.core.util.URLUtil" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -52,9 +53,9 @@
 GraphicElementFactory gef = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
 LookHelper helper = LookHelper.getLookHelper(session);
 
-String spaceId    	= request.getParameter("privateDomain");
-String subSpaceId   = request.getParameter("privateSubDomain");
-String componentId  = request.getParameter("component_id");
+String spaceId    	= Encode.forUriComponent(request.getParameter("privateDomain"));
+String subSpaceId   = Encode.forUriComponent(request.getParameter("privateSubDomain"));
+String componentId  = Encode.forUriComponent(request.getParameter("component_id"));
 boolean displayPersonalSpace = StringUtil.getBooleanValue(request.getParameter("FromMySpace"));
 
 if (!StringUtil.isDefined(spaceId) && StringUtil.isDefined(componentId)) {
@@ -176,33 +177,14 @@ gef.setSpaceIdForCurrentRequest(spaceId);
 <div class="fondDomainsBar">
 <div id="domainsBar">
   <div id="spaceTransverse"></div>
-  <div id="basSpaceTransverse">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-                <td class="basSpacesGauche"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesMilieu"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesDroite"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
-            </tr>
-        </table>
+  <div id="spaceMenuDivId">
+    <div id="spaces">
+    <br/><br/>${labelLoading}<br/><br/><img src="icons/inProgress.gif" alt="${labelLoading}"/>
     </div>
-    <div id="spaceMenuDivId">
-      <div id="spaces">
-		  <br/><br/>${labelLoading}<br/><br/><img src="icons/inProgress.gif" alt="${labelLoading}"/>
-      </div>
-      <c:if test="${not lookHelper.anonymousAccess}">
-        <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();">${labelPersonal}</a></div>
-      </c:if>
-    </div>
-    <div id="basSpaces">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-                <td class="basSpacesGauche"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesMilieu"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
-                <td class="basSpacesDroite"><img src="icons/1px.gif" width="8" height="8" alt=""/></td>
-            </tr>
-        </table>
-    </div>
-
+    <c:if test="${not lookHelper.anonymousAccess}">
+      <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();">${labelPersonal}</a></div>
+    </c:if>
+  </div>
 </div>
 
   <!-- Custom domains bar javascript -->

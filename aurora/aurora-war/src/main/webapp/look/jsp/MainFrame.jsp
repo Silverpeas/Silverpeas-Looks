@@ -99,59 +99,60 @@ if (m_MainSessionCtrl == null) { %>
 
 <c:set var="pdcActivated" value="<%=helper.displayPDCFrame()%>"/>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <title><%=generalMessage.getString("GML.popupTitle")%></title>
-  <view:link href="/look/jsp/css/aurora.css"/>
-  <view:looknfeel/>
-  <style type="text/css">
-    body {
-      margin: 0;
-      padding: 0;
-      border: none;
-      overflow: hidden;
-    }
+<view:sp-page>
+<view:sp-head-part>
+  <jsp:attribute name="atTop">
+    <view:link href="/look/jsp/css/aurora.css"/>
+  </jsp:attribute>
+  <jsp:body>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+      }
 
-    .hidden-part {
-      margin: 0;
-      padding: 0;
-      border: none;
-      display: none;
-    }
+      .hidden-part {
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: none;
+      }
 
-    #sp-layout-main {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: column;
-    }
+      #sp-layout-main {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+      }
 
-    #sp-layout-header-part, #sp-layout-body-part, #sp-layout-footer-part {
-      padding: 0;
-      margin: 0;
-      border: none;
-    }
+      #sp-layout-header-part, #sp-layout-body-part, #sp-layout-footer-part {
+        padding: 0;
+        margin: 0;
+        border: none;
+      }
 
-    #sp-layout-header-part {
-      width: 100%;
-      height: <%=bannerHeight%>;
-      background-image: url(<%=wallPaper%>) !important;
-    }
+      #sp-layout-header-part {
+        width: 100%;
+        height: <%=bannerHeight%>;
+        background-image: url(<%=wallPaper%>) !important;
+      }
 
-    #sp-layout-footer-part {
-      width: 100%;
-      height: <%=footerHeight%>;
-    }
+      #sp-layout-footer-part {
+        width: 100%;
+        height: <%=footerHeight%>;
+      }
 
-    #sp-layout-body-part {
-      width: 100%;
-      display: table;
-    }
-  </style>
-  <meta name="viewport" content="initial-scale=1.0"/>
-</head>
-<body>
+      #sp-layout-body-part {
+        width: 100%;
+        display: table;
+      }
+    </style>
+    <meta name="viewport" content="initial-scale=1.0"/>
+  </jsp:body>
+</view:sp-head-part>
+<view:sp-body-part>
 <% if (attachmentId != null) {
    	session.setAttribute("RedirectToAttachmentId", null);
 %>
@@ -166,8 +167,8 @@ if (m_MainSessionCtrl == null) { %>
   <div id="sp-layout-footer-part" style="display: none"></div>
 </div>
 <div class="hidden-part" style="height: 0">
-  <iframe src="../../clipboard/jsp/Idle.jsp" name="IdleFrame" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
-  <iframe src="<c:url value='/Ragenda/jsp/importCalendar'/>" name="importFrame" marginwidth="0" marginheight="0" scrolling="no" frameborder="0"></iframe>
+  <iframe src="../../clipboard/jsp/Idle.jsp" name="IdleFrame" title=""></iframe>
+  <iframe src="<c:url value='/Ragenda/jsp/importCalendar'/>" name="importFrame" title=""></iframe>
 </div>
 
 <view:progressMessage/>
@@ -186,6 +187,6 @@ if (m_MainSessionCtrl == null) { %>
   })();
 </script>
 <chatTags:silverChatInitialization/>
-</body>
-</html>
+</view:sp-body-part>
+</view:sp-page>
 <% } %>
