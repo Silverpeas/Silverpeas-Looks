@@ -484,7 +484,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       faqs.setAppId(appId);
       try {
         String[] profiles = getOrganisationController().getUserProfiles(getUserId(), appId);
-        SilverpeasRole role = SilverpeasRole.getHighestFrom(SilverpeasRole.from(profiles));
+        SilverpeasRole role = SilverpeasRole.getHighestFrom(SilverpeasRole.fromStrings(profiles));
         if (role != null) {
           faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.WRITER));
         }
