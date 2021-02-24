@@ -3,6 +3,8 @@ package org.silverpeas.looks.aurora;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
 
+import static org.silverpeas.core.util.URLUtil.removeApplicationURLFrom;
+
 /**
  * @author Nicolas Eysseric
  */
@@ -68,7 +70,7 @@ public class LookSettings {
   }
 
   public String getDefaultHomepageURL() {
-    return settings.getString("defaultHomepage", "/dt");
+    return settings.getString("defaultHomepage", removeApplicationURLFrom(settings.getString("loginHomepage", "/dt")));
   }
 
   public String getPersonalHomepageURL() {

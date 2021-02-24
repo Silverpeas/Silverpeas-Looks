@@ -67,6 +67,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
+import static org.silverpeas.core.util.StringUtil.defaultStringIfNotDefined;
+import static org.silverpeas.core.util.URLUtil.removeApplicationURLFrom;
 import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
@@ -605,12 +607,12 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (StringUtil.isDefined(componentId)) {
         frameURL = webContext + URLUtil.getURL(null, componentId)+"Main";
       } else {
-        String homePage = getSettings("defaultHomepage", "/dt");
-        String param = "";
+        String homePage = getSettings("defaultHomepage", defaultStringIfNotDefined(loginHomepage, "/dt"));
+        String param = StringUtil.EMPTY;
         if (StringUtil.isDefined(spaceId)) {
           param = "?SpaceId=" + spaceId;
         }
-        frameURL = webContext+homePage+param;
+        frameURL = webContext + removeApplicationURLFrom(homePage) + param;
       }
     } else {
       frameURL = webContext+strGoToNew;
