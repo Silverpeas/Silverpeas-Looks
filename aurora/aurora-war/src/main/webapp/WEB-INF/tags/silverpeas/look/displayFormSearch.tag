@@ -49,6 +49,36 @@
       <input type="text" id="query" value="" size="60" name="TitleNotInXMLForm" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
       <input type="hidden" name="mode" value="clear"/>
       <input type="hidden" name="xmlSearchSelectedForm" value="<%=searchForm.getFormName()%>.xml"/>
+      <div id="stdFields">
+        <ul class="fields">
+          <li class="field">
+            <div>
+              <label for="stdFieldUpdatedFor">Modifié</label>
+            </div>
+            <div class="fieldInput">
+              <select name="stdFieldUpdatedFor" id="stdFieldUpdatedFor">
+                <option></option>
+                <option value="0">Aujourd'hui</option>
+                <option value="7">7 derniers jours</option>
+                <option value="15">15 derniers jours</option>
+                <option value="30">30 derniers jours</option>
+              </select>
+            </div>
+          </li>
+          <li class="field">
+            <div>
+              <label for="stdFieldSpace">Espace</label>
+            </div>
+            <div class="fieldInput">
+              <select name="stdFieldSpace" id="stdFieldSpace">
+                <option></option>
+                <option value="WA1">Espace 1</option>
+                <option value="WA2">Espace 2</option>
+              </select>
+            </div>
+          </li>
+        </ul>
+      </div>
       <%
         PagesContext formContext = new PagesContext();
         formContext.setLanguage(User.getCurrentRequester().getUserPreferences().getLanguage());
