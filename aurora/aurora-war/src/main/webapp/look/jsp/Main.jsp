@@ -77,7 +77,7 @@
 
       <viewTags:displayTaxonomy enabled="${settings.displaySearchOnHome}" labelsInsideSelect="${labelInsideSelectOnTaxonomy}" />
 
-      <viewTags:displayFormSearch searchForm="${searchForm}"/>
+      <viewTags:displayFormSearch searchForm="${searchForm}" extraFieldPeriod="${settings.extraSearchFieldPeriodUsed}" extraFieldSpace="${settings.extraSearchFieldSpaceUsed}"/>
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
     </div>

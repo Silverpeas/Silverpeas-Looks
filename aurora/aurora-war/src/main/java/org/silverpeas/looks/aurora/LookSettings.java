@@ -103,4 +103,12 @@ public class LookSettings {
     return settings.getString("home.ephemeris.date.format", "dd MMMMM yyyy");
   }
 
+  public boolean isExtraSearchFieldPeriodUsed() {
+    return settings.getBoolean("home.search.extrafield.period", false);
+  }
+
+  public boolean isExtraSearchFieldSpaceUsed() {
+    return settings.getBoolean("home.search.extrafield.space", false);
+  }
+
 }
