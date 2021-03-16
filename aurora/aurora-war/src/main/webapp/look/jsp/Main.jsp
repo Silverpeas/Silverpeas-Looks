@@ -23,6 +23,12 @@
 
 <c:set var="newsWithCarrousel" value="${settings.displayNewsWithCarrousel}"/>
 
+<c:set var="secondaryListOfNews" value="${lookHelper.secondaryNews}"/>
+<c:set var="secondaryNewsImageSize" value="${settings.secondaryNewsImageSize}"/>
+<c:set var="secondaryNewsWithCarrousel" value="${settings.displaySecondaryNewsWithCarrousel}"/>
+
+<c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
+
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
@@ -47,6 +53,9 @@
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
+    <c:if test="${not empty extraJavascript}">
+      <script type="text/javascript" src="${extraJavascript}"></script>
+    </c:if>
     <script type="text/javascript">
     function changeBody(url) {
       if (StringUtil.isDefined(url)) {
@@ -87,6 +96,8 @@
       <viewTags:displayShortcuts shortcuts="${shortcuts}"/>
 
       <viewTags:displayNews listOfNews="${listOfNews}" carrousel="${newsWithCarrousel}" imageSize="${newsImageSize}"/>
+
+      <viewTags:displayNews listOfNews="${secondaryListOfNews}" carrousel="${secondaryNewsWithCarrousel}" imageSize="${secondaryNewsImageSize}" id="secondaryNews"/>
 
       <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 

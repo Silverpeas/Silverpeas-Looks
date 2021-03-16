@@ -74,6 +74,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private static final String DEFAULT_VALUE = "toBeDefined";
   private static final Random RANDOM = new Random();
   private static final String BANNER_ALL_SPACES = "*";
+  private static final String PROPERTY_NEWS_MAIN = "home.news";
+  private static final String PROPERTY_NEWS_SECONDARY = "home.news.secondary";
   private DelegatedNewsService delegatedNewsService;
   private LocalizationBundle messages;
   private LookSettings settings;
@@ -297,26 +299,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public NewsList getNews() {
-    String newsType = getSettings("home.news", "");
-    List<News> news = new ArrayList<>();
-    String uniqueAppId = "";
-    if (StringUtil.isDefined(newsType)) {
-      if ("delegated".equalsIgnoreCase(newsType)) {
-        news = getDelegatedNews();
-      } else {
-        List<String> allowedComponentIds =
-            getAllowedComponents("quickinfo", StringUtil.split(newsType, ' '));
-        if (allowedComponentIds.size() == 1) {
-          uniqueAppId = allowedComponentIds.get(0);
-        }
-        news = getNewsByComponentIds(allowedComponentIds);
-      }
-      int nbNews = getSettings("home.news.size", -1);
-      if (nbNews != -1 && news.size() > nbNews) {
-        return new NewsList(news.subList(0, nbNews), uniqueAppId);
-      }
-    }
-    return new NewsList(news, uniqueAppId);
+    return getNewsList(false);
+  }
+
+  public NewsList getSecondaryNews() {
+    return getNewsList(true);
   }
 
   private List<News> getDelegatedNews() {
@@ -335,7 +322,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return news;
   }
 
-  private List<News> getNewsByComponentIds(List<String> allowedComponentIds) {
+  private List<News> getNewsByComponentIds(List<String> allowedComponentIds, boolean importantOnly) {
     if (CollectionUtil.isEmpty(allowedComponentIds)) {
       return Collections.emptyList();
     }
@@ -343,7 +330,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     // getting news from allowed components
     List<News> allNews = new ArrayList<>();
     for (String appId : allowedComponentIds) {
-      allNews.addAll(getNewsByComponentId(appId));
+      allNews.addAll(getNewsByComponentId(appId, importantOnly));
     }
 
     // sorting news
@@ -352,9 +339,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return allNews;
   }
 
-  private List<News> getNewsByComponentId(String allowedComponentId) {
+  private List<News> getNewsByComponentId(String allowedComponentId, boolean importantOnly) {
     // getting news from allowed component
-    boolean importantOnly = getSettings("home.news.importantOnly", false);
     List<News> allNews = QuickInfoService.get().getVisibleNews(allowedComponentId);
     if (!importantOnly) {
       return allNews;
@@ -810,5 +796,59 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       mainSearchTemplateLoaded = true;
     }
     return mainSearchTemplate;
+  }
+
+  private NewsList getNewsList(boolean secondary) {
+    String key = PROPERTY_NEWS_MAIN;
+    if (secondary) {
+      key = PROPERTY_NEWS_SECONDARY;
+    }
+    String newsType = getSettings(key, "");
+    List<News> news = new ArrayList<>();
+    String uniqueAppId = "";
+    if (StringUtil.isDefined(newsType)) {
+      if ("delegated".equalsIgnoreCase(newsType)) {
+        news = getDelegatedNews();
+      } else {
+        List<String> allowedComponentIds = getComponentIdsForNews(secondary);
+        if (allowedComponentIds.size() == 1) {
+          uniqueAppId = allowedComponentIds.get(0);
+        }
+        boolean importantOnly = getSettings(key + ".importantOnly", false);
+        news = getNewsByComponentIds(allowedComponentIds, importantOnly);
+      }
+      int nbNews = getSettings(key + ".size", -1);
+      if (nbNews != -1 && news.size() > nbNews) {
+        return new NewsList(news.subList(0, nbNews), uniqueAppId);
+      }
+    }
+    return new NewsList(news, uniqueAppId);
+  }
+
+  private List<String> getComponentIdsForNews(boolean secondary) {
+    String mainNewsProp = getSettings(PROPERTY_NEWS_MAIN, "");
+    String secondaryNewsProp = getSettings(PROPERTY_NEWS_SECONDARY, "");
+    boolean excludeSecondaryNews = "*".equals(mainNewsProp);
+    boolean excludeMainNews = "*".equals(secondaryNewsProp);
+
+    String[] mainNewsComponentIds = StringUtil.split(mainNewsProp, ' ');
+    String[] secondaryNewsComponentIds = StringUtil.split(secondaryNewsProp, ' ');
+    List<String> allowedMainNewsComponentIds =
+        getAllowedComponents("quickinfo", mainNewsComponentIds);
+    List<String> allowedSecondaryNewsComponentIds =
+        getAllowedComponents("quickinfo", secondaryNewsComponentIds);
+    if (secondary) {
+      if (excludeMainNews) {
+        // exclude main news components from secondary ones
+        allowedSecondaryNewsComponentIds.removeAll(allowedMainNewsComponentIds);
+      }
+      return allowedSecondaryNewsComponentIds;
+    } else {
+      if (excludeSecondaryNews) {
+        // exclude secondary news components from main ones
+        allowedMainNewsComponentIds.removeAll(allowedSecondaryNewsComponentIds);
+      }
+      return allowedMainNewsComponentIds;
+    }
   }
 }
