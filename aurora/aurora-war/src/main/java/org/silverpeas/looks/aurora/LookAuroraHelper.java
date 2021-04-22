@@ -536,7 +536,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private boolean isComponentAvailable(String componentId) {
-    return getOrganisationController().isComponentAvailable(componentId, getUserId());
+    return getOrganisationController().isComponentAvailableToUser(componentId, getUserId());
   }
 
   public BodyPartSettings getBodyPartSettings(HttpServletRequest request) {
