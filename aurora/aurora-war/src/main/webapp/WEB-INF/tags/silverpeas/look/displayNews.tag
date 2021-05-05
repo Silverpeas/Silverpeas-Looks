@@ -41,6 +41,14 @@
               required="true"
               type="java.lang.String" %>
 
+<%@ attribute name="id"
+              required="false"
+              type="java.lang.String" %>
+
+<c:if test="${empty id}">
+  <c:set var="id" value="carrousel-actualite"/>
+</c:if>
+
 <fmt:message var="labelNews" key="look.home.news"/>
 <fmt:message var="labelNewsMore" key="look.home.news.more"/>
 
@@ -51,7 +59,7 @@
 </c:if>
 
 <c:if test="${not empty listOfNews.news}">
-  <div class="secteur-container" id="carrousel-actualite">
+  <div class="secteur-container" id="${id}">
     <h4>${labelNews}</h4>
     <ul class="${newsClass}" id="slider">
       <c:forEach var="news" items="${listOfNews.news}">
@@ -71,6 +79,7 @@
             <p>
               <span class="news-date"><view:formatDate value="${news.date}"/></span>
               <c:if test="${empty listOfNews.uniqueAppURL}">
+                <view:componentPath componentId="${news.news.componentInstanceId}" includeComponent="false"/>
                 <a class="sp-link" href="${news.appShortcut.url}" title="${labelNewsMore}"><span class="news-app">${news.appShortcut.altText}</span></a>
               </c:if>
                 ${news.description}

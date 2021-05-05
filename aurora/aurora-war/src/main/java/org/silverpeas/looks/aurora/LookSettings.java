@@ -103,4 +103,25 @@ public class LookSettings {
     return settings.getString("home.ephemeris.date.format", "dd MMMMM yyyy");
   }
 
+  public String getSecondaryNewsImageSize() {
+    return settings.getString("home.news.secondary.width", "1095") + "x" +
+        settings.getString("home.news.secondary.height", "");
+  }
+
+  public boolean isDisplaySecondaryNewsWithCarrousel() {
+    return "carrousel".equalsIgnoreCase(settings.getString("home.news.secondary.displayer", "carrousel"));
+  }
+
+  public String getExtraJavascriptForHome() {
+    return settings.getString("javascript.homepage", "");
+  }
+
+  public String getExtraJavascriptForBanner() {
+    return settings.getString("javascript.banner", "");
+  }
+
+  public String getExtraJavascriptForSpaceHomepage() {
+    return settings.getString("javascript.space.homepage", "");
+  }
+
 }

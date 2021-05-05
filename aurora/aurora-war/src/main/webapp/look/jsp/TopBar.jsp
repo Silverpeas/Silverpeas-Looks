@@ -18,6 +18,7 @@
 <c:set var="anonymousMode" value=""/>
 
 <c:set var="shortcuts" value="${lookHelper.toolsShortcuts}"/>
+<c:set var="extraJavascript" value="${settings.extraJavascriptForBanner}"/>
 
 <c:if test="${isAnonymous}">
   <c:set var="anonymousMode" value="anonymousMode"/>
@@ -76,6 +77,11 @@
 <view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise"/>
 <link href="css/sm-core-css.css" rel="stylesheet" type="text/css" />
 <link href='css/${smartmenusSkin}/${smartmenusSkin}.css' rel='stylesheet' type='text/css' />
+
+<c:if test="${not empty extraJavascript}">
+  <script type="text/javascript" src="${extraJavascript}"></script>
+</c:if>
+
 <script type="text/javascript">
 function goToHome() {
   selectHeading('home');

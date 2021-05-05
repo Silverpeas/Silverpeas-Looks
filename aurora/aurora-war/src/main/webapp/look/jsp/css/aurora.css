@@ -298,3 +298,10 @@
 #topar-header #btn-logout {
   display: none;
 }
+
+.main-home-page #last-publication-home .sp-path,
+.main-home-page #carrousel-actualite .sp-path,
+.main-home-page #secondaryNews .sp-path,
+.spaceHome #last-publication-home .sp-path {
+  display: none;
+}
