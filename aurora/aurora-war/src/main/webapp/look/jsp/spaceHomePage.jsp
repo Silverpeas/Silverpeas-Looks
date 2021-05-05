@@ -70,6 +70,8 @@
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
+<c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
+
 <fmt:message var="actionUpdate" key="look.space.home.update"/>
 
 <view:sp-page angularJsAppName="silverpeas.spaceHomepage">
@@ -93,6 +95,9 @@
     <view:includePlugin name="lightslideshow"/>
     <view:includePlugin name="toggle"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
+    <c:if test="${not empty extraJavascript}">
+      <script type="text/javascript" src="${extraJavascript}"></script>
+    </c:if>
     <script type="text/javascript">
       <!--
       function goToSpaceItem(spaceId) {

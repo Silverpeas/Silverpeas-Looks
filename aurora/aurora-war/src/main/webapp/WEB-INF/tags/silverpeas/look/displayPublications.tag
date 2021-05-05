@@ -47,7 +47,8 @@
       <c:forEach var="publication" items="${publications}">
         <li onclick="spWindow.loadLink('${publication.permalink}')">
           <a class="sp-link" href="${publication.permalink}">${publication.name}</a>
-          <view:username userId="${publication.updaterId}" />
+          <view:componentPath componentId="${publication.instanceId}" includeComponent="false"/>
+          <span class="user-publication"><view:username userId="${publication.updaterId}" /></span>
           <span class="date-publication">${silfn:formatAsLocalDate(publication.visibility.period.startDate, lookHelper.zoneId, lookHelper.language)}</span>
           <p class="description-publication">${publication.description}</p>
         </li>
