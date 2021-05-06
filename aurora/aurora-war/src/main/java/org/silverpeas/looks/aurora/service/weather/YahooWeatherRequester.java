@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
@@ -30,7 +31,7 @@ public class YahooWeatherRequester implements WeatherServiceRequester {
 
   private static final String API_URL = "http://weather-ydn-yql.media.yahoo.com/forecastrss";
   private static final String SERVICE_NAME = "Yahoo";
-  private static final Random RANDOM = new Random();
+  private static final Random RANDOM = new SecureRandom();
 
   @Override
   public WeatherForecastData request(final String cityId) {
