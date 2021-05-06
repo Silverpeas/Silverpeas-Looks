@@ -8,6 +8,7 @@ import org.silverpeas.core.util.URLUtil;
  */
 public class LookSettings {
 
+  private static final String CARROUSEL_TYPE = "carrousel";
   SettingBundle settings;
 
   public LookSettings(SettingBundle settings) {
@@ -60,7 +61,7 @@ public class LookSettings {
   }
 
   public boolean isDisplayNewsWithCarrousel() {
-    return "carrousel".equalsIgnoreCase(settings.getString("home.news.displayer", "carrousel"));
+    return CARROUSEL_TYPE.equalsIgnoreCase(settings.getString("home.news.displayer", CARROUSEL_TYPE));
   }
 
   public String getEventsAppURL() {
@@ -103,13 +104,22 @@ public class LookSettings {
     return settings.getString("home.ephemeris.date.format", "dd MMMMM yyyy");
   }
 
+  public boolean isExtraSearchFieldPeriodUsed() {
+    return settings.getBoolean("home.search.extrafield.period", false);
+  }
+
+  public boolean isExtraSearchFieldSpaceUsed() {
+    return settings.getBoolean("home.search.extrafield.space", false);
+  }
+
   public String getSecondaryNewsImageSize() {
     return settings.getString("home.news.secondary.width", "1095") + "x" +
         settings.getString("home.news.secondary.height", "");
   }
 
   public boolean isDisplaySecondaryNewsWithCarrousel() {
-    return "carrousel".equalsIgnoreCase(settings.getString("home.news.secondary.displayer", "carrousel"));
+    return CARROUSEL_TYPE.equalsIgnoreCase(settings.getString("home.news.secondary.displayer",
+        CARROUSEL_TYPE));
   }
 
   public String getExtraJavascriptForHome() {

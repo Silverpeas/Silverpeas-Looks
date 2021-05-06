@@ -37,6 +37,9 @@
               required="false"
               type="org.silverpeas.core.contribution.content.form.Form" %>
 
+<%@ attribute name="extraFieldPeriod" required="true" type="java.lang.Boolean" %>
+<%@ attribute name="extraFieldSpace" required="true" type="java.lang.Boolean" %>
+
 <fmt:message var="labelSearch" key="look.home.search.title"/>
 <fmt:message var="labelSearchButton" key="look.home.search.button"/>
 <fmt:message var="labelSearchInput" key="look.home.search.input"/>
@@ -52,6 +55,8 @@
       <%
         PagesContext formContext = new PagesContext();
         formContext.setLanguage(User.getCurrentRequester().getUserPreferences().getLanguage());
+        formContext.setExtraSearchFieldPeriod(extraFieldPeriod);
+        formContext.setExtraSearchFieldSpace(extraFieldSpace);
         searchForm.display(out, formContext);
       %>
       <a id="submit-AdvancedSearch" href="javascript:templateSearch()"><span>${labelSearchButton}</span></a>

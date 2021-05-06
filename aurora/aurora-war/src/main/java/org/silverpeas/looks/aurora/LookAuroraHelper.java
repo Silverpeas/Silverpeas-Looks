@@ -1,5 +1,6 @@
 package org.silverpeas.looks.aurora;
 
+import org.apache.commons.lang3.StringUtils;
 import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
@@ -76,6 +77,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private static final String BANNER_ALL_SPACES = "*";
   private static final String PROPERTY_NEWS_MAIN = "home.news";
   private static final String PROPERTY_NEWS_SECONDARY = "home.news.secondary";
+  private static final String QUICKINFO = "quickinfo";
   private DelegatedNewsService delegatedNewsService;
   private LocalizationBundle messages;
   private LookSettings settings;
@@ -127,7 +129,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (param.contains("*")) {
         definedSpaceIds = getExplicitlyDefinedSpaceIds();
       }
-      String[] spaceIds = StringUtil.split(param);
+      String[] spaceIds = StringUtils.split(param);
       return getBannerMainItemOfSpaces(spaceIds, definedSpaceIds);
     }
     return new ArrayList<>();
@@ -164,7 +166,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     spaceIds.add(getProjectsSpaceId());
     spaceIds.add(getSettings("applications.spaceId", ""));
     String bannerSpaceIds = getSettings("banner.spaces", "*");
-    for (String bannerSpaceId : StringUtil.split(bannerSpaceIds)) {
+    for (String bannerSpaceId : StringUtils.split(bannerSpaceIds)) {
       if (!BANNER_ALL_SPACES.equals(bannerSpaceId)) {
         spaceIds.add(bannerSpaceId);
       }
@@ -277,7 +279,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   @Override
   public List<PublicationDetail> getLatestPublications(String spaceId, int nbPublis) {
     String[] excludedComponentIds =
-        StringUtil.split(getSettings("home.publications.components.excluded", ""));
+        StringUtils.split(getSettings("home.publications.components.excluded", ""));
     List<PublicationDetail> publications =
         super.getLatestPublications(spaceId, Arrays.asList(excludedComponentIds), nbPublis * 2);
     List<PublicationDetail> result = new ArrayList<>();
@@ -295,7 +297,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private boolean isComponentForNews(String componentId) {
-    return componentId.startsWith("quickinfo");
+    return componentId.startsWith(QUICKINFO);
   }
 
   public NewsList getNews() {
@@ -749,7 +751,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private List<ComponentInstLight> getAppsByName(String spaceId, String name) {
-    List<ComponentInstLight> apps = new ArrayList();
+    List<ComponentInstLight> apps = new ArrayList<>();
     OrganizationController oc = OrganizationController.get();
     String[] appsIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserId());
     for (String appId : appsIds) {
@@ -773,8 +775,13 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (template != null) {
       try {
         Form form = template.getSearchForm();
-        form.setData(template.getRecordSet().getEmptyRecord());
-        return form;
+        if (form == null) {
+          SilverLogger.getLogger(this).warn("The template " + template.getName() +
+              " has no form defined for the search! No main search form to render");
+        } else {
+          form.setData(template.getRecordSet().getEmptyRecord());
+          return form;
+        }
       } catch (Exception e) {
         SilverLogger.getLogger(this).error(e);
       }
@@ -834,9 +841,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     String[] mainNewsComponentIds = StringUtil.split(mainNewsProp, ' ');
     String[] secondaryNewsComponentIds = StringUtil.split(secondaryNewsProp, ' ');
     List<String> allowedMainNewsComponentIds =
-        getAllowedComponents("quickinfo", mainNewsComponentIds);
+        getAllowedComponents(QUICKINFO, mainNewsComponentIds);
     List<String> allowedSecondaryNewsComponentIds =
-        getAllowedComponents("quickinfo", secondaryNewsComponentIds);
+        getAllowedComponents(QUICKINFO, secondaryNewsComponentIds);
     if (secondary) {
       if (excludeMainNews) {
         // exclude main news components from secondary ones
