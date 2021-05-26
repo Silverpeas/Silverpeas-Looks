@@ -107,7 +107,7 @@
 <script type="text/javascript">
   whenSilverpeasReady(function() {
     <c:if test="${carrousel}">
-    $("#slider").responsiveSlides({
+    $("#${id} .rslides#slider").responsiveSlides({
       auto: true,
       pager: false,
       nav: true,
