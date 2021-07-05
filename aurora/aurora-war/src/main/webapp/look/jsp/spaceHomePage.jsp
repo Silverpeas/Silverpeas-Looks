@@ -58,10 +58,11 @@
   List<Space> subspaces = homepage.getSubSpaces();
   List<App> apps = homepage.getApps();
   List<UserDetail> admins = homepage.getAdmins();
+  String customFormContent = homepage.getCustomFormContent();
 
   GraphicElementFactory gef = (GraphicElementFactory) session
       .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
-  gef.setSpaceIdForCurrentRequest(homepage.getSpace().getId());
+  gef.setSpaceIdForCurrentRequest(space.getId());
 %>
 
 <c:set var="backOfficeURL" value="<%=homepage.getBackOfficeURL()%>"/>
@@ -151,6 +152,8 @@
     <viewTags:displayShortcuts shortcuts="<%=homepage.getShortcuts()%>"/>
 
     <viewTags:displayPublications lookHelper="${lookHelper}" publications="<%=publications%>"/>
+
+    <%= customFormContent %>
   </div>
 </view:window>
 </view:sp-body-part>

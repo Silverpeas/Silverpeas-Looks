@@ -35,6 +35,8 @@ import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
 import org.silverpeas.core.contribution.content.form.DataRecord;
 import org.silverpeas.core.contribution.content.form.Field;
+import org.silverpeas.core.contribution.content.form.Form;
+import org.silverpeas.core.contribution.content.form.PagesContext;
 import org.silverpeas.core.contribution.content.form.RecordSet;
 import org.silverpeas.core.contribution.content.form.displayers.WysiwygFCKFieldDisplayer;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygContentTransformer;
@@ -61,6 +63,7 @@ public class AuroraSpaceHomePage {
   private ComponentInstLight backOfficeApp;
   private DataRecord data;
   private LookAuroraHelper look;
+  private Form customForm;
 
   public static final String TEMPLATE_NAME = "auroraspacehomepage.xml";
 
@@ -250,6 +253,7 @@ public class AuroraSpaceHomePage {
     if (app != null) {
       setBackOfficeApp(app);
       setData(getConfigurationData(app.getId()));
+      setCustomForm(app.getId());
     }
   }
 
@@ -270,30 +274,12 @@ public class AuroraSpaceHomePage {
   }
 
   private DataRecord getConfigurationData(String appId) {
-    return getConfigurationData(appId, OrganizationController.get());
+    return getConfigurationData(appId, "xmlTemplate");
   }
 
-  private DataRecord getConfigurationData(String appId, OrganizationController oc) {
-    String xmlFormName = oc.getComponentParameterValue(appId, "xmlTemplate");
-    if (!xmlFormName.isEmpty()) {
-      String xmlFormShortName =
-          xmlFormName.substring(xmlFormName.indexOf('/') + 1, xmlFormName.indexOf('.'));
-      try {
-        PublicationTemplate pubTemplate = PublicationTemplateManager.getInstance()
-            .getPublicationTemplate(appId + ":" + xmlFormShortName);
-        RecordSet recordSet = pubTemplate.getRecordSet();
-        DataRecord record = recordSet.getRecord("0", userLanguage);
-        if (record == null) {
-          record = recordSet.getEmptyRecord();
-          record.setId("0");
-          record.setLanguage(userLanguage);
-        }
-        return record;
-      } catch (Exception e) {
-        SilverLogger.getLogger(this).error(e);
-      }
-    }
-    return null;
+  private DataRecord getConfigurationData(String appId, String paramName) {
+    PublicationTemplate pubTemplate = getTemplate(appId, paramName);
+    return getDataRecord(pubTemplate);
   }
 
   private boolean getFieldBooleanValue(String name) {
@@ -390,5 +376,77 @@ public class AuroraSpaceHomePage {
       return URLUtil.getApplicationURL() + "/AuroraSpaceHomepageBackoffice?SpaceId=" + getSpace().getId();
     }
     return null;
+  }
+
+  private PublicationTemplate getTemplate(String appId, String paramName) {
+    String xmlFormName = OrganizationController.get().getComponentParameterValue(appId, paramName);
+    if (!xmlFormName.isEmpty()) {
+      String xmlFormShortName =
+          xmlFormName.substring(xmlFormName.indexOf('/') + 1, xmlFormName.indexOf('.'));
+      try {
+        return PublicationTemplateManager.getInstance()
+            .getPublicationTemplate(appId + ":" + xmlFormShortName);
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).info("On app #"+appId+", template "+xmlFormShortName+" not yet used !");
+      }
+    }
+    return null;
+  }
+
+  private DataRecord getDataRecord(PublicationTemplate template) {
+    if (template != null) {
+      try {
+        RecordSet recordSet = template.getRecordSet();
+        DataRecord record = recordSet.getRecord("0", userLanguage);
+        if (record == null) {
+          record = recordSet.getEmptyRecord();
+          record.setId("0");
+          record.setLanguage(userLanguage);
+        }
+        return record;
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+    return null;
+  }
+
+  private void setCustomForm(String appId) {
+    PublicationTemplate customTemplate = getTemplate(appId, "xmlTemplate2");
+    if (customTemplate != null) {
+      DataRecord dataRecord = getDataRecord(customTemplate);
+      if (dataRecord != null) {
+        try {
+          Form form = customTemplate.getViewForm();
+          form.setData(dataRecord);
+          setCustomForm(form);
+        } catch (Exception e) {
+          SilverLogger.getLogger(this).error(e);
+        }
+      }
+    }
+  }
+
+  public String getCustomFormContent() {
+    if (getCustomForm() != null) {
+      try {
+        PagesContext formContext = new PagesContext();
+        formContext.setComponentId(getBackOfficeApp().getId());
+        formContext.setLanguage(userLanguage);
+
+        return getCustomForm().toString(formContext);
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+    return "";
+  }
+
+  private Form getCustomForm() {
+    return customForm;
+  }
+
+  private void setCustomForm(final Form customForm) {
+    this.customForm = customForm;
   }
 }

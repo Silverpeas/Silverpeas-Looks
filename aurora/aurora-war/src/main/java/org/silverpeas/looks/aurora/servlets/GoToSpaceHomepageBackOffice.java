@@ -5,6 +5,7 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.component.model.Parameter;
 import org.silverpeas.core.admin.component.model.WAComponent;
 import org.silverpeas.core.admin.service.Administration;
+import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.http.HttpRequest;
@@ -41,7 +42,7 @@ public class GoToSpaceHomepageBackOffice extends HttpServlet {
       if (lookHelper.isSpaceAdmin(spaceId)) {
         ComponentInstLight backOfficeApp = lookHelper.getConfigurationApp(spaceId);
         if (backOfficeApp == null) {
-          createConfigurationApp(spaceId, lookHelper.getUserId());
+          createConfigurationApp(spaceId, lookHelper);
           backOfficeApp = lookHelper.getConfigurationApp(spaceId);
         }
 
@@ -62,7 +63,7 @@ public class GoToSpaceHomepageBackOffice extends HttpServlet {
     }
   }
 
-  private String createConfigurationApp(String spaceId, String userId) {
+  private String createConfigurationApp(String spaceId, LookAuroraHelper lookHelper) {
     String componentName = "webPages";
     Optional<WAComponent> existingComponent = WAComponent.getByName(componentName);
     if (existingComponent.isPresent()) {
@@ -70,7 +71,7 @@ public class GoToSpaceHomepageBackOffice extends HttpServlet {
 
       // set specific parameter values
       ComponentInst component = new ComponentInst();
-      component.setCreatorUserId(userId);
+      component.setCreatorUserId(lookHelper.getUserId());
       component.setInheritanceBlocked(false);
       component.setLabel("Page d'accueil");
       component.setName(componentName);
@@ -81,12 +82,18 @@ public class GoToSpaceHomepageBackOffice extends HttpServlet {
           parameter.setValue("no");
         } else if (parameter.getName().equals("xmlTemplate")) {
           parameter.setValue(AuroraSpaceHomePage.TEMPLATE_NAME);
+        } else if (parameter.getName().equals("xmlTemplate2")) {
+          // check if a custom template is defined for this space or a parent
+          String template = lookHelper.getSpaceHomePageCustomTemplate(spaceId);
+          if (StringUtil.isDefined(template)) {
+            parameter.setValue(template);
+          }
         }
       }
       component.setParameters(parameters);
 
       try {
-        return Administration.get().addComponentInst(userId, component);
+        return Administration.get().addComponentInst(lookHelper.getUserId(), component);
       } catch (Exception e) {
         SilverLogger.getLogger(this).error(e);
       }

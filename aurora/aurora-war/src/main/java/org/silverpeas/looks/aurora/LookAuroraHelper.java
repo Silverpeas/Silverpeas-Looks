@@ -77,6 +77,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private static final String BANNER_ALL_SPACES = "*";
   private static final String PROPERTY_NEWS_MAIN = "home.news";
   private static final String PROPERTY_NEWS_SECONDARY = "home.news.secondary";
+  private static final String PROPERTY_SPACEHOMEPAGE_CUSTOMTEMPLATE = "space.homepage.management" +
+      ".customtemplate.";
   private static final String QUICKINFO = "quickinfo";
   private DelegatedNewsService delegatedNewsService;
   private LocalizationBundle messages;
@@ -857,5 +859,18 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
       return allowedMainNewsComponentIds;
     }
+  }
+
+  public String getSpaceHomePageCustomTemplate(String spaceId) {
+    List<SpaceInstLight> spaces = getOrganisationController().getPathToSpace(spaceId);
+    // get closest space definition so we start from space itself
+    List<SpaceInstLight> pathToRoot = CollectionUtil.reverse(spaces);
+    for (SpaceInstLight space : pathToRoot) {
+      String customTemplate = getSettings(PROPERTY_SPACEHOMEPAGE_CUSTOMTEMPLATE+space.getId(), "");
+      if (StringUtil.isDefined(customTemplate)) {
+        return customTemplate;
+      }
+    }
+    return null;
   }
 }
