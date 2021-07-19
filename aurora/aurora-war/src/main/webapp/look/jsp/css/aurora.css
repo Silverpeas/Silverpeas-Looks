@@ -305,3 +305,7 @@
 .spaceHome #last-publication-home .sp-path {
   display: none;
 }
+
+.main-home-page .centered-btns_tabs {
+  display: none;
+}

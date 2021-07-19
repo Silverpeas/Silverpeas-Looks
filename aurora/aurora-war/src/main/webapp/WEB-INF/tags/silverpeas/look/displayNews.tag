@@ -109,7 +109,7 @@
     <c:if test="${carrousel}">
     $("#${id} .rslides#slider").responsiveSlides({
       auto: true,
-      pager: false,
+      pager: true,
       nav: true,
       speed: 500,
       pause: true,
