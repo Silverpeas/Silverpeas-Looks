@@ -57,6 +57,7 @@
         formContext.setLanguage(User.getCurrentRequester().getUserPreferences().getLanguage());
         formContext.setExtraSearchFieldPeriod(extraFieldPeriod);
         formContext.setExtraSearchFieldSpace(extraFieldSpace);
+        formContext.setUserId(User.getCurrentRequester().getId());
         searchForm.display(out, formContext);
       %>
       <a id="submit-AdvancedSearch" href="javascript:templateSearch()"><span>${labelSearchButton}</span></a>
