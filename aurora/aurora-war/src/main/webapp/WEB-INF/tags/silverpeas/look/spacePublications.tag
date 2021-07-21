@@ -45,7 +45,11 @@
 
   <ul id="publicationList">
     <c:forEach var="publication" items="${publications}">
-    <li>
+      <c:set var="newPubliCssClass" value=""/>
+      <c:if test="${publication.new}">
+        <c:set var="newPubliCssClass" value="class=\"new-contribution\""/>
+      </c:if>
+    <li ${newPubliCssClass}>
       <a class="sp-permalink" href="${publication.permalink}">
         <b>${publication.name}</b>
       </a>
