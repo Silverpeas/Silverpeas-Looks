@@ -50,7 +50,7 @@
         <c:set var="newPubliCssClass" value="class=\"new-contribution\""/>
       </c:if>
     <li ${newPubliCssClass}>
-      <a class="sp-permalink" href="${publication.permalink}">
+      <a class="sp-permalink publication-name" href="${publication.permalink}">
         <b>${publication.name}</b>
       </a>
       <view:username userId="${publication.updaterId}"/> - <view:formatDate value="${publication.updateDate}" language="${language}"/>
