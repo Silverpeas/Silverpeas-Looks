@@ -50,7 +50,7 @@
           <c:set var="newPubliCssClass" value="class=\"new-contribution\""/>
         </c:if>
         <li ${newPubliCssClass} onclick="spWindow.loadLink('${publication.permalink}')">
-          <a class="sp-link" href="${publication.permalink}">${publication.name}</a>
+          <a class="sp-link publication-name" href="${publication.permalink}">${publication.name}</a>
           <view:componentPath componentId="${publication.instanceId}" includeComponent="false"/>
           <span class="user-publication"><view:username userId="${publication.updaterId}" /></span>
           <span class="date-publication">${silfn:formatAsLocalDate(publication.visibility.period.startDate, lookHelper.zoneId, lookHelper.language)}</span>
