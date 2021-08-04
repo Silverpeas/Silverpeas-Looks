@@ -50,6 +50,7 @@ import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.Shortcut;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -95,19 +96,12 @@ public class AuroraSpaceHomePage {
     return emptyList();
   }
 
-  public List<PublicationDetail> getNews() {
+  public NewsList getNews() {
     boolean displayNews = isEnabled("space.homepage.news", "displayNews");
     if (displayNews) {
-      List<PublicationDetail> news = look.getNews(getSpace().getId());
-      if (CollectionUtil.isNotEmpty(news)) {
-        int nbNews = look.getSettings("space.homepage.news.nb", 10);
-        if (news.size() > nbNews) {
-          return news.subList(0, nbNews);
-        }
-        return news;
-      }
+      return look.getNewsOfSpace(getSpace().getId());
     }
-    return emptyList();
+    return new NewsList(Collections.emptyList(), null);
   }
 
   public boolean isTaxonomyEnabled() {

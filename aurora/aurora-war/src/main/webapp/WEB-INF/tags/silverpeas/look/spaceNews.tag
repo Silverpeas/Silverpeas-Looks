@@ -53,14 +53,15 @@
     <div class="portlet-content slideshow" data-transition="crossfade" data-loop="true" data-skip="false">
       <ul class="carousel">
         <c:forEach var="aNews" items="${news}">
-          <li class="slide" onclick="location.href='${aNews.permalink}'">
+          <c:set var="tpCSS" value="${aNews.taxonomyPositionAsString}"/>
+          <li class="slide ${tpCSS}" onclick="location.href='${aNews.permalink}'">
             <h3 class="title-quickInfo">
               <a class="sp-permalink" href="${aNews.permalink}">
-                ${silfn:escapeHtml(aNews.name)}
+                ${silfn:escapeHtml(aNews.title)}
               </a>
             </h3>
-            <c:if test="${not empty aNews.thumbnail}">
-              <img src="${aNews.thumbnail.URL}" alt=""/>
+            <c:if test="${not empty aNews.thumbnailURL}">
+              <img src="${aNews.thumbnailURL}" alt=""/>
             </c:if>
             <div class="content-quickInfo">
               <p>${aNews.description}</p>

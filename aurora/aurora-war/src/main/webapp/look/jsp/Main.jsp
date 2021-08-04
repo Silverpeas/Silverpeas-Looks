@@ -27,6 +27,10 @@
 <c:set var="secondaryNewsImageSize" value="${settings.secondaryNewsImageSize}"/>
 <c:set var="secondaryNewsWithCarrousel" value="${settings.displaySecondaryNewsWithCarrousel}"/>
 
+<c:set var="thirdListOfNews" value="${lookHelper.thirdNews}"/>
+<c:set var="thirdNewsImageSize" value="${settings.thirdNewsImageSize}"/>
+<c:set var="thirdNewsWithCarrousel" value="${settings.displayThirdNewsWithCarrousel}"/>
+
 <c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
 
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
@@ -98,6 +102,8 @@
       <viewTags:displayNews listOfNews="${listOfNews}" carrousel="${newsWithCarrousel}" imageSize="${newsImageSize}"/>
 
       <viewTags:displayNews listOfNews="${secondaryListOfNews}" carrousel="${secondaryNewsWithCarrousel}" imageSize="${secondaryNewsImageSize}" id="secondaryNews"/>
+
+      <viewTags:displayNews listOfNews="${thirdListOfNews}" carrousel="${thirdNewsWithCarrousel}" imageSize="${thirdNewsImageSize}" id="thirdNews"/>
 
       <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 

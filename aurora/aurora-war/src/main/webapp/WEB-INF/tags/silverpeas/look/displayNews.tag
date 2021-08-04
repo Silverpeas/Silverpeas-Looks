@@ -23,6 +23,7 @@
   --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
 
@@ -63,7 +64,8 @@
     <h4>${labelNews}</h4>
     <ul class="${newsClass}" id="slider">
       <c:forEach var="news" items="${listOfNews.news}">
-        <li class="news-${news.appShortcut.target}">
+        <c:set var="tpCSS" value="${news.taxonomyPositionAsString}"/>
+        <li class="news-${news.appShortcut.target} ${tpCSS}">
           <a class="sp-permalink" href="${news.permalink}">
             <c:choose>
               <c:when test="${not empty news.thumbnailURL}">
@@ -88,6 +90,13 @@
         </li>
       </c:forEach>
     </ul>
+    <c:if test="${not empty listOfNews.buttons}">
+      <div class="news-link-taxonomy">
+        <c:forEach var="button" items="${listOfNews.buttons}">
+          <a title="${labelNewsMore}" href="listOfNews.jsp?TaxonomyPosition=${button.param}&Label=${button.label}" class="link-more ${button.paramAsCSS}">${button.label}</a>
+        </c:forEach>
+      </div>
+    </c:if>
     <c:choose>
       <c:when test="${not empty listOfNews.uniqueAppURL}">
         <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more sp-link"><span>${labelNewsMore}</span></a>

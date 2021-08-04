@@ -302,10 +302,60 @@
 .main-home-page #last-publication-home .sp-path,
 .main-home-page #carrousel-actualite .sp-path,
 .main-home-page #secondaryNews .sp-path,
+.main-home-page #thirdNews .sp-path,
+.aurora-list-news .sp-path,
 .spaceHome #last-publication-home .sp-path {
   display: none;
 }
 
 .main-home-page .centered-btns_tabs {
   display: none;
+}
+
+/*********** Aurore News tag as list *******************/
+
+.aurora-list-news .list-news li{
+  clear:left;
+  margin-bottom:2em;
+}
+.aurora-list-news .list-news .news-date {
+  opacity:0.8;
+}
+
+.aurora-list-news .list-news {
+  padding:0;
+  height:auto
+}
+
+.aurora-list-news .list-news li {
+  width:100%;
+  height:100px;
+}
+
+.aurora-list-news .list-news li img{
+  width: 200px;
+  float: left;
+}
+
+.aurora-list-news .list-news .caption {
+  margin-left: 206px;
+  margin-right: 50px;
+}
+
+.aurora-list-news .list-news .caption h2 a,
+.aurora-list-news .list-news .caption p{
+  color:#444;
+  font-size:13px;
+  font-weight:100;
+}
+.aurora-list-news .list-news .caption h2 a {
+  font-size:16px;
+  font-weight:bold;
+}
+.aurora-list-news .list-news .caption h2 {
+  margin: 0;
+}
+
+.aurora-list-news .list-news .caption .news-date:after {
+  content: " - ";
 }

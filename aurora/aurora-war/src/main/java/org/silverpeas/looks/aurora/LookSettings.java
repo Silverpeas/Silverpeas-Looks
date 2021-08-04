@@ -122,6 +122,16 @@ public class LookSettings {
         CARROUSEL_TYPE));
   }
 
+  public String getThirdNewsImageSize() {
+    return settings.getString("home.news.third.width", "1095") + "x" +
+        settings.getString("home.news.third.height", "");
+  }
+
+  public boolean isDisplayThirdNewsWithCarrousel() {
+    return CARROUSEL_TYPE.equalsIgnoreCase(settings.getString("home.news.third.displayer",
+        CARROUSEL_TYPE));
+  }
+
   public String getExtraJavascriptForHome() {
     return settings.getString("javascript.homepage", "");
   }

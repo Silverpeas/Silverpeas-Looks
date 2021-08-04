@@ -33,9 +33,12 @@ import org.silverpeas.core.contribution.model.WysiwygContent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
+import org.silverpeas.core.index.search.model.QueryDescription;
+import org.silverpeas.core.index.search.model.SearchResult;
 import org.silverpeas.core.mylinks.model.LinkDetail;
 import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
 import org.silverpeas.core.mylinks.service.MyLinksService;
+import org.silverpeas.core.search.SearchService;
 import org.silverpeas.core.util.ArrayUtil;
 import org.silverpeas.core.util.CollectionUtil;
 import org.silverpeas.core.util.DateUtil;
@@ -77,6 +80,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private static final String BANNER_ALL_SPACES = "*";
   private static final String PROPERTY_NEWS_MAIN = "home.news";
   private static final String PROPERTY_NEWS_SECONDARY = "home.news.secondary";
+  private static final String PROPERTY_NEWS_THIRD = "home.news.third";
   private static final String PROPERTY_SPACEHOMEPAGE_CUSTOMTEMPLATE = "space.homepage.management" +
       ".customtemplate.";
   private static final String QUICKINFO = "quickinfo";
@@ -303,11 +307,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public NewsList getNews() {
-    return getNewsList(false);
+    return getNewsList(1);
   }
 
   public NewsList getSecondaryNews() {
-    return getNewsList(true);
+    return getNewsList(2);
+  }
+
+  public NewsList getThirdNews() {
+    return getNewsList(3);
   }
 
   private List<News> getDelegatedNews() {
@@ -356,6 +364,42 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     return importantNews;
+  }
+
+  public NewsList getAllNewsByTaxonomyPosition(String taxonomyPosition) {
+    List<News> allNews = getNewsByTaxonomyPosition(getAllowedComponents(QUICKINFO, "*"), false,
+        taxonomyPosition);
+    return new NewsList(allNews, null);
+  }
+
+  private List<News> getNewsByTaxonomyPosition(List<String> allowedComponentIds,
+      boolean importantOnly, String taxonomyPosition) {
+    List<News> someNews = new ArrayList<>();
+    QueryDescription query = new QueryDescription();
+    query.setSearchingUser(getUserId());
+    query.setTaxonomyPosition(taxonomyPosition);
+    for (String componentId : allowedComponentIds) {
+      query.addComponent(componentId);
+    }
+
+    try {
+      List<SearchResult> results = SearchService.get().search(query);
+      for (SearchResult result : results) {
+        News news = QuickInfoService.get().getNewsByForeignId(result.getId());
+        if (importantOnly && news.isImportant()) {
+          someNews.add(news);
+        } else if (!importantOnly) {
+          someNews.add(news);
+        }
+      }
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+
+    // sorting news
+    Collections.sort(someNews, QuickInfoDateComparatorDesc.comparator);
+
+    return someNews;
   }
 
   public NextEvents getNextEvents() {
@@ -807,34 +851,49 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return mainSearchTemplate;
   }
 
-  private NewsList getNewsList(boolean secondary) {
+  private NewsList getNewsList(int index) {
     String key = PROPERTY_NEWS_MAIN;
-    if (secondary) {
+    if (index == 2) {
       key = PROPERTY_NEWS_SECONDARY;
+    } else if (index == 3) {
+      key = PROPERTY_NEWS_THIRD;
     }
-    String newsType = getSettings(key, "");
-    List<News> news = new ArrayList<>();
+
     String uniqueAppId = "";
-    if (StringUtil.isDefined(newsType)) {
-      if ("delegated".equalsIgnoreCase(newsType)) {
-        news = getDelegatedNews();
-      } else {
-        List<String> allowedComponentIds = getComponentIdsForNews(secondary);
-        if (allowedComponentIds.size() == 1) {
-          uniqueAppId = allowedComponentIds.get(0);
-        }
-        boolean importantOnly = getSettings(key + ".importantOnly", false);
-        news = getNewsByComponentIds(allowedComponentIds, importantOnly);
-      }
-      int nbNews = getSettings(key + ".size", -1);
-      if (nbNews != -1 && news.size() > nbNews) {
-        return new NewsList(news.subList(0, nbNews), uniqueAppId);
-      }
+    List<News> news = new ArrayList<>();
+    String newsType = getSettings(key, "");
+    if (!StringUtil.isDefined(newsType)) {
+      return new NewsList(news, uniqueAppId);
     }
-    return new NewsList(news, uniqueAppId);
+
+    boolean importantOnly = getSettings(key + ".importantOnly", false);
+    boolean taxonomyType = "taxonomy".equalsIgnoreCase(newsType);
+    if ("delegated".equalsIgnoreCase(newsType)) {
+      news = getDelegatedNews();
+    } else if (taxonomyType) {
+      String position = getSettings(key + ".taxonomy.position", "");
+      news = getNewsByTaxonomyPosition(getAllowedComponents(QUICKINFO, "*"), importantOnly,
+          position);
+    } else {
+      List<String> allowedComponentIds = getComponentIdsForNews(index);
+      if (allowedComponentIds.size() == 1) {
+        uniqueAppId = allowedComponentIds.get(0);
+      }
+      news = getNewsByComponentIds(allowedComponentIds, importantOnly);
+    }
+
+    NewsList result = new NewsList(news, uniqueAppId);
+    int nbNews = getSettings(key + ".size", -1);
+    if (nbNews != -1 && news.size() > nbNews) {
+      result.limitNews(nbNews);
+    }
+    if (taxonomyType) {
+      result.withTaxonomyButtons();
+    }
+    return result;
   }
 
-  private List<String> getComponentIdsForNews(boolean secondary) {
+  private List<String> getComponentIdsForNews(int index) {
     String mainNewsProp = getSettings(PROPERTY_NEWS_MAIN, "");
     String secondaryNewsProp = getSettings(PROPERTY_NEWS_SECONDARY, "");
     boolean excludeSecondaryNews = "*".equals(mainNewsProp);
@@ -846,7 +905,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         getAllowedComponents(QUICKINFO, mainNewsComponentIds);
     List<String> allowedSecondaryNewsComponentIds =
         getAllowedComponents(QUICKINFO, secondaryNewsComponentIds);
-    if (secondary) {
+    if (index == 2) {
       if (excludeMainNews) {
         // exclude main news components from secondary ones
         allowedSecondaryNewsComponentIds.removeAll(allowedMainNewsComponentIds);
@@ -873,4 +932,23 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return null;
   }
+
+  public NewsList getNewsOfSpace(String spaceId) {
+    List<String> appIds = new ArrayList<>();
+    String[] cIds = getOrganisationController().getAvailCompoIds(spaceId, getUserId());
+    for (String id : cIds) {
+      if (StringUtil.startsWithIgnoreCase(id, "quickinfo")) {
+        appIds.add(id);
+      }
+    }
+
+    List<News> someNews = getNewsByComponentIds(appIds, false);
+    int nbNews = getSettings("space.homepage.news.nb", 10);
+    if (someNews.size() > nbNews) {
+      return new NewsList(someNews.subList(0, nbNews), null);
+    }
+    return new NewsList(someNews, null);
+  }
+
+
 }

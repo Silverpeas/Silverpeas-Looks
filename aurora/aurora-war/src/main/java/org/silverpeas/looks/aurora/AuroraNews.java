@@ -2,6 +2,9 @@ package org.silverpeas.looks.aurora;
 
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.io.media.image.thumbnail.model.ThumbnailDetail;
+import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
+import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.Shortcut;
 
 import java.util.Date;
@@ -52,5 +55,19 @@ public class AuroraNews {
 
   public Shortcut getAppShortcut() {
     return appShortcut;
+  }
+
+  public String getTaxonomyPositionAsString() {
+    String result = "";
+    try {
+      for (ClassifyPosition position : news.getTaxonomyPositions()) {
+        for (ClassifyValue value : position.getListClassifyValue()) {
+          result += " taxonomy-" + value.getAxisId() + "-" + value.getValue().replace('/', '_');
+        }
+      }
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return result;
   }
 }

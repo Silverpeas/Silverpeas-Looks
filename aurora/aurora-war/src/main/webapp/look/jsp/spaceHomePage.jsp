@@ -33,6 +33,7 @@
 <%@ page import="org.silverpeas.looks.aurora.AuroraSpaceHomePage" %>
 <%@ page import="org.silverpeas.looks.aurora.Space" %>
 <%@ page import="org.silverpeas.looks.aurora.App" %>
+<%@ page import="org.silverpeas.looks.aurora.NewsList" %>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -53,7 +54,7 @@
   LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
   AuroraSpaceHomePage homepage = helper.getHomePage(request.getParameter("SpaceId"));
   List<PublicationDetail> publications = homepage.getPublications();
-  List<PublicationDetail> news = homepage.getNews();
+  NewsList news = homepage.getNews();
   Space space = homepage.getSpace();
   List<Space> subspaces = homepage.getSubSpaces();
   List<App> apps = homepage.getApps();
@@ -70,6 +71,7 @@
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
 
 <c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
 
@@ -135,7 +137,7 @@
 
     <viewTags:spaceUsers users="<%=homepage.getUsers()%>" label="<%=homepage.getUsersLabel()%>"/>
 
-    <viewTags:spaceNews news="<%=news%>"/>
+    <viewTags:spaceNews news="<%=news.getNews()%>"/>
 
     <viewTags:displayNextEvents nextEvents="<%=homepage.getNextEvents()%>"/>
 

@@ -1,6 +1,11 @@
 package org.silverpeas.looks.aurora;
 
 import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
+import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
+import org.silverpeas.core.pdc.pdc.model.Value;
+import org.silverpeas.core.pdc.pdc.service.PdcManager;
+import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.Shortcut;
 
 import java.util.ArrayList;
@@ -14,6 +19,7 @@ import java.util.Map;
 public class NewsList extends ListOfContributions {
 
   private List<AuroraNews> news;
+  private List<NewsListButton> buttons = new ArrayList<>();
 
   public NewsList(List<News> someNews, String uniqueAppId) {
     setUniqueAppId(uniqueAppId);
@@ -26,6 +32,10 @@ public class NewsList extends ListOfContributions {
 
   public List<AuroraNews> getNews() {
     return news;
+  }
+
+  public void limitNews(int size) {
+    news = news.subList(0, size);
   }
 
   public boolean isEmpty() {
@@ -42,4 +52,28 @@ public class NewsList extends ListOfContributions {
     setAppShortcuts(new ArrayList<>(shortcuts.values()));
   }
 
+  public void withTaxonomyButtons() {
+    for (AuroraNews aNews : news) {
+      try {
+        List<ClassifyPosition> positions = aNews.getNews().getTaxonomyPositions();
+        for (ClassifyPosition position : positions) {
+          List<ClassifyValue> values = position.getListClassifyValue();
+          for (ClassifyValue classifyValue : values) {
+            Value value = classifyValue.getFullPath().get(classifyValue.getFullPath().size()-1);
+            NewsListButton button = new NewsListButton(value.getName());
+            button.setParam(classifyValue.getAxisId()+":"+classifyValue.getValue());
+            if (!buttons.contains(button)) {
+              buttons.add(button);
+            }
+          }
+        }
+      } catch (Exception e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+  }
+
+  public List<NewsListButton> getButtons() {
+    return buttons;
+  }
 }
