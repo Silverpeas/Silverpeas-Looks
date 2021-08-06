@@ -45,8 +45,12 @@
 
   <ul id="publicationList">
     <c:forEach var="publication" items="${publications}">
-    <li>
-      <a class="sp-permalink" href="${publication.permalink}">
+      <c:set var="newPubliCssClass" value=""/>
+      <c:if test="${publication.new}">
+        <c:set var="newPubliCssClass" value="class=\"new-contribution\""/>
+      </c:if>
+    <li ${newPubliCssClass}>
+      <a class="sp-permalink publication-name" href="${publication.permalink}">
         <b>${publication.name}</b>
       </a>
       <view:username userId="${publication.updaterId}"/> - <view:formatDate value="${publication.updateDate}" language="${language}"/>
