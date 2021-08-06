@@ -359,3 +359,14 @@
 .aurora-list-news .list-news .caption .news-date:after {
   content: " - ";
 }
+
+/*********** Last publications and new ones *******************/
+.last-publication-list .publication-name{
+  opacity:0.8;
+  font-weight:500;
+}
+
+.last-publication-list .new-contribution .publication-name {
+  font-weight:bold;
+  opacity:1;
+}
