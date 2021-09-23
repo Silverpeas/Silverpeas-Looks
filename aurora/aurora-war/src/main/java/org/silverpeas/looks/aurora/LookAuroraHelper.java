@@ -36,8 +36,6 @@ import org.silverpeas.core.contribution.template.publication.PublicationTemplate
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.index.search.model.SearchResult;
 import org.silverpeas.core.mylinks.model.LinkDetail;
-import org.silverpeas.core.mylinks.service.DefaultMyLinksService;
-import org.silverpeas.core.mylinks.service.MyLinksService;
 import org.silverpeas.core.search.SearchService;
 import org.silverpeas.core.util.ArrayUtil;
 import org.silverpeas.core.util.CollectionUtil;
@@ -53,6 +51,7 @@ import org.silverpeas.core.web.look.LookSilverpeasV5Helper;
 import org.silverpeas.core.web.look.Shortcut;
 import org.silverpeas.core.webapi.calendar.CalendarResourceURIs;
 import org.silverpeas.core.webapi.calendar.CalendarWebManager;
+import org.silverpeas.core.webapi.mylinks.MyLinksWebManager;
 import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntity;
 import org.silverpeas.looks.aurora.service.weather.City;
 import org.silverpeas.looks.aurora.service.weather.WeatherSettings;
@@ -499,15 +498,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<LinkDetail> getBookmarks() {
-    MyLinksService myLinksService = new DefaultMyLinksService();
-    List<LinkDetail> links = myLinksService.getAllLinks(getUserId());
-    List<LinkDetail> bookmarks = new ArrayList<>();
-    for (LinkDetail link : links) {
-      if (link.isVisible()) {
-        bookmarks.add(link);
-      }
-    }
-    return bookmarks;
+    return MyLinksWebManager.get()
+        .getAllLinksOfCurrentUser()
+        .stream()
+        .filter(LinkDetail::isVisible)
+        .collect(Collectors.toList());
   }
 
   public Questions getQuestions() {
@@ -561,6 +556,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return faqs;
   }
 
+  @Override
   public LocalizationBundle getLocalizedBundle() {
     return messages;
   }

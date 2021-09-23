@@ -25,13 +25,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
+<%@ tag import="org.silverpeas.core.util.JSONCodec" %>
+<%@ tag import="org.silverpeas.core.webapi.mylinks.MyLinkEntity" %>
+<%@ tag import="java.util.stream.Collectors" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
 <%@ attribute name="bookmarks"
               required="true"
-              type="java.util.List" %>
+              type="java.util.List<org.silverpeas.core.mylinks.model.LinkDetail>" %>
 
 <%@ attribute name="showWhenEmpty"
               required="true"
@@ -56,30 +59,22 @@
     <h4>${labelBookmarks}</h4>
     <div class="user-favorit-main-container">
       <c:if test="${not empty bookmarks}">
-        <ul class="user-favorit-list">
-          <c:set var="classFrag" value="main-bookmark"/>
-          <c:set var="bId" value="0"/>
-          <c:forEach var="bookmark" items="${bookmarks}">
-            <c:if test="${bId > 4}">
-              <c:set var="classFrag" value="other-bookmark"/>
-              <c:set var="areaNeedLinkMore" value="true"/>
-            </c:if>
-            <c:set var="bookmarkUrl" value="${bookmark.url}"/>
-            <c:set var="target" value="_blank"/>
-            <c:set var="bookmarkClass" value=""/>
-            <c:if test="${not bookmarkUrl.toLowerCase().startsWith('http')}">
-              <c:url var="bookmarkUrl" value="${bookmark.url}"/>
-              <c:set var="target" value=""/>
-              <c:set var="bookmarkClass" value="sp-link"/>
-            </c:if>
-            <li class="${classFrag}"><a class="${bookmarkClass}" href="${bookmarkUrl}" target="${target}" title="${bookmark.description}">${bookmark.name}</a></li>
-            <c:set var="bId" value="${bId+1}"/>
-          </c:forEach>
-        </ul>
-      </c:if>
-
-      <c:if test="${areaNeedLinkMore}">
-        <a title="${labelBookmarksMore}" href="#" class="link-more" onclick="toggleBookmarks();return false;"><span>${labelBookmarksMore}</span> </a>
+        <view:script src="/myLinksPeas/jsp/javaScript/vuejs/mylinkspeas.js"/>
+        <view:link href="/myLinksPeas/jsp/styleSheets/myLinksPeas.css"/>
+        <div id="mylinkspeas-widget">
+          <mylinkspeas-widget v-bind:links="links"/>
+        </div>
+        <c:set var="jsonBookmark" value="<%=JSONCodec.encode(bookmarks.stream().map(b -> MyLinkEntity.fromLinkDetail(b, null)).collect(Collectors.toList()))%>"/>
+        <script type="text/javascript">
+          new Vue({
+            el : '#mylinkspeas-widget',
+            data : function() {
+              return {
+                links : ${jsonBookmark}
+              }
+            }
+          });
+        </script>
       </c:if>
     </div>
     <a title="${labelBookmarksManage}" href="javaScript:changeBody('/RmyLinksPeas/jsp/Main')" class="link-add manage" ><span>${labelBookmarksManage}</span></a>
@@ -87,15 +82,6 @@
 </c:if>
 
 <script type="text/javascript">
-  function toggleBookmarks() {
-    $(".other-bookmark").toggle("slow");
-    if ($(".other-bookmark").css("display") == "none") {
-      $("#user-favorit-home a").removeClass("less");
-    } else {
-      $("#user-favorit-home a").addClass("less");
-    }
-  }
-
   whenSilverpeasReady(function() {
     <c:if test="${empty bookmarks and showWhenEmpty and silfn:isDefined(noBookmarksFragment)}">
       sp.ajaxRequest('${noBookmarksFragment}').loadTarget('.user-favorit-main-container');
