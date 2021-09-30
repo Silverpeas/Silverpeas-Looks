@@ -80,8 +80,8 @@
             <h2><a class="sp-permalink" href="${news.permalink}">${news.title}</a></h2>
             <p>
               <span class="news-date"><view:formatDate value="${news.date}"/></span>
+              <view:componentPath componentId="${news.news.componentInstanceId}" includeComponent="false"/>
               <c:if test="${empty listOfNews.uniqueAppURL}">
-                <view:componentPath componentId="${news.news.componentInstanceId}" includeComponent="false"/>
                 <a class="sp-link" href="${news.appShortcut.url}" title="${labelNewsMore}"><span class="news-app">${news.appShortcut.altText}</span></a>
               </c:if>
                 ${news.description}

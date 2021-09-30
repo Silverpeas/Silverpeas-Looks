@@ -57,6 +57,7 @@
               <div class="event eventFrom-${event.instanceId}">
                 <div class="eventName">
                   <a class="sp-permalink" href="${event.occurrencePermalinkUrl}">${event.title}</a>
+                  <view:componentPath componentId="${event.instanceId}" includeComponent="false"/>
                   <span class="clock-events">
                         <c:if test="${not event.onAllDay}">
                           <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
