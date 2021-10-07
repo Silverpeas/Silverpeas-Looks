@@ -883,7 +883,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (nbNews != -1 && news.size() > nbNews) {
       result.limitNews(nbNews);
     }
-    if (taxonomyType) {
+    if (getSettings(key + ".taxonomy.display", false)) {
       result.withTaxonomyButtons();
     }
     return result;
