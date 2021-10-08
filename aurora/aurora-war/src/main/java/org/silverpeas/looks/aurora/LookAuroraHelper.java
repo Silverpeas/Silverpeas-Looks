@@ -1,5 +1,6 @@
 package org.silverpeas.looks.aurora;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.silverpeas.components.almanach.AlmanachSettings;
 import org.silverpeas.components.delegatednews.model.DelegatedNews;
@@ -21,6 +22,8 @@ import org.silverpeas.core.admin.component.model.PersonalComponent;
 import org.silverpeas.core.admin.component.model.PersonalComponentInstance;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.domain.model.Domain;
+import org.silverpeas.core.admin.service.AdminException;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.Group;
@@ -285,6 +288,17 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public List<PublicationDetail> getLatestPublications(String spaceId, int nbPublis) {
     String[] excludedComponentIds =
         StringUtils.split(getSettings("home.publications.components.excluded", ""));
+    String[] excludedSpaceIds =
+        StringUtils.split(getSettings("home.publications.spaces.excluded", ""));
+    for (String excludedSpaceId : excludedSpaceIds) {
+      try {
+        String [] excludedAppId = Administration.get().getAllComponentIdsRecur(excludedSpaceId);
+        excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedAppId);
+      } catch (AdminException e) {
+        SilverLogger.getLogger(this).error(e);
+      }
+    }
+
     List<PublicationDetail> publications =
         super.getLatestPublications(spaceId, Arrays.asList(excludedComponentIds), nbPublis * 2);
     List<PublicationDetail> result = new ArrayList<>();
