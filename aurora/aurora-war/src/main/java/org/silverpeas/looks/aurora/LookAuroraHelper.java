@@ -572,6 +572,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
 
+    if (displayLoginHomepage || StringUtil.getBooleanValue(fromMySpace)) {
+      setSpaceId(null);
+      setSubSpaceId(null);
+    }
+
     StringBuilder paramsForDomainsBar = new StringBuilder().append("{");
     buildDomainsBar(paramsForDomainsBar, spaceId, subSpaceId, fromTopBar, componentId, fromMySpace);
 
