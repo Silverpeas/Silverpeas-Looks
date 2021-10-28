@@ -35,6 +35,7 @@ import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygControlle
 import org.silverpeas.core.contribution.model.WysiwygContent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
+import org.silverpeas.core.contribution.template.publication.PublicationTemplateImpl;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.index.search.model.QueryDescription;
 import org.silverpeas.core.index.search.model.SearchResult;
@@ -832,7 +833,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public Form getMainSearchForm() {
-    PublicationTemplate template = getMainSearchTemplate();
+    PublicationTemplateImpl template = (PublicationTemplateImpl) getMainSearchTemplate();
     if (template != null) {
       try {
         Form form = template.getSearchForm();
@@ -840,7 +841,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           SilverLogger.getLogger(this).warn("The template " + template.getName() +
               " has no form defined for the search! No main search form to render");
         } else {
-          form.setData(template.getRecordSet().getEmptyRecord());
+          form.setData(template.getSearchTemplate().getEmptyRecord());
           return form;
         }
       } catch (Exception e) {
