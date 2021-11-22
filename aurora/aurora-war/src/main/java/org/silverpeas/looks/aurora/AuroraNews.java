@@ -1,7 +1,7 @@
 package org.silverpeas.looks.aurora;
 
 import org.silverpeas.components.quickinfo.model.News;
-import org.silverpeas.core.io.media.image.thumbnail.model.ThumbnailDetail;
+import org.silverpeas.core.contribution.model.Thumbnail;
 import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
 import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
 import org.silverpeas.core.util.logging.SilverLogger;
@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public class AuroraNews {
 
-  private News news;
+  private final News news;
   private Shortcut appShortcut;
 
   public AuroraNews(News news) {
@@ -38,7 +38,8 @@ public class AuroraNews {
   }
 
   public String getThumbnailURL() {
-    ThumbnailDetail thumbnail = news.getPublication().getThumbnail();
+    Thumbnail thumbnail = news.getPublication()
+        .getThumbnail();
     if (thumbnail == null) {
       return null;
     }
@@ -58,16 +59,20 @@ public class AuroraNews {
   }
 
   public String getTaxonomyPositionAsString() {
-    String result = "";
+    StringBuilder result = new StringBuilder();
     try {
       for (ClassifyPosition position : news.getTaxonomyPositions()) {
         for (ClassifyValue value : position.getListClassifyValue()) {
-          result += " taxonomy-" + value.getAxisId() + "-" + value.getValue().replace('/', '_');
+          result.append(" taxonomy-")
+              .append(value.getAxisId())
+              .append("-")
+              .append(value.getValue().replace('/', '_'));
         }
       }
     } catch (Exception e) {
-      SilverLogger.getLogger(this).error(e);
+      SilverLogger.getLogger(this)
+          .error(e);
     }
-    return result;
+    return result.toString();
   }
 }
