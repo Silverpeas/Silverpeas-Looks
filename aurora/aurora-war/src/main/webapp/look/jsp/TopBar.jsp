@@ -72,6 +72,7 @@
 
 <view:includePlugin name="userSession"/>
 <view:includePlugin name="userNotification"/>
+<view:includePlugin name="basketSelection"/>
 <view:includePlugin name="ticker" />
 
 <view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise"/>
@@ -324,10 +325,21 @@ window.USERSESSION_PROMISE.then(function() {
                                          several-unread-label="${labelUnreadUserNotifications}">
             <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
           </silverpeas-user-notifications>
+          <silverpeas-basket-selection v-on:api="setApi">
+            <div id="basket-selection" class="btn-header"> <a href="javascript:void(0)"></a></div>
+          </silverpeas-basket-selection>
           <script type="text/javascript">
             whenSilverpeasReady(function() {
               new Vue({
                 el : 'silverpeas-user-notifications'
+              });
+              new Vue({
+                el : 'silverpeas-basket-selection',
+                methods : {
+                  setApi : function(api) {
+                    window.spBasketSelectionApi = api;
+                  }
+                }
               });
             });
           </script>
