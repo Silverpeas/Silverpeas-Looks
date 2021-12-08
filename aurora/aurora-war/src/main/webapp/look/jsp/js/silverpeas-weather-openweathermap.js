@@ -154,8 +154,8 @@
                      icon : computeIconUrl(data.list[i].weather[0].id,
                          data.list[i].weather[0].icon),
                      temperature : {
-                        min : data.list[i].main.temp_min,
-                        max : data.list[i].main.temp_max,
+                        min : Math.round(data.list[i].main.temp_min),
+                        max : Math.round(data.list[i].main.temp_max),
                         unit : 'Celcius'
                      },
                      pressure : data.list[i].main.pressure,
