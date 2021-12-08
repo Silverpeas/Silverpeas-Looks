@@ -131,8 +131,8 @@
                      description : data.DailyForecasts[i].Day.IconPhrase,
                      icon : iconPath,
                      temperature : {
-                        min : data.DailyForecasts[i].Temperature.Minimum.Value,
-                        max : data.DailyForecasts[i].Temperature.Maximum.Value,
+                        min : Math.round(data.DailyForecasts[i].Temperature.Minimum.Value),
+                        max : Math.round(data.DailyForecasts[i].Temperature.Maximum.Value),
                         unit : 'Celcius'
                      },
                      pressure : 'NA',
