@@ -41,7 +41,7 @@
 <c:choose>
   <c:when test="${not empty space.description || not empty space.intro}">
         <c:if test="${not empty space.intro}">
-          <div silverpeas-toggle originalClass="spaceIntro spaceDescription">
+          <div silverpeas-toggle originalClass="spaceIntro spaceDescription rich-content">
             ${space.intro}
           </div>
         </c:if>

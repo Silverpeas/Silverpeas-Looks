@@ -43,7 +43,7 @@
     <c:if test="${not empty freeZone.title}">
       <h4>${freeZone.title}</h4>
     </c:if>
-    <div id="${freeZoneId}-content">
+    <div id="${freeZoneId}-content" class="rich-content">
       ${freeZone.content}
     </div>
   </div>
