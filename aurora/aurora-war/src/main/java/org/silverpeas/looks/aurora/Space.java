@@ -26,7 +26,7 @@ public class Space {
 
   public String getDescription() {
     return WebEncodeHelper
-        .convertWhiteSpacesForHTMLDisplay(Encode.forHtml(spaceInst.getDescription(userLanguage)));
+        .convertBlanksForHtml(Encode.forHtml(spaceInst.getDescription(userLanguage)));
   }
 
   public void setIntro(String intro) {
