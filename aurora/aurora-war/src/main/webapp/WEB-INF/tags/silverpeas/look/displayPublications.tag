@@ -25,6 +25,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
+<%@ tag import="org.silverpeas.core.admin.service.OrganizationController" %>
+<%@ tag import="org.silverpeas.core.admin.space.SpaceInstLight" %>
+<%@ tag import="java.util.stream.Collectors" %>
+<%@ tag import="org.silverpeas.core.util.StringUtil" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
@@ -47,11 +51,14 @@
       <c:forEach var="publication" items="${publications}">
         <c:set var="newPubliCssClass" value=""/>
         <c:if test="${publication.new}">
-          <c:set var="newPubliCssClass" value="class=\"new-contribution\""/>
+          <c:set var="newPubliCssClass" value=" new-contribution"/>
         </c:if>
-        <li ${newPubliCssClass} onclick="spWindow.loadLink('${publication.permalink}')">
+        <c:set var="pubInstanceId" value="${publication.instanceId}"/>
+        <jsp:useBean id="pubInstanceId" type="java.lang.String"/>
+        <c:set var="fromSpaceClasses" value='<%=OrganizationController.get().getPathToComponent(pubInstanceId).stream().map(s -> "fromSpace-" + s.getId()).collect(Collectors.joining(StringUtil.SPACE))%>'/>
+        <li class="${fromSpaceClasses} fromInst-${pubInstanceId}${newPubliCssClass}" onclick="spWindow.loadLink('${publication.permalink}')">
           <a class="sp-link publication-name" href="${publication.permalink}">${publication.name}</a>
-          <view:componentPath componentId="${publication.instanceId}" includeComponent="false"/>
+          <view:componentPath componentId="${pubInstanceId}" includeComponent="false"/>
           <span class="user-publication"><view:username userId="${publication.updaterId}" /></span>
           <span class="date-publication">${silfn:formatAsLocalDate(publication.visibility.period.startDate, lookHelper.zoneId, lookHelper.language)}</span>
           <p class="description-publication">${publication.description}</p>
