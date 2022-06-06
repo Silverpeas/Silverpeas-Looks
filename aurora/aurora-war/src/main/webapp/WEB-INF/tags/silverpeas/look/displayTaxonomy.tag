@@ -50,14 +50,15 @@
   <div class="secteur-container search" id="bloc-advancedSeach">
     <h4>${labelSearch}</h4>
     <c:url var="searchActionURL" value="/RpdcSearch/jsp/AdvancedSearch"/>
-    <form method="get" action="${searchActionURL}" name="AdvancedSearch">
-      <input type="text" id="query" value="" size="60" name="query" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
+    <form method="get" action="javascript:document.querySelector('#submit-AdvancedSearch').click()" name="AdvancedSearch">
+      <input type="text" id="query" value="" size="60" name="query" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
       <input type="hidden" name="AxisValueCouples"/><input type="hidden" name="mode" value="clear"/>
       <c:if test="${not empty spaceId}">
         <input type="hidden" name="spaces" value="${spaceId}"/>
       </c:if>
       <fieldset id="used_pdc" class="skinFieldset"></fieldset>
       <a id="submit-AdvancedSearch" href="javascript:search()"><span>${labelSearchButton}</span></a>
+      <input type="submit" class="hide"/>
     </form>
   </div>
 
@@ -67,6 +68,7 @@ function search() {
   if (values.length > 0) {
     document.AdvancedSearch.AxisValueCouples.value = values.flatten();
   }
+  document.AdvancedSearch.action = '${searchActionURL}';
   document.AdvancedSearch.submit();
 }
 

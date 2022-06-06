@@ -48,8 +48,8 @@
   <div class="secteur-container search" id="bloc-advancedSeach">
     <h4>${labelSearch}</h4>
     <c:url var="searchActionURL" value="/RpdcSearch/jsp/XMLSearch"/>
-    <form method="post" action="${searchActionURL}" name="TemplateSearch" enctype="multipart/form-data">
-      <input type="text" id="query" value="" size="60" name="TitleNotInXMLForm" onkeypress="checkEnter(event)" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
+    <form method="post" action="javascript:document.querySelector('#submit-AdvancedSearch').click()" name="TemplateSearch" enctype="multipart/form-data">
+      <input type="text" id="query" value="" size="60" name="TitleNotInXMLForm" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
       <input type="hidden" name="mode" value="clear"/>
       <input type="hidden" name="xmlSearchSelectedForm" value="<%=searchForm.getFormName()%>.xml"/>
       <%
@@ -61,12 +61,14 @@
         searchForm.display(out, formContext);
       %>
       <a id="submit-AdvancedSearch" href="javascript:templateSearch()"><span>${labelSearchButton}</span></a>
+      <input type="submit" class="hide"/>
     </form>
   </div>
 
 <script type="text/javascript">
 function templateSearch() {
   $.progressMessage();
+  document.TemplateSearch.action = '${searchActionURL}';
   document.TemplateSearch.submit();
 }
 </script>
