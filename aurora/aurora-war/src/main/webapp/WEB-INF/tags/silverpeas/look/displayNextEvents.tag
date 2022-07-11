@@ -58,13 +58,13 @@
                 <div class="eventName">
                   <a class="sp-permalink" href="${event.occurrencePermalinkUrl}">${event.title}</a>
                   <view:componentPath componentId="${event.instanceId}" includeComponent="false"/>
+                  <c:if test="${not event.onAllDay}">
                   <span class="clock-events">
-                        <c:if test="${not event.onAllDay}">
-                          <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
-                          -
-                          <fmt:formatDate value="${event.endDateAsDate}" pattern="HH:mm"/>
-                        </c:if>
-                        </span>
+                    <fmt:formatDate value="${event.startDateAsDate}" pattern="HH:mm"/>
+                    -
+                    <fmt:formatDate value="${event.endDateAsDate}" pattern="HH:mm"/>
+                  </span>
+                  </c:if>
                 </div>
                 <c:if test="${silfn:isDefined(event.location) || empty nextEvents.uniqueAppURL}">
                   <div class="eventInfo">
