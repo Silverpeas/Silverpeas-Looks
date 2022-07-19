@@ -1,7 +1,11 @@
 package org.silverpeas.looks.aurora;
 
+import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.util.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
+
+import static java.util.Optional.ofNullable;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Nicolas Eysseric
@@ -44,7 +48,10 @@ public class LookSettings {
   }
 
   public boolean isDisplayBookmarksAreaWhenEmpty() {
-    return settings.getBoolean("home.bookmarks.empty.show", true);
+    return ofNullable(User.getCurrentRequester())
+        .filter(not(User::isAnonymous))
+        .map(r -> settings.getBoolean("home.bookmarks.empty.show", true))
+        .orElse(false);
   }
 
   public String getNoBookmarksFragmentURL() {
