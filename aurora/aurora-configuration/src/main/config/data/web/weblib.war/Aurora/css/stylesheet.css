@@ -446,7 +446,7 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
   display:none;
 }
 
-#topPage .yuimenu, #kmelia .yuimenu, #attachmentList .yuimenu{
+#topPage .yuimenu, #kmelia .yuimenu, .attachmentList .yuimenu{
   padding:6px 0;
   border-radius: 8px 0 8px 8px;
   margin-top:-3px;
@@ -783,12 +783,12 @@ a:hover {
   margin-top: 8px;
 }
 
-#topPage .yuimenu, #kmelia .yuimenu, #attachmentList .yuimenu {
+#topPage .yuimenu, #kmelia .yuimenu, .attachmentList .yuimenu {
   background-color: #F2F2F2;
   border: 1px solid #5D5D5E;
 }
 
-#topPage .yuimenu ul, #kmelia .yuimenu ul, #attachmentList .yuimenu ul {
+#topPage .yuimenu ul, #kmelia .yuimenu ul, .attachmentList .yuimenu ul {
   border-color: #5D5D5E;
 }
 
@@ -865,7 +865,7 @@ button,
 .ongletAdminOn strong,
 .yuimenu a , #portletPages .yuimenu a,
 .spaceHome #publication li ,
-#menubar-creation-actions .menubar-creation-actions-item, #attachment-creation-actions .menubar-creation-actions-item,
+#menubar-creation-actions .menubar-creation-actions-item, .attachment-creation-actions .menubar-creation-actions-item,
 #nav ul.nav-niveau-2 li a,
 .last-publication-list li{
   font-size:10pt !important;
@@ -969,13 +969,13 @@ button,
   background-color: transparent;
 }
 
-#menubar-creation-actions, #attachment-creation-actions {
+#menubar-creation-actions, .attachment-creation-actions {
   background-color: #FDF4EF;
   border-bottom: 1px solid #EDBCBB;
   border-top: 1px solid #EDBCBB;
 }
 
-#menubar-creation-actions .menubar-creation-actions-item:hover, #attachment-creation-actions .menubar-creation-actions-item:hover {
+#menubar-creation-actions .menubar-creation-actions-item:hover, .attachment-creation-actions .menubar-creation-actions-item:hover {
   background-color: #EDBCBB;
   color: #00395A;
 }
