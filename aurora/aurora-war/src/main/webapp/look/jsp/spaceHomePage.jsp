@@ -34,6 +34,7 @@
 <%@ page import="org.silverpeas.looks.aurora.Space" %>
 <%@ page import="org.silverpeas.looks.aurora.App" %>
 <%@ page import="org.silverpeas.looks.aurora.NewsList" %>
+<%@ page import="org.silverpeas.core.web.look.proxy.SpaceHomepageProxyManager" %>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -68,6 +69,7 @@
 
 <c:set var="backOfficeURL" value="<%=homepage.getBackOfficeURL()%>"/>
 <c:set var="spaceId" value="<%=homepage.getSpace().getId()%>"/>
+<c:set var="spaceHomepageProxy" value="<%=SpaceHomepageProxyManager.get().getProxyBySpaceId(homepage.getSpace().getId())%>"/>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
@@ -131,6 +133,8 @@
 <view:window>
   <div id="portletPages" class="rightContent">
 
+    <viewTags:displayWidget widget="${spaceHomepageProxy.thinWidget}" widgetId="topWidget"/>
+
     <viewTags:spacePicture pictureURL="<%=homepage.getSecondPicture()%>"/>
 
     <viewTags:spaceAdmins admins="<%=admins%>"/>
@@ -147,6 +151,7 @@
   </div>
 
   <div class="principalContent">
+
     <viewTags:spaceIntro space="<%=space%>"/>
 
     <viewTags:spaceNavigation apps="<%=apps%>" subspaces="<%=subspaces%>"/>
