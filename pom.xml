@@ -8,7 +8,7 @@
   </parent>
   
   <artifactId>looks</artifactId>
-  <version>6.3</version>
+  <version>6.3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Silverpeas Looks</name>
   
@@ -16,7 +16,7 @@
     <connection>scm:git:git@github.com:Silverpeas/Silverpeas-Looks.git</connection>
     <developerConnection>scm:git:git@github.com:Silverpeas/Silverpeas-Looks.git</developerConnection>
     <url>https://github.com/Silverpeas/Silverpeas-Looks</url>
-    <tag>6.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <repositories>
@@ -44,7 +44,7 @@
 
   <properties>
     <!-- property used by the CI to both deploy a build version and release the next stable version -->
-    <next.release>6.3</next.release>
+    <next.release>6.3.1</next.release>
     <!-- Version of Silverpeas on which it depends -->
     <silverpeas.version>${project.version}</silverpeas.version>
     <core.version>${silverpeas.version}</core.version>
