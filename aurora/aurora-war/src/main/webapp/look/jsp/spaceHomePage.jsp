@@ -135,7 +135,7 @@
 
     <viewTags:displayWidget widget="${spaceHomepageProxy.thinWidget}" widgetId="topWidget"/>
 
-    <viewTags:spacePicture pictureURL="<%=homepage.getSecondPicture()%>"/>
+    <viewTags:spacePicture pictureURL="<%=homepage.getSecondPicture()%>" pictureLink="<%=homepage.getSecondPictureLink()%>"/>
 
     <viewTags:spaceAdmins admins="<%=admins%>"/>
 
@@ -145,7 +145,7 @@
 
     <viewTags:displayNextEvents nextEvents="<%=homepage.getNextEvents()%>"/>
 
-    <viewTags:displayTaxonomy enabled="<%=homepage.isTaxonomyEnabled()%>" labelsInsideSelect="${true}" spaceId="${spaceId}"/>
+    <viewTags:displayTaxonomy enabled="<%=homepage.isTaxonomyEnabled()%>" labelsInsideSelect="${true}" spaceId="${spaceId}" scope="<%=homepage.getTaxonomyMode()%>"/>
 
     <viewTags:displayMedias medias="<%=homepage.getLatestMedias()%>"/>
   </div>

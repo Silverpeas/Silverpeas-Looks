@@ -34,10 +34,24 @@
               required="true"
               type="java.lang.String" %>
 
+<%@ attribute name="pictureLink"
+              required="true"
+              type="java.lang.String" %>
+
 <c:if test="${not empty pictureURL}">
   <div class="secteur-containeur" id="secondPicture">
     <div class="portlet-content">
+      <c:if test="${not empty pictureLink}">
+        <c:set value="target=\"_blank\"" var="target"/>
+        <c:if test="${silfn:isPermalink(pictureLink)}">
+          <c:set value="" var="target"/>
+        </c:if>
+        <a href="${pictureLink}" ${target}>
+      </c:if>
       <view:image src="${pictureURL}"/>
+      <c:if test="${not empty pictureLink}">
+        </a>
+      </c:if>
     </div>
   </div>
 </c:if>
