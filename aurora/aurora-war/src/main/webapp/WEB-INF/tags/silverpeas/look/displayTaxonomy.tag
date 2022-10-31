@@ -42,6 +42,16 @@
               required="true"
               type="java.lang.Boolean" %>
 
+<%@ attribute name="scope"
+              required="false"
+              type="java.lang.String" %>
+
+<c:if test="${empty scope}">
+  <c:set var="scope" value="1"/>
+</c:if>
+
+<c:set var="scopeRestrictedToCurrentSpace" value="${not empty spaceId && scope == '1'}"/>
+
 <fmt:message var="labelSearch" key="look.home.search.title"/>
 <fmt:message var="labelSearchButton" key="look.home.search.button"/>
 <fmt:message var="labelSearchInput" key="look.home.search.input"/>
@@ -53,7 +63,7 @@
     <form method="get" action="javascript:document.querySelector('#submit-AdvancedSearch').click()" name="AdvancedSearch">
       <input type="text" id="query" value="" size="60" name="query" autocomplete="off" class="ac_input" placeholder="${labelSearchInput}"/>
       <input type="hidden" name="AxisValueCouples"/><input type="hidden" name="mode" value="clear"/>
-      <c:if test="${not empty spaceId}">
+      <c:if test="${scopeRestrictedToCurrentSpace}">
         <input type="hidden" name="spaces" value="${spaceId}"/>
       </c:if>
       <fieldset id="used_pdc" class="skinFieldset"></fieldset>
@@ -74,7 +84,7 @@ function search() {
 
 whenSilverpeasReady(function() {
   $('#used_pdc').pdc('used', {
-    <c:if test="${not empty spaceId}">
+    <c:if test="${scopeRestrictedToCurrentSpace}">
       workspace : '${spaceId}',
     </c:if>
     axisTypeDisplay : false,

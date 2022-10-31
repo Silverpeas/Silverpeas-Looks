@@ -49,7 +49,9 @@
         <c:forEach var="media" items="${medias}">
           <li>
             <a href="${media.permalink}" class="sp-permalink">
-            <gallery:displayMediaInAlbumContent media="${media}" mediaResolution="${RESOLUTION}" isPortletDisplay="true"/>
+              <gallery:displayMediaInAlbumContent media="${media}" mediaResolution="${RESOLUTION}" isPortletDisplay="true"/>
+              <span class="media-title">${media.title}</span>
+              <span class="media-description">${media.description}</span>
             </a>
           </li>
         </c:forEach>

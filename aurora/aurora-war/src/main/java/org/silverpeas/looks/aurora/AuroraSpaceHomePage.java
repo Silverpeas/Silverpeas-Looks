@@ -105,7 +105,11 @@ public class AuroraSpaceHomePage {
   }
 
   public boolean isTaxonomyEnabled() {
-    return getFieldBooleanValue("displayTaxonomy");
+    return !getTaxonomyMode().equals("0");
+  }
+
+  public String getTaxonomyMode() {
+    return getFieldValue("displayTaxonomy");
   }
 
   public List<Space> getSubSpaces() {
@@ -188,6 +192,10 @@ public class AuroraSpaceHomePage {
 
   public String getSecondPicture() {
     return getFieldImageURL("secondPicture");
+  }
+
+  public String getSecondPictureLink() {
+    return getFieldValue("secondPictureLink");
   }
 
   public List<User> getUsers() {
