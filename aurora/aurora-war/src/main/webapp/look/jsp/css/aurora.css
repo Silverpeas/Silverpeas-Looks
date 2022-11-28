@@ -366,3 +366,8 @@
 .aurora-list-news .list-news .caption .news-date:after {
   content: " - ";
 }
+
+/************* New users list *****************/
+.main-home-page #new-users-home .new-users-list {
+  list-style: none;
+}
