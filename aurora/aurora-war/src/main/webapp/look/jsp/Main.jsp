@@ -31,6 +31,8 @@
 <c:set var="thirdNewsImageSize" value="${settings.thirdNewsImageSize}"/>
 <c:set var="thirdNewsWithCarrousel" value="${settings.displayThirdNewsWithCarrousel}"/>
 
+<c:set var="newUsers" value="${lookHelper.newUsersList}"/>
+
 <c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
 
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
@@ -108,6 +110,8 @@
       <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 
       <div id="rss-part"></div>
+
+      <viewTags:displayNewUsers newUsers="${newUsers}"/>
 
       <viewTags:displayFreeZone freeZone="${lookHelper.freeZone}" freeZoneId="freeZone"/>
 

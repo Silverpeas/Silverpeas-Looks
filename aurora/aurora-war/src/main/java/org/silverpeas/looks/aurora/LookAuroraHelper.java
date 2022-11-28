@@ -29,6 +29,8 @@ import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
 import org.silverpeas.core.admin.user.model.User;
+import org.silverpeas.core.admin.user.model.UserDetail;
+import org.silverpeas.core.admin.user.model.UserDetailsSearchCriteria;
 import org.silverpeas.core.calendar.Priority;
 import org.silverpeas.core.contribution.content.form.Form;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygController;
@@ -74,6 +76,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
+import static org.silverpeas.core.admin.user.constant.UserState.*;
 import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
@@ -964,6 +967,31 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return new NewsList(someNews.subList(0, nbNews), null);
     }
     return new NewsList(someNews, null);
+  }
+
+  public NewUsersList getNewUsersList() {
+    int nbUsersDisplayed = getSettings("home.users.nb", 0);
+    if (nbUsersDisplayed > 0) {
+      final OrganizationController organizationController = OrganizationController.get();
+      UserDetailsSearchCriteria criteria = new UserDetailsSearchCriteria().onUserStatesToExclude(
+          BLOCKED, DEACTIVATED, REMOVED);
+      String groupId = getSettings("home.users.group", "-1");
+      if (!"-1".equals(groupId)) {
+        criteria.onGroupIds(groupId);
+      }
+      List<User> users = organizationController.searchUsers(criteria);
+      Collections.sort(users, new UserDetail.OnCreationDate().reversed());
+      if (users.size() < nbUsersDisplayed) {
+        nbUsersDisplayed = users.size() - 1;
+      }
+      NewUsersList newUsersList = new NewUsersList(users.subList(0, nbUsersDisplayed));
+      newUsersList.setAvatar(getSettings("home.users.avatar", true));
+      List<String> fields = Arrays.stream(
+          StringUtil.split(getSettings("home.users.fields", ""), " ")).collect(Collectors.toList());
+      newUsersList.setFields(fields);
+      return newUsersList;
+    }
+    return null;
   }
 
 
