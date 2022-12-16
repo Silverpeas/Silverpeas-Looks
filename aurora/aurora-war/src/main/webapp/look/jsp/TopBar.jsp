@@ -320,27 +320,28 @@ window.USERSESSION_PROMISE.then(function() {
               <a href="javascript:onClick=spUserSession.logout();">${labelLogout}</a>
             </div>
           </div>
-          <silverpeas-user-notifications no-unread-label="${labelUserNotifications}"
-                                         one-unread-label="${labelUnreadUserNotification}"
-                                         several-unread-label="${labelUnreadUserNotifications}">
-            <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
-          </silverpeas-user-notifications>
-          <silverpeas-basket-selection v-on:api="setApi">
-            <div id="basket-selection" class="btn-header"> <a href="javascript:void(0)"></a></div>
-          </silverpeas-basket-selection>
+          <div id="topbar-user-notifications" class="silverpeas-user-notifications">
+            <silverpeas-user-notifications no-unread-label="${labelUserNotifications}"
+                                           one-unread-label="${labelUnreadUserNotification}"
+                                           several-unread-label="${labelUnreadUserNotifications}">
+              <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
+            </silverpeas-user-notifications>
+          </div>
+          <div id="topbar-basket-selection" class="silverpeas-basket-selection">
+            <silverpeas-basket-selection v-on:api="setApi">
+              <div id="basket-selection" class="btn-header"> <a href="javascript:void(0)"></a></div>
+            </silverpeas-basket-selection>
+          </div>
           <script type="text/javascript">
             whenSilverpeasReady(function() {
-              new Vue({
-                el : 'silverpeas-user-notifications'
-              });
-              new Vue({
-                el : 'silverpeas-basket-selection',
+              SpVue.createApp().mount('#topbar-user-notifications');
+              SpVue.createApp({
                 methods : {
                   setApi : function(api) {
                     window.spBasketSelectionApi = api;
                   }
                 }
-              });
+              }).mount('#topbar-basket-selection');
             });
           </script>
         </c:if>
