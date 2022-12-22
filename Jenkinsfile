@@ -21,6 +21,15 @@ pipeline {
     stage('Waiting for core running build if any') {
       steps {
         script {
+          master = env.BRANCH_NAME == 'master'
+          stable = env.BRANCH_NAME == env.STABLE_BRANCH
+          if (master) {
+            silverpeasCore = 'Master'
+          } else if (stable) {
+            silverpeasCore = 'Stable'
+          } else {
+            silverpeasCore = env.BRANCH_NAME
+          }
           version = computeSnapshotVersion()
           lockFilePath = createLockFile(version, 'looks')
           waitForDependencyRunningBuildIfAny(version, 'core')
