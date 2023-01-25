@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -981,18 +982,37 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
       List<User> users = organizationController.searchUsers(criteria);
       Collections.sort(users, new UserDetail.OnCreationDate().reversed());
-      if (users.size() < nbUsersDisplayed) {
-        nbUsersDisplayed = users.size() - 1;
-      }
-      NewUsersList newUsersList = new NewUsersList(users.subList(0, nbUsersDisplayed));
-      newUsersList.setAvatar(getSettings("home.users.avatar", true));
-      List<String> fields = Arrays.stream(
-          StringUtil.split(getSettings("home.users.fields", ""), " ")).collect(Collectors.toList());
-      newUsersList.setFields(fields);
-      return newUsersList;
+      return getNewUsersList(false, users);
     }
     return null;
   }
 
+  private NewUsersList getNewUsersList(boolean spaceScope, List<User> users) {
+    String paramPrefix = spaceScope ? "space.homepage." : "home.";
+    int nbUsersDisplayed = getSettings(paramPrefix+"users.nb", 0);
+    if (users.size() < nbUsersDisplayed) {
+      nbUsersDisplayed = users.size() - 1;
+    }
+    NewUsersList newUsersList = new NewUsersList(users.subList(0, nbUsersDisplayed));
+    newUsersList.setAvatar(getSettings(paramPrefix+"users.avatar", true));
+    List<String> fields = Arrays.stream(
+        StringUtil.split(getSettings(paramPrefix+"users.fields", ""), " ")).collect(Collectors.toList());
+    newUsersList.setFields(fields);
+    return newUsersList;
+  }
+
+  public NewUsersList getSpaceNewUsersList(String spaceId) {
+
+    final OrganizationController organizationController = OrganizationController.get();
+    HashSet<User> users = new HashSet<>();
+    String[] componentIds = organizationController.getAllComponentIdsRecur(spaceId);
+    for (String componentId : componentIds) {
+      users.addAll(Arrays.asList(organizationController.getAllUsers(componentId)));
+    }
+    List<User> newUsers = users.stream()
+        .sorted(new UserDetail.OnCreationDate().reversed())
+        .collect(Collectors.toList());
+    return getNewUsersList(true, newUsers);
+  }
 
 }

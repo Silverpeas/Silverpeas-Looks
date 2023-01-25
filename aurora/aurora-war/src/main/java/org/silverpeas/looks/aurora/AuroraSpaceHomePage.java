@@ -105,7 +105,7 @@ public class AuroraSpaceHomePage {
   }
 
   public boolean isTaxonomyEnabled() {
-    return !getTaxonomyMode().equals("0");
+    return !"0".equals(getTaxonomyMode());
   }
 
   public String getTaxonomyMode() {
@@ -228,6 +228,13 @@ public class AuroraSpaceHomePage {
       }
     }
     return shortcuts;
+  }
+
+  public NewUsersList getNewUsers() {
+    if (getFieldBooleanValue("newUsers")) {
+      return look.getSpaceNewUsersList(getSpace().getId());
+    }
+    return null;
   }
 
   private Shortcut getShortcut(String name, String nb) {

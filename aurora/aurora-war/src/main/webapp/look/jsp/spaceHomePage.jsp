@@ -35,6 +35,7 @@
 <%@ page import="org.silverpeas.looks.aurora.App" %>
 <%@ page import="org.silverpeas.looks.aurora.NewsList" %>
 <%@ page import="org.silverpeas.core.web.look.proxy.SpaceHomepageProxyManager" %>
+<%@ page import="org.silverpeas.looks.aurora.NewUsersList" %>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -61,6 +62,7 @@
   List<App> apps = homepage.getApps();
   List<UserDetail> admins = homepage.getAdmins();
   String customFormContent = homepage.getCustomFormContent();
+  NewUsersList newUsersList = homepage.getNewUsers();
 
   GraphicElementFactory gef = (GraphicElementFactory) session
       .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
@@ -155,6 +157,8 @@
     <viewTags:spaceIntro space="<%=space%>"/>
 
     <viewTags:spaceNavigation apps="<%=apps%>" subspaces="<%=subspaces%>"/>
+
+    <viewTags:displayNewUsers newUsers="<%=newUsersList%>" />
 
     <viewTags:displayShortcuts shortcuts="<%=homepage.getShortcuts()%>"/>
 

@@ -920,4 +920,36 @@
       <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
       <typeName>text</typeName>
     </fieldTemplate>
+    <fieldTemplate>
+      <fieldName>newUsers</fieldName>
+      <displayerName>radio</displayerName>
+      <isMandatory>false</isMandatory>
+      <isReadOnly>false</isReadOnly>
+      <isDisabled>false</isDisabled>
+      <isHidden>false</isHidden>
+      <label>
+        <labelName>Nouveaux utilisateurs</labelName>
+        <language>fr</language>
+      </label>
+      <label>
+        <labelName>New users</labelName>
+        <language>en</language>
+      </label>
+      <parameter>
+        <name>cols</name>
+        <value lang="fr">2</value>
+      </parameter>
+      <parameter>
+        <name>keys</name>
+        <value lang="fr">1##0</value>
+      </parameter>
+      <parameter>
+        <name>values</name>
+        <value lang="fr">Oui##Non</value>
+      </parameter>
+      <isSearchable>false</isSearchable>
+      <isFacet>false</isFacet>
+      <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+      <typeName>text</typeName>
+    </fieldTemplate>
 </recordTemplate>
