@@ -68,7 +68,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,7 +76,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.of;
 import static org.silverpeas.core.admin.user.constant.UserState.*;
+import static org.silverpeas.core.util.StringUtil.split;
 import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
@@ -421,7 +423,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public NextEvents getNextEvents() {
-    final String[] appIds = StringUtil.split(getSettings("home.events.appId", ""), ' ');
+    final String[] appIds = split(getSettings("home.events.appId", ""), ' ');
     final List<String> allowedComponentIds = getAllowedComponents("almanach", appIds);
     if (getSettings("home.events.personal.include", false)) {
       PersonalComponent.getByName("userCalendar").ifPresent(c -> allowedComponentIds
@@ -452,7 +454,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             entity.withOccurrencePermalinkUrl(uri.ofOccurrencePermalink(o));
             return entity;
           })
-          .collect(Collectors.toList());
+          .collect(toList());
 
       result = filterNextEvents(events, nbDays, includeToday, onlyImportant);
     }
@@ -521,7 +523,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         .getAllLinksOfCurrentUser()
         .stream()
         .filter(LinkDetail::isVisible)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
   public Questions getQuestions() {
@@ -709,7 +711,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .map(i -> getOrganisationController().getDomain(i.trim()))
           .filter(Objects::nonNull)
           .distinct()
-          .collect(Collectors.toList());
+          .collect(toList());
     }
     return directoryDomains;
   }
@@ -721,7 +723,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .map(groupId -> Group.getById(groupId.trim()))
           .filter(Objects::nonNull)
           .distinct()
-          .collect(Collectors.toList());
+          .collect(toList());
     }
     return directoryGroups;
   }
@@ -919,8 +921,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     boolean excludeSecondaryNews = "*".equals(mainNewsProp);
     boolean excludeMainNews = "*".equals(secondaryNewsProp);
 
-    String[] mainNewsComponentIds = StringUtil.split(mainNewsProp, ' ');
-    String[] secondaryNewsComponentIds = StringUtil.split(secondaryNewsProp, ' ');
+    String[] mainNewsComponentIds = split(mainNewsProp, ' ');
+    String[] secondaryNewsComponentIds = split(secondaryNewsProp, ' ');
     List<String> allowedMainNewsComponentIds =
         getAllowedComponents(QUICKINFO, mainNewsComponentIds);
     List<String> allowedSecondaryNewsComponentIds =
@@ -957,7 +959,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<String> appIds = new ArrayList<>();
     String[] cIds = getOrganisationController().getAvailCompoIds(spaceId, getUserId());
     for (String id : cIds) {
-      if (StringUtil.startsWithIgnoreCase(id, "quickinfo")) {
+      if (StringUtil.startsWithIgnoreCase(id, QUICKINFO)) {
         appIds.add(id);
       }
     }
@@ -980,8 +982,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (!"-1".equals(groupId)) {
         criteria.onGroupIds(groupId);
       }
-      List<User> users = organizationController.searchUsers(criteria);
-      Collections.sort(users, new UserDetail.OnCreationDate().reversed());
+      final List<User> users = organizationController.searchUsers(criteria);
+      users.sort(new UserDetail.OnCreationDate().reversed());
       return getNewUsersList(false, users);
     }
     return null;
@@ -989,30 +991,29 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private NewUsersList getNewUsersList(boolean spaceScope, List<User> users) {
     String paramPrefix = spaceScope ? "space.homepage." : "home.";
-    int nbUsersDisplayed = getSettings(paramPrefix+"users.nb", 0);
+    int nbUsersDisplayed = getSettings(paramPrefix + "users.nb", 0);
     if (users.size() < nbUsersDisplayed) {
       nbUsersDisplayed = users.size() - 1;
     }
     NewUsersList newUsersList = new NewUsersList(users.subList(0, nbUsersDisplayed));
-    newUsersList.setAvatar(getSettings(paramPrefix+"users.avatar", true));
-    List<String> fields = Arrays.stream(
-        StringUtil.split(getSettings(paramPrefix+"users.fields", ""), " ")).collect(Collectors.toList());
+    newUsersList.setAvatar(getSettings(paramPrefix + "users.avatar", true));
+    List<String> fields = of(split(getSettings(paramPrefix + "users.fields", ""), " "))
+        .collect(toList());
     newUsersList.setFields(fields);
     return newUsersList;
   }
 
   public NewUsersList getSpaceNewUsersList(String spaceId) {
-
-    final OrganizationController organizationController = OrganizationController.get();
-    HashSet<User> users = new HashSet<>();
-    String[] componentIds = organizationController.getAllComponentIdsRecur(spaceId);
-    for (String componentId : componentIds) {
-      users.addAll(Arrays.asList(organizationController.getAllUsers(componentId)));
+    int nbUsersDisplayed = getSettings("space.homepage.users.nb", 0);
+    if (nbUsersDisplayed > 0) {
+      final OrganizationController organizationController = OrganizationController.get();
+      final List<User> newUsers = of(organizationController.getAllComponentIdsRecur(spaceId))
+          .flatMap(i -> of(organizationController.getAllUsers(i)).map(User.class::cast))
+          .distinct()
+          .sorted(new UserDetail.OnCreationDate().reversed())
+          .collect(toList());
+      return getNewUsersList(true, newUsers);
     }
-    List<User> newUsers = users.stream()
-        .sorted(new UserDetail.OnCreationDate().reversed())
-        .collect(Collectors.toList());
-    return getNewUsersList(true, newUsers);
+    return null;
   }
-
 }
