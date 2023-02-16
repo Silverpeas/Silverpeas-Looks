@@ -14,7 +14,9 @@
 <c:set var="directoryDomains" value="${lookHelper.directoryDomains}"/>
 <c:set var="directoryDomainIds" value="${lookHelper.directoryDomainIds}"/>
 <c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
+
 <c:set var="isAnonymous" value="${lookHelper.anonymousUser}"/>
+<c:set var="isAccessGuest" value="${lookHelper.accessGuest}"/>
 <c:set var="anonymousMode" value=""/>
 
 <c:set var="shortcuts" value="${lookHelper.toolsShortcuts}"/>
@@ -24,6 +26,8 @@
   <c:set var="anonymousMode" value="anonymousMode"/>
 </c:if>
 <c:url var="urlLogin" value="/Login"/>
+
+<c:set var="isDisplayDirectory" value="${silfn:isDefined(directoryURL) && ((isAnonymous && settings.displayDirectoryForAnonymous) || not isAnonymous)}"/>
 
 <c:choose>
 <c:when test="${lookHelper == null or lookHelper.localizedBundle == null}">
@@ -303,47 +307,54 @@ window.USERSESSION_PROMISE.then(function() {
         </c:if>
         <c:if test="${not isAnonymous}">
           <a href="javascript:goToPersonalSpace()"><view:image type="avatar" id="avatar-img" alt="mon avatar" src="${lookHelper.userDetail.avatar}" /></a>
-          <div class="avatarName">
-            <div class="btn-header">
-              <a title="${labelProfile}" href="javascript:goToPersonalSpace()">${lookHelper.userFullName}</a>
-              <a id="show-menu-spacePerso" href="#"> Mon espace perso</a>
+            <div class="avatarName">
+              <div class="btn-header">
+                <a title="${labelProfile}" href="javascript:goToPersonalSpace()">${lookHelper.userFullName}</a>
+                <a id="show-menu-spacePerso" href="#"> Mon espace perso</a>
+              </div>
+              <div class="spacePerso">
+                <ul>
+                  <li><a id="link-settings" href="javascript:changeBody('/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
+                  <c:if test="${not isAccessGuest}">
+                    <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
+                  </c:if>
+                  <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
+                  <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
+                </ul>
+              </div>
+              <div id="btn-logout">
+                <a href="javascript:onClick=spUserSession.logout();">${labelLogout}</a>
+              </div>
             </div>
-            <div class="spacePerso">
-              <ul>
-                <li><a id="link-settings" href="javascript:changeBody('/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
-                <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
-                <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
-                <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
-              </ul>
+            <c:if test="${not isAccessGuest}">
+              <div id="topbar-user-notifications" class="silverpeas-user-notifications">
+                <silverpeas-user-notifications no-unread-label="${labelUserNotifications}"
+                                               one-unread-label="${labelUnreadUserNotification}"
+                                               several-unread-label="${labelUnreadUserNotifications}">
+                  <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
+                </silverpeas-user-notifications>
+              </div>
+              </c:if>
+            <div id="topbar-basket-selection" class="silverpeas-basket-selection">
+              <silverpeas-basket-selection v-on:api="setApi">
+                <div id="basket-selection" class="btn-header"><a href="javascript:void(0)"></a></div>
+              </silverpeas-basket-selection>
             </div>
-            <div id="btn-logout">
-              <a href="javascript:onClick=spUserSession.logout();">${labelLogout}</a>
-            </div>
-          </div>
-          <div id="topbar-user-notifications" class="silverpeas-user-notifications">
-            <silverpeas-user-notifications no-unread-label="${labelUserNotifications}"
-                                           one-unread-label="${labelUnreadUserNotification}"
-                                           several-unread-label="${labelUnreadUserNotifications}">
-              <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
-            </silverpeas-user-notifications>
-          </div>
-          <div id="topbar-basket-selection" class="silverpeas-basket-selection">
-            <silverpeas-basket-selection v-on:api="setApi">
-              <div id="basket-selection" class="btn-header"> <a href="javascript:void(0)"></a></div>
-            </silverpeas-basket-selection>
-          </div>
-          <script type="text/javascript">
-            whenSilverpeasReady(function() {
-              SpVue.createApp().mount('#topbar-user-notifications');
-              SpVue.createApp({
-                methods : {
-                  setApi : function(api) {
-                    window.spBasketSelectionApi = api;
-                  }
-                }
-              }).mount('#topbar-basket-selection');
-            });
-          </script>
+
+            <c:if test="${not isAccessGuest}">
+              <script type="text/javascript">
+                whenSilverpeasReady(function() {
+                  SpVue.createApp().mount('#topbar-user-notifications');
+                  SpVue.createApp({
+                    methods : {
+                      setApi : function(api) {
+                        window.spBasketSelectionApi = api;
+                      }
+                    }
+                  }).mount('#topbar-basket-selection');
+                });
+              </script>
+            </c:if>
         </c:if>
         <c:if test="${not empty projects}">
         <div class="btn-header">
@@ -379,7 +390,7 @@ window.USERSESSION_PROMISE.then(function() {
         <c:if test="${silfn:isDefined(settings.helpURL)}">
           <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
         </c:if>
-        <c:if test="${silfn:isDefined(directoryURL)}">
+        <c:if test="${isDisplayDirectory}">
           <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
         </c:if>
         <c:if test="${lookHelper.backOfficeVisible}">

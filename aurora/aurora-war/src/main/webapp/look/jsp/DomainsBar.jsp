@@ -56,7 +56,7 @@ LookHelper helper = LookHelper.getLookHelper(session);
 String spaceId    	= Encode.forUriComponent(request.getParameter("privateDomain"));
 String subSpaceId   = Encode.forUriComponent(request.getParameter("privateSubDomain"));
 String componentId  = Encode.forUriComponent(request.getParameter("component_id"));
-boolean displayPersonalSpace = StringUtil.getBooleanValue(request.getParameter("FromMySpace"));
+boolean displayPersonalSpace = StringUtil.getBooleanValue(request.getParameter("FromMySpace")) && !helper.isAccessGuest();
 
 if (!StringUtil.isDefined(spaceId) && StringUtil.isDefined(componentId)) {
   spaceId = helper.getSpaceId(componentId);
@@ -181,7 +181,7 @@ gef.setSpaceIdForCurrentRequest(spaceId);
     <div id="spaces">
     <br/><br/>${labelLoading}<br/><br/><img src="icons/inProgress.gif" alt="${labelLoading}"/>
     </div>
-    <c:if test="${not lookHelper.anonymousAccess}">
+    <c:if test="${not lookHelper.anonymousAccess && not lookHelper.accessGuest}">
       <div id="spacePerso" class="spaceLevelPerso"><a class="spaceURL" href="javaScript:openMySpace();">${labelPersonal}</a></div>
     </c:if>
   </div>
