@@ -151,4 +151,11 @@ public class LookSettings {
     return settings.getString("javascript.space.homepage", "");
   }
 
+  public boolean isDisplayDirectoryForAnonymous() {
+    return settings.getBoolean("directory.enabled.forAnonymous", false);
+  }
+
+  public boolean isDisplayDirectoryForGuest() {
+    return settings.getBoolean("directory.enabled.forGuest", false);
+  }
 }
