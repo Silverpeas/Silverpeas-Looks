@@ -14,7 +14,8 @@
 <c:set var="directoryDomains" value="${lookHelper.directoryDomains}"/>
 <c:set var="directoryDomainIds" value="${lookHelper.directoryDomainIds}"/>
 <c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
-
+<c:set var="displayConnectedUsers" value="${lookHelper.connectedUsersDisplayEnabled}"/>
+<c:set var="displayDirectory" value="${lookHelper.directoryDisplayEnabled}"/>
 <c:set var="isAnonymous" value="${lookHelper.anonymousUser}"/>
 <c:set var="isAccessGuest" value="${lookHelper.accessGuest}"/>
 <c:set var="anonymousMode" value=""/>
@@ -26,9 +27,6 @@
   <c:set var="anonymousMode" value="anonymousMode"/>
 </c:if>
 <c:url var="urlLogin" value="/Login"/>
-
-<c:set var="isDisplayDirectory" value="${silfn:isDefined(directoryURL) and ((isAnonymous and settings.displayDirectoryForAnonymous)
- or (isAccessGuest and settings.displayDirectoryForGuest and not isAnonymous) or not isAccessGuest)}"/>
 
 <c:choose>
   <c:when test="${lookHelper == null or lookHelper.localizedBundle == null}">
@@ -279,6 +277,7 @@
         </c:choose>
       });
 
+      <c:if test="${displayConnectedUsers}">
       window.USERSESSION_PROMISE.then(function() {
         spUserSession.addEventListener('connectedUsersChanged', function(event) {
           var nb = event.detail.data.nb;
@@ -293,11 +292,11 @@
             $container.show();
             jQuery("a", $container).text(nb + label);
           }
-        });
+        }, 'connectedUsersChanged@TopBar');
       });
+      </c:if>
     </script>
     <viewTags:displayTicker/>
-
     <div class="header-container ${anonymousMode}">
       <div class="wrapper clearfix">
         <h1 class="title">Intranet</h1>
@@ -348,16 +347,11 @@
                     <div id="notification-count" class="btn-header"> <a href="javascript:void(0)"></a></div>
                   </silverpeas-user-notifications>
                 </div>
-              </c:if>
-              <c:if test="${not isAccessGuest}">
                 <div id="topbar-basket-selection" class="silverpeas-basket-selection">
                   <silverpeas-basket-selection v-on:api="setApi">
                     <div id="basket-selection" class="btn-header"><a href="javascript:void(0)"></a></div>
                   </silverpeas-basket-selection>
                 </div>
-              </c:if>
-
-              <c:if test="${not isAccessGuest}">
                 <script type="text/javascript">
                   whenSilverpeasReady(function() {
                     SpVue.createApp().mount('#topbar-user-notifications');
@@ -399,14 +393,14 @@
             </c:if>
           </div>
           <ul id="outils">
-            <c:if test="${settings.displayConnectedUsers}">
+            <c:if test="${displayConnectedUsers}">
               <li id="connectedUsers"><a onclick="javascript:onClick=spUserSession.viewConnectedUsers();" href="#"></a></li>
             </c:if>
             <li id="map-link-header"><a href="javascript:changeBody('/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
             <c:if test="${silfn:isDefined(settings.helpURL)}">
               <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
             </c:if>
-            <c:if test="${isDisplayDirectory}">
+            <c:if test="${displayDirectory}">
               <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
             </c:if>
             <c:if test="${lookHelper.backOfficeVisible}">
@@ -450,7 +444,6 @@
             <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
           </div>
         </div>
-
         <div id="nav" style="display: none;">
           <ul id="main-menu" class="sm ${smartmenusSkin} displayMenuAppIcons-${settings.displayMenuAppIcons}">
             <c:if test="${lookHelper.userCanDisplayMainHomePage}">

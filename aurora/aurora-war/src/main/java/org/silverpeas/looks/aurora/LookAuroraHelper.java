@@ -728,8 +728,16 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return directoryGroups;
   }
 
+  @Override
+  public boolean isDirectoryDisplayEnabled() {
+    return getSettings("directory.enabled", true) &&
+        ((isAnonymousUser() && settings.isDisplayDirectoryForAnonymous()) ||
+            (!isAnonymousUser() && isAccessGuest() && settings.isDisplayDirectoryForGuest()) ||
+            super.isDirectoryDisplayEnabled());
+  }
+
   public String getDirectoryURL() {
-    if (!getSettings("directory.enabled", true)) {
+    if (!isDirectoryDisplayEnabled()) {
       return null;
     }
     String url = "/Rdirectory/jsp/Main";
