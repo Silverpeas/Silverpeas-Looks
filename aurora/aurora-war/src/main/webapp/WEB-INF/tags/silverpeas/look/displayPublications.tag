@@ -28,7 +28,6 @@
 <%@ tag import="org.silverpeas.core.admin.service.OrganizationController" %>
 <%@ tag import="org.silverpeas.core.admin.space.SpaceInstLight" %>
 <%@ tag import="java.util.stream.Collectors" %>
-<%@ tag import="org.silverpeas.core.util.StringUtil" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
@@ -55,7 +54,7 @@
         </c:if>
         <c:set var="pubInstanceId" value="${publication.instanceId}"/>
         <jsp:useBean id="pubInstanceId" type="java.lang.String"/>
-        <c:set var="fromSpaceClasses" value='<%=OrganizationController.get().getPathToComponent(pubInstanceId).stream().map(s -> "fromSpace-" + s.getId()).collect(Collectors.joining(StringUtil.SPACE))%>'/>
+        <c:set var="fromSpaceClasses" value='<%=OrganizationController.get().getPathToComponent(pubInstanceId).stream().map(s -> "fromSpace-" + s.getId()).collect(Collectors.joining(" "))%>'/>
         <li class="${fromSpaceClasses} fromInst-${pubInstanceId}${newPubliCssClass}" onclick="spWindow.loadLink('${publication.permalink}')">
           <a class="sp-link publication-name" href="${publication.permalink}">${publication.name}</a>
           <view:componentPath componentId="${pubInstanceId}" includeComponent="false"/>
