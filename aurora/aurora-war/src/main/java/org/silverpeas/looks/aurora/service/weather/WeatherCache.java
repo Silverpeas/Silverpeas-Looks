@@ -3,7 +3,7 @@ package org.silverpeas.looks.aurora.service.weather;
 import org.silverpeas.core.annotation.Bean;
 import org.silverpeas.core.annotation.Technical;
 import org.silverpeas.core.cache.model.Cache;
-import org.silverpeas.core.cache.service.CacheServiceProvider;
+import org.silverpeas.core.cache.service.CacheAccessorProvider;
 import org.silverpeas.core.util.ResourceLocator;
 
 import javax.inject.Singleton;
@@ -36,7 +36,7 @@ public class WeatherCache {
     if (timeToLive <= 0) {
       data = supplier.get();
     } else {
-      final Cache cache = CacheServiceProvider.getApplicationCacheService().getCache();
+      final Cache cache = CacheAccessorProvider.getApplicationCacheAccessor().getCache();
       data =
           cache.computeIfAbsent(cacheKey(cityId), WeatherForecastData.class, timeToLive, supplier);
     }
