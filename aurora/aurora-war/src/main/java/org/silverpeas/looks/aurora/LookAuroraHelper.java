@@ -82,6 +82,7 @@ import static org.silverpeas.core.admin.user.constant.UserState.*;
 import static org.silverpeas.core.util.StringUtil.split;
 import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
+@SuppressWarnings("unused")
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private static final String DEFAULT_VALUE = "toBeDefined";
@@ -93,8 +94,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private static final String PROPERTY_SPACEHOMEPAGE_CUSTOMTEMPLATE = "space.homepage.management" +
       ".customtemplate.";
   private static final String QUICKINFO = "quickinfo";
-  private DelegatedNewsService delegatedNewsService;
-  private LocalizationBundle messages;
+  private final DelegatedNewsService delegatedNewsService;
+  private final LocalizationBundle messages;
   private LookSettings settings;
   private List<Domain> directoryDomains = null;
   private List<Group> directoryGroups = null;
@@ -121,9 +122,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             language);
 
     final WeatherSettings weatherSettings = WeatherSettings.get();
-    final String basePath = "org.silverpeas.weather.settings.";
-    weatherSettings.setSettingsFilePath(
-        basePath + getSettings("home.weather.settings", basePath + "weather.properties"));
+    weatherSettings.setSettingsFile(getSettings("home.weather.settings",
+        WeatherSettings.DEFAULT_SETTINGS));
   }
 
   @Override
@@ -228,7 +228,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public String getLoginHomePage() {
-    return getSettings("loginHomepage", URLUtil.getApplicationURL()+"/look/jsp/Main.jsp");
+    return getSettings("loginHomepage", URLUtil.getApplicationURL() + "/look/jsp/Main.jsp");
   }
 
   public List<Shortcut> getToolsShortcuts() {
@@ -299,7 +299,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         StringUtils.split(getSettings("home.publications.spaces.excluded", ""));
     for (String excludedSpaceId : excludedSpaceIds) {
       try {
-        String [] excludedAppId = Administration.get().getAllComponentIdsRecur(excludedSpaceId);
+        String[] excludedAppId = Administration.get().getAllComponentIdsRecur(excludedSpaceId);
         excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedAppId);
       } catch (AdminException e) {
         SilverLogger.getLogger(this).error(e);
@@ -346,7 +346,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         News aNews = new News(delegated.getPublicationDetail());
         if (delegated.getPublicationDetail() != null) {
           aNews.setPublicationId(delegated.getPublicationDetail().getId());
-          aNews.setComponentInstanceId(delegated.getPublicationDetail().getComponentInstanceId());
+          aNews.setComponentInstanceId(delegated.getPublicationDetail().getInstanceId());
           news.add(aNews);
         }
       }
@@ -354,7 +354,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return news;
   }
 
-  private List<News> getNewsByComponentIds(List<String> allowedComponentIds, boolean importantOnly) {
+  private List<News> getNewsByComponentIds(List<String> allowedComponentIds,
+      boolean importantOnly) {
     if (CollectionUtil.isEmpty(allowedComponentIds)) {
       return Collections.emptyList();
     }
@@ -366,7 +367,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
 
     // sorting news
-    Collections.sort(allNews, QuickInfoDateComparatorDesc.comparator);
+    allNews.sort(QuickInfoDateComparatorDesc.comparator);
 
     return allNews;
   }
@@ -417,7 +418,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
 
     // sorting news
-    Collections.sort(someNews, QuickInfoDateComparatorDesc.comparator);
+    someNews.sort(QuickInfoDateComparatorDesc.comparator);
 
     return someNews;
   }
@@ -449,12 +450,12 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
               .getNextEventOccurrences(allowedComponentIds, emptySet(), emptySet(), emptySet(),
                   AlmanachSettings.getZoneId(),
                   AlmanachSettings.getNbOccurrenceLimitOfShortNextEventView())
-          .map(o -> {
-            final CalendarEventOccurrenceEntity entity = new CalendarEventOccurrenceEntity(o);
-            entity.withOccurrencePermalinkUrl(uri.ofOccurrencePermalink(o));
-            return entity;
-          })
-          .collect(toList());
+              .map(o -> {
+                final CalendarEventOccurrenceEntity entity = new CalendarEventOccurrenceEntity(o);
+                entity.withOccurrencePermalinkUrl(uri.ofOccurrencePermalink(o));
+                return entity;
+              })
+              .collect(toList());
 
       result = filterNextEvents(events, nbDays, includeToday, onlyImportant);
     }
@@ -600,7 +601,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     String fromTopBar = request.getParameter("FromTopBar");
     String componentId = request.getParameter("ComponentId");
     String login = request.getParameter("Login");
-    String fromMySpace 	= request.getParameter("FromMySpace");
+    String fromMySpace = request.getParameter("FromMySpace");
 
     if (StringUtil.isDefined(strGoToNew) || StringUtil.isDefined(spaceId) ||
         StringUtil.isDefined(subSpaceId) || StringUtil.isDefined(componentId)) {
@@ -659,18 +660,18 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       bodyPartSettings.setHideMenu(true);
     } else if (strGoToNew == null) {
       if (StringUtil.isDefined(componentId)) {
-        frameURL = webContext + URLUtil.getURL(null, componentId)+"Main";
+        frameURL = webContext + URLUtil.getURL(null, componentId) + "Main";
       } else {
         String homePage = getSettings("defaultHomepage", "/dt");
         String param = "";
         if (StringUtil.isDefined(spaceId)) {
           param = "?SpaceId=" + spaceId;
         }
-        frameURL = webContext+homePage+param;
+        frameURL = webContext + homePage + param;
       }
     } else {
-      frameURL = webContext+strGoToNew;
-      if(strGoToNew.startsWith(webContext)) {
+      frameURL = webContext + strGoToNew;
+      if (strGoToNew.startsWith(webContext)) {
         frameURL = strGoToNew;
       }
     }
@@ -682,13 +683,23 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       final String fromMySpace) {
     if ("1".equals(fromTopBar)) {
       if (spaceId != null) {
-        paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("', privateSubDomain:'")
-            .append(subSpaceId).append("', FromTopBar:'1'");
+        paramsForDomainsBar
+            .append("privateDomain:'")
+            .append(spaceId)
+            .append("', privateSubDomain" + ":'")
+            .append(subSpaceId)
+            .append("', FromTopBar:'1'");
       }
     } else if (componentId != null) {
-      paramsForDomainsBar.append("privateDomain:'', component_id:'").append(componentId).append("'");
+      paramsForDomainsBar
+          .append("privateDomain:'', component_id:'")
+          .append(componentId)
+          .append("'");
     } else {
-      paramsForDomainsBar.append("privateDomain:'").append(spaceId).append("'");
+      paramsForDomainsBar
+          .append("privateDomain:'")
+          .append(spaceId)
+          .append("'");
     }
     if ("1".equals(fromMySpace)) {
       paramsForDomainsBar.append(",FromMySpace:'1'");
@@ -741,9 +752,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return null;
     }
     String url = "/Rdirectory/jsp/Main";
-    url += "?DomainIds="+getDirectoryDomainIds();
-    url += "&GroupIds="+getDirectoryGroups().stream().map(Group::getId).collect(Collectors.joining(","));
-    url += "&Sort="+getSettings("directory.sort", "ALPHA");
+    url += "?DomainIds=" + getDirectoryDomainIds();
+    url += "&GroupIds=" + getDirectoryGroups().stream().map(Group::getId).collect(Collectors.joining(","));
+    url += "&Sort=" + getSettings("directory.sort", "ALPHA");
     return url;
   }
 
@@ -791,9 +802,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         if (useComponentLabel) {
           Optional<SilverpeasComponentInstance> component =
               getOrganisationController().getComponentInstance(componentId);
-          if (component.isPresent()) {
-            freeZone.setTitle(component.get().getLabel(getLanguage()));
-          }
+          component.ifPresent(silverpeasComponentInstance ->
+              freeZone.setTitle(silverpeasComponentInstance.getLabel(getLanguage())));
         } else {
           freeZone.setTitle(defaultLabel);
         }
@@ -802,8 +812,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     return null;
   }
-
-
 
   public AuroraSpaceHomePage getHomePage(String spaceId) {
     setSpaceIdAndSubSpaceId(spaceId);
@@ -826,6 +834,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return null;
   }
 
+  @SuppressWarnings("SameParameterValue")
   private List<ComponentInstLight> getAppsByName(String spaceId, String name) {
     List<ComponentInstLight> apps = new ArrayList<>();
     OrganizationController oc = OrganizationController.get();
@@ -955,7 +964,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     // get closest space definition so we start from space itself
     List<SpaceInstLight> pathToRoot = CollectionUtil.reverse(spaces);
     for (SpaceInstLight space : pathToRoot) {
-      String customTemplate = getSettings(PROPERTY_SPACEHOMEPAGE_CUSTOMTEMPLATE+space.getId(), "");
+      String customTemplate =
+          getSettings(PROPERTY_SPACEHOMEPAGE_CUSTOMTEMPLATE + space.getId(), "");
       if (StringUtil.isDefined(customTemplate)) {
         return customTemplate;
       }

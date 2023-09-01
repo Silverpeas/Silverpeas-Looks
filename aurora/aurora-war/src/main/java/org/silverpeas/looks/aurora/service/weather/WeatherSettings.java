@@ -13,17 +13,18 @@ import java.util.List;
 
 /**
  * Settings of a weather module dedicated to work with a remote weather service. By default
- * those settings are defined in the propreties/org/silverpeas/weather/settings/weather.properties
+ * those settings are defined in the properties/org/silverpeas/weather/settings/weather.properties
  * file but they can be defined in another properties file. In that case, the path of this file
- * must be specified with {@link #setSettingsFilePath(String)} method. Only the cache time-to-live
- * defined in the default propreties file is taken into account.
+ * must be specified with {@link #setSettingsFile(String)} method. Only the cache time-to-live
+ * defined in the default properties file is taken into account.
  * @author mmoquillon
  */
 @SessionScoped
 public class WeatherSettings implements Serializable {
 
-  private static final String DEFAULT_BUNDLE_PATH = "org.silverpeas.weather.settings.weather";
-  private String settingsPath = DEFAULT_BUNDLE_PATH;
+  private static final String SETTINGS_BUNDLES_PATH = "org.silverpeas.weather.settings.";
+  public static final String DEFAULT_SETTINGS = "weather";
+  private String settingsPath = SETTINGS_BUNDLES_PATH + DEFAULT_SETTINGS;
 
   /**
    * Gets an instance of the {@link WeatherSettings} bundle.
@@ -34,15 +35,17 @@ public class WeatherSettings implements Serializable {
   }
 
   /**
-   * Sets the path of the properties file in which are defined the weather settings to be
-   * taken in charge by this {@link WeatherSettings} instance.
-   * @param settingsPath the path of the properties file the in Java-package format. For example,
-   * <code>org.silverpeas.weather.settings.myOwnSettings</code> refer the properties file
-   * <code>myOwnSettings.properties</code> located in the directory
-   * <code>properties/org/silverpeas/weather/settings/</code>.
+   * Sets the name of the properties file in which are defined the weather settings to be
+   * taken in charge by this {@link WeatherSettings} instance. The properties file has to be
+   * located into the <code>properties/org/silverpeas/weather/settings/</code> directory of the
+   * Silverpeas installation.
+   * @param settingsFile the name of the properties file without its extension. It must be located
+   * into the <code>properties/org/silverpeas/weather/settings/</code> directory to be found and
+   * loaded by this object.
    */
-  public void setSettingsFilePath(final String settingsPath) {
-    this.settingsPath = settingsPath;
+  public void setSettingsFile(final String settingsFile) {
+    int idx = settingsFile.indexOf(".properties");
+    this.settingsPath = SETTINGS_BUNDLES_PATH + (idx > 0 ? settingsFile.substring(0, idx) : settingsFile);
   }
 
   /**
