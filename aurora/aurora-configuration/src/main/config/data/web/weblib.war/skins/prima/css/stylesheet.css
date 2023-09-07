@@ -140,6 +140,15 @@ input.search{
   min-height:2em;
   line-height:2em;
 }
+.champs {
+  padding: 0 15px 10px 0;
+}
+.champs input, .champs select, .champs textarea {
+  font-size: 13px;
+}
+.parameters .parameterInfo {
+  top:9px !important;
+}
 
 .ui-dialog .ui-dialog-titlebar-close {
     min-height: 20px;
@@ -235,7 +244,7 @@ silverpeas-time-picker .txtlibform {
 }
 .skinFieldset .field label, .skinFieldset .field .label {
     display: table-cell;
-    padding: 13px 15px 5px 0;
+	padding-top:10px;
 }
 
 #TreeDiv1 {
@@ -700,7 +709,7 @@ silverpeas-time-picker .txtlibform {
 
 #browseBar #breadCrumb {
   margin-left:3px;
-  width:calc( 100% - 3em );
+  width:calc( 100% - 7em );
   display: inline-block;
 }
 #menutoggle {
@@ -1342,4 +1351,31 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 /* a repertoirier sur le produit */
 #directory #indexAndSearch #search {
 	height:auto;
+}
+
+
+/* pour kmelia */
+
+#preview #pagination {
+  margin:5px;
+  width:auto;
+}
+#preview #backToSearch {
+  height: 30px;
+  width: auto;
+  float: right;
+}
+#preview #backToSearch a.button {
+  background-color: #F4F4F4;
+  background-image: url("../../../util/icons/gradientSVG.jsp?from=fff&to=e5e5e5&vertical=0&horizontal=100");
+  -moz-background-size: 100%;
+  border-radius: 5px;
+  border: 1px solid #CCCCCC;
+  color: #4C4C4C;
+  font-size: 100%;
+  padding: 7px 10px;
+  position: relative;
+  display: inline-block;
+  right: auto;
+  width: auto;
 }
