@@ -278,11 +278,26 @@
 .silverpeas-user-notifications.unread-user-notification #notification-count.btn-header {
 	background-color:var(--couleur-de-fond-clair);
 }
-.silverpeas-user-notifications.unread-user-notification #notification-count.btn-header a {
-	border-left:4px solid var(--couleur-flashy);
-	padding-left:1em;
-	color:var(--couleur-texte);
+.silverpeas-user-notifications.unread-user-notification #notification-count.btn-header a{
 	font-weight:600;
+}
+.silverpeas-user-notifications.unread-user-notification #notification-count.btn-header a:before {
+	content:'';
+	border-radius:5px;
+	width:10px;
+	height:10px;
+	background:var(--couleur-flashy);
+	display:inline-block;
+	margin-right:8px;
+	animation-duration: .7s;
+	animation-name: clignoter;
+	animation-iteration-count: infinite;
+	transition: none;
+}
+@keyframes clignoter {
+  0%   { opacity:1; }
+  40%   {opacity:0; }
+  100% { opacity:1; }
 }
 .silverpeas-user-notifications {
 	float:left;
@@ -1691,6 +1706,9 @@ a#advancedSearch-link-header {
 	  height: auto;
 	  margin-top: 61px;
 	}  
+	.sm-silverpeas ul {
+		z-index: 10;
+	}
 	#nav > ul {
 		margin: 0;
 		width: 100%;
@@ -1721,14 +1739,40 @@ a#advancedSearch-link-header {
   }
 }
 		
-		
-}
-/*@media only screen and (max-width: 1380px) {
-		#directory .aff_colonnes li {
-		flex-basis:calc( 50% - 4.5em );
-	}
 
-}*/
+
+@media only screen and (max-width: 620px) {	
+	#topar-header, 
+	#search-zone-header 	{
+	  height: auto;
+	  background-color: #FFF;
+	  position: relative;
+	  top:auto;
+	  left: auto;
+	  right:auto;
+	  border-bottom:1px solid #EEE;
+	  border-top:1px solid #EEE;
+	}
+	#logo-header {
+	  position: relative;
+	  }
+	 #nav {    
+	 margin-top: 0;
+	 }
+	   a#lastResult-link-header, a#advancedSearch-link-header {
+    display: none;
+  }
+  #search-zone-header{
+	  padding-top:0;
+  }
+  .silverpeas-user-notifications .silverpeas-attached-popin {
+	  left: 0 !important;
+	  right: 0 !important;
+	}
+	.silverpeas-user-notifications .silverpeas-attached-popin .silverpeas-attached-popin-content {
+	  width: auto;;
+	}
+}
 
 /* ==========================================================================
    Helper classes
