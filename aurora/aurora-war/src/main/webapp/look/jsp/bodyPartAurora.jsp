@@ -36,7 +36,6 @@
 <c:if test="${lookHelper != null}">
   <jsp:useBean id="lookHelper" type="org.silverpeas.looks.aurora.LookAuroraHelper"/>
   <c:set var="navigationWidth" value="${lookHelper.getSettings('domainsBarFramesetWidth','260')}px"/>
-  <c:set var="redExtLabel" value="${lookHelper.getString('look.layout.reduce')}"/>
   <c:set var="bodyPartSettings" value="${lookHelper.getBodyPartSettings(pageContext.request)}"/>
   <jsp:useBean id="bodyPartSettings" type="org.silverpeas.looks.aurora.BodyPartSettings"/>
   <c:set var="paramsForDomainsBar" value="${bodyPartSettings.domainsBarParams}"/>
@@ -79,10 +78,7 @@
       border: 0;
     }
   </style>
-  <div id="sp-layout-body-part-layout-toggle-part" style="display: none">
-    <div id="navigation-toggle" style="display: none"><img src="icons/silverpeasV5/reduct.gif" alt="${redExtLabel}" title="${redExtLabel}"/></div>
-    <div id="header-toggle"><img src="icons/silverpeasV5/reductTopBar.gif" alt="${redExtLabel}" title="${redExtLabel}"/></div>
-  </div>
+  <div id="sp-layout-body-part-layout-toggle-part" style="display: none"></div>
   <div id="sp-layout-body-part-layout">
     <div id="sp-layout-body-part-layout-navigation-part"></div>
     <div id="sp-layout-body-part-layout-content-part">
