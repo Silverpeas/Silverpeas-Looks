@@ -464,15 +464,22 @@ label.select-header:before {
 }
 
 #lastResult-link-header span {
-  background: transparent url(../imgDesign/packImages.png) 0 -219px no-repeat;
-  padding-left: 25px;
+  background: transparent url(../imgDesign/packImages.png) 0 -216px no-repeat;
+  padding-left: 25px;  line-height: 22px;
+  display: inline-block;
 }
 
 #advancedSearch-link-header span {
-  background: transparent url(../imgDesign/packImages.png) 0 -176px no-repeat;
-  padding-left: 30px;
+  background: transparent url(../imgDesign/packImages.png) 0 -173px no-repeat;
+  padding-left: 30px;  line-height: 22px;
+  display: inline-block;
 }
 
+#search-help-header span {
+  background: transparent url(../imgDesign/packImages.png) 0 -47px no-repeat;
+  padding-left:27px;  line-height: 22px;
+  display: inline-block;
+}
 
 /* ==============
     Menu

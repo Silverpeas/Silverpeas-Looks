@@ -61,6 +61,7 @@
     <fmt:message var="labelSearchButton" key="look.banner.search.button"/>
     <fmt:message var="labelSearchPlaceholder" key="look.banner.search.input.placeholder"/>
     <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
+    <fmt:message var="labelSearchHelp" key="look.banner.help"/>
     <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
     <fmt:message var="labelSearchPlatform" key="look.banner.search.scope.platform"/>
     <fmt:message var="labelSearchPlatformShort" key="look.banner.search.scope.platform.short"/>
@@ -442,6 +443,7 @@
             </form>
             <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()" title="${labelSearchResults}"><span>${labelSearchResults}</span></a>
             <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
+            <a id="search-help-header" href="javascript:sp.search.helpOn('#query')" title="${labelSearchHelp}"><span>${labelSearchHelp}</span></a>
           </div>
         </div>
         <div id="nav" style="display: none;">
