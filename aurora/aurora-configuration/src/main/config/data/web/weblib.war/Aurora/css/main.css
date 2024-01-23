@@ -388,6 +388,10 @@ label.select-header:before {
   padding-left: 30px;
 }
 
+#search-help-header span {
+  background: transparent url(../imgDesign/packImages.png) 0 -50px no-repeat;
+  padding-left:24px;
+}
 
 /* ==============
     Menu
