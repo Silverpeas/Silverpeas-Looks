@@ -443,7 +443,7 @@
             </form>
             <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()" title="${labelSearchResults}"><span>${labelSearchResults}</span></a>
             <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
-            <a id="search-help-header" href="javascript:sp.search.helpOn('#query')" title="${labelSearchHelp}"><span>${labelSearchHelp}</span></a>
+            <a id="search-help-header" href="javascript:void(0)" onclick="sp.search.helpOn(this, '#query')" title="${labelSearchHelp}"><span>${labelSearchHelp}</span></a>
           </div>
         </div>
         <div id="nav" style="display: none;">
