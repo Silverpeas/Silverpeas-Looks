@@ -4,7 +4,6 @@ import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
 import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
 import org.silverpeas.core.pdc.pdc.model.Value;
-import org.silverpeas.core.pdc.pdc.service.PdcManager;
 import org.silverpeas.core.util.logging.SilverLogger;
 import org.silverpeas.core.web.look.Shortcut;
 
@@ -19,7 +18,10 @@ import java.util.Map;
 public class NewsList extends ListOfContributions {
 
   private List<AuroraNews> news;
-  private List<NewsListButton> buttons = new ArrayList<>();
+  private final List<NewsListButton> buttons = new ArrayList<>();
+  private String imageSize = "800x";
+  private AuroraSpaceHomePageZone zone = AuroraSpaceHomePageZone.RIGHT;
+  private RenderingType type = RenderingType.CAROUSEL;
 
   public NewsList(List<News> someNews, String uniqueAppId) {
     setUniqueAppId(uniqueAppId);
@@ -43,7 +45,7 @@ public class NewsList extends ListOfContributions {
   }
 
   private void processShortcuts() {
-    Map<String, Shortcut> shortcuts = new HashMap();
+    Map<String, Shortcut> shortcuts = new HashMap<>();
     for (AuroraNews aNews : news) {
       String componentId = aNews.getNews().getComponentInstanceId();
       Shortcut appShortcut = shortcuts.computeIfAbsent(componentId, this::getAppShortcut);
@@ -75,5 +77,67 @@ public class NewsList extends ListOfContributions {
 
   public List<NewsListButton> getButtons() {
     return buttons;
+  }
+
+  /**
+   * Gets the zone location the news list MUST be managed.
+   * @return a {@link AuroraSpaceHomePageZone} instance.
+   */
+  public AuroraSpaceHomePageZone getZone() {
+    return zone;
+  }
+
+  /**
+   * Gets the image size the image of news MUST be displayed.
+   * <p>
+   * Format MUST be "WxH" (W = width and H = height in pixels)
+   * </p>
+   * @return the image size (width x height) as string.
+   */
+  public String getImageSize() {
+    return imageSize;
+  }
+
+  /**
+   * Sets the image size the image of news MUST be displayed.
+   * <p>
+   * Format MUST be "WxH" (W = width and H = height in pixels)
+   * </p>
+   * @param imageSize the image size (width x height) as string.
+   */
+  public void setImageSize(final String imageSize) {
+    this.imageSize = imageSize;
+  }
+
+  /**
+   * Sets the zone location the news list MUST be managed.
+   * @param zone {@link AuroraSpaceHomePageZone} instance.
+   */
+  public void setZone(final AuroraSpaceHomePageZone zone) {
+    this.zone = zone;
+  }
+
+  /**
+   * Gets the type the news list MUST be rendered in.
+   * @return a {@link RenderingType} instance.
+   */
+  public RenderingType getRenderingType() {
+    return type;
+  }
+
+  /**
+   * Sets the type the news list MUST be rendered in.
+   * @param type a {@link RenderingType} instance.
+   */
+  public void setRenderingType(final RenderingType type) {
+    this.type = type;
+  }
+
+  public enum RenderingType {
+    LIST, CAROUSEL;
+
+    public boolean isCarousel() {
+      return this == CAROUSEL;
+    }
   }
 }

@@ -34,17 +34,12 @@
               required="true"
               type="org.silverpeas.looks.aurora.NewsList" %>
 
-<%@ attribute name="carrousel"
-              required="true"
-              type="java.lang.Boolean" %>
-
-<%@ attribute name="imageSize"
-              required="true"
-              type="java.lang.String" %>
-
 <%@ attribute name="id"
               required="false"
               type="java.lang.String" %>
+
+<c:set var="imageSize" value="${listOfNews.imageSize}"/>
+<c:set var="carousel" value="${listOfNews.renderingType.carousel}"/>
 
 <c:if test="${empty id}">
   <c:set var="id" value="carrousel-actualite"/>
@@ -54,8 +49,7 @@
 <fmt:message var="labelNewsMore" key="look.home.news.more"/>
 
 <c:set var="newsClass" value="list-news"/>
-<c:set var="newsWithCarrousel" value="${carrousel}"/>
-<c:if test="${newsWithCarrousel}">
+<c:if test="${carousel}">
   <c:set var="newsClass" value="rslides"/>
 </c:if>
 
@@ -110,21 +104,19 @@
       </c:otherwise>
     </c:choose>
   </div>
-</c:if>
-
-
-<script type="text/javascript">
-  whenSilverpeasReady(function() {
-    <c:if test="${carrousel}">
-    $("#${id} .rslides#slider").responsiveSlides({
-      auto: true,
-      pager: true,
-      nav: true,
-      speed: 500,
-      pause: true,
-      timeout: 6000,
-      namespace: "centered-btns"
+  <script type="text/javascript">
+    whenSilverpeasReady(function() {
+      <c:if test="${carousel}">
+      $("#${id} .rslides#slider").responsiveSlides({
+        auto: true,
+        pager: true,
+        nav: true,
+        speed: 500,
+        pause: true,
+        timeout: 6000,
+        namespace: "centered-btns"
+      });
+      </c:if>
     });
-    </c:if>
-  });
-</script>
+  </script>
+</c:if>

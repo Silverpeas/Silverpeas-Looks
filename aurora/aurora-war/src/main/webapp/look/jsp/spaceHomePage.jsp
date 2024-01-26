@@ -36,6 +36,9 @@
 <%@ page import="org.silverpeas.looks.aurora.NewsList" %>
 <%@ page import="org.silverpeas.core.web.look.proxy.SpaceHomepageProxyManager" %>
 <%@ page import="org.silverpeas.looks.aurora.NewUsersList" %>
+<%@ page import="org.silverpeas.looks.aurora.AuroraSpaceHomePageZone" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="org.silverpeas.looks.aurora.FreeZone" %>
 
 <%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -57,6 +60,7 @@
   AuroraSpaceHomePage homepage = helper.getHomePage(request.getParameter("SpaceId"));
   List<PublicationDetail> publications = homepage.getPublications();
   NewsList news = homepage.getNews();
+  Map<AuroraSpaceHomePageZone, FreeZone> freeZones = homepage.getFreeZones();
   Space space = homepage.getSpace();
   List<Space> subspaces = homepage.getSubSpaces();
   List<App> apps = homepage.getApps();
@@ -90,9 +94,8 @@
         margin-bottom: 0.5em;
       }
     </style>
-    <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
-    <viewTags:spaceNewsCSS/>
+    <view:link href="/look/jsp/css/responsiveslides.css"/>
+    <view:link href="/look/jsp/css/themes.css"/>
     <viewTags:spaceNavigationCSS/>
     <viewTags:spacePublicationsCSS/>
     <view:link href="/look/jsp/css/aurora.css"/>
@@ -101,12 +104,11 @@
     <view:includePlugin name="pdc" />
     <view:includePlugin name="lightslideshow"/>
     <view:includePlugin name="toggle"/>
-    <script type="text/javascript" src="js/responsiveslides.min.js"></script>
+    <view:script src="/look/jsp/js/responsiveslides.min.js"/>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
     <script type="text/javascript">
-      <!--
       function goToSpaceItem(spaceId) {
         spWindow.loadSpace(spaceId);
       }
@@ -121,7 +123,6 @@
           $(".principalContent").css("margin-right", "0");
         }
       });
-      -->
     </script>
   </jsp:body>
 </view:sp-head-part>
@@ -137,13 +138,17 @@
 
     <viewTags:displayWidget widget="${spaceHomepageProxy.thinWidget}" widgetId="topWidget"/>
 
+    <viewTags:displayFreeZone freeZone="<%=freeZones.get(AuroraSpaceHomePageZone.RIGHT)%>" freeZoneId="rightFreeZone"/>
+
     <viewTags:spacePicture pictureURL="<%=homepage.getSecondPicture()%>" pictureLink="<%=homepage.getSecondPictureLink()%>"/>
 
     <viewTags:spaceAdmins admins="<%=admins%>"/>
 
     <viewTags:spaceUsers users="<%=homepage.getUsers()%>" label="<%=homepage.getUsersLabel()%>"/>
 
-    <viewTags:spaceNews news="<%=news.getNews()%>"/>
+    <c:if test="<%=news.getZone().isRight()%>">
+      <viewTags:spaceNews listOfNews="<%=news%>"/>
+    </c:if>
 
     <viewTags:displayNextEvents nextEvents="<%=homepage.getNextEvents()%>"/>
 
@@ -155,6 +160,12 @@
   <div class="principalContent">
 
     <viewTags:spaceIntro space="<%=space%>"/>
+
+    <viewTags:displayFreeZone freeZone="<%=freeZones.get(AuroraSpaceHomePageZone.MAIN)%>" freeZoneId="mainFreeZone"/>
+
+    <c:if test="<%=news.getZone().isMain()%>">
+      <viewTags:spaceNews listOfNews="<%=news%>"/>
+    </c:if>
 
     <viewTags:spaceNavigation apps="<%=apps%>" subspaces="<%=subspaces%>"/>
 

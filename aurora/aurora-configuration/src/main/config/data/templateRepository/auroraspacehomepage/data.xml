@@ -92,7 +92,123 @@
         <isDisabled>false</isDisabled>
         <isHidden>false</isHidden>
         <label>
-            <labelName>Actualités</labelName>
+            <labelName>Afficher</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>keys</name>
+            <value lang="fr">1##0</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>cols</name>
+            <value lang="fr">2</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>newsZone</fieldName>
+        <displayerName>radio</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Emplacement</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>keys</name>
+            <value lang="fr">main##right</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="fr">Zone principale##Colonne de droite</value>
+        </parameter>
+        <parameter>
+            <name>cols</name>
+            <value lang="fr">2</value>
+        </parameter>
+        <parameter>
+            <name>default</name>
+            <value lang="fr">right</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>newsRenderingType</fieldName>
+        <displayerName>radio</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Présentation</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>cols</name>
+            <value lang="fr">2</value>
+        </parameter>
+        <parameter>
+            <name>keys</name>
+            <value lang="fr">list##carousel</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="fr">Liste##Carrousel</value>
+        </parameter>
+        <parameter>
+            <name>default</name>
+            <value lang="fr">carousel</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>newsLimit</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Nombre d'actualité</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>maxLength</name>
+            <value lang="fr">2</value>
+        </parameter>
+        <parameter>
+            <name>default</name>
+            <value lang="fr">5</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>newsOfSubSpaces</fieldName>
+        <displayerName>radio</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Prendre en compte les sous-espaces</labelName>
             <language>fr</language>
         </label>
         <parameter>
@@ -106,6 +222,42 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>default</name>
+            <value lang="fr">1</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>newsImportantOnly</fieldName>
+        <displayerName>radio</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Importantes seulement</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>cols</name>
+            <value lang="fr">2</value>
+        </parameter>
+        <parameter>
+            <name>keys</name>
+            <value lang="fr">1##0</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>default</name>
+            <value lang="fr">0</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -901,55 +1053,135 @@
         <typeName>file</typeName>
     </fieldTemplate>
     <fieldTemplate>
-      <fieldName>secondPictureLink</fieldName>
-      <displayerName>url</displayerName>
-      <isMandatory>false</isMandatory>
-      <isReadOnly>false</isReadOnly>
-      <isDisabled>false</isDisabled>
-      <isHidden>false</isHidden>
-      <label>
-        <labelName>Image secondaire - Lien</labelName>
-        <language>fr</language>
-      </label>
-      <label>
-        <labelName>Second picture - Lien</labelName>
-        <language>en</language>
-      </label>
-      <isSearchable>false</isSearchable>
-      <isFacet>false</isFacet>
-      <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-      <typeName>text</typeName>
+        <fieldName>secondPictureLink</fieldName>
+        <displayerName>url</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Image secondaire - Lien</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Second picture - Lien</labelName>
+            <language>en</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
     </fieldTemplate>
     <fieldTemplate>
-      <fieldName>newUsers</fieldName>
-      <displayerName>radio</displayerName>
-      <isMandatory>false</isMandatory>
-      <isReadOnly>false</isReadOnly>
-      <isDisabled>false</isDisabled>
-      <isHidden>false</isHidden>
-      <label>
-        <labelName>Nouveaux utilisateurs</labelName>
-        <language>fr</language>
-      </label>
-      <label>
-        <labelName>New users</labelName>
-        <language>en</language>
-      </label>
-      <parameter>
-        <name>cols</name>
-        <value lang="fr">2</value>
-      </parameter>
-      <parameter>
-        <name>keys</name>
-        <value lang="fr">1##0</value>
-      </parameter>
-      <parameter>
-        <name>values</name>
-        <value lang="fr">Oui##Non</value>
-      </parameter>
-      <isSearchable>false</isSearchable>
-      <isFacet>false</isFacet>
-      <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-      <typeName>text</typeName>
+        <fieldName>newUsers</fieldName>
+        <displayerName>radio</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Nouveaux utilisateurs</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>New users</labelName>
+            <language>en</language>
+        </label>
+        <parameter>
+            <name>cols</name>
+            <value lang="fr">2</value>
+        </parameter>
+        <parameter>
+            <name>keys</name>
+            <value lang="fr">1##0</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="fr">Oui##Non</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>mainFreeContentTitle</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Titre</labelName>
+            <language>fr</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>mainFreeContentValue</fieldName>
+        <displayerName>wysiwyg</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Contenu</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>galleries</name>
+            <value lang="fr">true</value>
+        </parameter>
+        <parameter>
+            <name>fileStorages</name>
+            <value lang="fr">true</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>rightFreeContentTitle</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Titre</labelName>
+            <language>fr</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>rightFreeContentValue</fieldName>
+        <displayerName>wysiwyg</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>false</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>false</isHidden>
+        <label>
+            <labelName>Contenu</labelName>
+            <language>fr</language>
+        </label>
+        <parameter>
+            <name>galleries</name>
+            <value lang="fr">true</value>
+        </parameter>
+        <parameter>
+            <name>fileStorages</name>
+            <value lang="fr">true</value>
+        </parameter>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
     </fieldTemplate>
 </recordTemplate>

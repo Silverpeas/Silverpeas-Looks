@@ -3,16 +3,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/silverFunctions" prefix="silfn" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
+<%@ page import="java.util.stream.Stream" %>
+<%@ page import="org.silverpeas.looks.aurora.NewsList" %>
+<%@ page import="java.util.function.Predicate" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+<c:if test="${lookHelper != null}">
+  <jsp:useBean id="lookHelper" type="org.silverpeas.looks.aurora.LookAuroraHelper"/>
+</c:if>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 
 <c:set var="weatherCities" value="${lookHelper.weatherCities}"/>
 <c:set var="showWeather" value="${not empty weatherCities}"/>
 <c:set var="showEphemeris" value="${settings.displayEphemeris}"/>
 
-<c:set var="listOfNews" value="${lookHelper.news}"/>
-<c:set var="newsImageSize" value="${settings.newsImageSize}"/>
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
 <c:set var="questions" value="${lookHelper.questions}"/>
 <c:set var="publications" value="${lookHelper.latestPublications}"/>
@@ -21,15 +25,12 @@
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
 <c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
-<c:set var="newsWithCarrousel" value="${settings.displayNewsWithCarrousel}"/>
-
+<c:set var="listOfNews" value="${lookHelper.news}"/>
+<jsp:useBean id="listOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
 <c:set var="secondaryListOfNews" value="${lookHelper.secondaryNews}"/>
-<c:set var="secondaryNewsImageSize" value="${settings.secondaryNewsImageSize}"/>
-<c:set var="secondaryNewsWithCarrousel" value="${settings.displaySecondaryNewsWithCarrousel}"/>
-
+<jsp:useBean id="secondaryListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
 <c:set var="thirdListOfNews" value="${lookHelper.thirdNews}"/>
-<c:set var="thirdNewsImageSize" value="${settings.thirdNewsImageSize}"/>
-<c:set var="thirdNewsWithCarrousel" value="${settings.displayThirdNewsWithCarrousel}"/>
+<jsp:useBean id="thirdListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
 
 <c:set var="newUsers" value="${lookHelper.newUsersList}"/>
 
@@ -38,12 +39,17 @@
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
+<c:set var="isAtLeastOneCarousel" value="<%=Stream.of(listOfNews, secondaryListOfNews, thirdListOfNews)
+      .filter(Predicate.not(NewsList::isEmpty))
+      .map(NewsList::getRenderingType)
+      .anyMatch(NewsList.RenderingType::isCarousel)%>"/>
+
 <view:sp-page>
 <view:sp-head-part>
   <jsp:attribute name="atTop">
-    <c:if test="${newsWithCarrousel}">
-      <link rel="stylesheet" href="css/responsiveslides.css" type="text/css" media="screen" />
-      <link rel="stylesheet" href="css/themes.css" type="text/css" media="screen" />
+    <c:if test="${isAtLeastOneCarousel}">
+    <view:link href="/look/jsp/css/responsiveslides.css"/>
+    <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
     <view:link href="/look/jsp/css/aurora.css"/>
   </jsp:attribute>
@@ -101,11 +107,11 @@
 
       <viewTags:displayShortcuts shortcuts="${shortcuts}"/>
 
-      <viewTags:displayNews listOfNews="${listOfNews}" carrousel="${newsWithCarrousel}" imageSize="${newsImageSize}"/>
+      <viewTags:displayNews listOfNews="${listOfNews}"/>
 
-      <viewTags:displayNews listOfNews="${secondaryListOfNews}" carrousel="${secondaryNewsWithCarrousel}" imageSize="${secondaryNewsImageSize}" id="secondaryNews"/>
+      <viewTags:displayNews listOfNews="${secondaryListOfNews}" id="secondaryNews"/>
 
-      <viewTags:displayNews listOfNews="${thirdListOfNews}" carrousel="${thirdNewsWithCarrousel}" imageSize="${thirdNewsImageSize}" id="thirdNews"/>
+      <viewTags:displayNews listOfNews="${thirdListOfNews}" id="thirdNews"/>
 
       <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 

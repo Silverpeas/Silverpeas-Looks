@@ -1,276 +1,436 @@
-<link href='/silverpeas/util/styleSheets/fieldset.css?v=61SNAPSHOT' type='text/css' rel='stylesheet'/>
-                  <fieldset class="skinFieldset">
-                    <legend class="without-img">Introduction</legend>
-                    <div class="fields">
-                    <div class="field field_picture entireWidth " id="form-row-picture">
-                        <label for="picture" class="txtlibform"><%=picture.label%></label>
-                        <div class="fieldInput">
-                          <%=picture%>
-                        </div>
-                      </div>
-                      <div class="field field_intro entireWidth" id="form-row-intro">
-                        <label for="intro" class="txtlibform"><%=intro.label%></label>
-                        <div class="fieldInput champs">
-                          <%=intro%>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-                  <fieldset class="skinFieldset">
-                    <legend class="without-img">Navigation</legend>
-                    <div class="fields">
-                      <div class="field field_displaySubspaces" id="form-row-displaySubspaces">
-                        <label for="displaySubspaces" class="txtlibform"><%=displaySubspaces.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displaySubspaces%>
-                        </div>
-                      </div>
-                      <div class="field field_displayApps" id="form-row-displayApps">
-                        <label for="displayApps" class="txtlibform"><%=displayApps.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayApps%>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-                  <fieldset class="skinFieldset">
-                    <legend class="without-img">Blocs principaux (gauche)</legend>
-                    <div class="fields">
-                      <div class="field field_latestPublications" id="form-row-latestPublications">
-                        <label for="latestPublications" class="txtlibform"><%=latestPublications.label%></label>
-                        <div class="fieldInput champs">
-                          <%=latestPublications%>
-                        </div>
-                      </div>
-                      <br class="clear" />
-                      <div class="field field_newUsers" id="form-row-newUsers">
-                        <label for="newUsers" class="txtlibform"><%=newUsers.label%></label>
-                        <div class="fieldInput champs">
-                          <%=newUsers%>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-                  <fieldset class="skinFieldset">
-                    <legend class="without-img">Blocs de droite</legend>
-                    <div class="fields">
-                      <div class="field field_secondPicture entireWidth " id="form-row-secondPicture">
-                        <label for="secondPicture" class="txtlibform"><%=secondPicture.label%></label>
-                        <div class="fieldInput ">
-							<%=secondPicture%>
-                        </div>
-                      </div>
-                      <div class="field field_secondPictureLink entireWidth " id="form-row-secondPictureLink">
-                        <label for="secondPictureLink" class="txtlibform"><%=secondPictureLink.label%></label>
-                        <div class="fieldInput ">
-                          <%=secondPictureLink%>
-                        </div>
-                      </div>
-                      <hr class="clear" />
-					  <div class="field field_displayAdmins" id="form-row-displayAdmins">
-                        <label for="displayAdmins" class="txtlibform"><%=displayAdmins.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayAdmins%>
-                        </div>
-                      </div>
-                      <div class="field field_displayNews" id="form-row-displayNews">
-                        <label for="displayNews" class="txtlibform"><%=displayNews.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayNews%>
-                        </div>
-                      </div>
-                      <div class="field field_displayEvents" id="form-row-displayEvents">
-                        <label for="displayEvents" class="txtlibform"><%=displayEvents.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayEvents%>
-                        </div>
-                      </div>
-                      <div class="field field_displayMedias" id="form-row-displayMedias">
-                        <label for="displayMedias" class="txtlibform"><%=displayMedias.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayMedias%>
-                        </div>
-                      </div>
-					  <div class="field field_displayTasks" id="form-row-displayTasks">
-                        <label for="displayTasks" class="txtlibform"><%=displayTasks.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayTasks%>
-                        </div>
-                      </div>
-                      <div class="field field_displayTaxonomy" id="form-row-displayTaxonomy">
-                        <label for="displayTaxonomy" class="txtlibform"><%=displayTaxonomy.label%></label>
-                        <div class="fieldInput champs">
-                          <%=displayTaxonomy%>
-                        </div>
-                      </div>
-					  <hr class="clear" />
-					  <div class="field"><label class="fields-block-title">Bloc utilisateurs</label></div>
-                      <br class="clear" />
-                      <div class="field field_usersLabel" id="form-row-usersLabel">
-                        <label for="usersLabel" class="txtlibform"><%=usersLabel.label%></label>
-                        <div class="fieldInput champs">
-                          <%=usersLabel%>
-                        </div>
-                      </div>
-                      <div class="field field_users" id="form-row-users">
-                        <label for="users" class="txtlibform"><%=users.label%></label>
-                        <div class="fieldInput champs">
-                          <%=users%>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-        <fieldset id="pubInfo" class="skinFieldset">
-          <legend class="without-img">Les raccourcis</legend>
-          <div class="fields">
-            <div class="field field_shortcutURL1" id="form-row-shortcutURL1">
-              <label for="shortcutURL1" class="txtlibform"><%=shortcutURL1.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutURL1%>
-              </div>
-            </div>
-            <div class="field field_shortcutLabel1" id="form-row-shortcutLabel1">
-              <label for="shortcutLabel1" class="txtlibform"><%=shortcutLabel1.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutLabel1%>
-              </div>
-            </div>
-            <div class="field field_shortcutIcon1" id="form-row-shortcutIcon1">
-              <label for="shortcutIcon1" class="txtlibform"><%=shortcutIcon1.label%></label>
-              <div class="fieldInput">
-                <%=shortcutIcon1%>
-              </div>
-            </div>
-            <div class="field field_shortcutTarget1" id="form-row-shortcutTarget1">
-              <label for="shortcutTarget1" class="txtlibform"><%=shortcutTarget1.label%></label>
-              <div class="fieldInput champs">
-				<%=shortcutTarget1%>
-              </div>
-            </div>
-            <hr class="clear" />
-            <div class="field field_shortcutURL2" id="form-row-shortcutURL2">
-              <label for="shortcutURL2" class="txtlibform"><%=shortcutURL2.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutURL2%>
-              </div>
-            </div>
-            <div class="field field_shortcutLabel2" id="form-row-shortcutLabel2">
-              <label for="shortcutLabel2" class="txtlibform"><%=shortcutLabel2.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutLabel2%>
-              </div>
-            </div>
-            <div class="field field_shortcutIcon2" id="form-row-shortcutIcon2">
-              <label for="shortcutIcon2" class="txtlibform"><%=shortcutIcon2.label%></label>
-              <div class="fieldInput">
-                <%=shortcutIcon2%>
-              </div>
-            </div>
-            <div class="field field_shortcutTarget2" id="form-row-shortcutTarget2">
-              <label for="shortcutTarget2" class="txtlibform"><%=shortcutTarget2.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutTarget2%>
-              </div>
-            </div>
-            <hr class="clear" />
-            <div class="field field_shortcutURL3" id="form-row-shortcutURL3">
-              <label for="shortcutURL3" class="txtlibform"><%=shortcutURL3.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutURL3%>
-              </div>
-            </div>
-            <div class="field field_shortcutLabel3" id="form-row-shortcutLabel3">
-              <label for="shortcutLabel3" class="txtlibform"><%=shortcutLabel3.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutLabel3%>
-              </div>
-            </div>
-            <div class="field field_shortcutIcon3" id="form-row-shortcutIcon3">
-              <label for="shortcutIcon3" class="txtlibform"><%=shortcutIcon3.label%></label>
-              <div class="fieldInput">
-                <%=shortcutIcon3%>
-              </div>
-            </div>
-            <div class="field field_shortcutTarget3" id="form-row-shortcutTarget3">
-              <label for="shortcutTarget3" class="txtlibform"><%=shortcutTarget3.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutTarget3%>
-              </div>
-            </div>
-            <hr class="clear" />
-            <div class="field field_shortcutURL4" id="form-row-shortcutURL4">
-              <label for="shortcutURL4" class="txtlibform"><%=shortcutURL4.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutURL4%>
-              </div>
-            </div>
-            <div class="field field_shortcutLabel4" id="form-row-shortcutLabel4">
-              <label for="shortcutLabel4" class="txtlibform"><%=shortcutLabel4.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutLabel4%>
-              </div>
-            </div>
-            <div class="field field_shortcutIcon4" id="form-row-shortcutIcon4">
-              <label for="shortcutIcon4" class="txtlibform"><%=shortcutIcon4.label%></label>
-              <div class="fieldInput">
-                <%=shortcutIcon4%>
-              </div>
-            </div>
-            <div class="field field_shortcutTarget4" id="form-row-shortcutTarget4">
-              <label for="shortcutTarget4" class="txtlibform"><%=shortcutTarget4.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutTarget4%>
-              </div>
-            </div>
-            <hr class="clear" />
-            <div class="field field_shortcutURL5" id="form-row-shortcutURL5">
-              <label for="shortcutURL5" class="txtlibform"><%=shortcutURL5.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutURL5%>
-              </div>
-            </div>
-            <div class="field field_shortcutLabel5" id="form-row-shortcutLabel5">
-              <label for="shortcutLabel5" class="txtlibform"><%=shortcutLabel5.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutLabel5%>
-              </div>
-            </div>
-            <div class="field field_shortcutIcon5" id="form-row-shortcutIcon5">
-              <label for="shortcutIcon5" class="txtlibform"><%=shortcutIcon5.label%></label>
-              <div class="fieldInput">
-                <%=shortcutIcon5%>
-              </div>
-            </div>
-            <div class="field field_shortcutTarget5" id="form-row-shortcutTarget5">
-              <label for="shortcutTarget5" class="txtlibform"><%=shortcutTarget5.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutTarget5%>
-              </div>
-            </div>
-            <hr class="clear" />
-            <div class="field field_shortcutURL6" id="form-row-shortcutURL6">
-              <label for="shortcutURL6" class="txtlibform"><%=shortcutURL6.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutURL6%>
-              </div>
-            </div>
-            <div class="field field_shortcutLabel6" id="form-row-shortcutLabel6">
-              <label for="shortcutLabel6" class="txtlibform"><%=shortcutLabel6.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutLabel6%>
-              </div>
-            </div>
-            <div class="field field_shortcutIcon6" id="form-row-shortcutIcon6">
-              <label for="shortcutIcon6" class="txtlibform"><%=shortcutIcon6.label%></label>
-              <div class="fieldInput">
-                <%=shortcutIcon6%>
-              </div>
-            </div>
-            <div class="field field_shortcutTarget6" id="form-row-shortcutTarget6">
-              <label for="shortcutTarget6" class="txtlibform"><%=shortcutTarget6.label%></label>
-              <div class="fieldInput champs">
-                <%=shortcutTarget6%>
-              </div>
-            </div>
-          </div>
-        </fieldset>
+<link href='/silverpeas/util/styleSheets/fieldset.css?v=64SNAPSHOT' type='text/css' rel='stylesheet'/>
+<fieldset class="skinFieldset">
+  <legend class="without-img">Introduction</legend>
+  <div class="fields">
+    <div class="field field_picture entireWidth " id="form-row-picture">
+      <label for="picture" class="txtlibform">
+        <%=picture.label%>
+      </label>
+      <div class="fieldInput">
+        <%=picture%>
+      </div>
+    </div>
+    <div class="field field_intro entireWidth" id="form-row-intro">
+      <label for="intro" class="txtlibform">
+        <%=intro.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=intro%>
+      </div>
+    </div>
+  </div>
+</fieldset>
+<fieldset class="skinFieldset">
+  <legend class="without-img">Navigation</legend>
+  <div class="fields">
+    <div class="field field_displaySubspaces" id="form-row-displaySubspaces">
+      <label for="displaySubspaces" class="txtlibform">
+        <%=displaySubspaces.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displaySubspaces%>
+      </div>
+    </div>
+    <div class="field field_displayApps" id="form-row-displayApps">
+      <label for="displayApps" class="txtlibform">
+        <%=displayApps.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayApps%>
+      </div>
+    </div>
+  </div>
+</fieldset>
+<fieldset class="skinFieldset">
+  <legend class="without-img">Actualités</legend>
+  <div class="fields">
+    <div class="field field_displayNews" id="form-row-displayNews">
+      <label for="displayNews" class="txtlibform">
+        <%=displayNews.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayNews%>
+      </div>
+    </div>
+    <div class="field field_newsZone" id="form-row-newsZone">
+      <label for="newsZone" class="txtlibform">
+        <%=newsZone.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=newsZone%>
+      </div>
+    </div>
+    <div class="field field_newsRenderingType" id="form-row-newsRenderingType">
+      <label for="newsRenderingType" class="txtlibform">
+        <%=newsRenderingType.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=newsRenderingType%>
+      </div>
+    </div>
+    <div class="field field_newsLimit" id="form-row-newsLimit">
+      <label for="newsLimit" class="txtlibform">
+        <%=newsLimit.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=newsLimit%>
+      </div>
+    </div>
+    <div class="field field_newsOfSubSpaces" id="form-row-newsOfSubSpaces">
+      <label for="newsOfSubSpaces" class="txtlibform">
+        <%=newsOfSubSpaces.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=newsOfSubSpaces%>
+      </div>
+    </div>
+    <div class="field field_newsImportantOnly" id="form-row-newsImportantOnly">
+      <label for="newsImportantOnly" class="txtlibform">
+        <%=newsImportantOnly.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=newsImportantOnly%>
+      </div>
+    </div>
+  </div>
+</fieldset>
+<fieldset class="skinFieldset">
+  <legend class="without-img">Blocs principaux (gauche)</legend>
+  <div class="fields">
+    <div class="field field_latestPublications entireWidth " id="form-row-latestPublications">
+      <label for="latestPublications" class="txtlibform">
+        <%=latestPublications.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=latestPublications%>
+      </div>
+    </div>
+    <div class="field field_newUsers entireWidth " id="form-row-newUsers">
+      <label for="newUsers" class="txtlibform">
+        <%=newUsers.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=newUsers%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field"><label class="fields-block-title entireWidth ">Contenu libre</label></div>
+    <div class="field field_mainFreeContentTitle entireWidth " id="form-row-mainFreeContentTitle">
+      <label for="mainFreeContentTitle" class="txtlibform">
+        <%=mainFreeContentTitle.label%>
+      </label>
+      <div class="fieldInput">
+        <%=mainFreeContentTitle%>
+      </div>
+    </div>
+    <div class="field field_mainFreeContentValue entireWidth" id="form-row-mainFreeContentValue">
+      <label for="mainFreeContentValue" class="txtlibform">
+        <%=mainFreeContentValue.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=mainFreeContentValue%>
+      </div>
+    </div>
+  </div>
+</fieldset>
+<fieldset class="skinFieldset">
+  <legend class="without-img">Blocs de droite</legend>
+  <div class="fields">
+    <div class="field field_secondPicture entireWidth " id="form-row-secondPicture">
+      <label for="secondPicture" class="txtlibform">
+        <%=secondPicture.label%>
+      </label>
+      <div class="fieldInput ">
+        <%=secondPicture%>
+      </div>
+    </div>
+    <div class="field field_secondPictureLink entireWidth " id="form-row-secondPictureLink">
+      <label for="secondPictureLink" class="txtlibform">
+        <%=secondPictureLink.label%>
+      </label>
+      <div class="fieldInput ">
+        <%=secondPictureLink%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field field_displayAdmins" id="form-row-displayAdmins">
+      <label for="displayAdmins" class="txtlibform">
+        <%=displayAdmins.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayAdmins%>
+      </div>
+    </div>
+    <div class="field field_displayEvents" id="form-row-displayEvents">
+      <label for="displayEvents" class="txtlibform">
+        <%=displayEvents.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayEvents%>
+      </div>
+    </div>
+    <div class="field field_displayMedias" id="form-row-displayMedias">
+      <label for="displayMedias" class="txtlibform">
+        <%=displayMedias.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayMedias%>
+      </div>
+    </div>
+    <div class="field field_displayTasks" id="form-row-displayTasks">
+      <label for="displayTasks" class="txtlibform">
+        <%=displayTasks.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayTasks%>
+      </div>
+    </div>
+    <div class="field field_displayTaxonomy" id="form-row-displayTaxonomy">
+      <label for="displayTaxonomy" class="txtlibform">
+        <%=displayTaxonomy.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=displayTaxonomy%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field"><label class="fields-block-title">Bloc utilisateurs</label></div>
+    <br class="clear"/>
+    <div class="field field_usersLabel" id="form-row-usersLabel">
+      <label for="usersLabel" class="txtlibform">
+        <%=usersLabel.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=usersLabel%>
+      </div>
+    </div>
+    <div class="field field_users" id="form-row-users">
+      <label for="users" class="txtlibform">
+        <%=users.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=users%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field"><label class="fields-block-title entireWidth ">Contenu libre</label></div>
+    <div class="field field_rightFreeContentTitle entireWidth " id="form-row-rightFreeContentTitle">
+      <label for="rightFreeContentTitle" class="txtlibform">
+        <%=rightFreeContentTitle.label%>
+      </label>
+      <div class="fieldInput">
+        <%=rightFreeContentTitle%>
+      </div>
+    </div>
+    <div class="field field_rightFreeContentValue entireWidth" id="form-row-rightFreeContentValue">
+      <label for="rightFreeContentValue" class="txtlibform">
+        <%=rightFreeContentValue.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=rightFreeContentValue%>
+      </div>
+    </div>
+  </div>
+</fieldset>
+<fieldset id="pubInfo" class="skinFieldset">
+  <legend class="without-img">Les raccourcis</legend>
+  <div class="fields">
+    <div class="field field_shortcutURL1" id="form-row-shortcutURL1">
+      <label for="shortcutURL1" class="txtlibform">
+        <%=shortcutURL1.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutURL1%>
+      </div>
+    </div>
+    <div class="field field_shortcutLabel1" id="form-row-shortcutLabel1">
+      <label for="shortcutLabel1" class="txtlibform">
+        <%=shortcutLabel1.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutLabel1%>
+      </div>
+    </div>
+    <div class="field field_shortcutIcon1" id="form-row-shortcutIcon1">
+      <label for="shortcutIcon1" class="txtlibform">
+        <%=shortcutIcon1.label%>
+      </label>
+      <div class="fieldInput">
+        <%=shortcutIcon1%>
+      </div>
+    </div>
+    <div class="field field_shortcutTarget1" id="form-row-shortcutTarget1">
+      <label for="shortcutTarget1" class="txtlibform">
+        <%=shortcutTarget1.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutTarget1%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field field_shortcutURL2" id="form-row-shortcutURL2">
+      <label for="shortcutURL2" class="txtlibform">
+        <%=shortcutURL2.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutURL2%>
+      </div>
+    </div>
+    <div class="field field_shortcutLabel2" id="form-row-shortcutLabel2">
+      <label for="shortcutLabel2" class="txtlibform">
+        <%=shortcutLabel2.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutLabel2%>
+      </div>
+    </div>
+    <div class="field field_shortcutIcon2" id="form-row-shortcutIcon2">
+      <label for="shortcutIcon2" class="txtlibform">
+        <%=shortcutIcon2.label%>
+      </label>
+      <div class="fieldInput">
+        <%=shortcutIcon2%>
+      </div>
+    </div>
+    <div class="field field_shortcutTarget2" id="form-row-shortcutTarget2">
+      <label for="shortcutTarget2" class="txtlibform">
+        <%=shortcutTarget2.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutTarget2%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field field_shortcutURL3" id="form-row-shortcutURL3">
+      <label for="shortcutURL3" class="txtlibform">
+        <%=shortcutURL3.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutURL3%>
+      </div>
+    </div>
+    <div class="field field_shortcutLabel3" id="form-row-shortcutLabel3">
+      <label for="shortcutLabel3" class="txtlibform">
+        <%=shortcutLabel3.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutLabel3%>
+      </div>
+    </div>
+    <div class="field field_shortcutIcon3" id="form-row-shortcutIcon3">
+      <label for="shortcutIcon3" class="txtlibform">
+        <%=shortcutIcon3.label%>
+      </label>
+      <div class="fieldInput">
+        <%=shortcutIcon3%>
+      </div>
+    </div>
+    <div class="field field_shortcutTarget3" id="form-row-shortcutTarget3">
+      <label for="shortcutTarget3" class="txtlibform">
+        <%=shortcutTarget3.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutTarget3%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field field_shortcutURL4" id="form-row-shortcutURL4">
+      <label for="shortcutURL4" class="txtlibform">
+        <%=shortcutURL4.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutURL4%>
+      </div>
+    </div>
+    <div class="field field_shortcutLabel4" id="form-row-shortcutLabel4">
+      <label for="shortcutLabel4" class="txtlibform">
+        <%=shortcutLabel4.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutLabel4%>
+      </div>
+    </div>
+    <div class="field field_shortcutIcon4" id="form-row-shortcutIcon4">
+      <label for="shortcutIcon4" class="txtlibform">
+        <%=shortcutIcon4.label%>
+      </label>
+      <div class="fieldInput">
+        <%=shortcutIcon4%>
+      </div>
+    </div>
+    <div class="field field_shortcutTarget4" id="form-row-shortcutTarget4">
+      <label for="shortcutTarget4" class="txtlibform">
+        <%=shortcutTarget4.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutTarget4%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field field_shortcutURL5" id="form-row-shortcutURL5">
+      <label for="shortcutURL5" class="txtlibform">
+        <%=shortcutURL5.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutURL5%>
+      </div>
+    </div>
+    <div class="field field_shortcutLabel5" id="form-row-shortcutLabel5">
+      <label for="shortcutLabel5" class="txtlibform">
+        <%=shortcutLabel5.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutLabel5%>
+      </div>
+    </div>
+    <div class="field field_shortcutIcon5" id="form-row-shortcutIcon5">
+      <label for="shortcutIcon5" class="txtlibform">
+        <%=shortcutIcon5.label%>
+      </label>
+      <div class="fieldInput">
+        <%=shortcutIcon5%>
+      </div>
+    </div>
+    <div class="field field_shortcutTarget5" id="form-row-shortcutTarget5">
+      <label for="shortcutTarget5" class="txtlibform">
+        <%=shortcutTarget5.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutTarget5%>
+      </div>
+    </div>
+    <hr class="clear"/>
+    <div class="field field_shortcutURL6" id="form-row-shortcutURL6">
+      <label for="shortcutURL6" class="txtlibform">
+        <%=shortcutURL6.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutURL6%>
+      </div>
+    </div>
+    <div class="field field_shortcutLabel6" id="form-row-shortcutLabel6">
+      <label for="shortcutLabel6" class="txtlibform">
+        <%=shortcutLabel6.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutLabel6%>
+      </div>
+    </div>
+    <div class="field field_shortcutIcon6" id="form-row-shortcutIcon6">
+      <label for="shortcutIcon6" class="txtlibform">
+        <%=shortcutIcon6.label%>
+      </label>
+      <div class="fieldInput">
+        <%=shortcutIcon6%>
+      </div>
+    </div>
+    <div class="field field_shortcutTarget6" id="form-row-shortcutTarget6">
+      <label for="shortcutTarget6" class="txtlibform">
+        <%=shortcutTarget6.label%>
+      </label>
+      <div class="fieldInput champs">
+        <%=shortcutTarget6%>
+      </div>
+    </div>
+  </div>
+</fieldset>
