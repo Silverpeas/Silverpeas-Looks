@@ -12,7 +12,6 @@ import static java.util.function.Predicate.not;
  */
 public class LookSettings {
 
-  private static final String CARROUSEL_TYPE = "carrousel";
   SettingBundle settings;
 
   public LookSettings(SettingBundle settings) {
@@ -62,15 +61,6 @@ public class LookSettings {
     return settings.getBoolean("home.search", true);
   }
 
-  public String getNewsImageSize() {
-    return settings.getString("home.news.width", "1095") + "x" +
-        settings.getString("home.news.height", "");
-  }
-
-  public boolean isDisplayNewsWithCarrousel() {
-    return CARROUSEL_TYPE.equalsIgnoreCase(settings.getString("home.news.displayer", CARROUSEL_TYPE));
-  }
-
   public String getEventsAppURL() {
     return URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, settings.getString("home.events.appId", ""));
   }
@@ -117,26 +107,6 @@ public class LookSettings {
 
   public boolean isExtraSearchFieldSpaceUsed() {
     return settings.getBoolean("home.search.extrafield.space", false);
-  }
-
-  public String getSecondaryNewsImageSize() {
-    return settings.getString("home.news.secondary.width", "1095") + "x" +
-        settings.getString("home.news.secondary.height", "");
-  }
-
-  public boolean isDisplaySecondaryNewsWithCarrousel() {
-    return CARROUSEL_TYPE.equalsIgnoreCase(settings.getString("home.news.secondary.displayer",
-        CARROUSEL_TYPE));
-  }
-
-  public String getThirdNewsImageSize() {
-    return settings.getString("home.news.third.width", "1095") + "x" +
-        settings.getString("home.news.third.height", "");
-  }
-
-  public boolean isDisplayThirdNewsWithCarrousel() {
-    return CARROUSEL_TYPE.equalsIgnoreCase(settings.getString("home.news.third.displayer",
-        CARROUSEL_TYPE));
   }
 
   public String getExtraJavascriptForHome() {

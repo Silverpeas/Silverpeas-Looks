@@ -30,41 +30,58 @@
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
-<%@ attribute name="news"
+<%@ attribute name="listOfNews"
               required="true"
-              type="java.util.List" %>
+              type="org.silverpeas.looks.aurora.NewsList" %>
 
 <fmt:message var="labelNews" key="look.space.home.news"/>
 
 <script type="text/javascript">
-  <!--
+  <c:if test="${listOfNews.renderingType.carousel}">
   whenSilverpeasReady(function() {
-    var $s = $('.slideshow').slides();
+    $("#spaceQuiskInfo ul.carousel").responsiveSlides({
+      auto: true,
+      pager: true,
+      nav: true,
+      speed: 500,
+      pause: true,
+      timeout: 6000,
+      namespace: "centered-btns"
+    });
   });
-  -->
+  </c:if>
 </script>
 
-<c:if test="${not empty news}">
+<c:set var="listOrcarouselCss" value="list"/>
+<c:if test="${listOfNews.renderingType.carousel}">
+  <c:set var="listOrcarouselCss" value="carousel rslides"/>
+</c:if>
+
+<c:if test="${not empty listOfNews.news}">
   <!-- QuickInfo -->
   <div class="secteur-container" id="spaceQuiskInfo">
     <div class="header">
       <h2 class="portlet-title">${labelNews}</h2>
     </div>
     <div class="portlet-content slideshow" data-transition="crossfade" data-loop="true" data-skip="false">
-      <ul class="carousel">
-        <c:forEach var="aNews" items="${news}">
+      <ul class="${listOrcarouselCss}">
+        <c:forEach var="aNews" items="${listOfNews.news}">
           <c:set var="tpCSS" value="${aNews.taxonomyPositionAsString}"/>
-          <li class="slide ${tpCSS}" onclick="location.href='${aNews.permalink}'">
-            <h3 class="title-quickInfo">
-              <a class="sp-permalink" href="${aNews.permalink}">
-                ${silfn:escapeHtml(aNews.title)}
-              </a>
-            </h3>
+          <li class="slide ${tpCSS}" onclick="spWindow.loadPermalink('${aNews.permalink}')">
             <c:if test="${not empty aNews.thumbnailURL}">
-              <img src="${aNews.thumbnailURL}" alt=""/>
+              <div class="thumbnail"><img src="${aNews.thumbnailURL}" alt=""/></div>
             </c:if>
-            <div class="content-quickInfo">
-              <p>${aNews.description}</p>
+            <div class="content-quickInfo caption">
+              <h3 class="title-quickInfo">
+                <a class="sp-permalink" href="${aNews.permalink}">
+                    ${silfn:escapeHtml(aNews.title)}
+                </a>
+              </h3>
+              <p class="news-date"><view:formatDate value="${aNews.date}"/></p>
+              <view:componentPath componentId="${aNews.news.componentInstanceId}" includeComponent="false"/>
+              <c:if test="${not empty aNews.description}">
+                <p>${aNews.description}</p>
+              </c:if>
             </div>
           </li>
         </c:forEach>
