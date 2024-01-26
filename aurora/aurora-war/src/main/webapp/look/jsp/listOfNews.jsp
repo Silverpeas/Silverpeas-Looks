@@ -72,7 +72,7 @@
 <view:browseBar />
 <view:window>
   <h1><%=title%></h1>
-<viewTags:displayNews listOfNews="<%=newsList%>" carrousel="false" imageSize="800x"/>
+<viewTags:displayNews listOfNews="<%=newsList%>" />
 </view:window>
 </view:sp-body-part>
 </view:sp-page>

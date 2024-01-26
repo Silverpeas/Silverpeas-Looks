@@ -23,62 +23,65 @@
   --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<style type="text/css">
+<style>
   .spaceHome .spaceDescription {
     display: block;
-    margin: 1em 0px;
-    padding: 0px;
+    margin: 1em 0;
+    padding: 0;
     text-align: justify;
   }
 
   .spaceHome .spaceNavigation .browseSpace {
-    font-weight: 100;
+    font-weight: 500;
   }
 
   .spaceHome .spaceNavigation ul {
     list-style-type: none;
-    margin: 0px;
-    padding: 0px;
+    display: flex;
+    flex-direction: row;
+    flex-flow: wrap;
+    margin: 0;
+    padding: 0;
   }
 
   .spaceHome .spaceNavigation li {
     border-radius: 12px;
-    float: left;
-    line-height: 32px;
-    margin-right: 6px;
-    min-height: 32px;
-    padding: 8px 12px 8px 8px;
+    line-height: 3em;
+    margin-right: 1em;
+    min-height: 3em;
+    padding: 1em;
+    display: flex;
   }
 
   .spaceHome .spaceNavigation li:hover {
-    background-image: url("<c:url value="/util/icons/gradientSVG.jsp?from=e5e5e5&to=fff&vertical=0&horizontal=100"/>");
+    background: linear-gradient(90deg, rgb(0 0 0 / 0.3) 0%, rgb(255 255 255 / 1) 100%);
     cursor: pointer;
   }
 
   .spaceHome .spaceNavigation li div {
-    display: inline-block;
-    vertical-align: middle;
+    align-self: center;
   }
 
   .spaceHome .spaceNavigation li a {
-    font-size: 14px;
+    font-size: 110%;
   }
 
   .spaceHome .spaceNavigation li p {
     font-size: 90%;
-    margin: -13px 0 0 0;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
   }
 
   .spaceHome .spaceNavigation li.browse-component {
     padding-left: 36px;
-    position: relative;
+    position: relative
   }
 
   .spaceHome .spaceNavigation li img {
     left: 5px;
     position: absolute;
-    top: 25%;
+    top: calc(50% - 13px);
     width: 26px;
+    height: auto;
   }
 </style>

@@ -44,6 +44,7 @@ import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.util.CollectionUtil;
+import org.silverpeas.core.util.Pair;
 import org.silverpeas.core.util.StringUtil;
 import org.silverpeas.core.util.URLUtil;
 import org.silverpeas.core.util.logging.SilverLogger;
@@ -51,11 +52,18 @@ import org.silverpeas.core.web.look.Shortcut;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toMap;
+import static org.silverpeas.core.util.StringUtil.EMPTY;
+import static org.silverpeas.looks.aurora.AuroraSpaceHomePageZone.MAIN;
+import static org.silverpeas.looks.aurora.AuroraSpaceHomePageZone.RIGHT;
 
 public class AuroraSpaceHomePage {
 
@@ -97,11 +105,50 @@ public class AuroraSpaceHomePage {
   }
 
   public NewsList getNews() {
-    boolean displayNews = isEnabled("space.homepage.news", "displayNews");
+    final int nbNews = ofNullable(getFieldValue("newsLimit"))
+        .filter(StringUtil::isInteger)
+        .map(Integer::parseInt)
+        .map(l -> Math.min(l, look.getSettings("space.homepage.news.nb.max", 10)))
+        .orElse(look.getSettings("space.homepage.news.nb.default", 5));
+    final boolean displayNews = nbNews > 0 && isEnabled("space.homepage.news", "displayNews");
+    final NewsList newsList;
     if (displayNews) {
-      return look.getNewsOfSpace(getSpace().getId());
+      final boolean includeSubSpaces = getFieldBooleanValue("newsOfSubSpaces");
+      final boolean importantOnly = getFieldBooleanValue("newsImportantOnly");
+      newsList = look.getNewsOfSpace(getSpace().getId(), includeSubSpaces, importantOnly, nbNews);
+      ofNullable(getFieldValue("newsZone"))
+          .filter(StringUtil::isDefined)
+          .map(String::toUpperCase)
+          .map(AuroraSpaceHomePageZone::valueOf)
+          .ifPresent(newsList::setZone);
+      ofNullable(getFieldValue("newsRenderingType"))
+          .filter(StringUtil::isDefined)
+          .map(String::toUpperCase)
+          .map(NewsList.RenderingType::valueOf)
+          .ifPresent(newsList::setRenderingType);
+      newsList.setImageSize(look.getSettings("space.homepage.news.image.width", "800") + "x" +
+          look.getSettings("space.homepage.news.image.height", EMPTY));
+    } else {
+      newsList = new NewsList(Collections.emptyList(), null);
     }
-    return new NewsList(Collections.emptyList(), null);
+    return newsList;
+  }
+
+  public Map<AuroraSpaceHomePageZone, FreeZone> getFreeZones() {
+    return EnumSet.of(MAIN, RIGHT)
+        .stream()
+        .flatMap(p -> {
+          final String prefix = p.name().toLowerCase();
+          return ofNullable(getFieldWysiwygValue(prefix + "FreeContentValue"))
+              .filter(StringUtil::isDefined)
+              .map(FreeZone::new)
+              .map(z -> {
+                z.setTitle(getFieldValue(prefix + "FreeContentTitle"));
+                return Pair.of(p, z);
+              })
+              .stream();
+        })
+        .collect(toMap(Pair::getFirst, Pair::getSecond));
   }
 
   public boolean isTaxonomyEnabled() {

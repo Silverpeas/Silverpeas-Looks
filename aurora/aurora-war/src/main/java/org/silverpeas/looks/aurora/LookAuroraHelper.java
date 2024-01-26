@@ -16,6 +16,7 @@ import org.silverpeas.components.rssaggregator.model.RSSItem;
 import org.silverpeas.components.rssaggregator.model.SPChannel;
 import org.silverpeas.components.rssaggregator.service.RSSService;
 import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
+import org.silverpeas.core.SilverpeasRuntimeException;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
 import org.silverpeas.core.admin.component.model.PersonalComponent;
@@ -25,6 +26,7 @@ import org.silverpeas.core.admin.domain.model.Domain;
 import org.silverpeas.core.admin.service.AdminException;
 import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.admin.service.OrganizationController;
+import org.silverpeas.core.admin.service.SpaceWithSubSpacesAndComponents;
 import org.silverpeas.core.admin.space.SpaceInstLight;
 import org.silverpeas.core.admin.user.model.Group;
 import org.silverpeas.core.admin.user.model.SilverpeasRole;
@@ -72,13 +74,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.of;
+import static org.silverpeas.core.admin.space.SpaceInst.SPACE_KEY_PREFIX;
 import static org.silverpeas.core.admin.user.constant.UserState.*;
+import static org.silverpeas.core.util.StringUtil.EMPTY;
 import static org.silverpeas.core.util.StringUtil.split;
 import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
@@ -389,7 +395,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public NewsList getAllNewsByTaxonomyPosition(String taxonomyPosition) {
     List<News> allNews = getNewsByTaxonomyPosition(getAllowedComponents(QUICKINFO, "*"), false,
         taxonomyPosition);
-    return new NewsList(allNews, null);
+    final NewsList newsList = new NewsList(allNews, null);
+    newsList.setRenderingType(NewsList.RenderingType.LIST);
+    return newsList;
   }
 
   private List<News> getNewsByTaxonomyPosition(List<String> allowedComponentIds,
@@ -893,7 +901,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<News> news = new ArrayList<>();
     String newsType = getSettings(key, "");
     if (!StringUtil.isDefined(newsType)) {
-      return new NewsList(news, uniqueAppId);
+      return setupMainHomePageNewsListDisplay(key, new NewsList(news, uniqueAppId));
     }
 
     boolean importantOnly = getSettings(key + ".importantOnly", false);
@@ -920,7 +928,28 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (getSettings(key + ".taxonomy.display", false)) {
       result.withTaxonomyButtons();
     }
-    return result;
+    return setupMainHomePageNewsListDisplay(key, result);
+  }
+
+  private NewsList setupMainHomePageNewsListDisplay(final String key, final NewsList newsList) {
+    switch (key) {
+      case PROPERTY_NEWS_MAIN:
+        newsList.setZone(AuroraSpaceHomePageZone.MAIN);
+        break;
+      case PROPERTY_NEWS_THIRD:
+        newsList.setZone(AuroraSpaceHomePageZone.THIRD);
+        break;
+      default:
+        newsList.setZone(AuroraSpaceHomePageZone.RIGHT);
+    }
+    newsList.setRenderingType(ofNullable(getSettings(key + ".displayer", null))
+        .filter(StringUtil::isDefined)
+        .map(String::toUpperCase)
+        .map(NewsList.RenderingType::valueOf)
+        .orElse(NewsList.RenderingType.CAROUSEL));
+    newsList.setImageSize(
+        getSettings(key + ".width", "800") + "x" + getSettings(key + ".height", ""));
+    return newsList;
   }
 
   private List<String> getComponentIdsForNews(int index) {
@@ -963,19 +992,27 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return null;
   }
 
-  public NewsList getNewsOfSpace(String spaceId) {
-    List<String> appIds = new ArrayList<>();
-    String[] cIds = getOrganisationController().getAvailCompoIds(spaceId, getUserId());
-    for (String id : cIds) {
-      if (StringUtil.startsWithIgnoreCase(id, QUICKINFO)) {
-        appIds.add(id);
-      }
+  NewsList getNewsOfSpace(final String spaceId, final boolean includeSubSpaces,
+      final boolean importantOnly, final int limit) {
+    final String localSpaceId = spaceId.replace(SPACE_KEY_PREFIX, EMPTY);
+    final List<String> appIds;
+    try {
+      final SpaceWithSubSpacesAndComponents.ComponentInstanceSelector componentInstanceSelector =
+          getOrganisationController()
+              .getFullTreeviewOnComponentName(getUserId(), QUICKINFO)
+              .componentInstanceSelector();
+      appIds = componentInstanceSelector.fromSpaces(Set.of(localSpaceId))
+          .select()
+          .stream()
+          .filter(i -> includeSubSpaces || i.getSpaceId().equals(localSpaceId))
+          .map(SilverpeasComponentInstance::getId)
+          .collect(toList());
+    } catch (AdminException e) {
+      throw new SilverpeasRuntimeException(e);
     }
-
-    List<News> someNews = getNewsByComponentIds(appIds, false);
-    int nbNews = getSettings("space.homepage.news.nb", 10);
-    if (someNews.size() > nbNews) {
-      return new NewsList(someNews.subList(0, nbNews), null);
+    final List<News> someNews = getNewsByComponentIds(appIds, importantOnly);
+    if (someNews.size() > limit) {
+      return new NewsList(someNews.subList(0, limit), null);
     }
     return new NewsList(someNews, null);
   }
