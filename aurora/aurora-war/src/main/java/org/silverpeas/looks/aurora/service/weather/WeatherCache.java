@@ -1,10 +1,10 @@
 package org.silverpeas.looks.aurora.service.weather;
 
 import org.silverpeas.core.annotation.Bean;
-import org.silverpeas.core.annotation.Technical;
-import org.silverpeas.core.cache.model.Cache;
+import org.silverpeas.kernel.annotation.Technical;
+import org.silverpeas.kernel.cache.model.Cache;
 import org.silverpeas.core.cache.service.CacheAccessorProvider;
-import org.silverpeas.core.util.ResourceLocator;
+import org.silverpeas.kernel.bundle.ResourceLocator;
 
 import javax.inject.Singleton;
 import java.util.function.Supplier;

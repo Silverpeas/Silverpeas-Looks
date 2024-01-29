@@ -1,7 +1,7 @@
 <%@page import="org.silverpeas.looks.aurora.LookAuroraHelper"%>
-<%@ page import="org.silverpeas.core.util.StringUtil" %>
-<%@ page import="org.silverpeas.core.util.ResourceLocator" %>
-<%@ page import="org.silverpeas.core.util.LocalizationBundle" %>
+<%@ page import="org.silverpeas.kernel.util.StringUtil" %>
+<%@ page import="org.silverpeas.kernel.bundle.ResourceLocator" %>
+<%@ page import="org.silverpeas.kernel.bundle.LocalizationBundle" %>
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
