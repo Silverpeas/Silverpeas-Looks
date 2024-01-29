@@ -1,7 +1,7 @@
 package org.silverpeas.looks.aurora;
 
 import org.silverpeas.core.admin.user.model.User;
-import org.silverpeas.core.util.SettingBundle;
+import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.core.util.URLUtil;
 
 import static java.util.Optional.ofNullable;
