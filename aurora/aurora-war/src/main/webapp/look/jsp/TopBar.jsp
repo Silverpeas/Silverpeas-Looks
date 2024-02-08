@@ -95,6 +95,12 @@
         });
       }
 
+      function loadMap(spaceId) {
+        changeBody(sp.url.format('/admin/jsp/Map.jsp', {
+          SpaceId : spaceId
+        }));
+      }
+
       function getTopBarPage() {
         return "TopBar.jsp";
       }
@@ -397,7 +403,7 @@
             <c:if test="${displayConnectedUsers}">
               <li id="connectedUsers"><a onclick="javascript:onClick=spUserSession.viewConnectedUsers();" href="#"></a></li>
             </c:if>
-            <li id="map-link-header"><a href="javascript:changeBody('/admin/jsp/Map.jsp')" title="${labelMap}">${labelMap}</a></li>
+            <li id="map-link-header"><a href="javascript:loadMap()" title="${labelMap}">${labelMap}</a></li>
             <c:if test="${silfn:isDefined(settings.helpURL)}">
               <li id="help-link-header"><a target="_blank" href="${settings.helpURL}" title="${labelHelp}">${labelHelp}</a></li>
             </c:if>
