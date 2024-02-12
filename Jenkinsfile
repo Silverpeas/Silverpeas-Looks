@@ -72,9 +72,11 @@ pipeline {
       }
       steps {
         script {
+          String jdkHome = sh(script: 'echo ${SONAR_JDK_HOME}', returnStdout: true).trim()
           withSonarQubeEnv {
             sh """
-                mvn ${SONAR_MAVEN_GOAL} -Dsonar.projectKey=Silverpeas_Silverpeas-Looks \\
+                JAVA_HOME=$jdkHome mvn ${SONAR_MAVEN_GOAL} \\
+                  -Dsonar.projectKey=Silverpeas_Silverpeas-Looks \\
                   -Dsonar.organization=silverpeas \\
                   -Dsonar.pullrequest.branch=${env.BRANCH_NAME} \\
                   -Dsonar.pullrequest.key=${env.CHANGE_ID} \\
