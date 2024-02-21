@@ -337,7 +337,7 @@
                     <c:if test="${not isAccessGuest}">
                       <li><a id="link-settings" href="javascript:changeBody('/RMyProfil/jsp/MyInfos')">${labelProfileSettings}</a> </li>
                       <li><a id="link-myspace" href="javascript:goToPersonalSpace()">${labelProfileMySpace}</a></li>
-                      <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/Main')">${labelProfileMyFeed}</a></li>
+                      <li><a id="link-feed" href="javascript:changeBody('/RMyProfil/jsp/MyFeed')">${labelProfileMyFeed}</a></li>
                     </c:if>
                     <li><a id="link-logout" id="logOut-link" href="javascript:onClick=spUserSession.logout();">${labelLogout}</a> </li>
                   </ul>
