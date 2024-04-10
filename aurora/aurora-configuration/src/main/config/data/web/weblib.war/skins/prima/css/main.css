@@ -180,7 +180,8 @@
 
 .select-header select,
 .header-container #infoConnection .avatarName,
-#notification-count.btn-header {
+#notification-count.btn-header,
+#topbar-basket-selection .btn-header {
   position: relative;
   display: inline-block;
   width: auto;
@@ -210,10 +211,11 @@
 }
 
 .header-container #infoConnection .avatarName,
-#notification-count.btn-header {
+#notification-count.btn-header,
+#topbar-basket-selection .btn-header  {
   position: relative;
   float: left;
-  display: inline-block;
+  display:block;
   padding: 7px .875rem 8px .875rem;
   height: auto;
   line-height: 24px;
@@ -273,7 +275,8 @@
   padding-right: 1em;
 }
 
-.all-read-user-notification #notification-count.btn-header {
+.all-read-user-notification #notification-count.btn-header,
+#topbar-basket-selection .btn-header  {
   background: var(--couleur-de-fond-clair);
   border: 1px solid #DDD;
 }
@@ -288,7 +291,8 @@
 }
 
 .header-container #infoConnection .avatarName a,
-#notification-count.btn-header a {
+#notification-count.btn-header a,
+#topbar-basket-selection .btn-header a {
   color: #333;
 }
 
@@ -326,7 +330,8 @@
   }
 }
 
-.silverpeas-user-notifications {
+.silverpeas-user-notifications,
+.silverpeas-basket-selection{
   float: left;
 }
 
