@@ -104,7 +104,6 @@ select {
 }
 input[type="file"] {border: 0; padding-left: 0; padding-right: 0; background-color: initial; }
 input[type="submit"], button[type="submit"] {
-  -webkit-appearance: button;
   cursor: pointer;
   background-color: #fff;
   min-height: 32px;
@@ -572,10 +571,6 @@ silverpeas-time-picker .txtlibform {
   left:28px;
 }
 
-
- #spaces .spaceLevel1On .browseSpace .browseComponent a,  #spaces .spaceLevel1On .browseSpace .browseComponentActiv a {
-}
-
  #spaces .spaceLevel1On .browseSpace .browseSpace > a {
 	padding-left:32px;
 }
@@ -694,8 +689,8 @@ silverpeas-time-picker .txtlibform {
 /* MenuToogle Yuimenu et fil d'ariane */
 
 .cellOperation {
-  width: auto;
   right: 0;
+  width:auto;
 }
 .cellBrowseBar {
   border-bottom:0;
@@ -710,6 +705,11 @@ silverpeas-time-picker .txtlibform {
 }
 #browseBar {
   padding-top:3px;
+  display: flex;
+}
+#browseBar #i18n {
+  white-space: nowrap;
+  padding-left: 0.5em;
 }
 
 #browseBar #breadCrumb {
@@ -731,6 +731,10 @@ silverpeas-time-picker .txtlibform {
 	line-height: 26px;
 	font-size: 14px;
 	letter-spacing: 1px;
+  width:230px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #menutoggle img{
@@ -745,9 +749,6 @@ silverpeas-time-picker .txtlibform {
 
 .yuimenu a , #portletPages .yuimenu a {
   font-weight:500;
-}
-
-.yuimenu .yuimenuitem{
 }
 
 .ArrayColumn, .ArrayCell,
@@ -1340,7 +1341,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
   display:block;
 }
 .spaceHome .cg-favorit-list li {
-  display:inline-block;
+  display:block;
   float:left;
   margin-right:1em;
 }
@@ -1373,7 +1374,6 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 #preview #backToSearch a.button {
   background-color: #F4F4F4;
   background-image: url("../../../util/icons/gradientSVG.jsp?from=fff&to=e5e5e5&vertical=0&horizontal=100");
-  -moz-background-size: 100%;
   border-radius: 5px;
   border: 1px solid #CCCCCC;
   color: #4C4C4C;
