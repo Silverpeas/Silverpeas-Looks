@@ -119,10 +119,6 @@ label.select-header {
   padding: 2px 0 0;
 }
 
-label.select-header:after {
-
-}
-
 label.select-header:before {
   content: '  >';
   right: 0;
@@ -159,7 +155,7 @@ label.select-header:before {
   width: auto;
   height: inherit;
   overflow: inherit;
-  display: inline-block;
+  display:block;
   margin-right: 0.7em;
   text-transform: initial;
   color: #FFF;
@@ -274,10 +270,6 @@ label.select-header:before {
   opacity: 1;
 }
 
-.header-container #outils li a#connectedUsers {
-
-}
-
 .header-container #map-link-header a {
   background: transparent url(../imgDesign/packImages.png) -2px -255px no-repeat;
   padding-left: 25px;
@@ -317,17 +309,6 @@ label.select-header:before {
 #search-form-header a {
   opacity: 1 !important;
   padding: 0 0.5em;
-}
-
-#search-zone-header a,
-#search-zone-header label {
-}
-
-#search-zone-header a {
-}
-
-#search-zone-header > a span {
-
 }
 
 #search-zone-header > a {
@@ -402,10 +383,6 @@ label.select-header:before {
   width: 100%;
   height: 48px;
   background: transparent url(../imgDesign/bg-menu-nav1.png) top left no-repeat;
-}
-
-#nav.sousMenu {
-
 }
 
 #nav > ul {
@@ -508,10 +485,6 @@ label.select-header:before {
   position: relative;
 }
 
-#nav ul.nav-niveau-2 li.space a {
-
-}
-
 #nav ul.nav-niveau-2 li a span {
   color: #FFF;
   text-align: left;
@@ -599,7 +572,7 @@ label.select-header:before {
 }
 
 #user-favorit-home .link-add.manage {
-  display: inline-block;
+  display:block;
   clear: both;
   margin-top: 1em;
   float: left;
@@ -674,7 +647,7 @@ label.select-header:before {
 }
 
 #portletPages div.portlet-content {
-  padding-left: 10px;
+  padding:0;
 }
 
 
@@ -782,10 +755,6 @@ label.select-header:before {
   overflow: auto;
 }
 
-.FAQ-entry-main-container div, .FAQ-entry-main-container a {
-
-}
-
 .FAQ-entry-main-container .link-add {
   float: none;
 }
@@ -798,7 +767,7 @@ label.select-header:before {
 .spaceHome .link-more,
 #submit-AdvancedSearch {
   background: url("../imgDesign/packBtn.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-  display: inline-block;
+  display:block;
   float: right;
   height: 32px;
   margin: 1em 0;
@@ -844,10 +813,6 @@ label.select-header:before {
 #weather-home #ephemeride:before {
   content: 'Nous fêtons les ';
   color: #000;
-
-}
-
-#weather-home {
 }
 
 #weather-home.secteur-container h4::first-letter {
@@ -1162,7 +1127,6 @@ label.select-header:before {
   background-color: transparent;
   border: 0;
   overflow: hidden;
-  *text-indent: -9999px;
 }
 
 .ir:before {
@@ -1211,11 +1175,6 @@ label.select-header:before {
 .clearfix:after {
   clear: both;
 }
-
-.clearfix {
-  *zoom: 1;
-}
-
 /* ==========================================================================
    Print styles
    ========================================================================== */

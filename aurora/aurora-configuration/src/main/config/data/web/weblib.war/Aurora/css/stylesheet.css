@@ -345,12 +345,6 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
   border:1px dotted #BBB;
 }
 
-.portlet-content ul{
-  padding:0 10px;
-  margin:0 10px;
-  list-style-image:url(../imgDesign/puce.png);
-}
-
 #portletPages dl.sort dt {
   line-height:20px;
   background:#FFF url();
@@ -1205,6 +1199,11 @@ button,
 
 .spaceHome #spaceQuiskInfo li.slide p {
   line-height: 110%;
+}
+
+.principalContent .slideshow  .carousel li  div.caption {
+  padding-right:48px ;
+  flex-basis: calc( 50% - 48px ) ;
 }
 
 .spaceHome #spaceQuiskInfo .slides-pagination a:hover, .spaceHome #spaceQuiskInfo .slides-pagination .selected a {
