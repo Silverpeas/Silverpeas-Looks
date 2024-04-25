@@ -254,7 +254,7 @@
   width: auto;
   height: inherit;
   overflow: inherit;
-  display: inline-block;
+  display:block;
   margin-right: 0.7em;
   text-transform: initial;
   color: #FFF;
@@ -415,7 +415,7 @@
   padding: 0;
   height: 32px;
   margin: 0;
-  display: inline-block;
+  display: block;
   float: left;
 }
 
@@ -437,10 +437,6 @@
 
 .header-container #outils li a:hover {
   background-color: #f9f9f9;
-}
-
-.header-container #outils li a,
-#search-zone-header a {
 }
 
 .header-container #outils li a:hover,
@@ -542,9 +538,6 @@
   font-weight: 600;
 }
 
-#search-zone-header > a span {
-}
-
 #search-zone-header > a {
   padding: 4px 0 0 5px;
   position: absolute;
@@ -562,17 +555,8 @@
   float: left;
 }
 
-#search-form-header #select-user-group-queryDirectory .selectize-input {
-
-}
-
 #search-form-header .selectize-control {
   border: 0;
-}
-
-#search-form-header input#query,
-#search-form-header #select-user-group-queryDirectory .search-input-container input {
-
 }
 
 #search-zone-header #inputSearchSwitchable .switchSearchMode.directory.off,
@@ -1101,26 +1085,114 @@ a#search-help-header {
   padding: 15px;
 }
 
+
+
+#new-users-home .new-users-list {
+  padding: 0;
+  margin: 0;
+}
+
 #new-users-home .new-users-list li {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
+  height: auto;
+  flex-basis: 254px;
+  width: auto;
+  margin-right: 1em;
 }
 
 #new-users-home .new-users-list .field.userToZoom {
-  font-size: 18px;
+  font-size: 1em;
   font-weight: 500;
-  padding-top: 0.25em;
 }
 
 #new-users-home div.user-card,
 #spaceUsers div.user-card {
   border: 0;
-  background-color: var(--couleur-de-fond-clair);
+  background-color:var(--couleur-de-fond-clair);
   margin-bottom: 0;
+  display: flex;
 }
 
+.main-home-page #new-users-home div.user-card ,
+.spaceHome #new-users-home div.user-card{
+  background-color:transparent;
+}
+
+.spaceHome  #new-users-home .new-users-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+#spaceUsers div.user-card,
+#spaceUsers div.user-card .field,
 #new-users-home div.user-card,
 #new-users-home div.user-card .field {
   width: auto;
+}
+div.user-card .avatar {
+  border:0;
+}
+
+.spaceHome #new-users-home ul li {
+  display: none !important;
+}
+.list-users .intfdcolor {
+  background-color:var(--couleur-de-fond-clair);
+}
+
+
+#spaceUsers div.user-card,
+#spaceManager .list-responsible-user li {
+  border: 0;
+  background-color:var(--couleur-de-fond-clair);
+  margin-bottom: 0;
+  display: flex;
+  position: relative;
+  padding-left: 90px;
+  flex-flow: column;
+  min-height: 90px;
+  float: none;
+  width: auto;
+  min-width: auto;
+  height: auto;
+  margin-bottom: 1em;
+}
+
+#spaceManager .list-responsible-user li div.content {
+  padding: 0;
+}
+
+#new-users-home div.user-card {
+  margin-bottom: 0;
+  display: flex;
+  position: relative;
+  padding-left: 90px;
+  flex-flow: column;
+  min-height: 90px;
+}
+
+#new-users-home div.user-card .avatar,
+#spaceUsers div.user-card .avatar,
+#spaceManager .list-responsible-user .profilPhoto {
+  position: absolute;
+  top: 8px;
+  left: 7px;
+}
+
+div.user-card .avatar img,
+#spaceManager .list-responsible-user .profilPhoto img {
+  width: 80px;
+  height: auto;
+}
+
+div.user-card .avatar,
+#spaceManager .list-responsible-user .profilPhoto {
+  border: 0;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 45px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
 }
 
 /* LES DERNIERES PUBLI */
@@ -1239,9 +1311,6 @@ a#search-help-header {
 #last-publication-home .last-publication-list span {
   color: #777;
   font-size: 14px;
-}
-
-#last-publication-home .last-publication-list .description-publication {
 }
 
 .main-home-page .header h4,
@@ -1395,6 +1464,10 @@ a#search-help-header {
 .portlet-content,
 .spaceHome #spaceQuiskInfo .slideshow {
   margin-bottom: 0.5em
+}
+
+.spaceHome ul.centered-btns_tabs  {
+  padding: 0;
 }
 
 #localisation-weather {
@@ -1627,10 +1700,6 @@ a#search-help-header {
 
 
 /* PDC Bloc */
-
-.spaceHome #bloc-advancedSeach h4 {
-}
-
 .spaceHome #bloc-advancedSeach #used_pdc .field {
   padding-left: 0;
 }
@@ -1669,10 +1738,6 @@ a#search-help-header {
 .spaceHome #bloc-advancedSeach input {
   width: 100%;
   margin-bottom: 5px;
-}
-
-.main-home-page #bloc-advancedSeach #used_pdc {
-
 }
 
 .main-home-page #bloc-advancedSeach #used_pdc .field {
@@ -1939,7 +2004,6 @@ a#search-help-header {
   background-color: transparent;
   border: 0;
   overflow: hidden;
-  *text-indent: -9999px;
 }
 
 .ir:before {
@@ -1987,10 +2051,6 @@ a#search-help-header {
 
 .clearfix:after {
   clear: both;
-}
-
-.clearfix {
-  *zoom: 1;
 }
 
 /* ==========================================================================

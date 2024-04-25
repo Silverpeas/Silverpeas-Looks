@@ -55,7 +55,6 @@ select {
 }
 input[type="file"] {border: 0; padding-left: 0; padding-right: 0; background-color: initial; }
 input[type="submit"], button[type="submit"] {
-  -webkit-appearance: button;
   cursor: pointer;
   background-color: #fff;
   min-height: 28px;
@@ -488,9 +487,8 @@ input[type="checkbox"]:checked:hover:before {
 }
 
 .portlet-content ul{
-  padding:0 10px;
-  margin:0 10px;
-  list-style-image:url(../imgDesign/puce.png);
+  padding:0;
+  margin:0;
 }
 
 #portletPages dl.sort dt {
@@ -568,7 +566,7 @@ input[type="checkbox"]:checked:hover:before {
   background-image:linear-gradient(top,#dd4b39,#c53727);
   border:1px solid transparent;
   text-shadow:0 1px rgba(0,0,0,0.1);
-  text-transform:uppercase
+  text-transform:uppercase;
   color: #FFF !important;
   font-family: "Century Gothic","Trebuchet MS",Arial, sans serif;
   padding: 5px 10px;
@@ -1231,7 +1229,6 @@ button,
   min-height: 50px;
   padding: 3px 0 3px 58px;
   background:transparent url(/silverpeas/util/icons/gradientSVG.jsp?from=ffffff&to=efefef&vertical=0&horizontal=100) 0 23px no-repeat;
-  -moz-background-size: 100%;
 }
 
 .portlet li.events div.event {
@@ -1455,7 +1452,7 @@ button,
 
 
 .spaceHome .cg-favorit-list li {
-  display:inline-block;
+  display:block;
   float:left;
   margin-right:1em;
 }
