@@ -1,0 +1,621 @@
+/*
+ * Copyright (C) 2000 - 2013 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have recieved a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+body {
+  --couleur-principale: #252525;
+  /*utilisée en couleur de texte donc doit être lisible */
+  --couleur-text-sur-principale: #FFFFFF;
+  --couleur-foncee: #555;
+  /* notamment utilisée pour le menu du header */
+  --couleur-text-sur-foncee: #FFFFFF;
+  --couleur-texte: #1d1d1b;
+  --couleur-texte-nav-off: #999999;
+  --couleur-texte-clair: #777777;
+  --couleur-flashy: #7eb73b;
+  /*utilisée en couleur de texte donc doit être lisible */
+  --couleur-text-sur-flashy: #FFFFFF;
+  --couleur-bouton: #7eb73b;
+  --couleur-text-sur-bouton: #FFFFFF;
+  --couleur-boutonHover: #231f20;
+  --couleur-text-sur-boutonHover: #FFFFFF;
+  --couleur-de-fond-clair: #F5F5F5;
+  --couleur-de-fond-clair-bloc-home: rgba(255, 255, 255, 0.8);
+  --couleur-date-home: #999999;
+  --couleur-flashInfo: #f2f842;
+  --couleur-text-sur-flashInfo: #000000;
+
+  background: #FFF url(/weblib/skins/prima2/imgDesign/fond/2.png) 0 0 no-repeat;
+  font-family: Helvetica, Arial, sans serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--couleur-texte);
+}
+
+
+html,
+button,
+body,
+td,
+div,
+a,
+input,
+select,
+textarea,
+#myProfileFiche .statut,
+.textePetitBold {
+  font-family: Helvetica, Arial, sans serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--couleur-texte);
+}
+
+
+a {
+  color: #333;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+
+
+input,
+.selectize-control .selectize-input,
+select,
+button {
+  vertical-align: middle;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  min-height: 32px;
+  padding: 0 7px;
+}
+
+input,
+.selectize-control .selectize-input,
+select,
+textarea,
+button {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #aeb6b6;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: url(../imgDesign/arrow_down-grey.png);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 7px) 50%;
+  padding-right: 20px;
+  height: 32px;
+}
+
+input[type="file"] {
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: initial;
+}
+
+input[type="submit"],
+button[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  background-color: #fff;
+  min-height: 32px;
+  -webkit-transition: background-color 100ms linear;
+  -moz-transition: background-color 100ms linear;
+  -o-transition: background-color 100ms linear;
+  transition: background-color 100ms linear;
+}
+
+input[type="submit"]:hover,
+button[type="submit"]:hover {
+  background-color: #ddd;
+}
+
+input[type="text"] {
+  min-width: 90px;
+}
+
+input[type="text"]:focus,
+input[type="text"]:active,
+input[type="password"]:focus,
+input[type="password"]:active,
+input[type="date"]:focus,
+input[type="date"]:active,
+input[type="number"]:focus,
+input[type="number"]:active,
+select:focus,
+select:active,
+textarea:focus,
+textarea:active {
+  border: 1px solid #5ad;
+  outline: none;
+}
+
+input.search:focus {
+  border: 0;
+}
+
+input.search {
+  min-height: 2em;
+  line-height: 2em;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  min-height: 20px;
+}
+
+select[multiple=multiple],
+select[size] {
+  background: #fff;
+  padding-right: initial;
+  padding-left: initial;
+  height: auto;
+}
+
+select[size='1'] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image: url(../imgDesign/arrow_down-grey.png);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 7px) 50%;
+  padding-right: 20px;
+  height: 32px;
+}
+
+fieldset {
+  border: 1px solid #e4e4e4;
+  margin: 0;
+  min-width: inherit;
+}
+
+input[type=radio] {
+  height: 15px;
+  min-height: 15px;
+  width: 15px !important;
+
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  border-radius: 4px;
+  height: 15px;
+  min-height: 15px;
+  width: 15px !important;
+  background: #fff !important;
+  border: 1px solid #ccc;
+}
+
+input[type="checkbox"]:hover,
+input[type="checkbox"]:checked :hover {
+  border: 1px solid #55aadd;
+}
+
+input[type="checkbox"]:checked {
+  border: 1px solid #AAA;
+  margin: 0px;
+  position: relative;
+}
+
+input[type="checkbox"]:checked:before {
+  font-family: Comic Sans MS;
+  width: 12px;
+  height: 11px;
+  border-radius: 4px;
+  top: 0px;
+  left: 0px;
+  border: 1px solid transparent;
+  content: 'x';
+  display: block;
+  color: #2a2a2a;
+  font-size: 11px;
+  position: absolute;
+  line-height: 9px;
+  text-align: center;
+  border-top: 1px solid #DDD;
+  border-left: 1px solid #DDD;
+}
+
+input[type="checkbox"]:checked:hover:before {
+  border-top: 1px solid #bbe3f8;
+  border-left: 1px solid #bbe3f8;
+}
+
+
+body>form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#formLogin #top {
+  margin: 3em;
+  padding: 3em 3em 3em 200px;
+  flex-basis: 298px;
+  position: relative;
+  border: 2px solid #F9E98E;
+  background: #FBF7AA url(../custom/try-enjoy.png) 0 0 no-repeat;
+}
+
+#formLogin #top a[href*="newRegistration"] {
+  display: inline-block;
+  white-space: nowrap;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 1em 1em 0 0;
+  box-shadow: 0px 1px 1px 0px rgb(0, 0, 0, 0.8);
+  background: var(--couleur-foncee);
+  color: var(--couleur-text-sur-foncee);
+  text-decoration: none;
+}
+
+#formLogin #top a[href*="newRegistration"]:hover,
+#formLogin #top a[href*="newRegistration"]:focus {
+  background-color: #000;
+}
+
+#top a {}
+
+.clear {
+  clear: both;
+}
+
+.page,
+#login-socialnetwork {
+  margin: 3em;
+  padding: 5em 3em 3em;
+  border-top: 2px solid var(--couleur-flashy);
+  border-bottom: 1px solid #ccc;
+  background: var(--couleur-de-fond-clair-bloc-home) url("/weblib/skins/prima2/imgDesign/logo.png") center 1em no-repeat;
+  flex-basis: 460px;
+  z-index: 1;
+  text-align: center;
+}
+
+/*#login-socialnetwork {
+  text-align: left;
+  padding-left: 351px;
+  z-index: 3;
+  margin-bottom: -120px;
+  padding-bottom: 27px;
+  background: transparent url("util/icons/external/deco-login-btn.png") 350px bottom no-repeat;
+}
+
+#login-socialnetwork a {
+  display: block;
+  clear: left;
+  width: 164px;
+  padding-left: 30px;
+}*/
+
+#background {
+  background: url("") top center no-repeat;
+}
+
+a.submit,
+a.submitWithOneDomain {
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 1em 1em 0 0;
+  text-transform: uppercase;
+  box-shadow: 0px 1px 1px 0px rgb(0, 0, 0, 0.8);
+  background: var(--couleur-bouton);
+  color: var(--couleur-text-sur-bouton);
+  text-decoration: none;
+}
+
+a.submit:hover,
+a.submitWithOneDomain:hover {
+  background-color: #252525;
+}
+
+#background .submit {}
+
+#background div.submit {
+
+  text-align: center;
+  padding: 5px
+}
+
+#backgroundBig {
+  background: url() top center no-repeat;
+  min-height: 524px;
+}
+
+#backgroundBig .submit {}
+
+#backgroundBig div.submit {}
+
+.cadre {}
+
+input {
+  display: inline-block;
+  padding: 5px;
+  text-align: left;
+  margin-bottom: 0.5em;
+  width: calc(100% - 5px - 1em);
+}
+
+select {
+  padding: 5px;
+  width: calc(100% - 5px - 1em);
+  margin-bottom: 0.5em;
+  text-align: left;
+}
+
+select option {
+  text-align: left;
+}
+
+.titre {
+  display: none;
+}
+
+#header {
+  margin-bottom: 0.5em;
+  text-align: right;
+}
+
+.logo {
+  display: none;
+}
+
+.information {
+  float: none;
+  text-align: center !important;
+  font-size: 20px;
+  color: #000;
+  font-weight: 400;
+  font-family: Helvetica, Arial, sans serif;
+  line-height: 45px;
+  text-transform: normal;
+  background: transparent url() no-repeat scroll left bottom;
+  padding: 0 0 8px 0;
+  margin: 0 0 7px;
+  display: block !important;
+  width: auto !important;
+}
+
+.information span {
+  color: red;
+}
+
+p label {
+  display: block;
+  margin-bottom: 10px;
+  /*padding-bottom:5px;*/
+}
+
+p label span {
+  display: block;
+  padding: 4px 0px 2px 0px;
+  line-height: 25px;
+  font-size: 14px;
+  color: #000;
+  margin-bottom: 6px;
+  text-align: left;
+  font-weight: 400;
+}
+
+#formLogin .submit {}
+
+#formLogin .submitWithOneDomain {
+  position: relative;
+  text-align: left;
+  margin-bottom: 3em;
+  margin-top: 0;
+}
+
+.caractere {
+  height: 44px;
+}
+
+.noDisplay {
+  display: none;
+}
+
+
+.forgottenPwd {
+  padding: 0;
+}
+
+.forgottenPwd a {}
+
+.rememberPwd {}
+
+.changePwd {}
+
+.passwordRules {}
+
+.passwordRules a {}
+
+#storePassword {
+  background-color: transparent;
+  border: 0px;
+  display: inline;
+  padding-bottom: 0px;
+  width: 15px;
+  text-align: left;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.questionSelection {
+  float: right;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+#question {}
+
+.fnfinformation {
+  float: right;
+  margin-top: 30px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.fnfinformation ul li {
+  padding-left: 5px;
+  margin-left: 25px;
+  text-align: left;
+}
+
+/*
+
+a.submit.validate, a.submitWithOneDomain.validate span{
+  background: transparent url(../imgDesign/bt-left-validate.png) 0 0 no-repeat;
+}
+
+a.submit.refused, a.submitWithOneDomain.refused span {
+  background: transparent url(../imgDesign/bt-left-refused.png) 0 0 no-repeat;
+}
+*/
+#copyright {
+  margin: 1em 0;
+  padding: 3em 3em 0;
+}
+
+#copyright a {}
+
+#termsOfServiceAcceptance .page {
+  flex-basis: 1024px;
+  margin-top: 3em;
+}
+
+#termsOfServiceAcceptance .cadre {
+  width: 100%;
+}
+
+#content-terms-of-service {
+  clear: both;
+  float: none;
+  height: 600px;
+  width: 100%;
+  overflow: auto;
+  text-align: left;
+  padding-top: 1em;
+}
+
+#content-terms-of-service * {
+  text-align: left;
+}
+
+#splash #top {
+  background-color: #f48250;
+}
+
+#splash a.submit,
+#splash #no-more {
+  display: inline-block;
+  width: auto;
+  margin: 10px 10px 10px 0;
+}
+
+
+
+.registrationText,
+.registrationSuccessText.success {
+  border: 2px solid #F9E98E;
+  background-color: #FBF7AA;
+  margin: 1.5em 0;
+  padding: 1.5em;
+  font-size: 90%;
+}
+
+.form-registration>div,
+#identity-template ul li {
+  margin: 0 0 1.5em 0;
+  padding: 0;
+}
+
+.form-registration-avatar,
+#identity-template legend {
+  display: none;
+}
+
+fieldset#identity-template {
+  border: 0;
+  margin: 0;
+  min-width: inherit;
+}
+
+#identity-template ul {
+  list-style-type: none;
+}
+
+#identity-template .legend {
+  display: none;
+}
+
+.form-registration-firstName label:after,
+.form-registration-lastName label:after,
+.form-registration-email label:after,
+#form-row-company label:after,
+#form-row-acceptedCondition label:after  {
+  content: '[ champ obligatoire ]';
+  margin-left: 0.5em;
+  font-size: 90%;
+  display: inline-block;
+  color:#9b0626;
+}
+
+#form-row-company img[src*="mandatory"],
+#identity-template img[src*="mandatory"] {
+  display:none;
+}
+
+
+body>.page>#background {
+  background: url("") top center no-repeat;
+  background: transparent url(../custom/try-enjoy.png) 0 bottom no-repeat;
+  min-height: 259px;
+}
