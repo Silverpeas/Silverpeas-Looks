@@ -4,11 +4,11 @@ pipeline {
   environment {
     lockFilePath = null
     version = null
-    silverpeas = 'Master'
+    silverpeas = null
   }
   agent {
     docker {
-      image 'silverpeas/silverbuild'
+      image 'silverpeas/silverbuild:6.4'
       args '''
         -v $HOME/.m2:/home/silverbuild/.m2 
         -v $HOME/.gitconfig:/home/silverbuild/.gitconfig 
@@ -21,7 +21,10 @@ pipeline {
     stage('Waiting for core running build if any') {
       steps {
         script {
-          version = computeSnapshotVersion()
+          println "Current branch is ${env.BRANCH_NAME}"
+          def pom = readMavenPom()
+          silverpeasCore = getSilverpeasCoreProject(pom)
+          version = computeSnapshotVersion(pom)
           lockFilePath = createLockFile(version, 'looks')
           waitForDependencyRunningBuildIfAny(version, 'core')
         }
@@ -83,7 +86,7 @@ pipeline {
                   -Dsonar.pullrequest.base=master \\
                   -Dsonar.pullrequest.provider=github \\
                   -Dsonar.host.url=${SONAR_HOST_URL} \\
-                  -Dsonar.login=${SONAR_AUTH_TOKEN} \\
+                  -Dsonar.token=${SONAR_AUTH_TOKEN} \\
                   -Dsonar.scanner.force-deprecated-java-version=true
                 """
           }
@@ -103,14 +106,13 @@ pipeline {
       deleteLockFile(lockFilePath)
       step([$class                  : 'Mailer',
             notifyEveryUnstableBuild: true,
-            recipients              : "miguel.moquillon@silverpeas.org, yohann.chastagnier@silverpeas.org, nicolas.eysseric@silverpeas.org",
+            recipients              : "miguel.moquillon@silverpeas.org, david.lesimple@silverpeas.org, silveryocha@chastagnier.com",
             sendToIndividuals       : true])
     }
   }
 }
 
-def computeSnapshotVersion() {
-  def pom = readMavenPom()
+def computeSnapshotVersion(pom) {
   final String version = pom.version
   final String defaultVersion = env.BRANCH_NAME == 'master' ? version :
       env.BRANCH_NAME.toLowerCase().replaceAll('[# -]', '')
@@ -186,4 +188,37 @@ def checkParentPOMVersion(version) {
       mvn -U versions:update-parent -DgenerateBackupPoms=false -DparentVersion="[${parentVersion}]"
       """
   }
+}
+
+def getSilverpeasCoreProject(pom) {
+  String silverpeasCoreProject
+  switch (env.BRANCH_NAME) {
+    case 'master':
+      silverpeasCoreProject = 'Master'
+      break
+    case env.STABLE_BRANCH:
+      silverpeasCoreProject = 'Stable'
+      break
+    default:
+      Matcher branchMatcher = env.BRANCH_NAME =~ /\d+.\d+.x/
+      if (branchMatcher.matches()) {
+        // an old stable project
+        silverpeasCoreProject = env.BRANCH_NAME
+      } else {
+        // this is a PR
+        String version = pom.version
+        Matcher versionMatcher = version =~ /\d+.\d+.\d+-SNAPSHOT/
+        if (versionMatcher.matches()) {
+          if (version.startsWith(env.STABLE_BRANCH.replace('.x', ''))) {
+            silverpeasCoreProject = 'Stable'
+          } else {
+            silverpeasCoreProject = version.replaceFirst('.\\d+-SNAPSHOT', '.x')
+          }
+        } else {
+          silverpeasCoreProject = 'Master'
+        }
+      }
+      break
+  }
+  return silverpeasCoreProject
 }
