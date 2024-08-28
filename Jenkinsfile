@@ -23,7 +23,7 @@ pipeline {
         script {
           println "Current branch is ${env.BRANCH_NAME}"
           def pom = readMavenPom()
-          silverpeasCore = getSilverpeasCoreProject(pom)
+          silverpeas = getSilverpeasProject(pom)
           version = computeSnapshotVersion(pom)
           lockFilePath = createLockFile(version, 'looks')
           waitForDependencyRunningBuildIfAny(version, 'core')
@@ -190,35 +190,35 @@ def checkParentPOMVersion(version) {
   }
 }
 
-def getSilverpeasCoreProject(pom) {
-  String silverpeasCoreProject
+def getSilverpeasProject(pom) {
+  String silverpeasProject
   switch (env.BRANCH_NAME) {
     case 'master':
-      silverpeasCoreProject = 'Master'
+      silverpeasProject = 'Master'
       break
     case env.STABLE_BRANCH:
-      silverpeasCoreProject = 'Stable'
+      silverpeasProject = 'Stable'
       break
     default:
       Matcher branchMatcher = env.BRANCH_NAME =~ /\d+.\d+.x/
       if (branchMatcher.matches()) {
         // an old stable project
-        silverpeasCoreProject = env.BRANCH_NAME
+        silverpeasProject = env.BRANCH_NAME
       } else {
         // this is a PR
         String version = pom.version
         Matcher versionMatcher = version =~ /\d+.\d+.\d+-SNAPSHOT/
         if (versionMatcher.matches()) {
           if (version.startsWith(env.STABLE_BRANCH.replace('.x', ''))) {
-            silverpeasCoreProject = 'Stable'
+            silverpeasProject = 'Stable'
           } else {
-            silverpeasCoreProject = version.replaceFirst('.\\d+-SNAPSHOT', '.x')
+            silverpeasProject = version.replaceFirst('.\\d+-SNAPSHOT', '.x')
           }
         } else {
-          silverpeasCoreProject = 'Master'
+          silverpeasProject = 'Master'
         }
       }
       break
   }
-  return silverpeasCoreProject
+  return silverpeasProject
 }

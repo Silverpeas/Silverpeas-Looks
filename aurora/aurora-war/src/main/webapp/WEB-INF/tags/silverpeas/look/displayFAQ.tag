@@ -43,7 +43,7 @@
     <div class="FAQ-entry-main-container">
       <div class="FAQ-entry">
         <c:forEach var="question" items="${questions.list}">
-          <c:url var="questionURL" value="${question._getPermalink()}"/>
+          <c:url var="questionURL" value="${question.permalink()}"/>
           <p><a class="sp-permalink" href="${questionURL}">${question.title}</a></p>
         </c:forEach>
       </div>
