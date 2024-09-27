@@ -3,6 +3,10 @@
 <%@ page import="org.silverpeas.kernel.bundle.ResourceLocator" %>
 <%@ page import="org.silverpeas.kernel.bundle.LocalizationBundle" %>
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
+<%@ page import="org.silverpeas.core.web.util.WebRedirection" %>
+<%@ page import="static org.silverpeas.core.web.util.WebRedirection.REDIRECT_TO_COMPONENT" %>
+<%@ page import="static org.silverpeas.core.web.util.WebRedirection.REDIRECT_TO_SPACE" %>
+<%@ page import="static org.silverpeas.core.web.util.WebRedirection.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
@@ -17,12 +21,12 @@
 
 
 <%
-String			componentIdFromRedirect = (String) session.getAttribute("RedirectToComponentId");
-String			spaceIdFromRedirect 	= (String) session.getAttribute("RedirectToSpaceId");
+String			componentIdFromRedirect = (String) session.getAttribute(REDIRECT_TO_COMPONENT);
+String			spaceIdFromRedirect 	= (String) session.getAttribute(REDIRECT_TO_SPACE);
 if (!StringUtil.isDefined(spaceIdFromRedirect)) {
-	spaceIdFromRedirect 	= request.getParameter("RedirectToSpaceId");
+	spaceIdFromRedirect 	= request.getParameter(REDIRECT_TO_SPACE);
 }
-String			attachmentId		 	= (String) session.getAttribute("RedirectToAttachmentId");
+String			attachmentId		 	= (String) session.getAttribute(REDIRECT_TO_ATTACHMENT);
 LocalizationBundle generalMessage			= ResourceLocator.getGeneralLocalizationBundle(language);
 StringBuilder			frameBottomParams		= new StringBuilder().append("{");
 boolean			login					= StringUtil.getBooleanValue(request.getParameter("Login"));
@@ -73,7 +77,7 @@ if (m_MainSessionCtrl == null) { %>
 	}
 	
 	if (!thisFrame.equalsIgnoreCase(helper.getMainFrame())) {
-		session.setAttribute("RedirectToSpaceId", spaceIdFromRedirect);
+		session.setAttribute(REDIRECT_TO_SPACE, spaceIdFromRedirect);
 		%>
 			<script type="text/javascript">
 				top.location="<%=helper.getMainFrame()%>";
@@ -154,7 +158,7 @@ if (m_MainSessionCtrl == null) { %>
 </view:sp-head-part>
 <view:sp-body-part>
 <% if (attachmentId != null) {
-   	session.setAttribute("RedirectToAttachmentId", null);
+   	session.setAttribute(REDIRECT_TO_ATTACHMENT, null);
 %>
 	<script type="text/javascript">
 		SP_openWindow('<%=m_sContext%>/File/<%=attachmentId%>', 'Fichier', '800', '600', 'directories=0,menubar=1,toolbar=1,scrollbars=1,location=1,alwaysRaised');
