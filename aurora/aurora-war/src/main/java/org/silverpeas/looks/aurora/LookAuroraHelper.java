@@ -16,6 +16,7 @@ import org.silverpeas.components.rssaggregator.model.RSSItem;
 import org.silverpeas.components.rssaggregator.model.SPChannel;
 import org.silverpeas.components.rssaggregator.service.RSSService;
 import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
+import org.silverpeas.core.web.util.WebRedirection;
 import org.silverpeas.kernel.SilverpeasRuntimeException;
 import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.ComponentInstLight;
@@ -603,7 +604,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     BodyPartSettings bodyPartSettings = new BodyPartSettings();
 
     HttpSession session = request.getSession();
-    String strGoToNew = (String) session.getAttribute("gotoNew");
+    String strGoToNew = (String) session.getAttribute(WebRedirection.REDIRECT_URL);
     String spaceId = request.getParameter("SpaceId");
     String subSpaceId = request.getParameter("SubSpaceId");
     String fromTopBar = request.getParameter("FromTopBar");
@@ -644,9 +645,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         displayLoginHomepage, loginHomepage);
 
     session.removeAttribute("goto");
-    session.removeAttribute("gotoNew");
-    session.removeAttribute("RedirectToComponentId");
-    session.removeAttribute("RedirectToSpaceId");
+    session.removeAttribute(WebRedirection.REDIRECT_URL);
+    session.removeAttribute(WebRedirection.REDIRECT_TO_COMPONENT);
+    session.removeAttribute(WebRedirection.REDIRECT_TO_SPACE);
 
     boolean hideMenu = "1".equals(fromTopBar) || "1".equals(login);
     if (hideMenu) {
