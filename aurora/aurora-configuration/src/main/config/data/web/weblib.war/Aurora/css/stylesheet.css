@@ -1085,6 +1085,15 @@ button,
   padding: 8px;
 }
 
+.spaceHome .carousel li:not(:has(.thumbnail))::before,
+.main-home-page  #carrousel-actualite a:has(img[src*='emptyNews'])::before  {
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.main-home-page  #carrousel-actualite a:has(img[src*='emptyNews'])::before  {
+  content: "best format 16:9";
+  background-position: center calc( 50% - 4em );
+}
 
 .spaceHome .spaceNavigation li.browse-space a {
   background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px -10px transparent;

@@ -1251,6 +1251,24 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 	position:relative;
 }
 
+.spaceHome .carousel li:not(:has(.thumbnail))::before,
+.main-home-page  #carrousel-actualite a:has(img[src*='emptyNews'])::before  {
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.main-home-page  #carrousel-actualite a:has(img[src*='emptyNews'])::before  {
+  content: "Best format 4:3";
+  background-position: center calc( 50% - 4em );  
+  height: 300px;
+}
+
+.main-home-page  #carrousel-actualite .list-news a:has(img[src*='emptyNews'])::before  {
+  content: " ";
+  background-position: center center;
+  width: 160px;
+  height:100px;
+}
+
 .spaceHome .spaceNavigation li.browse-component p {
   padding-left: 0;
 }
