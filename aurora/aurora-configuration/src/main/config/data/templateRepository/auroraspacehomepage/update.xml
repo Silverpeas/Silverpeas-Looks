@@ -11,10 +11,14 @@
             <labelName>Administrateur(s)</labelName>
             <language>fr</language>
         </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
+        <label>
+            <labelName>Display administrator(s)</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Display administrator(s)</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">1##0</value>
@@ -22,6 +26,14 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
+        </parameter>
+        <parameter>
+            <name>cols</name>
+            <value lang="fr">2</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -39,6 +51,14 @@
             <labelName>Sous espace(s)</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Display subspaces navigation</labelName>
+            <language>en</language>
+        </label>
+         <label>
+            <labelName>Display subspaces navigation</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>cols</name>
             <value lang="fr">2</value>
@@ -50,6 +70,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -67,6 +91,14 @@
             <labelName>Application(s)</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Display space applications</labelName>
+            <language>en</language>
+        </label>
+         <label>
+            <labelName>Display space applications</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>cols</name>
             <value lang="fr">2</value>
@@ -78,6 +110,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -95,6 +131,14 @@
             <labelName>Afficher</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Display the news</labelName>
+            <language>en</language>
+        </label>
+         <label>
+            <labelName>Display the news</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">1##0</value>
@@ -102,6 +146,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <parameter>
             <name>cols</name>
@@ -123,6 +171,14 @@
             <labelName>Emplacement</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Location of the news</labelName>
+            <language>en</language>
+        </label>
+         <label>
+            <labelName>Location of the news</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">main##right</value>
@@ -130,6 +186,14 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Zone principale##Colonne de droite</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Main##Right side</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Main##Right side</value>
         </parameter>
         <parameter>
             <name>cols</name>
@@ -155,6 +219,14 @@
             <labelName>Présentation</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>News presentation</labelName>
+            <language>en</language>
+        </label>
+         <label>
+            <labelName>News presentation</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>cols</name>
             <value lang="fr">2</value>
@@ -166,6 +238,14 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Liste##Carrousel</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">List##Carrousel</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">List##Carrousel</value>
         </parameter>
         <parameter>
             <name>default</name>
@@ -186,6 +266,14 @@
         <label>
             <labelName>Nombre d'actualité</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>How many news ?</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>How many news ?</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>maxLength</name>
@@ -211,6 +299,14 @@
             <labelName>Prendre en compte les sous-espaces</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>News from subspaces too</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>News from subspaces too</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>cols</name>
             <value lang="fr">2</value>
@@ -222,6 +318,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <parameter>
             <name>default</name>
@@ -243,6 +343,14 @@
             <labelName>Importantes seulement</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Important news only</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Important news only</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>cols</name>
             <value lang="fr">2</value>
@@ -254,6 +362,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <parameter>
             <name>default</name>
@@ -276,8 +388,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>Events</labelName>
+            <labelName>Display events</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Display events</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>cols</name>
@@ -290,6 +406,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -308,8 +428,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>Medias</labelName>
+            <labelName>Display media</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Display media</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>cols</name>
@@ -322,6 +446,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -340,8 +468,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>Taxonomy</labelName>
+            <labelName>Search zone with taxonomy</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Search zone with taxonomy</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>keys</name>
@@ -350,6 +482,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui, sur la plateforme entière##Oui, sur l'espace courant##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes, about the entire platform##Yes, only on this subspace##No</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -366,6 +502,14 @@
         <label>
             <labelName>Nombre de dernières publications</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>Lastest Publications, how many ?</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Lastest Publications, how many ?</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>maxLength</name>
@@ -390,6 +534,14 @@
         <label>
             <labelName>Introduction</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>Preface</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Introduction</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -420,8 +572,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>Picture</labelName>
+            <labelName>First Picture on the main container</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>First Picture on the main container</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -451,6 +607,10 @@
             <labelName>Shortcut #1 - URL</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #1 - URL</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -470,6 +630,10 @@
         <label>
             <labelName>Shortcut #1 - Label</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #1 - Label</labelName>
+            <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -491,6 +655,10 @@
             <labelName>Shortcut #1 - Icon</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #1 - Icon</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>galleries</name>
             <value lang="fr">true</value>
@@ -511,6 +679,14 @@
             <labelName>Raccourci #1 - Cible</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Shortcut #1 - Target</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #1 - Target</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">_blank</value>
@@ -518,6 +694,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Open in a new tab</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -539,6 +719,10 @@
             <labelName>Shortcut #2 - URL</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #2 - URL</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -559,6 +743,10 @@
             <labelName>Shortcut #2 - Label</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #2 - Label</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -578,6 +766,10 @@
         <label>
             <labelName>Shortcut #2 - Icon</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #2 - Icon</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -603,6 +795,10 @@
             <labelName>Shortcut #2 - Target</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #2 - Target</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">_blank</value>
@@ -610,6 +806,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Open in a new tab</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -631,6 +831,10 @@
             <labelName>Shortcut #3 - URL</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #3 - URL</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -651,6 +855,10 @@
             <labelName>Shortcut #3 - Label</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #3 - Label</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -670,6 +878,10 @@
         <label>
             <labelName>Shortcut #3 - Icon</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #3 - Icon</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -695,6 +907,10 @@
             <labelName>Shortcut #3 - Target</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #3 - Target</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">_blank</value>
@@ -702,6 +918,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Open in a new tab</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -723,6 +943,10 @@
             <labelName>Shortcut #4 - URL</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #4 - URL</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -743,6 +967,10 @@
             <labelName>Shortcut #4 - Label</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #4 - Label</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -762,6 +990,10 @@
         <label>
             <labelName>Shortcut #4 - Icon</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #4 - Icon</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -787,6 +1019,10 @@
             <labelName>Shortcut #4 - Target</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #4 - Target</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">_blank</value>
@@ -794,6 +1030,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Open in a new tab</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -815,6 +1055,10 @@
             <labelName>Shortcut #5 - URL</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #5 - URL</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -835,6 +1079,10 @@
             <labelName>Shortcut #5 - Label</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #5 - Label</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -854,6 +1102,10 @@
         <label>
             <labelName>Shortcut #5 - Icon</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #5 - Icon</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -878,6 +1130,10 @@
         <label>
             <labelName>Shortcut #5 - Target</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #5 - Target</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>keys</name>
@@ -907,6 +1163,10 @@
             <labelName>Shortcut #6 - URL</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #6 - URL</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -927,6 +1187,10 @@
             <labelName>Shortcut #6 - Label</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #6 - Label</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -946,6 +1210,10 @@
         <label>
             <labelName>Shortcut #6 - Icon</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Shortcut #6 - Icon</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -971,6 +1239,10 @@
             <labelName>Shortcut #6 - Target</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Shortcut #6 - Target</labelName>
+            <language>de</language>
+        </label>
         <parameter>
             <name>keys</name>
             <value lang="fr">_blank</value>
@@ -978,6 +1250,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Open in a new tab</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -999,6 +1275,10 @@
             <labelName>Users</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Users</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -1019,6 +1299,10 @@
             <labelName>Users - Label</labelName>
             <language>en</language>
         </label>
+        <label>
+            <labelName>Users - Label</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -1036,8 +1320,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>Second picture</labelName>
+            <labelName>Second picture - Right container</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Second picture - Right container</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -1064,8 +1352,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>Second picture - Lien</labelName>
+            <labelName>Second picture - Link url</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Second picture - Link url</labelName>
+            <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1084,8 +1376,12 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>New users</labelName>
+            <labelName>Display new users</labelName>
             <language>en</language>
+        </label>
+        <label>
+            <labelName>Display new users</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>cols</name>
@@ -1098,6 +1394,10 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="en">Yes##No</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1112,8 +1412,16 @@
         <isDisabled>false</isDisabled>
         <isHidden>false</isHidden>
         <label>
-            <labelName>Titre</labelName>
+            <labelName>Titre de la zone libre</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>Free zone Title</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Free zone Title</labelName>
+            <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1130,6 +1438,14 @@
         <label>
             <labelName>Contenu</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>Free Content</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Free Content</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
@@ -1155,6 +1471,14 @@
             <labelName>Titre</labelName>
             <language>fr</language>
         </label>
+        <label>
+            <labelName>Right free zone title</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Right free zone title</labelName>
+            <language>de</language>
+        </label>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -1170,6 +1494,14 @@
         <label>
             <labelName>Contenu</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>Right free zone content</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Right free zone content</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>galleries</name>
