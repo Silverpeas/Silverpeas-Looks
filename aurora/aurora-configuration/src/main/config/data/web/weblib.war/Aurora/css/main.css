@@ -991,7 +991,9 @@ label.select-header:before {
   float: left;
   height: 314px;
   position: relative;
-  overflow: hidden;
+  overflow: hidden;  
+  width: calc( 100% - 260px );
+  margin-bottom:1em;
 }
 
 .main-home-page #last-publication-home,
@@ -999,6 +1001,7 @@ label.select-header:before {
 .main-home-page #freeZone {
   margin-left: 260px;
   margin-top: 2.5em;
+  clear:left;
 }
 
 
@@ -1316,13 +1319,23 @@ label.select-header:before {
   color: #333;
 }
 
-/********************** ***************************/
+/********************** News as carrousel ***************************/
 
 #carrousel-actualite .centered-btns_nav {
   top: 36%;
   margin-top: 0;
 }
 
+#carrousel-actualite #slider li {
+  position:relative;
+}
+#carrousel-actualite  #slider li > a {
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom: 0;
+}
 /*********** News as list *******************/
 #carrousel-actualite .list-news {
   padding: 0;

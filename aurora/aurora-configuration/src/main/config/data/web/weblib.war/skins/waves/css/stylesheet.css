@@ -1651,6 +1651,22 @@ silverpeas-calendar-event-occurrence-list-item div.occurrence-extra,
   margin-top: 0;
 }
 
+.main-home-page #carrousel-actualite a:has(img[src*="emptyNews"])::before {
+  height: 300px;
+}
+
+.main-home-page  #carrousel-actualite a:has(img[src*='emptyNews'])::before  {
+  content: "Best format 600x400px";
+  background-position: center calc( 50% - 4em );
+}
+
+.main-home-page  #carrousel-actualite .list-news a:has(img[src*='emptyNews'])::before  {
+  content: " ";
+  background-position: center center;
+  width: 160px;
+  height:100px;
+  background-color: #FFF;
+}
 
 .spaceHome .spaceNavigation {
   margin: 1 0;
@@ -2091,6 +2107,23 @@ div.cell fieldset.skinFieldset {
   padding: 5px;
   height: auto;
   line-height: auto;
+}
+#preview #lastReaderList  {
+  padding-bottom:0;
+}
+#preview #lastReaderList li {
+  height:48px;
+}
+#preview #lastReaderList::after {
+  content:'';
+  clear:left;
+  height:1px;
+  width:100%;
+  display:block;
+}
+
+#preview #lastReaderList li span.consultationDate, #preview #lastReaderList li span.userToZoom {
+  padding-left: 53px;
 }
 
 #pubList #pubsHeader {
