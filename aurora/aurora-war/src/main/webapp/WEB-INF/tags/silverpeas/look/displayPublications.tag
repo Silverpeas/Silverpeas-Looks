@@ -56,11 +56,12 @@
         <jsp:useBean id="pubInstanceId" type="java.lang.String"/>
         <c:set var="fromSpaceClasses" value='<%=OrganizationController.get().getPathToComponent(pubInstanceId).stream().map(s -> "fromSpace-" + s.getId()).collect(Collectors.joining(" "))%>'/>
         <li class="${fromSpaceClasses} fromInst-${pubInstanceId}${newPubliCssClass}" onclick="spWindow.loadLink('${publication.permalink}')">
-          <a class="sp-link publication-name" href="${publication.permalink}">${publication.name}</a>
+          <a class="sp-link publication-name" href="${publication.permalink}">
+            <c:out value="${publication.name}"/></a>
           <view:componentPath componentId="${pubInstanceId}" includeComponent="false"/>
           <span class="user-publication"><view:username userId="${publication.updaterId}" /></span>
           <span class="date-publication">${silfn:formatAsLocalDate(publication.visibility.period.startDate, lookHelper.zoneId, lookHelper.language)}</span>
-          <p class="description-publication">${publication.description}</p>
+          <p class="description-publication"><c:out value="${publication.description}"/></p>
         </li>
       </c:forEach>
     </ul>
