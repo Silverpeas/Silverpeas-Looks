@@ -32,6 +32,10 @@
             <value lang="en">Yes##No</value>
         </parameter>
         <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
+        </parameter>
+        <parameter>
             <name>cols</name>
             <value lang="fr">2</value>
         </parameter>
@@ -75,6 +79,10 @@
             <name>values</name>
             <value lang="en">Yes##No</value>
         </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
+        </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -115,6 +123,10 @@
             <name>values</name>
             <value lang="en">Yes##No</value>
         </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
+        </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -150,6 +162,10 @@
         <parameter>
             <name>values</name>
             <value lang="en">Yes##No</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
             <name>cols</name>
@@ -241,11 +257,11 @@
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="en">List##Carrousel</value>
+            <value lang="en">List##Carousel</value>
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="de">List##Carrousel</value>
+            <value lang="de">Liste##Karussell</value>
         </parameter>
         <parameter>
             <name>default</name>
@@ -268,11 +284,11 @@
             <language>fr</language>
         </label>
         <label>
-            <labelName>How many news ?</labelName>
+            <labelName>Number of news</labelName>
             <language>en</language>
         </label>
         <label>
-            <labelName>How many news ?</labelName>
+            <labelName>Anzahl der Nachrichten</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -324,6 +340,10 @@
             <value lang="en">Yes##No</value>
         </parameter>
         <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
+        </parameter>
+        <parameter>
             <name>default</name>
             <value lang="fr">1</value>
         </parameter>
@@ -366,6 +386,10 @@
         <parameter>
             <name>values</name>
             <value lang="en">Yes##No</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
             <name>default</name>
@@ -411,6 +435,10 @@
             <name>values</name>
             <value lang="en">Yes##No</value>
         </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
+        </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -451,6 +479,10 @@
             <name>values</name>
             <value lang="en">Yes##No</value>
         </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
+        </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -486,6 +518,10 @@
         <parameter>
             <name>values</name>
             <value lang="en">Yes, about the entire platform##Yes, only on this subspace##No</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja, über die gesamte Plattform##Ja, nur auf diesem Unterraum##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -691,6 +727,10 @@
             <name>values</name>
             <value lang="en">Open in a new tab</value>
         </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">In einem neuen Tab öffnen</value>
+        </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
         <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
@@ -802,6 +842,10 @@
         <parameter>
             <name>values</name>
             <value lang="en">Open in a new tab</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -917,7 +961,7 @@
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="de">Open in a new tab</value>
+            <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1033,7 +1077,7 @@
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="de">Open in a new tab</value>
+            <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1149,7 +1193,7 @@
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="de">Open in a new tab</value>
+            <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1265,7 +1309,7 @@
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="de">Open in a new tab</value>
+            <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
@@ -1410,6 +1454,10 @@
         <parameter>
             <name>values</name>
             <value lang="en">Yes##No</value>
+        </parameter>
+        <parameter>
+            <name>values</name>
+            <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
         <isFacet>false</isFacet>
