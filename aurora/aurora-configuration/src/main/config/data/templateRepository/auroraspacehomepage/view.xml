@@ -16,7 +16,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Display administrator(s)</labelName>
+            <labelName>Administrator(en) anzeigen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -60,7 +60,7 @@
             <language>en</language>
         </label>
          <label>
-            <labelName>Display subspaces navigation</labelName>
+            <labelName>Unterraumnavigation anzeigen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -104,7 +104,7 @@
             <language>en</language>
         </label>
          <label>
-            <labelName>Display space applications</labelName>
+            <labelName>Raumanwendungen anzeigen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -148,7 +148,7 @@
             <language>en</language>
         </label>
          <label>
-            <labelName>Display the news</labelName>
+            <labelName>Zeigen Sie die Nachrichten an</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -192,7 +192,7 @@
             <language>en</language>
         </label>
          <label>
-            <labelName>Location of the news</labelName>
+            <labelName>Ort der Nachrichten</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -209,7 +209,7 @@
         </parameter>
         <parameter>
             <name>values</name>
-            <value lang="de">Main##Right side</value>
+            <value lang="de">Hauptseite##Rechte Seite</value>
         </parameter>
         <parameter>
             <name>cols</name>
@@ -320,7 +320,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>News from subspaces too</labelName>
+            <labelName>Neuigkeiten auch aus Unterräumen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -368,7 +368,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Important news only</labelName>
+            <labelName>Nur wichtige Neuigkeiten</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -416,7 +416,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Display events</labelName>
+            <labelName>Ereignisse anzeigen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -460,7 +460,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Display media</labelName>
+            <labelName>Medien anzeigen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -504,7 +504,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Search zone with taxonomy</labelName>
+            <labelName>Suchzone mit Taxonomie</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -544,7 +544,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Lastest Publications, how many ?</labelName>
+            <labelName>Letzte Veröffentlichungen, wie viele?</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -576,7 +576,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Introduction</labelName>
+            <labelName>Vorwort</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -612,7 +612,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>First Picture on the main container</labelName>
+            <labelName>Erstes Bild auf dem Hauptcontainer</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -644,7 +644,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #1 - URL</labelName>
+            <labelName>Abkürzung #1 - URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -668,7 +668,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #1 - Label</labelName>
+            <labelName>Abkürzung #1 - Label</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -692,7 +692,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #1 - Icon</labelName>
+            <labelName>Abkürzung #1 - Icon</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -714,6 +714,14 @@
         <label>
             <labelName>Raccourci #1 - Cible</labelName>
             <language>fr</language>
+        </label>
+        <label>
+            <labelName>Shortcut #1 - Target</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Abkürzung #1 - Ziel</labelName>
+            <language>de</language>
         </label>
         <parameter>
             <name>keys</name>
@@ -752,7 +760,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #2 - URL</labelName>
+            <labelName>Abkürzung #2 - URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -776,7 +784,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #2 - Label</labelName>
+            <labelName>Abkürzung #2 - Etikett</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -800,7 +808,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #2 - Icon</labelName>
+            <labelName>Abkürzung #2 - Ikon</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -828,7 +836,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #2 - Target</labelName>
+            <labelName>Abkürzung #2 - Ziel</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -868,7 +876,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #3 - URL</labelName>
+            <labelName>Abkürzung #3 - URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -892,7 +900,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #3 - Label</labelName>
+            <labelName>Abkürzung #3 - Etikett</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -916,7 +924,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #3 - Icon</labelName>
+            <labelName>Abkürzung #3 - Ikon</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -944,7 +952,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #3 - Target</labelName>
+            <labelName>Abkürzung #3 - Ziel</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -984,7 +992,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #4 - URL</labelName>
+            <labelName>Abkürzung #4 - URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1008,7 +1016,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #4 - Label</labelName>
+            <labelName>Abkürzung #4 - Etikett</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1032,7 +1040,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #4 - Icon</labelName>
+            <labelName>Abkürzung #4 - Ikon</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1060,7 +1068,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #4 - Target</labelName>
+            <labelName>Abkürzung #4 - Ziel</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1100,7 +1108,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #5 - URL</labelName>
+            <labelName>Abkürzung #5 - URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1124,7 +1132,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #5 - Label</labelName>
+            <labelName>Abkürzung #5 - Etikett</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1148,7 +1156,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #5 - Icon</labelName>
+            <labelName>Abkürzung #5 - Ikon</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1176,7 +1184,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #5 - Target</labelName>
+            <labelName>Abkürzung #5 - Ziel</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1216,7 +1224,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #6 - URL</labelName>
+            <labelName>Abkürzung #6 - URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1240,7 +1248,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #6 - Label</labelName>
+            <labelName>Abkürzung #6 - Etikett</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1264,7 +1272,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #6 - Icon</labelName>
+            <labelName>Abkürzung #6 - Ikon</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1292,7 +1300,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Shortcut #6 - Target</labelName>
+            <labelName>Abkürzung #6 - Ziel</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1356,7 +1364,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Users - Label</labelName>
+            <labelName>Benutzer - Bezeichnung</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1380,7 +1388,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Second picture - Right container</labelName>
+            <labelName>Zweites Bild - Rechter Container</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1412,7 +1420,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Second picture - Link url</labelName>
+            <labelName>Zweites Bild - Link-URL</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1436,7 +1444,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Display new users</labelName>
+            <labelName>Neue Benutzer anzeigen</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1480,7 +1488,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Free zone Title</labelName>
+            <labelName>Freier Zonentitel</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1504,7 +1512,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Free Content</labelName>
+            <labelName>Kostenlose Inhalte</labelName>
             <language>de</language>
         </label>
         <parameter>
@@ -1536,7 +1544,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Right free zone title</labelName>
+            <labelName>Rechter Freizonentitel</labelName>
             <language>de</language>
         </label>
         <isSearchable>false</isSearchable>
@@ -1560,7 +1568,7 @@
             <language>en</language>
         </label>
         <label>
-            <labelName>Right free zone content</labelName>
+            <labelName>Rechte Freizoneninhalte</labelName>
             <language>de</language>
         </label>
         <parameter>
