@@ -1,6 +1,6 @@
 <link href='/silverpeas/util/styleSheets/fieldset.css?v=64SNAPSHOT' type='text/css' rel='stylesheet'/>
 <fieldset class="skinFieldset">
-  <legend class="without-img">Introduction</legend>
+  <legend class="without-img"><%=sectionIntro.label%></legend>
   <div class="fields">
     <div class="field field_picture entireWidth " id="form-row-picture">
       <label for="picture" class="txtlibform">
@@ -21,7 +21,7 @@
   </div>
 </fieldset>
 <fieldset class="skinFieldset">
-  <legend class="without-img">Navigation</legend>
+  <legend class="without-img"><%=sectionBrowsing.label%></legend>
   <div class="fields">
     <div class="field field_displaySubspaces" id="form-row-displaySubspaces">
       <label for="displaySubspaces" class="txtlibform">
@@ -42,7 +42,7 @@
   </div>
 </fieldset>
 <fieldset class="skinFieldset">
-  <legend class="without-img">Actualités</legend>
+  <legend class="without-img"><%=sectionNews.label%></legend>
   <div class="fields">
     <div class="field field_displayNews" id="form-row-displayNews">
       <label for="displayNews" class="txtlibform">
@@ -95,7 +95,7 @@
   </div>
 </fieldset>
 <fieldset class="skinFieldset">
-  <legend class="without-img">Blocs principaux (gauche)</legend>
+  <legend class="without-img"><%=sectionMainArea.label%></legend>
   <div class="fields">
     <div class="field field_latestPublications entireWidth " id="form-row-latestPublications">
       <label for="latestPublications" class="txtlibform">
@@ -114,7 +114,7 @@
       </div>
     </div>
     <hr class="clear"/>
-    <div class="field"><label class="fields-block-title entireWidth ">Contenu libre</label></div>
+    <div class="field"><label class="fields-block-title entireWidth "><%=subsectionFreeContent.label%></label></div>
     <div class="field field_mainFreeContentTitle entireWidth " id="form-row-mainFreeContentTitle">
       <label for="mainFreeContentTitle" class="txtlibform">
         <%=mainFreeContentTitle.label%>
@@ -134,7 +134,7 @@
   </div>
 </fieldset>
 <fieldset class="skinFieldset">
-  <legend class="without-img">Blocs de droite</legend>
+  <legend class="without-img"><%=sectionRightArea.label%></legend>
   <div class="fields">
     <div class="field field_secondPicture entireWidth " id="form-row-secondPicture">
       <label for="secondPicture" class="txtlibform">
@@ -177,14 +177,6 @@
         <%=displayMedias%>
       </div>
     </div>
-    <div class="field field_displayTasks" id="form-row-displayTasks">
-      <label for="displayTasks" class="txtlibform">
-        <%=displayTasks.label%>
-      </label>
-      <div class="fieldInput champs">
-        <%=displayTasks%>
-      </div>
-    </div>
     <div class="field field_displayTaxonomy" id="form-row-displayTaxonomy">
       <label for="displayTaxonomy" class="txtlibform">
         <%=displayTaxonomy.label%>
@@ -194,7 +186,7 @@
       </div>
     </div>
     <hr class="clear"/>
-    <div class="field"><label class="fields-block-title">Bloc utilisateurs</label></div>
+    <div class="field"><label class="fields-block-title"><%=subsectionUsersZone.label%></label></div>
     <br class="clear"/>
     <div class="field field_usersLabel" id="form-row-usersLabel">
       <label for="usersLabel" class="txtlibform">
@@ -213,7 +205,7 @@
       </div>
     </div>
     <hr class="clear"/>
-    <div class="field"><label class="fields-block-title entireWidth ">Contenu libre</label></div>
+    <div class="field"><label class="fields-block-title entireWidth "><%=subsectionFreeContent.label%></label></div>
     <div class="field field_rightFreeContentTitle entireWidth " id="form-row-rightFreeContentTitle">
       <label for="rightFreeContentTitle" class="txtlibform">
         <%=rightFreeContentTitle.label%>
@@ -233,7 +225,7 @@
   </div>
 </fieldset>
 <fieldset id="pubInfo" class="skinFieldset">
-  <legend class="without-img">Les raccourcis</legend>
+  <legend class="without-img"><%=sectionShortcuts.label%></legend>
   <div class="fields">
     <div class="field field_shortcutURL1" id="form-row-shortcutURL1">
       <label for="shortcutURL1" class="txtlibform">

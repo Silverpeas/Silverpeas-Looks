@@ -1,1587 +1,1485 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <recordTemplate>
-    <fieldTemplate>
-        <fieldName>displayAdmins</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Administrateur(s)</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display administrator(s)</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Administrator(en) anzeigen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>displaySubspaces</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Sous espace(s)</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display subspaces navigation</labelName>
-            <language>en</language>
-        </label>
-         <label>
-            <labelName>Unterraumnavigation anzeigen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>displayApps</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Application(s)</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display space applications</labelName>
-            <language>en</language>
-        </label>
-         <label>
-            <labelName>Raumanwendungen anzeigen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>displayNews</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Afficher</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display the news</labelName>
-            <language>en</language>
-        </label>
-         <label>
-            <labelName>Zeigen Sie die Nachrichten an</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>newsZone</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Emplacement</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Location of the news</labelName>
-            <language>en</language>
-        </label>
-         <label>
-            <labelName>Ort der Nachrichten</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">main##right</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Zone principale##Colonne de droite</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Main##Right side</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Hauptseite##Rechte Seite</value>
-        </parameter>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>default</name>
-            <value lang="fr">right</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>newsRenderingType</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Présentation</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>News presentation</labelName>
-            <language>en</language>
-        </label>
-         <label>
-            <labelName>News presentation</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">list##carousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Liste##Carrousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">List##Carousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Liste##Karussell</value>
-        </parameter>
-        <parameter>
-            <name>default</name>
-            <value lang="fr">carousel</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>newsLimit</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Nombre d'actualité</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Number of news</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Anzahl der Nachrichten</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>maxLength</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>default</name>
-            <value lang="fr">5</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>newsOfSubSpaces</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Prendre en compte les sous-espaces</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>News from subspaces too</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Neuigkeiten auch aus Unterräumen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <parameter>
-            <name>default</name>
-            <value lang="fr">1</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>newsImportantOnly</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Importantes seulement</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Important news only</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Nur wichtige Neuigkeiten</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <parameter>
-            <name>default</name>
-            <value lang="fr">0</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>displayEvents</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Evénements</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display events</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Ereignisse anzeigen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>displayMedias</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Médias</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display media</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Medien anzeigen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>displayTaxonomy</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Plan de classement</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Search zone with taxonomy</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Suchzone mit Taxonomie</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">2##1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui, sur la plateforme entière##Oui, sur l'espace courant##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes, about the entire platform##Yes, only on this subspace##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja, über die gesamte Plattform##Ja, nur auf diesem Unterraum##Nein</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>latestPublications</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Nombre de dernières publications</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Lastest Publications, how many ?</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Letzte Veröffentlichungen, wie viele?</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>maxLength</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>size</name>
-            <value lang="fr">10</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>intro</fieldName>
-        <displayerName>wysiwyg</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Introduction</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Preface</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Vorwort</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <parameter>
-            <name>fileStorages</name>
-            <value lang="fr">false</value>
-        </parameter>
-        <parameter>
-            <name>width</name>
-            <value lang="fr">800</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>picture</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Image</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>First Picture on the main container</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Erstes Bild auf dem Hauptcontainer</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <parameter>
-            <name>width</name>
-            <value lang="fr">1600</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutURL1</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #1 - URL</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #1 - URL</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #1 - URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutLabel1</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #1 - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #1 - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #1 - Etikett</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutIcon1</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #1 - Icône</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #1 - Icon</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #1 - Ikon</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutTarget1</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #1 - Cible</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #1 - Target</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #1 - Ziel</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">_blank</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">In einem neuen Tab öffnen</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutURL2</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #2 - URL</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #2 - URL</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #2 - URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutLabel2</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #2 - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #2 - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #2 - Etikett</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutIcon2</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #2 - Icône</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #2 - Icon</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #2 - Ikon</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutTarget2</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #2 - Cible</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #2 - Target</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #2 - Ziel</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">_blank</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">In einem neuen Tab öffnen</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutURL3</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #3 - URL</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #3 - URL</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #3 - URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutLabel3</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #3 - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #3 - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #3 - Etikett</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutIcon3</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #3 - Icône</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #3 - Icon</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #3 - Ikon</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutTarget3</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #3 - Cible</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #3 - Target</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #3 - Ziel</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">_blank</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">In einem neuen Tab öffnen</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutURL4</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #4 - URL</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #4 - URL</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #4 - URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutLabel4</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #4 - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #4 - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #4 - Etikett</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutIcon4</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #4 - Icône</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #4 - Icon</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #4 - Ikon</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutTarget4</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #4 - Cible</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #4 - Target</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #4 - Ziel</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">_blank</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">In einem neuen Tab öffnen</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutURL5</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #5 - URL</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #5 - URL</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #5 - URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutLabel5</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #5 - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #5 - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #5 - Etikett</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutIcon5</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #5 - Icône</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #5 - Icon</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #5 - Ikon</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutTarget5</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #5 - Cible</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #5 - Target</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #5 - Ziel</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">_blank</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">In einem neuen Tab öffnen</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutURL6</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #6 - URL</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #6 - URL</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #6 - URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutLabel6</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #6 - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #6 - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #6 - Etikett</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutIcon6</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #6 - Icône</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #6 - Icon</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #6 - Ikon</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>shortcutTarget6</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Raccourci #6 - Cible</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Shortcut #6 - Target</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Abkürzung #6 - Ziel</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">_blank</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">In einem neuen Tab öffnen</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>users</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Utilisateurs</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Users</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Users</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>multipleUser</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>usersLabel</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Utilisateurs - Libellé</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Users - Label</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Benutzer - Bezeichnung</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>secondPicture</fieldName>
-        <displayerName>image</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Image secondaire</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Second picture - Right container</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Zweites Bild - Rechter Container</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <parameter>
-            <name>width</name>
-            <value lang="fr">500</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>file</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>secondPictureLink</fieldName>
-        <displayerName>url</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Image secondaire - Lien</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Second picture - Link url</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Zweites Bild - Link-URL</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>newUsers</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Nouveaux utilisateurs</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Display new users</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Neue Benutzer anzeigen</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>cols</name>
-            <value lang="fr">2</value>
-        </parameter>
-        <parameter>
-            <name>keys</name>
-            <value lang="fr">1##0</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
-            <value lang="de">Ja##Nein</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>mainFreeContentTitle</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Titre de la zone libre</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Free zone Title</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Freier Zonentitel</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>mainFreeContentValue</fieldName>
-        <displayerName>wysiwyg</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Contenu</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Free Content</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Kostenlose Inhalte</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <parameter>
-            <name>fileStorages</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>rightFreeContentTitle</fieldName>
-        <displayerName>simpletext</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>false</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Titre</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Right free zone title</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Rechter Freizonentitel</labelName>
-            <language>de</language>
-        </label>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
-    <fieldTemplate>
-        <fieldName>rightFreeContentValue</fieldName>
-        <displayerName>wysiwyg</displayerName>
-        <isMandatory>false</isMandatory>
-        <isReadOnly>true</isReadOnly>
-        <isDisabled>false</isDisabled>
-        <isHidden>false</isHidden>
-        <label>
-            <labelName>Contenu</labelName>
-            <language>fr</language>
-        </label>
-        <label>
-            <labelName>Right free zone content</labelName>
-            <language>en</language>
-        </label>
-        <label>
-            <labelName>Rechte Freizoneninhalte</labelName>
-            <language>de</language>
-        </label>
-        <parameter>
-            <name>galleries</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <parameter>
-            <name>fileStorages</name>
-            <value lang="fr">true</value>
-        </parameter>
-        <isSearchable>false</isSearchable>
-        <isFacet>false</isFacet>
-        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
-        <typeName>text</typeName>
-    </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displayAdmins</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Administrateur(s)</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display administrator(s)</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Administrator(en) anzeigen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displaySubspaces</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Sous espace(s)</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display subspaces navigation</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Unterraumnavigation anzeigen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displayApps</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Application(s)</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display space applications</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Raumanwendungen anzeigen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displayNews</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Afficher</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display the news</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Zeigen Sie die Nachrichten an</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>newsZone</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Emplacement</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Location of the news</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Ort der Nachrichten</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">main##right</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Zone principale##Colonne de droite</value>
+      <value lang="en">Main##Right side</value>
+      <value lang="de">Hauptseite##Rechte Seite</value>
+    </parameter>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>default</name>
+      <value lang="fr">right</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>newsRenderingType</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Présentation</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>News presentation</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>News presentation</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">list##carousel</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Liste##Carrousel</value>
+      <value lang="en">List##Carousel</value>
+      <value lang="de">Liste##Karussell</value>
+    </parameter>
+    <parameter>
+      <name>default</name>
+      <value lang="fr">carousel</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>newsLimit</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Nombre d'actualité</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Number of news</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Anzahl der Nachrichten</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>maxLength</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>default</name>
+      <value lang="fr">5</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>newsOfSubSpaces</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Prendre en compte les sous-espaces</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>News from subspaces too</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Neuigkeiten auch aus Unterräumen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <parameter>
+      <name>default</name>
+      <value lang="fr">1</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>newsImportantOnly</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Importantes seulement</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Important news only</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Nur wichtige Neuigkeiten</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <parameter>
+      <name>default</name>
+      <value lang="fr">0</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displayEvents</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Evénements</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display events</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Ereignisse anzeigen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displayMedias</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Médias</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display media</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Medien anzeigen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>displayTaxonomy</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Plan de classement</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Search zone with taxonomy</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Suchzone mit Taxonomie</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">2##1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui, sur la plateforme entière##Oui, sur l'espace courant##Non</value>
+      <value lang="en">Yes, about the entire platform##Yes, only on this subspace##No</value>
+      <value lang="de">Ja, über die gesamte Plattform##Ja, nur auf diesem Unterraum##Nein</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>latestPublications</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Nombre de dernières publications</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Lastest Publications, how many ?</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Letzte Veröffentlichungen, wie viele?</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>maxLength</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>size</name>
+      <value lang="fr">10</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>intro</fieldName>
+    <displayerName>wysiwyg</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Introduction</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Preface</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Vorwort</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <parameter>
+      <name>fileStorages</name>
+      <value lang="fr">false</value>
+    </parameter>
+    <parameter>
+      <name>width</name>
+      <value lang="fr">800</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>picture</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Image</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>First Picture on the main container</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Erstes Bild auf dem Hauptcontainer</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <parameter>
+      <name>width</name>
+      <value lang="fr">1600</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutURL1</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #1 - URL</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #1 - URL</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #1 - URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutLabel1</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #1 - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #1 - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #1 - Etikett</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutIcon1</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #1 - Icône</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #1 - Icon</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #1 - Ikon</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutTarget1</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #1 - Cible</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #1 - Target</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #1 - Ziel</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">_blank</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Nouvelle fenêtre</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="en">Open in a new tab</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="de">In einem neuen Tab öffnen</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutURL2</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #2 - URL</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #2 - URL</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #2 - URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutLabel2</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #2 - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #2 - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #2 - Etikett</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutIcon2</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #2 - Icône</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #2 - Icon</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #2 - Ikon</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutTarget2</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #2 - Cible</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #2 - Target</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #2 - Ziel</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">_blank</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Nouvelle fenêtre</value>
+      <value lang="en">Open in a new tab</value>
+      <value lang="de">In einem neuen Tab öffnen</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutURL3</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #3 - URL</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #3 - URL</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #3 - URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutLabel3</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #3 - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #3 - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #3 - Etikett</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutIcon3</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #3 - Icône</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #3 - Icon</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #3 - Ikon</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutTarget3</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #3 - Cible</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #3 - Target</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #3 - Ziel</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">_blank</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Nouvelle fenêtre</value>
+      <value lang="en">Open in a new tab</value>
+      <value lang="de">In einem neuen Tab öffnen</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutURL4</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #4 - URL</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #4 - URL</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #4 - URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutLabel4</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #4 - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #4 - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #4 - Etikett</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutIcon4</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #4 - Icône</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #4 - Icon</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #4 - Ikon</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutTarget4</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #4 - Cible</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #4 - Target</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #4 - Ziel</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">_blank</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Nouvelle fenêtre</value>
+      <value lang="en">Open in a new tab</value>
+      <value lang="de">In einem neuen Tab öffnen</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutURL5</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #5 - URL</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #5 - URL</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #5 - URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutLabel5</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #5 - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #5 - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #5 - Etikett</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutIcon5</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #5 - Icône</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #5 - Icon</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #5 - Ikon</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutTarget5</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #5 - Cible</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #5 - Target</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #5 - Ziel</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">_blank</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Nouvelle fenêtre</value>
+      <value lang="en">Open in a new tab</value>
+      <value lang="de">In einem neuen Tab öffnen</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutURL6</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #6 - URL</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #6 - URL</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #6 - URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutLabel6</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #6 - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #6 - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #6 - Etikett</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutIcon6</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #6 - Icône</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #6 - Icon</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #6 - Ikon</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>shortcutTarget6</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Raccourci #6 - Cible</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Shortcut #6 - Target</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Abkürzung #6 - Ziel</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">_blank</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Nouvelle fenêtre</value>
+      <value lang="en">Open in a new tab</value>
+      <value lang="de">In einem neuen Tab öffnen</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>users</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Utilisateurs</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Users</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Users</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>multipleUser</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>usersLabel</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Utilisateurs - Libellé</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Users - Label</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Benutzer - Bezeichnung</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>secondPicture</fieldName>
+    <displayerName>image</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Image secondaire</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Second picture - Right container</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Zweites Bild - Rechter Container</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <parameter>
+      <name>width</name>
+      <value lang="fr">500</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>file</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>secondPictureLink</fieldName>
+    <displayerName>url</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Image secondaire - Lien</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Second picture - Link url</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Zweites Bild - Link-URL</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>newUsers</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Nouveaux utilisateurs</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Display new users</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Neue Benutzer anzeigen</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>cols</name>
+      <value lang="fr">2</value>
+    </parameter>
+    <parameter>
+      <name>keys</name>
+      <value lang="fr">1##0</value>
+    </parameter>
+    <parameter>
+      <name>values</name>
+      <value lang="fr">Oui##Non</value>
+      <value lang="en">Yes##No</value>
+      <value lang="de">Ja##Nein</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>mainFreeContentTitle</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Titre de la zone libre</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Free zone Title</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Freier Zonentitel</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>mainFreeContentValue</fieldName>
+    <displayerName>wysiwyg</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Contenu</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Free Content</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Kostenlose Inhalte</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <parameter>
+      <name>fileStorages</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>rightFreeContentTitle</fieldName>
+    <displayerName>simpletext</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>false</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Titre</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Right free zone title</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Rechter Freizonentitel</labelName>
+      <language>de</language>
+    </label>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
+  <fieldTemplate>
+    <fieldName>rightFreeContentValue</fieldName>
+    <displayerName>wysiwyg</displayerName>
+    <isMandatory>false</isMandatory>
+    <isReadOnly>true</isReadOnly>
+    <isDisabled>false</isDisabled>
+    <isHidden>false</isHidden>
+    <label>
+      <labelName>Contenu</labelName>
+      <language>fr</language>
+    </label>
+    <label>
+      <labelName>Right free zone content</labelName>
+      <language>en</language>
+    </label>
+    <label>
+      <labelName>Rechte Freizoneninhalte</labelName>
+      <language>de</language>
+    </label>
+    <parameter>
+      <name>galleries</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <parameter>
+      <name>fileStorages</name>
+      <value lang="fr">true</value>
+    </parameter>
+    <isSearchable>false</isSearchable>
+    <isFacet>false</isFacet>
+    <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+    <typeName>text</typeName>
+  </fieldTemplate>
 </recordTemplate>

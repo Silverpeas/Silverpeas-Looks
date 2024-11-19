@@ -26,13 +26,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -74,13 +68,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -118,13 +106,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -158,13 +140,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -202,13 +178,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Zone principale##Colonne de droite</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Main##Right side</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Hauptseite##Rechte Seite</value>
         </parameter>
         <parameter>
@@ -254,13 +224,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Liste##Carrousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">List##Carousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Liste##Karussell</value>
         </parameter>
         <parameter>
@@ -334,13 +298,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -382,13 +340,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -430,13 +382,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -474,13 +420,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -514,13 +454,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui, sur la plateforme entière##Oui, sur l'espace courant##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes, about the entire platform##Yes, only on this subspace##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja, über die gesamte Plattform##Ja, nur auf diesem Unterraum##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -730,13 +664,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -846,13 +774,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -962,13 +884,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1078,13 +994,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1194,13 +1104,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1310,13 +1214,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1458,13 +1356,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>

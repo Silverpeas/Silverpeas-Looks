@@ -1,5 +1,199 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <recordTemplate>
+    <!-- Section and subsection title definition as hidden fields -->
+    <fieldTemplate>
+        <fieldName>sectionIntro</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Introduction</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Introduction</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Einleitung</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>sectionBrowsing</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Navigation</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Browsing</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Durchsuchen</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>sectionNews</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Actualités</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>News</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Nachricht</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>sectionMainArea</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Blocs principaux (gauche)</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Main area (left area)</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Hauptbereich (linker Bereich)</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>sectionRightArea</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Blocs de droite</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Right area</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Rechter Bereich</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>sectionShortcuts</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Raccourcis</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Shortcuts</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Verknüpfungen</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>subsectionFreeContent</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Contenu libre</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Free zone</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Freizone</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <fieldTemplate>
+        <fieldName>subsectionUsersZone</fieldName>
+        <displayerName>text</displayerName>
+        <isMandatory>false</isMandatory>
+        <isReadOnly>true</isReadOnly>
+        <isDisabled>false</isDisabled>
+        <isHidden>true</isHidden>
+        <label>
+            <labelName>Bloc utilisateurs</labelName>
+            <language>fr</language>
+        </label>
+        <label>
+            <labelName>Users zone</labelName>
+            <language>en</language>
+        </label>
+        <label>
+            <labelName>Benutzerzone</labelName>
+            <language>de</language>
+        </label>
+        <isSearchable>false</isSearchable>
+        <isFacet>false</isFacet>
+        <maximumNumberOfOccurrences>1</maximumNumberOfOccurrences>
+        <typeName>text</typeName>
+    </fieldTemplate>
+    <!-- True fields definition -->
     <fieldTemplate>
         <fieldName>displayAdmins</fieldName>
         <displayerName>radio</displayerName>
@@ -26,13 +220,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -59,7 +247,7 @@
             <labelName>Display subspaces navigation</labelName>
             <language>en</language>
         </label>
-         <label>
+        <label>
             <labelName>Unterraumnavigation anzeigen</labelName>
             <language>de</language>
         </label>
@@ -74,13 +262,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -103,7 +285,7 @@
             <labelName>Display space applications</labelName>
             <language>en</language>
         </label>
-         <label>
+        <label>
             <labelName>Raumanwendungen anzeigen</labelName>
             <language>de</language>
         </label>
@@ -118,13 +300,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -147,7 +323,7 @@
             <labelName>Display the news</labelName>
             <language>en</language>
         </label>
-         <label>
+        <label>
             <labelName>Zeigen Sie die Nachrichten an</labelName>
             <language>de</language>
         </label>
@@ -158,13 +334,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -191,7 +361,7 @@
             <labelName>Location of the news</labelName>
             <language>en</language>
         </label>
-         <label>
+        <label>
             <labelName>Ort der Nachrichten</labelName>
             <language>de</language>
         </label>
@@ -202,13 +372,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Zone principale##Colonne de droite</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Main##Right side</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Hauptseite##Rechte Seite</value>
         </parameter>
         <parameter>
@@ -239,7 +403,7 @@
             <labelName>News presentation</labelName>
             <language>en</language>
         </label>
-         <label>
+        <label>
             <labelName>News presentation</labelName>
             <language>de</language>
         </label>
@@ -254,13 +418,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Liste##Carrousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">List##Carousel</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Liste##Karussell</value>
         </parameter>
         <parameter>
@@ -334,13 +492,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -382,13 +534,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <parameter>
@@ -430,13 +576,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -474,13 +614,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -514,13 +648,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui, sur la plateforme entière##Oui, sur l'espace courant##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes, about the entire platform##Yes, only on this subspace##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja, über die gesamte Plattform##Ja, nur auf diesem Unterraum##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -730,13 +858,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -846,13 +968,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -962,13 +1078,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1078,13 +1188,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1194,13 +1298,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1310,13 +1408,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Nouvelle fenêtre</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Open in a new tab</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">In einem neuen Tab öffnen</value>
         </parameter>
         <isSearchable>false</isSearchable>
@@ -1458,13 +1550,7 @@
         <parameter>
             <name>values</name>
             <value lang="fr">Oui##Non</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="en">Yes##No</value>
-        </parameter>
-        <parameter>
-            <name>values</name>
             <value lang="de">Ja##Nein</value>
         </parameter>
         <isSearchable>false</isSearchable>
