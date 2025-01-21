@@ -260,10 +260,6 @@ Prévoir de mettre la présentation de l'aide à la recherche ? Recherche avncé
 	background: none !important;
 }
 
-#sp-layout-body-part-layout-content-part {
-	padding-left: 1em;
-}
-
 #sp-layout-footer-part {
 	height: 40px !important;
 	background-color: #f0f0f0;
@@ -273,10 +269,6 @@ Prévoir de mettre la présentation de l'aide à la recherche ? Recherche avncé
 	position: relative;
 	background-color: var(--couleur-foncee);
 	height: 140px;
-}
-
-#topar-header * {
-	font-size: 1em;
 }
 
 .btn-header,
@@ -529,7 +521,6 @@ Prévoir de mettre la présentation de l'aide à la recherche ? Recherche avncé
 
 #infoConnection .spacePerso ul li a {
 	color: #141414;
-	font-size: 1em;
 	display: block;
 	font-weight: 500;
 	padding: 5px 5px 5px 3em;
@@ -728,7 +719,6 @@ Prévoir de mettre la présentation de l'aide à la recherche ? Recherche avncé
 	height: 60px;
 	line-height: 60px;
 	text-align: center;
-	font-size: 1em;
 }
 
 #search-form-header a {
@@ -994,16 +984,6 @@ button.button:hover {
 	color: var(--couleur-text-sur-boutonHover);
 }
 
-#advanced-search form .sp_button,
-#globalResult form .sp_button,
-#directory form .sp_button,
-#navBlog .sp_button {
-	padding: 1px 10px;
-	font-size: 0.8em !important;
-	height: 30px;
-	line-height: 30px;
-	margin-top: 0;
-}
 
 /* ONGLET */
 
@@ -1030,7 +1010,6 @@ button.button:hover {
 	padding: 8px 10px 6px;
 	border-bottom: 3px solid var(--couleur-flashy);
 	font-weight: 700;
-	font-size: 1em;
 }
 
 
@@ -1048,7 +1027,6 @@ button.button:hover {
 .sp_tabOff a:hover {
 	color: var(--couleur-flashy);
 	background-color: var(--couleur-de-fond-clair);
-	border-radius: 0;
 }
 
 
@@ -2064,7 +2042,7 @@ ul li.category:last-child,
 button.button,
 #faq-home .link-add.sp-link,
 .ui-dialog .ui-dialog-buttonpane button {
-	border-radius: 5px;
+	border-radius:var(--radius-btn-secondaire);
 	background: #323237;
 	color: #FFF;
 	padding: 0.75rem;
