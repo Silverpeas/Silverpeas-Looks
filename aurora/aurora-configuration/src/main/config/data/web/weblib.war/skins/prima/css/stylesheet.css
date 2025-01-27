@@ -28,23 +28,163 @@ body {
 	--couleur-text-sur-principale: #FFFFFF;
 	--couleur-foncee:#231f20;  /* notamment utilisée pour le menu du header */
 	--couleur-text-sur-foncee:#FFFFFF;
-	--couleur-texte: #2a2a2a;
-	--couleur-texte-clair: #777777;
-	--couleur-flashy: #009fe3;  /*utilisée en couleur de texte donc doit être lisible */
-	--couleur-text-sur-flashy: #FFFFFF;
-	--couleur-bouton: #009fe3;
-	--couleur-text-sur-bouton: #FFFFFF;
 	--couleur-boutonHover: #231f20;
 	--couleur-text-sur-boutonHover: #FFFFFF;
-	--couleur-de-fond-clair:#F5F5F5;
-	--couleur-date-home:#999999;
 	--couleur-flashInfo: #f2f842;
 	--couleur-text-sur-flashInfo: #000000;
 
 
+  
+  /* variable provenant de la main silverpeas */
+
+
+  --color-flashy-principale: #009fe3;
+  --color-text-sur-flashy-principale: #FFF;
+
+  --color-flashy-hover: #252525;
+  --color-text-sur-flashy-hover: #FFF;
+
+  --color-text: #2a2a2a;
+  --color-text-second-niveau: #777777;
+  --color-lien-action: #5f9d15;
+  --color-text-label: #666;
+  --color-titre-avec-deux-couleurs: #1c94d4;
+  --color-action: #f1790f;
+  --color-text-date: #666666;
+  --bgColor-bloc-date: #5f9d15;
+  --color-bloc-date: #FFF;
+
+  --bgColor-bloc-fond-clair: #F5F5F5;
+  --border-color-bloc-fond-clair: #D6D6D6;
+  --border-color-bloc-fond-clair-hover: #9e9e9e;
+  --radius-bloc: 8px;
+
+  --bg-bloc-degrade: #F5F5F5;
+  --border-bloc-degrade: 1px solid #cdcdcd;
+
+  --bgColor-dossier: #EAEAEAEA;
+  --bgColor-dossier-hover: #ffffdc;
+  --radius-dossier: 10px;
+
+  --bgColor-thumb: #EEEEEE;
+  --border-color-thumb: #DDDDDD;
+  --border-color-thumb-hover: #CCCCCC;
+
+  --bgColor-header-bloc: #FFF --color-titre-bloc-header:#333;
+
+  --color-titre: #333;
+  --font-size-titre: 1.6em;
+  --font-weight-titre: 700;
+
+  --border-color-even: #d4d4d4;
+  --border-color-odd: #d4d4d4;
+  --bgColor-even: #f9f9f9;
+  --bgColor-odd: #eeeeee;
+
+  --color-trait-separateur: #DDD;
+
+  --color-draft: #FF6F6F;
+  --color-read: #319e3e;
+
+
+
+  --width-photo-profil: 30px;
+
+
+  --bgColor-card: #FFF;
+  --border-color-card: #CCC;
+  --shadow-border-card: 0;
+  /* ou 1px solid  #000*/
+  --width-avatar-card: 100px;
+  --height-avatar-card: 100px;
+  --shadow-avatar-card: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
+  --radius-avatar-card: 50px;
+  --border-width-avatar-card: 0;
+  --border-color-avatar-card: #CECECE;
+  --bg-color-avatar-card: #FFF;
+
+
+  --width-avatar-comment: 50px;
+  --height-avatar-comment: auto;
+  --shadow-avatar-comment: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
+  --radius-avatar-comment: 0;
+  --border-width-avatar-comment: 1px;
+  --border-color-avatar-comment: #CECECE;
+  --bg-color-avatar-comment: #FFF;
+
+  --color-link-richContent: var(--color-lien-action);
+  --decoration-link-richContent: underline;
+  /* LES TAILLES ET PROPORTIONS */
+  --right-side-width: 33%;
+
+  /* Comportement roll hover d'un lien / un titre */
+  --roll-hover-background: #FAFAFA;
+  /*fafafa dans blog*/
+  --roll-hover-color: #000;
+
+
+  /* ETIQUETTE / TAG */
+  --radius-etiquette: 3px;
+  /* vérifier lisibilité*/
+  --bgColor-etiquette: #ACACAC;
+  --color-text-etiquette: #FFFFFF;
+  --bgColor-hover-etiquette: #5c5c5c;
+  --color-text-hover-etiquette: #FFFFFF;
+
+
+  /* FILTRE etiquette */
+  --radius-filtre: 4px;
+  /* vérifier lisibilité*/
+  --bgColor-filtre: #FFF;
+  --border-color-filtre: #8f8f8f;
+  --color-text-filtre: #5f5f5f;
+
+  --bgColor-filtre-hover: #adadad;
+  --color-text-filtre-hover: #252525;
+  --border-color-filtre-hover: #ACACAC;
+
+  --bgColor-filtre-select: #5c5c5c;
+  --color-text-filtre-select: #FFF;
+  --border-color-filtre-select: #5c5c5c;
+
+  /*ZONE FILTRE FOND*/
+  --bgColor-zone-filtre: rgba(255, 255, 255, 0.5);
+  --border-color-zone-filtre: #CECECE;
+  --radius-zone-filtre: 10px;
+
+
+  /* Introduction des app */
+  --max-height-intro: 90px;
+
+
+
+  /* Description */
+  --border-left-size-description: 0;
+  --border-left-color-description: #e4e4e4;
+  --padding-left-description: 0;
+  --color-text-description: #212121;
+
+
+  /*bouton*/
+  --radius-btn: 5px;
+  --radius-btn-secondaire: 5px;
+  --bgColor-btn-secondaire: #FFF;
+  --bgColor-btn-secondaire-hover: #ffffdc;
+  --border-color-btn-secondaire: #FFF;
+  --color-text-btn-secondaire: #4c4c4c;
+
+  --bgColor-action-hover: #EAEAEA;
+
+
+
+
+  /* FORMULAIRE & CO */
+  --height-input: 32px;
+
+
 	background:#FFFFFF fixed no-repeat;
 	font-family:Helvetica, Arial, sans serif;
-	color: var(--couleur-texte);
+	color: var(--color-text);
 }
 
 html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut, .textePetitBold{
@@ -53,7 +193,7 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 	font-weight:500;
 }
 a {
-	color: var(--couleur-texte);
+	color: var(--color-text);
 }
 
 hr {
@@ -71,20 +211,13 @@ textarea {
   resize: vertical;
 }
 
-
-.rightContent {
-	width:33%;
-}
-.principalContent {
-	margin-right:calc( 33% + 24px )
-}
 /************* personnalisation des formulaires ********************/
 
 input,.selectize-control .selectize-input, select, button {
 	vertical-align: middle; 
 	margin-top: 1px; 
 	margin-bottom: 1px; 
-	min-height: 32px; 
+	min-height: var(--height-input); 
 	padding: 0 7px;
 }
 
@@ -100,13 +233,13 @@ select {
   background-repeat: no-repeat;
   background-position: calc(100% - 7px) 50%;
   padding-right: 20px;
-  height:32px;
+  height:var(--height-input);
 }
 input[type="file"] {border: 0; padding-left: 0; padding-right: 0; background-color: initial; }
 input[type="submit"], button[type="submit"] {
   cursor: pointer;
   background-color: #fff;
-  min-height: 32px;
+  min-height: var(--height-input);
   -webkit-transition: background-color 100ms linear;
   -moz-transition: background-color 100ms linear;
   -o-transition: background-color 100ms linear;
@@ -171,7 +304,7 @@ select[size='1']{
     background-position: calc(100% - 7px) 50%;
     padding-right: 20px;
 	padding-left: 0.5em;
-    height: 32px;
+    height: var(--height-input);
 }
 fieldset {border: 1px solid #e4e4e4; margin:0; min-width: inherit;}
 
@@ -234,18 +367,6 @@ silverpeas-time-picker .txtlibform {
   border:0;
 }
 
-#searchZone #searchLabel,
-.sp_button.copy-to-clipboard , silverpeas-permalink .copy-to-clipboard .sp_button  {
-	line-height:32px
-}
-#directory #indexAndSearch #search input {
-    height: 28px;
-}
-#advanced-search form .sp_button, #globalResult form .sp_button, #directory form .sp_button, #directory #indexAndSearch .sp_button, #searchLine .sp_button, .container-filter #search .sp_button, #thumbnailInputs .sp_button {
-    height: 30px;
-    line-height: 27px;
-	margin: 0;
-}
 .skinFieldset .field label, .skinFieldset .field .label {
     display: table-cell;
 	padding-top:10px;
@@ -356,18 +477,13 @@ silverpeas-time-picker .txtlibform {
 }
 
 .intfdcolor {
-  background-image: none;
-  background-color:#FFFFFF;
-}
-
-.ArrayNavigation {
-  background-image: none;
+  background:#FFFFFF;
 }
 
 #facetSearchDivId {
 	border:none;
-	background:transparent;
 }
+
 #facetSearchDivId > div {
 	margin-bottom:1em;
 	background-color:#FFF;
@@ -378,18 +494,11 @@ silverpeas-time-picker .txtlibform {
 #searchGroupTitle,
 .searchGroupTitle {  
 	background-color: var( --couleur-principale );
-	line-height: 2em;
-	height: 2em;
 	border-radius: 10px 10px 0 0;
-	padding-left:0;
 }
 
 #searchGroupTitle span, .searchGroupTitle span {
   color: var( --couleur-text-sur-principale );
-  line-height: 24px !important;
-  font-weight: 500 !important;
-  font-size: 13px !important;
-  background:none !important;
   
 }
 #searchGroupValues ul li.selected {
@@ -419,13 +528,13 @@ silverpeas-time-picker .txtlibform {
 }
 
  #spaces a:hover,  #spaceTransverse a:hover {
-  color:var(--couleur-flashy);
+  color:var(--color-flashy-principale);
 }
 
  .spaceLevel1 a.spaceURL,  .spaceLevel1On a.spaceURL,
  #spaceMenuDivId #spacePerso .spaceURL {
   background: url("../imgDesign/bg_menu_level1.png") no-repeat scroll 0px bottom transparent;
-  color:var(--couleur-flashy);
+  color:var(--color-flashy-principale);
   display: block;
   font-weight: 500;
   line-height: 19px;
@@ -442,12 +551,12 @@ silverpeas-time-picker .txtlibform {
 	border-radius: 15px 15px 0 0;
 }
  #spaces .spaceLevel1On > a.spaceURL {
-	 color: var(--couleur-flashy);
+	 color: var(--color-flashy-principale);
 	 position:relative;
  }
  #spaces .spaceLevel1On > a.spaceURL:after, 
  #spaceMenuDivId #spacePerso > .spaceURL:after{
-	background-color: var(--couleur-flashy);
+	background-color: var(--color-flashy-principale);
 	width:2em;
 	height:2px;
 	position:absolute;
@@ -459,13 +568,13 @@ silverpeas-time-picker .txtlibform {
 
  .spaceLevel1 a.spaceURL:hover {
   background: url() no-repeat scroll  0px bottom  transparent;
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
 }
 
  .spaceLevel1On a.spaceURL:hover,  .spaceLevel1On a.spaceURL,
  #spaceMenuDivId #spacePerso .spaceURL  {
 	background: url();
-	color: var(--couleur-flashy);
+	color: var(--color-flashy-principale);
 	line-height: 19px;
 	min-height: 18px;
 	padding: 13px 10px 17px 15px;
@@ -528,8 +637,8 @@ silverpeas-time-picker .txtlibform {
   height: 20px;
   border-radius: 10px;
   display: inline-block;
-  background-color: var(--couleur-flashy);
-  color: var(--couleur-text-sur-flashy);
+  background-color: var(--color-flashy-principale);
+  color: var(--color-text-sur-flashy-principale);
   text-align: center;
   line-height: 15px;
   margin-right: 0.25em;
@@ -544,8 +653,8 @@ silverpeas-time-picker .txtlibform {
   height: 20px;
   border-radius: 10px;
   display: inline-block;
-  background-color: var(--couleur-flashy);
-  color: var(--couleur-text-sur-flashy);
+  background-color: var(--color-flashy-principale);
+  color: var(--color-text-sur-flashy-principale);
   text-align: center;
   line-height: 15px;
   margin-right: 0.25em;
@@ -553,7 +662,7 @@ silverpeas-time-picker .txtlibform {
 }
  #spaces .spaceLevel1On .contentSpace .spaceOn > a {
   background-color:#FFF;
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
 }
 
  #spaces .spaceLevel1On .browseSpace   .browseComponent a, 
@@ -693,7 +802,7 @@ silverpeas-time-picker .txtlibform {
   min-height: 53px;
 }
 #browseBar #breadCrumb {
-	background-color:var(--couleur-de-fond-clair);
+	background-color:var(--bgColor-bloc-fond-clair);
 	border-radius:5px;
 	padding:0.5em;
 }
@@ -703,7 +812,6 @@ silverpeas-time-picker .txtlibform {
 }
 #browseBar #i18n {
   white-space: nowrap;
-  padding-left: 0.5em;
 }
 
 #browseBar #breadCrumb {
@@ -742,7 +850,7 @@ silverpeas-time-picker .txtlibform {
 }
 
 .yuimenu a , #portletPages .yuimenu a {
-  font-weight:500;
+  font-size:12px;
 }
 
 .ArrayColumn, .ArrayCell,
@@ -764,9 +872,6 @@ silverpeas-time-picker .txtlibform {
   border-radius:12px;
   padding:0 0 8px 0;
 }
-.btn-deploy-all-item.bgDegradeGris, #displaying.bgDegradeGris {
-  font-size:100%;
-}
 
 .bgDegradeGris .bgDegradeGris {
   border-radius:12px 12px 0 0;
@@ -775,10 +880,6 @@ silverpeas-time-picker .txtlibform {
 .sousNavBulle {
   border-radius:12px 12px 0 0;
   margin-top:12px;
-}
-
-#backToSearch .button {
-  font-size:90%;
 }
 
 #agenda #currentScope, #agenda #jump, #agenda #today ,#agenda #categories, #agenda #invitations, #agenda #alert, #agenda #caption, #agenda #rss {
@@ -793,7 +894,6 @@ silverpeas-time-picker .txtlibform {
 .eventBeginDate .number {
   top:19px;
 }
-
 
 #pdcFrame td{
   font-size:11px;
@@ -826,30 +926,12 @@ silverpeas-time-picker .txtlibform {
 }
 
 #browseBar #i18n .ArrayNavigationOn {
-    background-color: var(--couleur-flashy);
+    background-color: var(--color-flashy-principale);
 }
 
-@media only screen and (max-width: 650px){
-  .rightContent {
-    clear: both;
-    float: none;
-    margin-top: 40px;
-    width: auto;
-  }
-  .rightContent .attachments {
-    min-width:auto;
-  }
-  .principalContent {
-    margin-right: 0;
-    margin-top: 10px;
-  }
-  .header h4 {
-    min-width: auto;
-  }
-}
 
 #topPage .yuimenu, #kmelia .yuimenu, #attachmentList .yuimenu {
-  background-color: var( --couleur-de-fond-clair );
+  background-color: var( --bgColor-bloc-fond-clair );
   border: 1px solid rgba(0,0,0,0.2) ;
 }
 
@@ -858,17 +940,17 @@ silverpeas-time-picker .txtlibform {
 }
 
 .yuimenu a, #portletPages .yuimenu a {
-  background-color:var( --couleur-de-fond-clair );
+  background-color:var( --bgColor-bloc-fond-clair );
 }
 
 .yuimenuitemlabel, .yuimenuitemlabel:visited, .yuimenubaritemlabel, .yuimenubaritemlabel:visited {
-  color:var(--couleur-flashy);
+  color:var(--color-flashy-principale);
 }
 
 .yuimenu a:hover, #portletPages .yuimenu a:hover {
-  background-color: var(--couleur-flashy);
-  border-color: var(--couleur-flashy);
-  color: var( --couleur-text-sur-flashy );
+  background-color: var(--color-flashy-principale);
+  border-color: var(--color-flashy-principale);
+  color: var( --color-text-sur-flashy-principale );
 }
 
 #portletPages .list-responsible-user .action a:hover, .list-responsible-user .action a:hover {border-bottom:0}
@@ -879,20 +961,19 @@ silverpeas-time-picker .txtlibform {
 }
 
 #myProfileFiche .action .link, #publicProfileFiche #contactCommun .link, #publicProfileFiche #allContact .link, .txtnav, .txtbigdate, .txttitrecol, #directory .link {
-  border-color:var(--couleur-flashy);
-  color: var(--couleur-flashy);
+  border-color:var(--color-flashy-principale);
+  color: var(--color-flashy-principale);
   line-height: 12px;
   font-family: "Courier New";
 }
 
 .jsxc_bar, #silverchat_roster_header {
-	background-color: var(--couleur-flashy) !important;
+	background-color: var(--color-flashy-principale) !important;
 }
 #silverchat_roster_header #silverchat_notice span {
     background-color: #000 !important;
 }
 /************ TAILLE DES POLICES CENTRALISEE ***************/
-
 
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information {
     font-size: 10px;
@@ -915,17 +996,13 @@ silverpeas-time-picker .txtlibform {
   font-weight:700;
 }
 
- a {
-	font-size: 10pt;
-	font-weight: 500;
-}
 #portletPages div.portlet-content {
 	padding-top:1em;
 }
 
 #portletPages #portal-page div.portlet-content {
 	padding:20px;
-	background-color:var( --couleur-de-fond-clair );
+	background-color:var( --bgColor-bloc-fond-clair );
 	border-radius:20px;
 }
 
@@ -949,36 +1026,10 @@ Label, legend{
 }
 
 #myProfileFiche .action .link, #contactCommun .link, #allContact .link, #publicProfileFiche .action .link, #publicProfileFiche #contactCommun .link, #publicProfileFiche #allContact .link {
-    color:var(--couleur-flashy);
+    color:var(--color-flashy-principale);
 }
 #myProfileFiche .info, #publicProfileFiche .info  {
 	position:relative;
-}
-.ongletAdminOn span.textePetitBold, .ongletAdminOff span.txtPetitBlanc,
-.componentNav,
-#spaces-welcome-message p,
-#spaces-welcome-message ul,
-#spaces-welcome-message a ,
-.titreForum,
-.ArrayNavigation,
-.skinFieldset legend,
-#globalResultForm,
-#globalResultQueryLabel,
-#globalResultParamDisplayLabel,
-.titreFenetre ,
-#portletPages dl.sort ,
-#portletPages dl.sort dd,
-button.ui-button.ui-widget,
-button,
-.sp_button,
-.ongletAdminOn .txtPetitBlanc,
-.ongletAdminOn strong,
-.yuimenu a , #portletPages .yuimenu a,
-.spaceHome #publication li ,
-#menubar-creation-actions .menubar-creation-actions-item, #attachment-creation-actions .menubar-creation-actions-item,
-#nav ul.nav-niveau-2 li a,
-.last-publication-list li{
-  font-size:14px !important;
 }
 
 .spaceHome .spaceNavigation li a {
@@ -1113,7 +1164,7 @@ button,
 .portlet div.eventShortDate .month,
 silverpeas-calendar-event-occurrence-list .display-grouped-by-day .section-day-date .month-number,
 .portlet-content silverpeas-calendar-event-occurrence-list .display-grouped-by-day .section-day-date .day-in-month{
-	color:var(--couleur-flashy);
+	color:var(--color-flashy-principale);
 	position: absolute;
 	top:30px;
 	left: 0;
@@ -1122,7 +1173,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .section-day-d
 }
 .portlet div.eventShortDate .number,
 .portlet-content silverpeas-calendar-event-occurrence-list .display-grouped-by-day .section-day-date .day-in-month{
-	color: var(--couleur-flashy);
+	color: var(--color-flashy-principale);
 	position: absolute;
 	top: 7px;
 	line-height: 1.5em;
@@ -1133,7 +1184,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .section-day-d
 .portlet .priority  div.eventShortDate,
 silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority .section-day-date {
   background-image:none !important;
-  border:2px solid var( --couleur-flashy );
+  border:2px solid var( --color-flashy-principale );
 }
 
 .portlet div.eventLongDate {
@@ -1217,7 +1268,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 .spaceHome .spaceNavigation li{
 	border-radius:4px;
 	padding: 0.5em 2em;
-	background-color:var(--couleur-de-fond-clair); 
+	background-color:var(--bgColor-bloc-fond-clair); 
 	}
 .spaceHome .spaceNavigation li img {
     left: 19px;
@@ -1235,7 +1286,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 	padding: 0px;
 	font-weight:500;    
 	padding: 0 0 20px 0;
-    color:var(--couleur-texte-clair);
+    color:var(--color-text-second-niveau);
 }
 .description-publication,
 .publication-description,
@@ -1243,7 +1294,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 .main-home-page .principal-main-container .rslides .caption p ,
 .main-home-page .principal-main-container .list-news .caption p {
 	font-family: "Courier New", Courier, monospace;
-    color:var(--couleur-texte-clair);
+    color:var(--color-text-second-niveau);
 }
 
 .spaceHome .spaceDescription {
@@ -1283,7 +1334,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 }
 
 .spaceHome .rightContent > div{
-    background: var(--couleur-de-fond-clair);
+    background: var(--bgColor-bloc-fond-clair);
     border-radius: 0;
     padding: 20px;
     position: relative;
@@ -1294,19 +1345,10 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 .spaceHome  #portletPages div:first-child  .header  h2 {
   margin-top:0;
 }
-/*
-.spaceHome #publication li:before,
-.last-publication-list li:before {
-  width:10px;
-  height:10px;
-  border-radius:5px;
-  content:' ';
-  display:inline-block;
-  background-color:var( --couleur-flashy );
-}*/
+
 .spaceHome #publication li a:hover,
 .last-publication-list li  a:hover{
-  background-color:var( --couleur-de-fond-clair );
+  background-color:var( --bgColor-bloc-fond-clair );
 }
 
 .spaceHome #publication li a b,
@@ -1317,7 +1359,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 
 .spaceHome #publication li a:hover b,
 .last-publication-list li a:hover b {
-  color:var( --couleur-flashy );
+  color:var( --color-flashy-principale );
 }
 
 .last-publication-list .description-publication {
@@ -1326,7 +1368,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 
 .spaceHome #publication li .userToZoom ,
 .last-publication-list li .userToZoom {
-  color: var( --couleur-flashy );
+  color: var( --color-flashy-principale );
 }
 
 .spaceHome #spaceQuiskInfo li.slide {
@@ -1334,7 +1376,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 }
 
 .spaceHome #spaceQuiskInfo li.slide > h4 {
-  color:var(--couleur-flashy);
+  color:var(--color-flashy-principale);
   font-weight: 500;
   line-height: 120%;
 }
@@ -1344,7 +1386,7 @@ silverpeas-calendar-event-occurrence-list .display-grouped-by-day .high-priority
 }
 
 .spaceHome #spaceQuiskInfo .slides-pagination a:hover, .spaceHome #spaceQuiskInfo .slides-pagination .selected a {
-  background-color:var(--couleur-flashy);
+  background-color:var(--color-flashy-principale);
 }
 
 .spaceHome .list-responsible-user li {
