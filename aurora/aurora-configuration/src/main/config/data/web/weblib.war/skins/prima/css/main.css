@@ -10,7 +10,7 @@
 /* ordre des blocs redefini avec order */
 #next-event-part {
   order: 1;
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   padding: 1em;
   flex-basis: calc(50% - 5em);
 }
@@ -114,7 +114,7 @@
 
 #sp-layout-body-part-layout-navigation-part {
   padding-top: 1em;
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
 }
 
 #sp-layout-header-part {
@@ -139,6 +139,9 @@
   height: 120px;
 }
 
+#topPage {
+  padding-top: 0;
+}
 
 #topar-header * {
   font-size: 13px !important;
@@ -191,7 +194,7 @@
   color: #333;
   text-decoration: none;
   cursor: pointer;
-  background: var(--couleur-de-fond-clair);
+  background: var(--bgColor-bloc-fond-clair);
   border: 1px solid #DDD;
   border-radius: 5px;
   -webkit-appearance: none;
@@ -232,7 +235,7 @@
   position: absolute;
   top: 14px;
   left: 14px;
-  background-color: var(--couleur-flashy);
+  background-color: var(--color-flashy-principale);
   height: 12px;
   width: 12px;
   border-radius: 6px;
@@ -277,7 +280,7 @@
 
 .all-read-user-notification #notification-count.btn-header,
 #topbar-basket-selection .btn-header  {
-  background: var(--couleur-de-fond-clair);
+  background: var(--bgColor-bloc-fond-clair);
   border: 1px solid #DDD;
 }
 
@@ -297,7 +300,7 @@
 }
 
 .silverpeas-user-notifications.unread-user-notification #notification-count.btn-header {
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
 }
 
 .silverpeas-user-notifications.unread-user-notification #notification-count.btn-header a {
@@ -309,7 +312,7 @@
   border-radius: 5px;
   width: 10px;
   height: 10px;
-  background: var(--couleur-flashy);
+  background: var(--color-flashy-principale);
   display: inline-block;
   margin-right: 8px;
   animation-duration: .7s;
@@ -340,7 +343,7 @@
 .header-container #infoConnection .avatarName:hover,
 #notification-count.btn-header:hover,
 .silverpeas-user-notifications.unread-user-notification #notification-count.btn-header:hover {
-  background-color: rgb(var(--couleur-de-fond-clair), 0.8);
+  background-color: rgb(var(--bgColor-bloc-fond-clair), 0.8);
 }
 
 .header-container #infoConnection #show-menu-spacePerso {
@@ -400,7 +403,7 @@
 
 #infoConnection .spacePerso ul li:hover,
 #infoConnection .spacePerso ul li a:hover {
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
 }
 
 .header-container #outils {
@@ -532,9 +535,9 @@
 }
 
 #search-form-header a {
-  background-color: var(--couleur-flashy);
+  background-color: var(--color-flashy-principale);
   border-radius: 0;
-  color: var(--couleur-text-sur-flashy);
+  color: var(--color-text-sur-flashy-principale);
   font-weight: 600;
 }
 
@@ -696,12 +699,12 @@ a#search-help-header {
 }
 
 #nav > ul > li.selected > a {
-  background-color: var(--couleur-flashy);
+  background-color: var(--color-flashy-principale);
 }
 
 #nav > ul > li > a:hover {
-  background-color: var(--couleur-flashy);
-  color: var(--couleur-text-sur-flashy) !important;
+  background-color: var(--color-flashy-principale);
+  color: var(--color-text-sur-flashy-principale) !important;
 }
 
 #nav .sm-silverpeas ul a.has-submenu {
@@ -743,7 +746,7 @@ a#search-help-header {
 
 #nav .sm-silverpeas ul a:hover, #nav .sm-silverpeas ul a:focus, #nav .sm-silverpeas ul a:active, #nav .sm-silverpeas ul a.highlighted {
   background: #FFF;
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
 }
 
 #nav .megaMenu-spaceDescription {
@@ -802,20 +805,8 @@ a#search-help-header {
   color: var(--couleur-text-sur-boutonHover);
 }
 
-#advanced-search form .sp_button, #globalResult form .sp_button, #directory form .sp_button, #navBlog .sp_button {
-  padding: 1px 10px;
-  font-size: 10pt !important;
-  height: 30px;
-  line-height: 30px;
-  margin-top: 0;
-}
-
 /* ONGLET */
 
-.sousOnglets, .sp_tabOn a, .sp_tabOff a:hover, .sp_tabOn span {
-  background-color: var(--couleur-flashy);
-  color: var(--couleur-text-sur-flashy);
-}
 
 .sp_tabOff a, .sp_tabOff span {
   background-color: var(--couleur-foncee);
@@ -855,7 +846,7 @@ a#search-help-header {
 
 
 .main-home-page #freeZone #freeZone-content {
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   padding: 1em;
 }
 
@@ -964,7 +955,7 @@ a#search-help-header {
 }
 
 .main-home-page .principal-main-container .list-news .caption h2 a:hover {
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
 }
 
 .main-home-page .principal-main-container .list-news .caption p {
@@ -983,7 +974,7 @@ a#search-help-header {
 }
 
 .centered-btns_here a, .transparent-btns_here a, .large-btns_here a {
-  background: var(--couleur-flashy);
+  background: var(--color-flashy-principale);
 }
 
 .main-home-page .principal-main-container .rslides {
@@ -1002,20 +993,20 @@ a#search-help-header {
   width: 100%;
   overflow: auto;
   max-height: inherit;
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   padding: 0;
   text-align: left;
 }
 
 .main-home-page .principal-main-container .rslides .caption .news-date {
   display: block;
-  color: var(--couleur-date-home);
+  color: var(--color-text-date);
   font-size: 1.25em;
   padding-bottom: 0.25em;
 }
 
 .main-home-page .principal-main-container .rslides .caption h2 a {
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
   font-size: 18px;
   font-weight: 600;
 }
@@ -1041,8 +1032,8 @@ a#search-help-header {
   left: 1em;
   right: auto;
   padding: 0.35em;
-  background-color: var(--couleur-flashy);
-  color: var(--couleur-text-sur-flashy);
+  background-color: var(--color-flashy-principale);
+  color: var(--color-text-sur-flashy-principale);
   line-height: 100%;
   width: auto;
 }
@@ -1080,7 +1071,7 @@ a#search-help-header {
 }
 
 .main-home-page #new-users-home .new-users-main-container {
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   border-radius: 15px;
   padding: 15px;
 }
@@ -1108,7 +1099,7 @@ a#search-help-header {
 #new-users-home div.user-card,
 #spaceUsers div.user-card {
   border: 0;
-  background-color:var(--couleur-de-fond-clair);
+  background-color:var(--bgColor-bloc-fond-clair);
   margin-bottom: 0;
   display: flex;
 }
@@ -1137,14 +1128,14 @@ div.user-card .avatar {
   display: none !important;
 }
 .list-users .intfdcolor {
-  background-color:var(--couleur-de-fond-clair);
+  background-color:var(--bgColor-bloc-fond-clair);
 }
 
 
 #spaceUsers div.user-card,
 #spaceManager .list-responsible-user li {
   border: 0;
-  background-color:var(--couleur-de-fond-clair);
+  background-color:var(--bgColor-bloc-fond-clair);
   margin-bottom: 0;
   display: flex;
   position: relative;
@@ -1246,7 +1237,7 @@ div.user-card .avatar,
   padding: 1em 1em 0em 1em;
   position: relative;
   text-align: center;
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   height: 107px;
 }
 
@@ -1286,7 +1277,7 @@ div.user-card .avatar,
 }
 
 #last-publication-home .last-publication-list li {
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   padding: 1em;
   margin-bottom: 1em;
 }
@@ -1305,7 +1296,7 @@ div.user-card .avatar,
 #last-publication-home .last-publication-list a:hover,
 .eventName a:hover,
 .main-bookmark a:hover {
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
 }
 
 #last-publication-home .last-publication-list span {
@@ -1349,7 +1340,7 @@ div.user-card .avatar,
 .main-home-page #user-favorit-home h4,
 .main-home-page #new-users-home h4 {
   font-size: 28px;
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
   font-weight: 800;
   text-align: center;
   line-height: 25px;
@@ -1370,14 +1361,14 @@ div.user-card .avatar,
 }
 
 .main-home-page #weather-home h4 .date-today {
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
 }
 
 #user-favorit-home h4::after,
 .main-home-page #new-users-home h4::after {
   content: ' ';
   height: 1px;
-  background-color: var(--couleur-flashy);
+  background-color: var(--color-flashy-principale);
   flex-basis: 20%;
   margin-left: 1em;
 }
@@ -1392,7 +1383,7 @@ div.user-card .avatar,
 .main-home-page #new-users-home h4::before {
   content: ' ';
   height: 1px;
-  background-color: var(--couleur-flashy);
+  background-color: var(--color-flashy-principale);
   flex-basis: 20%;
   margin-right: 1em;
 }
@@ -1532,7 +1523,7 @@ div.user-card .avatar,
 
 .main-home-page #user-favorit-home ul li {
   margin: 0 0 1em 0;
-  background: var(--couleur-de-fond-clair);
+  background: var(--bgColor-bloc-fond-clair);
   padding: 0;
   position: relative;
 }
@@ -1545,7 +1536,7 @@ div.user-card .avatar,
   content: ' ';
   width: 24px;
   height: 24px;
-  background: var(--couleur-flashy) url(../imgDesign/puce-favorit.png) 0 0 no-repeat;
+  background: var(--color-flashy-principale) url(../imgDesign/puce-favorit.png) 0 0 no-repeat;
   position: absolute;
   top: 12px;
   right: 1em;
@@ -1562,9 +1553,9 @@ div.user-card .avatar,
   display: block;
   font-size: 18px;
   font-style: italic;
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
   font-weight: 500;
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   border-radius: 20px;
   padding: 20px 15px;
   text-align: center;
@@ -1594,7 +1585,7 @@ div.user-card .avatar,
   display: inline-block;
   height: 0;
   width: 0;
-  border-top: 16px solid var(--couleur-de-fond-clair);
+  border-top: 16px solid var(--bgColor-bloc-fond-clair);
   border-right: 13px solid transparent;
   border-left: 7px solid transparent;
 }
@@ -1610,45 +1601,14 @@ div.user-card .avatar,
 #directory #indexAndSearch .sp_button,
 .sp_button, button.button,
 #faq-home .link-add.sp-link {
-  border-radius: 5px;
-  background: #323237;
-  color: #FFF;
-  padding: 0.75rem;
-  font-size: 12px;
   font-weight: 600;
-  display: inline-block;
-  margin: 1em 1em 0 0;
   text-transform: uppercase;
-}
-
-.main-home-page .link-more:hover,
-.main-home-page #submit-AdvancedSearch:hover,
-.spaceHome #submit-AdvancedSearch:hover,
-.spaceHome .link-more:hover,
-#directory form .sp_button:hover,
-#directory #indexAndSearch .sp_button:hover,
-.sp_button, button.button:hover,
-.spaceHome #submit-AdvancedSearch:hover,
-#faq-home .link-add.sp-link:hover {
-  background: var(--couleur-boutonHover);
-  color: var(--couleur-text-sur-boutonHover);
-}
-
-.main-home-page #submit-AdvancedSearch,
-.spaceHome #submit-AdvancedSearch,
-#directory form .sp_button, #directory #indexAndSearch .sp_button,
-.sp_button, button.button {
-
-  background: var(--couleur-bouton);
-  color: var(--couleur-text-sur-bouton);
 }
 
 #directory form .sp_button,
 #directory #indexAndSearch .sp_button {
   border: 0;
   text-transform: initial;
-  height: 15px;
-  line-height: 15px;
 }
 
 
@@ -1656,7 +1616,7 @@ div.user-card .avatar,
 .main-home-page #submit-AdvancedSearch:hover,
 .spaceHome #submit-AdvancedSearch:hover,
 .spaceHome .link-more:hover {
-  background: var(--couleur-flashy);
+  background: var(--color-flashy-principale);
 }
 
 .spaceHome .spaceIntro {
@@ -1672,7 +1632,7 @@ div.user-card .avatar,
   text-transform: Initial;
   font-family: "Courier New", Courier, monospace;
   background: #FFF;
-  color: var(--couleur-flashy);
+  color: var(--color-flashy-principale);
   font-size: 34px;
   padding: 18px 0;
   line-height: 1em;
@@ -1751,13 +1711,13 @@ div.user-card .avatar,
 }
 
 .main-home-page #bloc-advancedSeach #submit-AdvancedSearch {
-  background-color: var(--couleur-flashy);
-  color: var(--couleur-text-sur-flashy);
+  background-color: var(--color-flashy-principale);
+  color: var(--color-text-sur-flashy-principale);
 }
 
 .main-home-page #bloc-advancedSeach #submit-AdvancedSearch:hover {
-  background-color: var(--couleur-bouton);
-  color: var(--couleur-text-sur-bouton);
+  background-color: var(--color-flashy-principale);
+  color: var(--color-text-sur-flashy-principale);
 }
 
 .main-home-page #bloc-advancedSeach #used_pdc .field .champs {
@@ -2154,7 +2114,7 @@ h2.wysiwyg-title1 {
   font-size: 20px;
   line-height: 45px;
   position: relative;
-  border-bottom: 2px solid var(--couleur-flashy);
+  border-bottom: 2px solid var(--color-flashy-principale);
   padding-bottom: 10px;
   margin: 1em 0;
 }
@@ -2173,7 +2133,7 @@ strong.wysiwyg-focus {
 }
 
 p.wysiwyg-important {
-  background-color: var(--couleur-de-fond-clair);
+  background-color: var(--bgColor-bloc-fond-clair);
   border-radius: 0 10px 0 10px;
   padding: 9.5px;
   border: 1px solid #ebebeb;
