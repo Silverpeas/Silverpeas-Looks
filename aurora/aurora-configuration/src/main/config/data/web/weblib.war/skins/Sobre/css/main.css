@@ -49,7 +49,6 @@ body#top {
 .header-container {
   position: relative;
   height: 192px;
-  /*background:#FFF url("../imgDesign/deco-bandeau.png") bottom right no-repeat;*/
   border-bottom: 0;
   text-align: center;
 }
@@ -176,7 +175,6 @@ label.select-header:before {
   position: absolute;
   top: 0;
   padding: 8px 174px 0 40px;
-  /*background:transparent url(../imgDesign/outlook.png) top right no-repeat;*/
 }
 
 .header-container #infoConnection .avatarName {
@@ -388,12 +386,9 @@ label.select-header:before {
   color: #FFF;
   display: inline-block;
   font-weight: bold;
-  height: 29px;
   line-height: 29px;
   min-width: 54px;
-  padding: 0 8px;
   text-align: center;
-  -moz-border-radius: 2px;
   border-radius: 2px;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
@@ -402,39 +397,28 @@ label.select-header:before {
   outline:none;
   padding: 0 0;
   width: 60px;
-  -moz-box-shadow: none;
   box-shadow: none;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
   background: #61a0b8;
-  background: -moz-linear-gradient(top, #4387fd, #4683ea);
-  background: linear-gradient(top, #4387fd, #4683ea);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4387fd, endColorstr=#4683ea, GradientType=1)
-}
+  background: linear-gradient(to top, #4387fd, #4683ea);}
 
 #search-form-header a:hover {
-  -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, .15);
   box-shadow: 0 1px 0 rgba(0, 0, 0, .15)
 }
 
 #search-form-header a:focus {
-  -moz-box-shadow: inset 0 0 0 1px #fff;
   box-shadow: inset 0 0 0 1px #fff
 }
 
 #search-form-header a:hover:focus {
-  -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, .15), inset 0 0 0 1px #fff;
   box-shadow: 0 1px 0 rgba(0, 0, 0, .15), inset 0 0 0 1px #fff
 }
 
 #search-form-header a:active:active {
   border: 1px solid transparent;
-  -moz-box-shadow: inset 0 2px 0 rgba(0, 0, 0, .15);
   box-shadow: inset 0 2px 0 rgba(0, 0, 0, .15);
   background: #3c78dc;
-  background: -moz-linear-gradient(top, #3c7ae4, #3f76d3);
-  background: linear-gradient(top, #3c7ae4, #3f76d3);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#3c7ae4, endColorstr=#3f76d3, GradientType=1)
+  background: linear-gradient(to top, #3c7ae4, #3f76d3);
 }
 
 #lastResult-link-header span {
@@ -594,8 +578,7 @@ label.select-header:before {
   clear: both;
   margin-top: 1em;
   float: left;
-  background: -moz-linear-gradient(top, #fff, #f0eeee);
-  background: linear-gradient(top, #fff, #f0eeee);
+  background: linear-gradient(to top, #fff, #f0eeee);
   border: 1px solid #d8d8d8;
   border-radius: 6px;
 }
@@ -622,10 +605,8 @@ label.select-header:before {
   color: #25252c;
   font-weight: 100;
   border-bottom: 0 none;
-  margin-top: 0;
   padding-left: 28px;
   padding-bottom: 10px;
-  font-size: 22px;
   margin: 18px 0 7px;
   font-size: 24px;
   font-family: Arial;
@@ -642,8 +623,6 @@ label.select-header:before {
 #portletPages dl.sort dt {
   color: #61a0b8;
   background: transparent url() no-repeat scroll left bottom;
-  border-bottom: 0 none;
-  margin-top: 0;
   padding: 12px 0 8px 0;
   font-size: 20px;
   font-weight: 100;
@@ -922,8 +901,6 @@ label.select-header:before {
 
 #bloc-advancedSeach #query {
   border-radius: 12px;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
   border: 1px solid #d1d1d1;
   width: 90%;
   height: 20px;
@@ -1195,38 +1172,6 @@ label.select-header:before {
   display: block;
   text-transform: uppercase
 }
-
-/* ===============
-    ALL: IE Fixes
-   =============== */
-
-/* ==========================================================================
-   Media Queries
-   ========================================================================== */
-
-@media only screen and (min-width: 480px) {}
-
-@media only screen and (min-width: 768px) {
-
-  /* ===============
-       présentation a partir de 768
-       =============== */
-
-
-}
-
-@media only screen and (min-width: 980px) {
-
-  /* ===============
-     préasentation a partir de 1024
-     =============== */
-
-
-}
-
-@media only screen and (min-width: 1200px) {}
-
-@media only screen and (min-width: 1800px) {}
 
 /* ==========================================================================
    Helper classes

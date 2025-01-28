@@ -28,6 +28,100 @@ body {
   background:#FFF url() fixed no-repeat;
   font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
   color:#082E4A;
+
+  
+  --color-flashy-principale:#4683ea;
+  --color-text-sur-flashy-principale:#FFF;
+  
+  --color-text:#082E4A;
+  --color-text-second-niveau:#626262;
+  --color-lien-action:#4683ea;
+  --color-text-label:#666;
+  --color-titre-avec-deux-couleurs:#4683ea;
+  --color-action:#f1790f;
+  --color-text-date:#666666;
+  --bgColor-bloc-date:#4683ea;
+  --color-bloc-date:#FFF;
+
+  --radius-bloc:0;
+  
+  --color-trait-separateur: #DDD;
+  /* LES TAILLES ET PROPORTIONS */
+  --right-side-width:33%;
+  
+  /* Comportement roll hover d'un lien / un titre */
+  --roll-hover-background:#FAFAFA; /*fafafa dans blog*/
+  --roll-hover-color:#000;
+
+
+  /* ETIQUETTE / TAG */
+  --radius-etiquette:3px;
+  /* vérifier lisibilité*/
+  --bgColor-etiquette:#ACACAC;
+  --color-text-etiquette:#FFFFFF;
+  --bgColor-hover-etiquette:#5c5c5c;
+  --color-text-hover-etiquette:#FFFFFF;
+
+  
+  /* FILTRE etiquette */
+  --radius-filtre:4px;
+  /* vérifier lisibilité*/
+  --bgColor-filtre:#FFF;
+  --border-color-filtre:#8f8f8f;
+  --color-text-filtre:#5f5f5f;
+
+  --bgColor-filtre-hover:#adadad;
+  --color-text-filtre-hover:#252525;
+  --border-color-filtre-hover:#ACACAC;
+  
+  --bgColor-filtre-select:#5c5c5c;
+  --color-text-filtre-select:#FFF;
+  --border-color-filtre-select:#5c5c5c;
+
+  /*ZONE FILTRE FOND*/
+  --bgColor-zone-filtre:#eaeaea;
+  --border-color-zone-filtre:#CECECE;
+  --radius-zone-filtre:10px;
+
+
+  /* Introduction des app */
+  --max-height-intro: 90px;
+
+
+  /* Description */
+  --border-left-size-description:6px;
+  --border-left-color-description:#e4e4e4;
+  --padding-left-description:1em;
+  --color-text-description:#5e5e5e;
+
+
+  /*bouton*/
+  --radius-btn:0;
+  --radius-btn-secondaire:5px;
+  --bgColor-btn-secondaire:linear-gradient(180deg,  rgba(243,243,243,1) 0%, rgba(243,243,243,1) 33%,rgba(228,228,228,1) 100%);
+  --bgColor-btn-secondaire-hover:linear-gradient(180deg,  rgba(228,228,228,1) 0%, rgba(243,243,243,1) 33%,rgba(250,250,250,1) 100%);
+  --border-color-btn-secondaire:#cccccc;
+  --color-text-btn-secondaire:#4c4c4c;
+  
+  --bgColor-action-hover: #EAEAEA;
+
+  /* COULEURS DES MESSAGES INFORMATION */
+
+  --border-color-im-ok:#9BD94A;
+  --bgColor-color-im-ok:#D5FAC5;
+  
+  --border-color-im-nok:#CE6F6F;
+  --bgColor-color-im-nok:#FECBCB;
+
+  --border-color-im-info:#F9E98E;
+  --bgColor-color-im-info:#FBF7AA;
+
+  --bgColor-im-neutre:#ebebeb;
+  --border-color-im-neutre:#d8d7d7;
+
+
+  /* FORMULAIRE & CO */
+  --height-input:24px;
 }
 
 html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut, .textePetitBold{
@@ -39,7 +133,7 @@ html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut,
 
 /************* personnalisation des formulaires ********************/
 
-input,.selectize-control .selectize-input, select, button {vertical-align: middle; margin-top: 1px; margin-bottom: 1px; min-height: 24px; padding: 0 7px; font-size:13px;}
+input,.selectize-control .selectize-input, select, button {vertical-align: middle; margin-top: 1px; margin-bottom: 1px; min-height: var(--height-input); padding: 0 7px; font-size:13px;}
 input,.selectize-control .selectize-input, select, textarea, button { color: #333; background-color: #fff; border:1px solid #ccc; border-radius:3px; box-sizing: border-box;}
 select {
   -webkit-appearance: none;
@@ -142,8 +236,6 @@ input[type="checkbox"]:checked:hover:before {
 }
 
 #domainsBar {
-  padding:0;
-  margin:0 0 10px 0;
   top:0;
   bottom:0;
   position:absolute;
@@ -333,17 +425,14 @@ input[type="checkbox"]:checked:hover:before {
 }
 
 #browseBar {
-  background:transparent none;
   border-top: 2px solid #fff;
   color: #626262;
-  font-size: 9px;
   height: 23px;
   padding-top: 9px;
   padding-left: 12px;
 }
 
 #browseBar a {
-  background:transparent none;
   border-top: 0;
   color: #626262;
   font-size: 10px;
@@ -373,33 +462,23 @@ input[type="checkbox"]:checked:hover:before {
   margin:0;
 }
 
-#browseBar #breadCrumb a{
-  font-size:9pt;
-}
-
 #TreeDiv1 {
   background-color: #FFFFFF;
 }
 
 #blog #titresTopics , #blog #titresArchives, #blog #titresLiens {
   background-image: none;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 .navigationListTitle {
   background-color:#E1E1E1;
   background-image:none;
   border-radius:8px 8px 0 0;
-  -moz-border-radius:8px 8px 0 0;
-  -webkit-border-radius:8px 8px 0 0;
 }
 .tableNavigationList {
   background-color:#D6D7D9;
   border:none;
 }
-
-.sousTitreFenetre {
-  font-weight:100;}
 
 .titreFenetre {
   color:#262827;
@@ -437,11 +516,6 @@ input[type="checkbox"]:checked:hover:before {
 }
 
 
-.sousNavBulle p, #agenda #navigation, #agenda #agendaView, #agenda #footer, #richContent, #blog #blogContainer, #navBlog, #viewPostDraft, #blog #blogContainer #postsList div.post, #viewPost, #whitePagesSheet .sheet .sousNavBulle p, #publicProfileContenu .sousNavBulle p{
-  padding:8px;
-}
-
-
 .newsFeed , #identity table, #ReceiveInvitation{
   margin:0;
   border-radius:0 0 12px 12px;
@@ -466,17 +540,14 @@ input[type="checkbox"]:checked:hover:before {
 
 .arrayPane {
   box-shadow:5px 5px 10px #DDDDDD;
-  -moz-box-shadow:5px 5px 10px #DDDDDD;
-  -webkit-box-shadow:5px 5px 10px #DDDDDD;
 }
 
 #portletPages h2.portlet-title {
   border-bottom: 0px solid #CCCCCC;
   color:#ec8601;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
   text-transform:normal;
   font-variant: normal;
-  font-weight:100;
+  font-weight:400;
   margin-bottom: 0px;
   padding: 2px 0 0 ;
 }
@@ -562,18 +633,19 @@ input[type="checkbox"]:checked:hover:before {
 
 .sp_button, button.button{
   background-color:#c53727;
-  background-image:-moz-linear-gradient(top,#dd4b39,#c53727);
-  background-image:linear-gradient(top,#dd4b39,#c53727);
+  background:linear-gradient(to top,#dd4b39,#c53727);
   border:1px solid transparent;
   text-shadow:0 1px rgba(0,0,0,0.1);
-  text-transform:uppercase;
   color: #FFF !important;
-  font-family: "Century Gothic","Trebuchet MS",Arial, sans serif;
-  padding: 5px 10px;
   text-align: center;
   text-decoration: none;
   text-transform:uppercase;
 }
+
+.sp_button:hover, button.button:hover{
+  background:linear-gradient(to bottom,#dd4b39,#c53727);
+}
+
 
 div.buttonPane .button {
   display:inline-block;
@@ -582,12 +654,14 @@ div.buttonPane .button {
 button.ui-button.ui-widget {
   background-image:url();
   background-color:#000 ;
-  background:#000 linear-gradient(#444, #222) 0 0 repeat scroll;
+  background:linear-gradient(to top,#444,#222);
   border: 1px solid #000;
-  border-radius: 0 0 0 0;
+  border-radius:0;
   box-shadow: 0 0 0 #343434;
   color: #FFF !important;
-  font-family: "Century Gothic","Trebuchet MS",Arial, sans serif;
+}
+button.ui-button.ui-widget:hover {
+  background:linear-gradient(to bottom,#444,#222);
 }
 
 .ui-dialog-titlebar button.ui-button.ui-widget{
@@ -606,10 +680,8 @@ button.ui-button.ui-widget {
 
 .sp_button:hover, button.button:hover,
 button.ui-button.ui-widget:hover {
-  -moz-box-shadow:0 1px 1px rgba(0,0,0,0.2);
   box-shadow:0 1px 1px rgba(0,0,0,0.2);
   background-color:#dd4b39;
-  background-image:-moz-linear-gradient(top,#c53727,#dd4b39);
   background-image:linear-gradient(top,#c53727,#dd4b39);
   border:1px solid #b0281a;
   border-bottom-color:#af301f
@@ -630,17 +702,9 @@ button.ui-button.ui-widget:hover {
 .sp_tabOn  a,.sp_tabOff a, .sp_tabOn span,.sp_tabOff span{
   display:block;
   margin-right:4px;
-  border-radius:8px 8px 0 0;
-  -moz-border-radius:8px 8px 0 0;
-  -webkit-border-radius:8px 8px 0 0;
   padding:8px 10px 6px;
-  behavior: url("/silverpeas/util/styleSheets/PIE.htc");
 }
 
-.sousOnglets {
-  background-image:none;
-  height:3px;
-}
 /* MenuToogle Yuimenu*/
 
 #topPage .yuimenu, #kmelia .yuimenu, .attachmentList .yuimenu{
@@ -650,11 +714,11 @@ button.ui-button.ui-widget:hover {
 }
 
 .yuimenu a , #portletPages .yuimenu a {
-  font-weight:100;
+  font-weight:400;
 }
 
 .yuimenu .yuimenuitem{
-  border-bottom:0px solid #262827 ;
+  border-bottom:0 ;
 }
 
 /* onglet menu */
@@ -667,20 +731,17 @@ button.ui-button.ui-widget:hover {
   background-color:transparent;
 }
 
-
 .cadrePhoto {
   background-color:#E1E1E1;
   border-radius: 5px;
   box-shadow:0;
   padding:7px;
-  behavior: url("/silverpeas/util/styleSheets/PIE.htc");
   position:relative;
 }
+
 .fondPhoto {
   background-color:#FFF;
   padding:0 0 18px;
-  background-position:bottom right;
-  background-repeat:no-repeat;
 }
 
 .ArrayColumn, .ArrayCell,
@@ -729,10 +790,6 @@ button.ui-button.ui-widget:hover {
   margin-top:12px;
 }
 
-#backToSearch .button {
-  font-size:90%;
-}
-
 #agenda #currentScope, #agenda #jump, #agenda #today ,#agenda #categories, #agenda #invitations, #agenda #alert, #agenda #caption, #agenda #rss {
   border:1px solid #CCC;
   margin-top: 0;
@@ -776,6 +833,7 @@ button.ui-button.ui-widget:hover {
   padding:0 3px;
   background-color:#353535;
   letter-spacing:1px;
+  color:#FFF;
 }
 
 
@@ -791,20 +849,7 @@ button.ui-button.ui-widget:hover {
 
 @media only screen and (max-width: 650px), only screen and (max-device-width: 650px){
   .rightContent {
-    clear: both;
-    float: none;
     margin-top: 40px;
-    width: auto;
-  }
-  .rightContent .attachments {
-    min-width:auto;
-  }
-  .principalContent {
-    margin-right: 0;
-    margin-top: 10px;
-  }
-  .header h4 {
-    min-width: auto;
   }
 }
 
@@ -994,10 +1039,7 @@ a:hover {
 }
 #menutoggle {
   background-color:#f5f5f5;
-  background-image:-moz-linear-gradient(top,#f5f5f5,#e2e2e2);
-  background-image:linear-gradient(top,#f5f5f5,#e2e2e2);
-  color:#444;
-  border:1px solid #dcdcdc;
+  background:linear-gradient(to top,#f5f5f5,#e2e2e2);
   border:1px solid rgba(0,0,0,0.1);
   font-weight:bold;
   color:#333;
@@ -1072,10 +1114,7 @@ a:hover {
 .ArrayColumn,
 #classifieds .tableFrame #categories .categoryTitle,
 #menutoggle,
-#browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information{
-  font-size:10pt;
-}
-
+#browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information,
 .commentaires #edition-box .title, .commentaires .oneComment p.author,
 #portletPages div.portlet-content ,
 #domainsBar a,
@@ -1114,8 +1153,12 @@ button,
 .spaceHome #publication li ,
 #menubar-creation-actions .menubar-creation-actions-item, .attachment-creation-actions .menubar-creation-actions-item,
 #nav ul.nav-niveau-2 li a,
-.last-publication-list li{
-  font-size:10.5pt !important;
+.last-publication-list li,
+.spaceHome #spaceQuiskInfo li.slide > h4 ,
+.spaceHome #publication li a b,
+.spaceHome #publication .header h4,
+.last-publication-list li a{
+  font-size:10.5pt ;
 }
 
 .sousTitreFenetre,
@@ -1123,42 +1166,30 @@ button,
 .spaceHome .list-responsible-user .userName,
 .spaceHome .spaceNavigation li a{
   font-size: 11pt;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
-}
-
-.spaceHome #spaceQuiskInfo li.slide > h4 ,
-.spaceHome #publication li a b,
-.spaceHome #publication .header h4,
-.last-publication-list li a{
-  font-size: 10.5pt;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 #facetSearchDivId #searchGroupTitle span ,
 #domainsBar #spaceMenuDivId #spacePerso .spaceURL,
 #topBar #outils div.avatarName a {
   font-size: 13pt;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 #portletPages h2.portlet-title,
 #shortcuts a , #shortcuts a:hover, #shortcuts a:focus, #shortcuts td.activeShortcut a,
 #nav  ul > li > div > a{
   font-size:14pt;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 .spaceHome .spaceName ,
 #domainsBar .spaceLevel1 a.spaceURL, #domainsBar .spaceLevel1On a.spaceURL{
   font-size:15pt;
-  font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
 }
 
 /************ END TAILLE DES POLICES CENTRALISEE ***************/
 
 
 .ongletAdminOn span.textePetitBold, .ongletAdminOff span.txtPetitBlanc {
-  font-weight:100;
+  font-weight:400;
 }
 .ArrayColumn, #classifieds .tableFrame #categories .categoryTitle, .tableArrayPane thead {
   background-color: #D6D7D9;
@@ -1485,14 +1516,6 @@ button,
 .btn-deploy-all-item, #dynamicalLoad, #displaying, #displaying a {width:auto}
 #displaying {width:228px;}
 
-#advanced-search form .sp_button,
-#globalResult form .sp_button,
-#directory form .sp_button{
-  padding: 1px 10px;
-  font-size:9pt !important;
-  height:17px;
-  line-height:17px;
-}
 
 .commentaires button {
   background-image: none;
