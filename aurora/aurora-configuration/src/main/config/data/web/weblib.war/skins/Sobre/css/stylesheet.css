@@ -29,6 +29,7 @@ body {
   font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
   color:#082E4A;
 
+  --font-size:9pt;
   
   --color-flashy-principale:#4683ea;
   --color-text-sur-flashy-principale:#FFF;
@@ -126,7 +127,7 @@ body {
 
 html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut, .textePetitBold{
   font-family:"Century Gothic","Trebuchet MS",Arial, sans serif;
-  font-size:9pt;
+  font-size:var(--font-size);
 }
 
 

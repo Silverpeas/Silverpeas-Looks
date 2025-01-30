@@ -37,6 +37,7 @@ body {
   
   /* variable provenant de la main silverpeas */
 
+  --font-size:14px;
 
   --color-flashy-principale: #009fe3;
   --color-text-sur-flashy-principale: #FFF;
@@ -189,7 +190,7 @@ body {
 
 html,button,body, td, div, a , input, select, textarea, #myProfileFiche .statut, .textePetitBold{
 	font-family: Helvetica, Arial, sans serif;
-	font-size:14px;
+	font-size:var(--font-size);
 	font-weight:500;
 }
 a {
