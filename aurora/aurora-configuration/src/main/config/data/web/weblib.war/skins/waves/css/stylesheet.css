@@ -28,6 +28,8 @@ Le vert Silverpeas : 7eb73b mais couleur utilisée : #5f9d15 pour accessibilité
 /* SETTINGS COLOR AND FONT
 Could be defined differently in the custom css  */
 body {
+
+  
   --couleur-principale: #252525;
   /*utilisée en couleur de texte donc doit être lisible */
   --couleur-text-sur-principale: #FFFFFF;
@@ -36,8 +38,6 @@ body {
   --couleur-foncee: #393e34;
   /* notamment utilisée pour le menu du header */
   --couleur-text-sur-foncee: #FFFFFF;
-
-  --couleur-texte: #1d1d1b;
 
   --couleur-texte-clair: #555;
 
@@ -79,13 +79,10 @@ body {
 
 
   --font-family: Helvetica, Arial, sans serif;
-  --font-size: 16px;
-  color: var(--couleur-texte);
-
 
 
   /* variable provenant de la main silverpeas */
-
+  --font-size:16px;
 
   --color-flashy-principale: #5f9d15;
   --color-text-sur-flashy-principale: #FFF;
@@ -93,7 +90,7 @@ body {
   --color-flashy-hover: #252525;
   --color-text-sur-flashy-hover: #FFF;
 
-  --color-text: #212121;
+  --color-text: #1d1d1b;
   --color-text-second-niveau: #626262;
   --color-lien-action: #5f9d15;
   --color-text-label: #666;
@@ -241,6 +238,9 @@ body {
 
   /* FORMULAIRE & CO */
   --height-input: 32px;
+
+  
+  color: var(--color-text);
 }
 
 html,
@@ -261,7 +261,7 @@ a,
 silverpeas-calendar-event-view-main .occurrence-description p,
 #topicDescription,
 .componentInstanceIntro {
-  color: var(--couleur-texte);
+  color: var(--color-text);
   border-left: 0;
 }
 
@@ -596,7 +596,7 @@ silverpeas-time-picker .txtlibform {
 }
 
 #pagination .txtnav {
-  color: var(--couleur-texte);
+  color: var(--color-text);
   font-weight: 700;
 }
 
@@ -1146,9 +1146,9 @@ td.ArrayCellHot,
 #domainContent #description-domainContent,
 .descriptionType {
   background-color: var(--couleur-de-fond-clair-bloc-home);
-  color: var(--couleur-texte);
+  color: var(--color-text);
   padding: 8px;
-  border-color: var(--couleur-texte);
+  border-color: var(--color-text);
 }
 
 #browseBar #i18n .ArrayNavigationOn {
@@ -1318,12 +1318,12 @@ td.ArrayCellHot,
 #classifieds .tableFrame #categories .categoryTitle,
 .tableArrayPane thead {
   background-color: var(--couleur-de-fond-clair);
-  color: var(--couleur-texte);
+  color: var(--color-text);
   text-align: left;
 }
 
 .ArrayColumn a {
-  color: var(--couleur-texte);
+  color: var(--color-text);
 }
 
 th.ArrayColumn a {
@@ -1982,7 +1982,7 @@ div.cell fieldset.skinFieldset {
   border-radius:var(--radius-btn-secondaire);
   border: 0;
   box-shadow: -2px 2px 3px -1px rgba(0, 0, 0, 0.3);
-  color: var(--couleur-texte);
+  color: var(--color-text);
   font-size: 100%;
   padding: 0.5em 10px;
   position: relative;
@@ -2173,7 +2173,7 @@ div.cell fieldset.skinFieldset {
 }
 
 #commentaires .buttons button.button::before {
-  color: var(--couleur-texte);
+  color: var(--color-text);
   text-transform: lowercase;
   font-size: 12px;
   content: "Envoyer";

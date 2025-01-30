@@ -1003,7 +1003,7 @@ button.button:hover {
 .sp_tabOn a,
 .sp_tabOn span {
 	background-color: #FFF;
-	color: var(--couleur-texte);
+	color: var(--color-text);
 	height: 25px;
 	line-height: 30px;
 	margin: 2px 8px 0px;
@@ -1262,7 +1262,7 @@ button.button:hover {
 }
 
 .main-home-page .principal-main-container .rslides .caption h2 a {
-	color: var(--couleur-texte);
+	color: var(--color-text);
 	font-size: 1em;
 	font-weight: 500;
 	border-left: 4px solid var(--couleur-flashy);
@@ -2129,7 +2129,7 @@ button.button,
 }
 
 .spaceHome h1.spaceName {
-	color: var(--couleur-texte);
+	color: var(--color-text);
 }
 
 .spaceHome #last-publication-home {
