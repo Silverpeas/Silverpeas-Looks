@@ -416,9 +416,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       List<SearchResult> results = SearchService.get().search(query);
       for (SearchResult result : results) {
         News news = QuickInfoService.get().getNewsByForeignId(result.getId());
-        if (importantOnly && news.isImportant()) {
-          someNews.add(news);
-        } else if (!importantOnly) {
+        if (!importantOnly || news.isImportant()) {
           someNews.add(news);
         }
       }
