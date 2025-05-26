@@ -392,7 +392,7 @@
                   <select id="application-select" onchange="goToApplication(this.value)">
                     <option selected="selected" value="">${labelApplications}</option>
                     <c:forEach var="app" items="${apps}">
-                      <option value="${app.internalLink}">${app.label}</option>
+                      <option value="${app.permalink}">${app.label}</option>
                     </c:forEach>
                   </select>
                 </label>
