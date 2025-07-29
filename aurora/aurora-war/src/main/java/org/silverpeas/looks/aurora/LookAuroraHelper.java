@@ -771,6 +771,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
   }
 
+  public boolean isBookmarkDisplayEnabled() {
+    return getSettings("bookmark.enable");
+  }
   public RSSFeeds getRSSFeeds() {
     String componentId = getSettings("home.rss.appId", "");
     if (StringUtil.isDefined(componentId)) {
