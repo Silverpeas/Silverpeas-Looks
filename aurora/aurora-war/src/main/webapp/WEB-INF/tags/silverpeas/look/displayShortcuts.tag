@@ -46,7 +46,14 @@
           <c:if test="${shortcut.target == '_blank'}">
             <c:set var="className" value=""/>
           </c:if>
-          <li><a class="${className}" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}"><img alt="${shortcut.altText}" src="${shortcut.iconURL}" /> <span>${shortcut.altText}</span></a></li>
+          <li>
+            <a class="${className}" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}">
+              <c:if test="${not empty shortcut.iconURL}">
+                <img alt="${shortcut.altText}" src="${shortcut.iconURL}" />
+              </c:if>
+              <span>${shortcut.altText}</span>
+            </a>
+          </li>
         </c:forEach>
       </ul>
     </div>
