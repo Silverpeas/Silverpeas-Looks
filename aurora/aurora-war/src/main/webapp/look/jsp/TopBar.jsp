@@ -16,11 +16,13 @@
 <c:set var="directoryGroups" value="${lookHelper.directoryGroups}"/>
 <c:set var="displayConnectedUsers" value="${lookHelper.connectedUsersDisplayEnabled}"/>
 <c:set var="displayDirectory" value="${lookHelper.directoryDisplayEnabled}"/>
+<c:set var="displayBookmark" value="${lookHelper.bookmarkDisplayEnabled}"/>
 <c:set var="isAnonymous" value="${lookHelper.anonymousUser}"/>
 <c:set var="isAccessGuest" value="${lookHelper.accessGuest}"/>
 <c:set var="anonymousMode" value=""/>
 
 <c:set var="shortcuts" value="${lookHelper.toolsShortcuts}"/>
+<c:set var="bookmarks" value="${lookHelper.bookmarks}"/>
 <c:set var="extraJavascript" value="${settings.extraJavascriptForBanner}"/>
 
 <c:if test="${isAnonymous}">
@@ -49,6 +51,8 @@
     <fmt:message var="labelLogout" key="look.banner.logout"/>
     <fmt:message var="labelProjects" key="look.banner.projects"/>
     <fmt:message var="labelApplications" key="look.banner.applications"/>
+
+    <fmt:message var="labelBookmarks" key="look.home.bookmarks.title"/>
 
     <fmt:message var="labelHome" key="look.banner.home"/>
     <fmt:message var="labelMap" key="look.banner.map"/>
@@ -155,6 +159,18 @@
         unselectHeadings();
         changeBody(url);
         $("#application-select").val("");
+      }
+
+      function goToBookmark(select) {
+        var url = select.value;
+        var index = select.selectedIndex;
+        var option = select.options[index];
+        var target = $(option).attr("target");
+        if (target === "true") {
+          window.open(url, '_blank').focus();
+        } else {
+          goToApplication(url);
+        }
       }
 
       function goToProject(projectSpaceId) {
@@ -398,6 +414,23 @@
                 </label>
               </div>
             </c:if>
+
+            <c:if test="${displayBookmark}">
+              <c:if test="${not empty bookmarks}">
+                <div class="btn-header">
+                  <label class="select-header">
+                    <select id="bookmarks-select" onchange="goToBookmark(this)">
+                      <option selected="selected" value="">${labelBookmarks}</option>
+                      <c:forEach var="bookmark" items="${bookmarks}">
+                        <option value="${bookmark.url}" target="${bookmark.popup}">${bookmark.name}</option>
+                      </c:forEach>
+                    </select>
+                  </label>
+                </div>
+              </c:if>
+            </c:if>
+
+
           </div>
           <ul id="outils">
             <c:if test="${displayConnectedUsers}">

@@ -754,6 +754,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             super.isDirectoryDisplayEnabled());
   }
 
+  public boolean isBookmarkDisplayEnabled() {
+    return getSettings("bookmark.enable");
+  }
+
   public String getDirectoryURL() {
     if (!isDirectoryDisplayEnabled()) {
       return null;
