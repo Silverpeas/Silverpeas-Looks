@@ -46,6 +46,7 @@ public class LookSettings {
     return settings.getBoolean("home.ephemeris", true);
   }
 
+  public boolean isDisplayLastSubscribedNews() { return settings.getBoolean("home.subscription.news", false); }
   public boolean isDisplayBookmarksAreaWhenEmpty() {
     return ofNullable(User.getCurrentRequester())
         .filter(not(User::isAnonymous))

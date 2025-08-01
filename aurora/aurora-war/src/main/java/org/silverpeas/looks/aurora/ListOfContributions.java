@@ -1,5 +1,6 @@
 package org.silverpeas.looks.aurora;
 
+import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.admin.component.model.SilverpeasComponentInstance;
 import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.kernel.util.Mutable;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public abstract class ListOfContributions {
 
   private List<Shortcut> appShortcuts;
-  private String uniqueAppId;
+  private ComponentInst app;
 
   Shortcut getAppShortcut(String componentId) {
     final String url = URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, componentId);
@@ -35,15 +36,22 @@ public abstract class ListOfContributions {
     this.appShortcuts = appShortcuts;
   }
 
-  void setUniqueAppId(String componentId) {
-    uniqueAppId = componentId;
+  void setApp(ComponentInst app) {
+    this.app = app;
   }
 
   public String getUniqueAppURL() {
-    if (StringUtil.isNotDefined(uniqueAppId)) {
+    if (app == null || StringUtil.isNotDefined(app.getId())) {
       return null;
     }
-    return URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, uniqueAppId);
+    return URLUtil.getSimpleURL(URLUtil.URL_COMPONENT, app.getId());
   }
 
+  public ComponentInst getApp() {
+    return app;
+  }
+
+  public String getUniqueAppId() {
+    return app.getId();
+  }
 }

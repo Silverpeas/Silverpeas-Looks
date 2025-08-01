@@ -16,6 +16,9 @@ import org.silverpeas.components.rssaggregator.model.RSSItem;
 import org.silverpeas.components.rssaggregator.model.SPChannel;
 import org.silverpeas.components.rssaggregator.service.RSSService;
 import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
+import org.silverpeas.core.subscription.SubscriptionServiceProvider;
+import org.silverpeas.core.subscription.service.ComponentSubscription;
+import org.silverpeas.core.subscription.util.SubscriptionList;
 import org.silverpeas.core.web.util.WebRedirection;
 import org.silverpeas.kernel.SilverpeasRuntimeException;
 import org.silverpeas.core.admin.component.model.ComponentInst;
@@ -67,15 +70,7 @@ import org.silverpeas.looks.aurora.service.weather.WeatherSettings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -468,7 +463,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
     NextEvents nextEvents = new NextEvents(result);
     if (allowedComponentIds.size() == 1) {
-      nextEvents.setUniqueAppId(allowedComponentIds.get(0));
+      nextEvents.setApp(getAppById(allowedComponentIds.get(0)));
     }
     return nextEvents;
   }
@@ -913,7 +908,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<News> news = new ArrayList<>();
     String newsType = getSettings(key, "");
     if (!StringUtil.isDefined(newsType)) {
-      return setupMainHomePageNewsListDisplay(key, new NewsList(news, uniqueAppId));
+      return setupMainHomePageNewsListDisplay(key, new NewsList(news, getAppById(uniqueAppId)));
     }
 
     boolean importantOnly = getSettings(key + ".importantOnly", false);
@@ -932,7 +927,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       news = getNewsByComponentIds(allowedComponentIds, importantOnly);
     }
 
-    NewsList result = new NewsList(news, uniqueAppId);
+    NewsList result = new NewsList(news, getAppById(uniqueAppId));
     int nbNews = getSettings(key + ".size", -1);
     if (nbNews != -1 && news.size() > nbNews) {
       result.limitNews(nbNews);
@@ -1073,5 +1068,61 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return getNewUsersList(true, newUsers);
     }
     return null;
+  }
+
+  public List<NewsList> getAllNewsBySubscription() {
+    List<NewsList> news = new ArrayList<>();
+    List<String> newsComponentsIds = getAppNewsIdSubscribed();
+    for (String componentId : newsComponentsIds) {
+      int maxHistory = getSettings("subscription.news.maxbycompoments", 10);
+      List<News> l = QuickInfoService.get().getVisibleNews(componentId);
+      if (l.size() > maxHistory) {
+        l = l.subList(0,maxHistory);
+      }
+      NewsList n = new NewsList(l ,getAppById(componentId));
+      news.add(n);
+    }
+
+    return news;
+  }
+
+  private List<String> getAppNewsIdSubscribed() {
+    List<String> newsComponentsIds = new ArrayList<>();
+    SubscriptionList subscriptions = SubscriptionServiceProvider.getSubscribeService().getByUserSubscriber(getUserId());
+    for (Object subscription: subscriptions) {
+      if (subscription instanceof ComponentSubscription) {
+        ComponentSubscription componentSubscription = (ComponentSubscription) subscription;
+        if (componentSubscription.getResource().getInstanceId().startsWith("quickinfo")) {
+          newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
+        }
+      }
+    }
+    return newsComponentsIds;
+  }
+
+  public List<AuroraNews> getLastNewsSubscribed() {
+    List<String> newsComponentsIds = getAppNewsIdSubscribed();
+    List<AuroraNews> news = new ArrayList<>();
+    for (String componentId : newsComponentsIds) {
+      List<News> l = QuickInfoService.get().getVisibleNews(componentId);
+      for (News n : l) {
+        AuroraNews auroraNews = new AuroraNews(n);
+        news.add(auroraNews);
+      }
+    }
+    Collections.sort(news, (n1, n2) -> n2.getNews().getPublishDate().compareTo(n1.getNews().getPublishDate()));
+    news = news.subList(0,getSettings("home.subscription.news.max",4));
+
+    return news;
+  }
+
+  private ComponentInst getAppById(String appId) {
+    ComponentInst app = null;
+    try {
+        app = Administration.get().getComponentInst(appId);
+    } catch (AdminException e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return app;
   }
 }

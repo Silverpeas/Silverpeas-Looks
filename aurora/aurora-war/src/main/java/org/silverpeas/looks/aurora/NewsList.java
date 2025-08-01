@@ -1,6 +1,7 @@
 package org.silverpeas.looks.aurora;
 
 import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.core.admin.component.model.ComponentInst;
 import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
 import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
 import org.silverpeas.core.pdc.pdc.model.Value;
@@ -23,8 +24,8 @@ public class NewsList extends ListOfContributions {
   private AuroraSpaceHomePageZone zone = AuroraSpaceHomePageZone.RIGHT;
   private RenderingType type = RenderingType.CAROUSEL;
 
-  public NewsList(List<News> someNews, String uniqueAppId) {
-    setUniqueAppId(uniqueAppId);
+  public NewsList(List<News> someNews, ComponentInst app) {
+    setApp(app);
     news = new ArrayList<>();
     for(News aNews : someNews) {
       news.add(new AuroraNews(aNews));

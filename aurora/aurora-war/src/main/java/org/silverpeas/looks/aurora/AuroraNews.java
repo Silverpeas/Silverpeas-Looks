@@ -1,6 +1,8 @@
 package org.silverpeas.looks.aurora;
 
 import org.silverpeas.components.quickinfo.model.News;
+import org.silverpeas.core.admin.service.AdminException;
+import org.silverpeas.core.admin.service.Administration;
 import org.silverpeas.core.contribution.model.Thumbnail;
 import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
 import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
@@ -31,6 +33,15 @@ public class AuroraNews {
 
   public Date getDate() {
     return news.getOnlineDate();
+  }
+
+  public String getPublisherName() {
+      try {
+          return Administration.get().getUserDetail(news.getPublishedBy()).getDisplayedName();
+      } catch (AdminException e) {
+          SilverLogger.getLogger(this).error(e);
+      }
+      return null;
   }
 
   public String getPermalink() {
