@@ -1111,7 +1111,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     Collections.sort(news, (n1, n2) -> n2.getNews().getPublishDate().compareTo(n1.getNews().getPublishDate()));
-    news = news.subList(0,getSettings("home.subscription.news.max",4));
+    int max = getSettings("home.subscription.news.max",4);
+    if (news.size() > max) {
+      news = news.subList(0, max);
+    }
 
     return news;
   }
