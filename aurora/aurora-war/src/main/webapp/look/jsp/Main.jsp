@@ -16,6 +16,7 @@
 <c:set var="weatherCities" value="${lookHelper.weatherCities}"/>
 <c:set var="showWeather" value="${not empty weatherCities}"/>
 <c:set var="showEphemeris" value="${settings.displayEphemeris}"/>
+<c:set var="showLastSubscribedNews" value="${settings.displayLastSubscribedNews}"/>
 
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
 <c:set var="questions" value="${lookHelper.questions}"/>
@@ -31,6 +32,11 @@
 <jsp:useBean id="secondaryListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
 <c:set var="thirdListOfNews" value="${lookHelper.thirdNews}"/>
 <jsp:useBean id="thirdListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
+
+<c:if test="${showLastSubscribedNews}">
+  <c:set var="subscribedListOfNews" value="${lookHelper.lastNewsSubscribed}"/>
+  <jsp:useBean id="subscribedListOfNews" type="java.util.List<org.silverpeas.looks.aurora.AuroraNews>"/>
+</c:if>
 
 <c:set var="newUsers" value="${lookHelper.newUsersList}"/>
 
@@ -54,6 +60,7 @@
     <view:link href="/look/jsp/css/aurora.css"/>
   </jsp:attribute>
   <jsp:body>
+    <view:link href="/look/jsp/css/aurora.css"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
     <style type="text/css">
@@ -112,6 +119,8 @@
       <viewTags:displayNews listOfNews="${secondaryListOfNews}" id="secondaryNews"/>
 
       <viewTags:displayNews listOfNews="${thirdListOfNews}" id="thirdNews"/>
+
+      <viewTags:displayNewsSubscribed enabled="${showLastSubscribedNews}" listOfNews="${subscribedListOfNews}"/>
 
       <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 
