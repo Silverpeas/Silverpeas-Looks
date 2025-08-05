@@ -27,4 +27,5 @@
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
-<viewTags:displayNextEvents nextEvents="${lookHelper.nextEvents}"/>
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
+<viewTags:displayNextEvents nextEvents="${lookHelper.nextEvents}" dateFormat="${settings.eventDateFormat}"/>
