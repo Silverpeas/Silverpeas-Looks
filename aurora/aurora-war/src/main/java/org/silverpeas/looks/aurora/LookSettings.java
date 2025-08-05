@@ -46,6 +46,8 @@ public class LookSettings {
     return settings.getBoolean("home.ephemeris", true);
   }
 
+  public String getEventDateFormat() { return settings.getString("home.events.date.format","EEEE dd MMMM yyyy"); }
+
   public boolean isDisplayLastSubscribedNews() { return settings.getBoolean("home.subscription.news", false); }
   public boolean isDisplayBookmarksAreaWhenEmpty() {
     return ofNullable(User.getCurrentRequester())

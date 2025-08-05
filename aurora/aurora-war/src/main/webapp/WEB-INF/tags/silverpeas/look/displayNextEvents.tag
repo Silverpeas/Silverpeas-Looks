@@ -34,6 +34,10 @@
               type="org.silverpeas.looks.aurora.NextEvents"
               description="Next event structure" %>
 
+<%@ attribute name="dateFormat"
+              required="true"
+              type="java.lang.String" %>
+
 <fmt:message var="labelEvents" key="look.home.events.next"/>
 <fmt:message var="labelEventsMore" key="look.home.events.more"/>
 
@@ -50,7 +54,7 @@
               <span class="number">${date.dayInMonth}</span>/<span class="month">${date.month}</span>
             </div>
             <div class="eventLongDate">
-              <fmt:formatDate value="${date.date}" pattern="EEEE dd MMMM yyyy"/></div>
+              <fmt:formatDate value="${date.date}" pattern="${dateFormat}"/></div>
             <c:forEach var="eventFull" items="${date.events}">
               <c:set var="event" value="${eventFull.detail}"/>
               <c:set var="eventAppShortcut" value="${eventFull.appShortcut}"/>
