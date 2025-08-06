@@ -1104,7 +1104,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     for (Object subscription: subscriptions) {
       if (subscription instanceof ComponentSubscription) {
         ComponentSubscription componentSubscription = (ComponentSubscription) subscription;
-        if (componentSubscription.getResource().getInstanceId().startsWith("quickinfo")) {
+        if (componentSubscription.getResource().getInstanceId().startsWith(QUICKINFO)) {
           newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
         }
       }
@@ -1122,7 +1122,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         news.add(auroraNews);
       }
     }
-    Collections.sort(news, (n1, n2) -> n2.getNews().getPublishDate().compareTo(n1.getNews().getPublishDate()));
+    news.sort((n1, n2) -> n2.getNews().getPublishDate().compareTo(n1.getNews().getPublishDate()));
     int max = getSettings("home.subscription.news.max",4);
     if (news.size() > max) {
       news = news.subList(0, max);
