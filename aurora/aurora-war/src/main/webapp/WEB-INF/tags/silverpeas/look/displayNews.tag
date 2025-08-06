@@ -28,6 +28,10 @@
 <%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
+
+<c:set var="settings" value="${lookHelper.lookSettings}"/>
+<c:set var="delegated" value="${settings.delegatedNews}"/>
+
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
 <%@ attribute name="listOfNews"
@@ -84,6 +88,15 @@
         </li>
       </c:forEach>
     </ul>
+    <c:if test="${delegated}">
+      <c:if test="${not empty id}">
+        <div id="moreNews-link-page">
+          <a title="Voir + d'actualités" href="/silverpeas/look/jsp/listOfNewsDelegated.jsp"
+             class="link-more sp-link"><span>${labelDelegatedNewsMore}</span></a>
+        </div>
+      </c:if>
+    </c:if>
+
     <c:if test="${not empty listOfNews.buttons}">
       <div class="news-link-taxonomy">
         <c:forEach var="button" items="${listOfNews.buttons}">

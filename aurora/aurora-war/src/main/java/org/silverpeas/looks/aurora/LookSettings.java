@@ -48,6 +48,9 @@ public class LookSettings {
 
   public String getEventDateFormat() { return settings.getString("home.events.date.format","EEEE dd MMMM yyyy"); }
 
+  public boolean isDelegatedNews() {
+    return settings.getString("home.news").equalsIgnoreCase("delegated");
+  }
   public boolean isDisplayLastSubscribedNews() { return settings.getBoolean("home.subscription.news", false); }
   public boolean isDisplayBookmarksAreaWhenEmpty() {
     return ofNullable(User.getCurrentRequester())

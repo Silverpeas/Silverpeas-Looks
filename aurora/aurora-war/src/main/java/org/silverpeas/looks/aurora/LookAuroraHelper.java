@@ -340,6 +340,17 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getNewsList(3);
   }
 
+  public List<AuroraNews> getAllDelegatedNews() {
+    List<AuroraNews> delegatedNews = new ArrayList<>();
+    List<News> news = getDelegatedNews();
+    for (News n : news) {
+      News aNews = QuickInfoService.get().getNewsByForeignId(n.getPublicationId());
+      AuroraNews an = new AuroraNews(aNews);
+      delegatedNews.add(an);
+    }
+
+    return delegatedNews;
+  }
   private List<News> getDelegatedNews() {
     List<News> news = new ArrayList<>();
     List<DelegatedNews> delegatedNews = delegatedNewsService.getAllValidDelegatedNews();

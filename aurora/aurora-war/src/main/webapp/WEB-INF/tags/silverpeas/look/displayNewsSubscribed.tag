@@ -83,7 +83,7 @@
                 </c:forEach>
             </ul>
             <div id="myNews-link-page">
-                <a title="Voir toutes mes actualités" href="/silverpeas/look/jsp/listOfNewsBySubscription.jsp"
+                <a title="${labelAllPublished}" href="/silverpeas/look/jsp/listOfNewsBySubscription.jsp"
                    class="link-more sp-link"><span>${labelAllPublished}</span></a>
             </div>
         </div>
