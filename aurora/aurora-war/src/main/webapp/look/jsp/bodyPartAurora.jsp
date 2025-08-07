@@ -36,6 +36,7 @@
 <c:if test="${lookHelper != null}">
   <jsp:useBean id="lookHelper" type="org.silverpeas.looks.aurora.LookAuroraHelper"/>
   <c:set var="navigationWidth" value="${lookHelper.getSettings('domainsBarFramesetWidth','260')}px"/>
+  <c:set var="navigationEnable" value="${lookHelper.getSettings('domainsBar.enable', true)}"/>
   <c:set var="bodyPartSettings" value="${lookHelper.getBodyPartSettings(pageContext.request)}"/>
   <jsp:useBean id="bodyPartSettings" type="org.silverpeas.looks.aurora.BodyPartSettings"/>
   <c:set var="paramsForDomainsBar" value="${bodyPartSettings.domainsBarParams}"/>
@@ -91,21 +92,31 @@
         isPersonal : false
       };
       spLayout.getBody().ready(function() {
-        spLayout.getBody().getNavigation().addEventListener('start-load', function(event) {
+        spLayout.getBody().getNavigation().addEventListener('start-load', function (event) {
           var navigationContext = event.detail.data;
           if (navigationContext.currentSpaceId) {
             lastDisplaySpace.isPersonal = navigationContext.isPersonalSpace;
           }
-          if (navigationContext.contentNotRelatedToSpaceOrPersonalSpace ) {
+          if (navigationContext.contentNotRelatedToSpaceOrPersonalSpace) {
             lastDisplaySpace.isPersonal = false;
           }
-          var showMenu = lastDisplaySpace.isPersonal
-                         || navigationContext.currentSpaceId
-                         || navigationContext.currentComponentId;
-          if (showMenu) {
+          if (lastDisplaySpace.isPersonal) {
             spLayout.getBody().getNavigation().show();
           } else {
-            spLayout.getBody().getNavigation().hide(true);
+            var showMenu = navigationContext.currentSpaceId
+                    || navigationContext.currentComponentId;
+            if (showMenu) {
+              <c:choose>
+              <c:when test="${navigationEnable}">
+                spLayout.getBody().getNavigation().show();
+              </c:when>
+              <c:otherwise>
+                spLayout.getBody().getNavigation().hide(true);
+              </c:otherwise>
+              </c:choose>
+            } else {
+              spLayout.getBody().getNavigation().hide(true);
+            }
           }
         }, '__id__aurora-body-part');
         spLayout.getBody().getNavigation().load(${paramsForDomainsBar});
