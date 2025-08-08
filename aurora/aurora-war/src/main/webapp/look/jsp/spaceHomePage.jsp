@@ -150,7 +150,7 @@
       <viewTags:spaceNews listOfNews="<%=news%>"/>
     </c:if>
 
-    <viewTags:displayNextEvents nextEvents="<%=homepage.getNextEvents()%>"/>
+    <viewTags:displayNextEvents nextEvents="<%=homepage.getNextEvents()%>" dateFormat="${settings.eventDateFormat}"/>
 
     <viewTags:displayTaxonomy enabled="<%=homepage.isTaxonomyEnabled()%>" labelsInsideSelect="${true}" spaceId="${spaceId}" scope="<%=homepage.getTaxonomyMode()%>"/>
 
