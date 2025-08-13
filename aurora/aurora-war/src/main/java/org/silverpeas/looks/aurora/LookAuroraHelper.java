@@ -778,7 +778,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public boolean isBookmarkDisplayEnabled() {
-    return getSettings("bookmark.enable");
+    return getSettings("banner.bookmark.enable");
   }
   public RSSFeeds getRSSFeeds() {
     String componentId = getSettings("home.rss.appId", "");
