@@ -916,15 +916,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       key = PROPERTY_NEWS_THIRD;
     }
 
-    String uniqueAppId = "";
     List<News> news = new ArrayList<>();
     String newsType = getSettings(key, "");
     if (!StringUtil.isDefined(newsType)) {
-      return setupMainHomePageNewsListDisplay(key, new NewsList(news, getAppById(uniqueAppId)));
+      return setupMainHomePageNewsListDisplay(key, new NewsList(news, null));
     }
 
     boolean importantOnly = getSettings(key + ".importantOnly", false);
     boolean taxonomyType = "taxonomy".equalsIgnoreCase(newsType);
+    String uniqueAppId = "";
     if ("delegated".equalsIgnoreCase(newsType)) {
       news = getDelegatedNews();
     } else if (taxonomyType) {
@@ -939,15 +939,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       news = getNewsByComponentIds(allowedComponentIds, importantOnly);
     }
 
-    NewsList result = new NewsList(news, getAppById(uniqueAppId));
+    NewsList newsList = new NewsList(news, getAppById(uniqueAppId));
     int nbNews = getSettings(key + ".size", -1);
     if (nbNews != -1 && news.size() > nbNews) {
-      result.limitNews(nbNews);
+      newsList.limitNews(nbNews);
     }
     if (getSettings(key + ".taxonomy.display", false)) {
-      result.withTaxonomyButtons();
+      newsList.withTaxonomyButtons();
     }
-    return setupMainHomePageNewsListDisplay(key, result);
+    return setupMainHomePageNewsListDisplay(key, newsList);
   }
 
   private NewsList setupMainHomePageNewsListDisplay(final String key, final NewsList newsList) {
@@ -1133,10 +1133,12 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private ComponentInst getAppById(String appId) {
     ComponentInst app = null;
-    try {
+    if (StringUtil.isDefined(appId)) {
+      try {
         app = Administration.get().getComponentInst(appId);
-    } catch (AdminException e) {
-      SilverLogger.getLogger(this).error(e);
+      } catch (AdminException e) {
+        SilverLogger.getLogger(this).error(e);
+      }
     }
     return app;
   }
