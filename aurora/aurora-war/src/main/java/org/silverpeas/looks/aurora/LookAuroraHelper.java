@@ -279,6 +279,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         Integer.parseInt(getSettings("home.publications.nb", "3")));
   }
 
+  public List<PublicationDetail> getMoreLatestPublications() {
+    return getLatestPublications(null,
+            Integer.parseInt(getSettings("home.publications.more.nb", "30")));
+  }
+
   public List<ComponentInst> getApplications() {
     List<ComponentInst> hyperLinks = new ArrayList<>();
     String[] asAvailCompoForCurUser = getOrganisationController().getAvailCompoIds(
