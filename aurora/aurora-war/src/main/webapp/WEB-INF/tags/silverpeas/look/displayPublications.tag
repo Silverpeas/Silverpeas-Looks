@@ -41,6 +41,7 @@
               type="java.util.List<org.silverpeas.core.contribution.publication.model.PublicationDetail>" %>
 
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
+<fmt:message var="labelPublicationsMore" key="look.home.publications.more"/>
 
 <c:if test="${not empty publications}">
 <div id="last-publication-home" class="secteur-container">
@@ -65,6 +66,10 @@
         </li>
       </c:forEach>
     </ul>
+    <div id="morePublications-link-page">
+      <a title="${labelPublicationsMore}" href="/silverpeas/look/jsp/listOfPublications.jsp"
+         class="link-more sp-link"><span>${labelPublicationsMore}</span></a>
+    </div>
   </div>
 </div>
 </c:if>
