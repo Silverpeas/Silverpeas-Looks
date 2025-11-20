@@ -93,7 +93,15 @@
       <c:if test="${not empty id}">
         <div id="moreNews-link-page">
           <a title="${labelDelegatedNewsMore}" href="/silverpeas/look/jsp/listOfNewsDelegated.jsp"
-             class="link-more sp-link"><span>${labelDelegatedNewsMore}</span></a>
+             class="link-more"><span>${labelDelegatedNewsMore}</span></a>
+        </div>
+      </c:if>
+    </c:if>
+    <c:if test="${not delegated}">
+      <c:if test="${not empty id}">
+        <div id="moreNews-link-page">
+          <a title="${labelDelegatedNewsMore}" href="/silverpeas/look/jsp/listOfAppsNews.jsp"
+             class="link-more"><span>${labelDelegatedNewsMore}</span></a>
         </div>
       </c:if>
     </c:if>
