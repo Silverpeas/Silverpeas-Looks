@@ -345,6 +345,28 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getNewsList(3);
   }
 
+  public List<AuroraNews> getNews(int index, int max) {
+    List<AuroraNews> appNews = new ArrayList<>();
+    List<String> ids = getComponentIdsForNews(index);
+    String key = PROPERTY_NEWS_MAIN;
+    if (index == 2) {
+      key = PROPERTY_NEWS_SECONDARY;
+    } else if (index == 3) {
+      key = PROPERTY_NEWS_THIRD;
+    }
+    boolean importantOnly = getSettings(key + ".importantOnly", false);
+    List<News> news = getNewsByComponentIds(ids, importantOnly);
+    int i = 1;
+    for (News n : news) {
+      if (i >= max) break;
+      News aNews = QuickInfoService.get().getNewsByForeignId(n.getPublicationId());
+      AuroraNews an = new AuroraNews(aNews);
+      appNews.add(an);
+      i++;
+    }
+    return appNews;
+  }
+
   public List<AuroraNews> getAllDelegatedNews() {
     List<AuroraNews> delegatedNews = new ArrayList<>();
     List<News> news = getDelegatedNews();
