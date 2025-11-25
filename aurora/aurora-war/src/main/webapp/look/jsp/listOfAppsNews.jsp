@@ -47,8 +47,14 @@
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 
 <%
+  List<AuroraNews> newsLists;
   LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
-  List<AuroraNews> newsLists = helper.getNews(1, helper.getSettings("home.news.listing.size", 20));
+  if (request.getParameter("delegated").equals("true")) {
+    newsLists = helper.getAllDelegatedNews();
+  } else {
+    // any other value means no delegated news, whatever they are
+    newsLists = helper.getNews(1, helper.getSettings("home.news.listing.size", 20));
+  }
 %>
 
 <fmt:message var="labelDelegatedNewsTitle" key="look.delegated.news.title"/>
@@ -92,8 +98,9 @@
             <c:set var="important" value=""/>
           </c:otherwise>
         </c:choose>
-        <li class="${important}" onclick="spWindow.loadPermalink('${news.news.permalink}')">
-
+        <li class="${important}">
+          <a class="sp-permalink" href="${news.news.permalink}"
+             onkeydown="spWindow.loadPermalink('${news.news.permalink}">
           <div class="content-news-illustration">
             <c:choose>
               <c:when test="${not empty news.thumbnailURL}">
@@ -104,7 +111,7 @@
               </c:otherwise>
             </c:choose>
           </div>
-          <h3 class="news-title"><a class="sp-permalink" href="${news.news.permalink}">${news.news.title}</a></h3>
+          <h3 class="news-title">${news.news.title}</h3>
           <div class="news-info-fonctionality">
           <span class="news-publishing">
             <span class="news-date"><span class="news-date-label">${labelDelegatedNewsPublishDate} </span><view:formatDate value="${news.date}"/></span>
@@ -112,6 +119,7 @@
             <view:componentPath componentId="${news.news.componentInstanceId}" includeComponent="false"/>
           </div>
           <p class="news-teasing">${news.description}</p>
+          </a>
         </li>
       </c:forEach>
     </ul>
