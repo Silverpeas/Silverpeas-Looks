@@ -334,47 +334,13 @@
   display: block;
 }
 
-/*#spaceQuiskInfo .slideshow ul li ,
-#spaceQuiskInfo .slideshow ul {
-	height:250px;
-	position:relative;
-}
-
-#spaceQuiskInfo .slideshow ul li::before {
-	content:' ';
-	display:block;
-	position:absolute;
-	top:0;
-	left:0;
-	width:250px;
-	height:250px;
-	background-color:#000;
-	z-index:0;
-}
-#spaceQuiskInfo .slideshow ul li img{
-	height:250px;
-}
-#spaceQuiskInfo .slideshow .content-quickInfo {
-	position: absolute;
-	display: block;
-	top: 22px;
-	bottom: 22px;
-	left: auto;
-	right: 55px;
-	padding: 15px;
-	text-align: center;
-	background: #FFF;
-	color: #333;
-	margin: 0;
-	width: 230px;
-	max-height: 240px;
-	overflow: auto;
-}*/
 /*********** Aurore News tag as list *******************/
 
 .aurora-list-news .list-news li {
   clear: left;
   margin-bottom: 2em;
+  width: 100%;
+  height: 100px;
 }
 
 .aurora-list-news .list-news .news-date {
@@ -384,11 +350,6 @@
 .aurora-list-news .list-news {
   padding: 0;
   height: auto
-}
-
-.aurora-list-news .list-news li {
-  width: 100%;
-  height: 100px;
 }
 
 .aurora-list-news .list-news li img {
@@ -429,7 +390,7 @@
 /************* Slideshow ***********/
 .spaceHome .carousel li:not(:has(.thumbnail))::before,
 .main-home-page  #carrousel-actualite a:has(img[src*='emptyNews'])::before  {
-  content:' ';  
+  content:' ';
   background: rgba(255, 255, 255, .5);
   text-align: center;
   flex-basis: 50%;
@@ -456,7 +417,7 @@
 }
 
 /************* News subscriptions *************/
-.subscription-news .listing-news{
+.subscription-news .listing-news {
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -515,4 +476,9 @@
       font-size:0.9em;
     }
   }
+}
+
+.subscription-news .listing-news li a {
+    display: inline-block;
+    height: 100%;
 }
