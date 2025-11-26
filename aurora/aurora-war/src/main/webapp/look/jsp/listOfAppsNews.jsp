@@ -1,7 +1,10 @@
 <%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
 <%@ page import="org.silverpeas.core.web.look.LookHelper" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.silverpeas.looks.aurora.AuroraNews" %><%--
+<%@ page import="org.silverpeas.looks.aurora.AuroraNews" %>
+<%@ page import="org.silverpeas.core.web.look.Shortcut" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %><%--
 
     Copyright (C) 2000 - 2024 Silverpeas
 
@@ -54,6 +57,11 @@
   } else {
     // any other value means no delegated news, whatever they are
     newsLists = helper.getNews(1, helper.getSettings("home.news.listing.size", 20));
+  }
+
+  Map<String, Shortcut> shortcuts = new HashMap<>();
+  for (AuroraNews news : newsLists) {
+    shortcuts.put(news.getAppShortcut().getUrl(), news.getAppShortcut());
   }
 %>
 
@@ -123,6 +131,12 @@
         </li>
       </c:forEach>
     </ul>
+  </div>
+
+  <div id="news-link-apps">
+    <c:forEach items="<%=shortcuts%>" var="appNewsShortcut">
+      <a title="${appNewsShortcut.value.altText}" href="${appNewsShortcut.value.url}" class="link-more sp-link" id="link-app-${appNewsShortcut.value.target}"><span>${appNewsShortcut.value.altText}</span></a>
+    </c:forEach>
   </div>
 
 </view:window>

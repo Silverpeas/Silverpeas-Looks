@@ -361,6 +361,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       if (i >= max) break;
       News aNews = QuickInfoService.get().getNewsByForeignId(n.getPublicationId());
       AuroraNews an = new AuroraNews(aNews);
+      an.setAppShortcut(getAppShortcut(aNews.getComponentInstanceId()));
       appNews.add(an);
       i++;
     }
@@ -373,6 +374,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     for (News n : news) {
       News aNews = QuickInfoService.get().getNewsByForeignId(n.getPublicationId());
       AuroraNews an = new AuroraNews(aNews);
+      an.setAppShortcut(getAppShortcut(aNews.getComponentInstanceId()));
       delegatedNews.add(an);
     }
 
@@ -392,6 +394,17 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     return news;
+  }
+
+  private Shortcut getAppShortcut(String appId) {
+    Shortcut shortcut = null;
+    try {
+      ComponentInst app = Administration.get().getComponentInst(appId);
+      shortcut = new Shortcut("", "", app.getPermalink(), app.getLabel());
+    } catch (AdminException e) {
+      SilverLogger.getLogger(this).error(e);
+    }
+    return shortcut;
   }
 
   private List<News> getNewsByComponentIds(List<String> allowedComponentIds,
