@@ -10,7 +10,7 @@
   </parent>
   
   <artifactId>looks</artifactId>
-  <version>6.4.5-SNAPSHOT</version>
+  <version>6.4.6-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Silverpeas Looks</name>
   
@@ -46,7 +46,7 @@
 
   <properties>
     <!-- property used by the CI to both deploy a build version and release the next stable version -->
-    <next.release>6.4.5</next.release>
+    <next.release>6.4.6</next.release>
     <!-- Version of Silverpeas on which it depends -->
     <silverpeas.version>${project.version}</silverpeas.version>
     <core.version>${silverpeas.version}</core.version>
