@@ -162,10 +162,10 @@
       }
 
       function goToBookmark(select) {
-        var url = select.value;
-        var index = select.selectedIndex;
-        var option = select.options[index];
-        var target = $(option).attr("target");
+        const url = select.value;
+        const index = select.selectedIndex;
+        const option = select.options[index];
+        const target = $(option).attr("target");
         if (target === "true") {
           window.open(url, '_blank').focus();
         } else {
@@ -193,9 +193,15 @@
         executeSearchActionToBodyPartTarget("LastResults", false);
       }
 
+      const searchEngineScope = "SearchEngineScope";
+
+      const directoryScope = "DirectoryScope";
+
+      let searchScope;
+
       function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
-        var urlParameters = hasToSerializeForm ? jQuery(document.searchForm).serializeFormJSON() : {};
-        var url = "";
+        const urlParameters = hasToSerializeForm ? jQuery(document.searchForm).serializeFormJSON() : {};
+        let url = "";
         if (searchScope === searchEngineScope) {
           url = sp.url.format(webContext + "/RpdcSearch/jsp/" + action, urlParameters);
         } else if (searchScope === directoryScope) {
@@ -205,15 +211,15 @@
       }
 
       function jumpToUser(selectionUserAPI) {
-        var userIds = selectionUserAPI.getSelectedUserIds();
+        const userIds = selectionUserAPI.getSelectedUserIds();
         if (userIds.length) {
-          var url = webContext+"/Rprofil/jsp/Main?userId="+userIds[0];
+          const url = webContext + "/Rprofil/jsp/Main?userId=" + userIds[0];
           spWindow.loadContent(url);
         }
       }
 
       $("#inputSearchSwitchable").keypress(function(e) {
-        if (e.which == 13) {
+        if (e.which === 13) {
           e.preventDefault();
           searchEngine();
           return false;
@@ -221,9 +227,7 @@
         return true;
       });
 
-      var searchEngineScope = "SearchEngineScope";
-      var directoryScope = "DirectoryScope";
-      var searchScope = searchEngineScope;
+      searchScope = searchEngineScope;
 
       whenSilverpeasReady(function() {
         <c:if test="${silfn:isDefined(currentHeading)}">
@@ -251,8 +255,8 @@
           $('#advancedSearch-link-header').css('visibility', 'hidden');
           $('#query').hide();
           // setting 'platform' query as 'directory' query
-          var directoryInput = $("input[name='queryDirectory']");
-          var query = directoryInput.val();
+          const directoryInput = $("input[name='queryDirectory']");
+          const query = directoryInput.val();
           if (query.isNotDefined()) {
             directoryInput.val($('#query').val())
           }
@@ -280,8 +284,8 @@
             $('#nav').show();
           }, 0);
           spLayout.getBody().ready(function() {
-            var __menuTimeout;
-            var __enableMenu = function() {
+            let __menuTimeout;
+            const __enableMenu = function () {
               clearTimeout(__menuTimeout);
               $('#main-menu').smartmenus('enable');
             };
@@ -303,12 +307,12 @@
       <c:if test="${displayConnectedUsers}">
       window.USERSESSION_PROMISE.then(function() {
         spUserSession.addEventListener('connectedUsersChanged', function(event) {
-          var nb = event.detail.data.nb;
-          var $container = jQuery("#connectedUsers");
+          const nb = event.detail.data.nb;
+          const $container = jQuery("#connectedUsers");
           if (nb <= 0) {
             $container.hide();
           } else {
-            var label = " ${labelConnectedUsers}";
+            let label = " ${labelConnectedUsers}";
             if (nb === 1) {
               label = " ${labelConnectedUser}";
             }
@@ -323,7 +327,9 @@
     <div class="header-container ${anonymousMode}">
       <div class="wrapper clearfix">
         <h1 class="title">Intranet</h1>
-        <a id="logo-header" href="#" onclick="goToHome();"> <img alt="" src="${settings.logo}" /> </a>
+        <a id="logo-header" href="javascript:goToHome()"> <img alt="" src="${settings.logo}"
+        />
+        </a>
         <div id="topar-header">
           <div id="infoConnection">
             <c:if test="${isAnonymous}">
@@ -434,7 +440,8 @@
           </div>
           <ul id="outils">
             <c:if test="${displayConnectedUsers}">
-              <li id="connectedUsers"><a onclick="javascript:onClick=spUserSession.viewConnectedUsers();" href="#"></a></li>
+              <li id="connectedUsers"><a
+                  href="javascript:onClick=spUserSession.viewConnectedUsers()"></a></li>
             </c:if>
             <li id="map-link-header"><a href="javascript:loadMap()" title="${labelMap}">${labelMap}</a></li>
             <c:if test="${silfn:isDefined(settings.helpURL)}">
@@ -444,7 +451,9 @@
               <li id="directory-link-header"><a href="javascript:changeBody('${directoryURL}')" title="${labelDirectory}">${labelDirectory}</a></li>
             </c:if>
             <c:if test="${lookHelper.backOfficeVisible}">
-              <li id="adminstration-link-header"> <a href="javascript:void(0)" onclick="spWindow.loadAdminHomePage();" title="${labelBackoffice}">${labelBackoffice}</a></li>
+              <li id="adminstration-link-header"> <a
+                  href="javascript:spWindow.loadAdminHomePage()"
+                  title="${labelBackoffice}">${labelBackoffice}</a></li>
             </c:if>
 
             <c:forEach var="shortcut" items="${shortcuts}" varStatus="count">
@@ -482,7 +491,7 @@
             </form>
             <a id="lastResult-link-header" href="javascript:lastResultsSearchEngine()" title="${labelSearchResults}"><span>${labelSearchResults}</span></a>
             <a id="advancedSearch-link-header" href="javascript:advancedSearchEngine()" title="${labelSearchAdvanced}"><span>${labelSearchAdvanced}</span></a>
-            <a id="search-help-header" href="javascript:void(0)" onclick="sp.search.helpOn(this, '#query')" title="${labelSearchHelp}"><span>${labelSearchHelp}</span></a>
+            <a id="search-help-header" href="javascript:sp.search.helpOn(this, '#query')" title="${labelSearchHelp}"><span>${labelSearchHelp}</span></a>
           </div>
         </div>
         <div id="nav" style="display: none;">
