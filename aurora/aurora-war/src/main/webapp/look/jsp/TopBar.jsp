@@ -193,11 +193,9 @@
         executeSearchActionToBodyPartTarget("LastResults", false);
       }
 
-      const searchEngineScope = "SearchEngineScope";
-
-      const directoryScope = "DirectoryScope";
-
-      let searchScope;
+      var searchEngineScope = "SearchEngineScope";
+      var directoryScope = "DirectoryScope";
+      var searchScope = searchEngineScope;
 
       function executeSearchActionToBodyPartTarget(action, hasToSerializeForm) {
         const urlParameters = hasToSerializeForm ? jQuery(document.searchForm).serializeFormJSON() : {};
@@ -226,8 +224,6 @@
         }
         return true;
       });
-
-      searchScope = searchEngineScope;
 
       whenSilverpeasReady(function() {
         <c:if test="${silfn:isDefined(currentHeading)}">
