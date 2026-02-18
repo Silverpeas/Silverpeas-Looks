@@ -177,6 +177,11 @@
         } else {
           goToApplication(url);
         }
+        
+         // Réinitialise la sélection sur "Mes favoris"
+	setTimeout(function () {
+	  select.selectedIndex = 0;
+	}, 100);
       }
 
       function searchEngine() {
