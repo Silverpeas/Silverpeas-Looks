@@ -16,6 +16,7 @@ import org.silverpeas.components.rssaggregator.model.RSSItem;
 import org.silverpeas.components.rssaggregator.model.SPChannel;
 import org.silverpeas.components.rssaggregator.service.RSSService;
 import org.silverpeas.components.rssaggregator.service.RSSServiceProvider;
+import org.silverpeas.core.admin.space.SpaceInst;
 import org.silverpeas.core.subscription.SubscriptionServiceProvider;
 import org.silverpeas.core.subscription.service.ComponentSubscription;
 import org.silverpeas.core.subscription.util.SubscriptionList;
@@ -311,6 +312,14 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       } catch (AdminException e) {
         SilverLogger.getLogger(this).error(e);
       }
+    }
+
+    try {
+      SpaceInst personalSpace = Administration.get().getPersonalSpace(getUserId());
+      String[] excludedPersonalAppId = Administration.get().getAllComponentIds(personalSpace.getId());
+      excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedPersonalAppId);
+    } catch(Exception e) {
+      SilverLogger.getLogger(this).error(e);
     }
 
     List<PublicationDetail> publications =
