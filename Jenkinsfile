@@ -114,7 +114,7 @@ def computeSnapshotVersion(pom) {
   final String version = pom.version
   final String defaultVersion = env.BRANCH_NAME == 'master' ? version :
       env.BRANCH_NAME.toLowerCase().replaceAll('[# -]', '')
-  Matcher m = env.CHANGE_TITLE =~ /^(Bug #?\d+|Feature #?\d+).*$/
+  Matcher m = env.CHANGE_TITLE =~ /^(Bug #?\d+|Feature #?\d+|Support #?\d+).*$/
   String snapshot = m.matches()
       ? m.group(1).toLowerCase().replaceAll(' #?', '')
       : ''
