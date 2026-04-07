@@ -21,53 +21,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package org.silverpeas.looks.aurora.matomo;
 
-class TrackableContent {
-  private boolean content;
-  private String contentId;
-  private String contentName;
-  private String contentType;
+/**
+ * Injections points in HTML pages for Matomo.
+ *
+ * @author mmoquillon
+ */
+final class MatomoInjectionPoints {
 
-  private String permalink;
+  // HTML closing tag used as injection point.
+  public static final String START_TAG_SCRIPT = "<script>";
+  public static final String END_TAG_SCRIPT = "</script>";
+  public static final String VIRTUAL_PAGE = "virtualPage";
+  public static final String TITLE = "title";
 
-  public boolean isContent() {
-    return content;
-  }
 
-  public void setContent(boolean content) {
-    this.content = content;
-  }
-
-  public String getContentId() {
-    return contentId;
-  }
-
-  public void setContentId(String contentId) {
-    this.contentId = contentId;
-  }
-
-  public String getContentName() {
-    return contentName;
-  }
-
-  public void setContentName(String contentName) {
-    this.contentName = contentName;
-  }
-
-  public String getContentType() {
-    return contentType;
-  }
-
-  public String getPermalink() {
-    return permalink;
-  }
-
-  public void setPermalink(String permalink) {
-    this.permalink = permalink;
-  }
-
-  public void setContentType(String contentType) {
-    this.contentType = contentType;
+  private MatomoInjectionPoints() {
   }
 }
+  

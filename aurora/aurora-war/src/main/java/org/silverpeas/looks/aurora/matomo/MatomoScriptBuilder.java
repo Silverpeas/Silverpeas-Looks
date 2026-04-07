@@ -30,58 +30,68 @@ import org.silverpeas.kernel.util.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
-class MatomoScriptBuilder {
-    public static String build(HttpServletRequest request, TrackableContent content, String userId, String matomoUrl, String siteId) {
-        SilverpeasTemplate template = SilverpeasTemplateFactory.createSilverpeasTemplateOnCore("statistics");
-        template.setAttribute("matomoUrl", matomoUrl);
-        template.setAttribute("siteId", siteId);
+final class MatomoScriptBuilder {
 
-        if (content.isContent()) {
-            template.setAttribute("space", "");
-            template.setAttribute("component", "");
-            template.setAttribute("userId", userId);
-            template.setAttribute("content", content.getContentType() + "_" + content.getContentId());
-            template.setAttribute(MatomoInjectionFilter.TITLE, content.getContentName());
-            template.setAttribute(MatomoInjectionFilter.VIRTUAL_PAGE, content.getPermalink());
+  private MatomoScriptBuilder() {
+  }
 
-            String script = template.applyFileTemplate("matomo");
-            script = script.replace(MatomoInjectionFilter.START_TAG_SCRIPT, MatomoInjectionFilter.START_TAG_SCRIPT + "if (!document.body.dataset.matomoExecuted) {document.body.dataset.matomoExecuted = 'true';");
-            script = script.replace(MatomoInjectionFilter.END_TAG_SCRIPT, "}" + MatomoInjectionFilter.END_TAG_SCRIPT);
-            return script;
-        } else {
-            String spaceId = request.getParameter("SpaceId");
-            String componentId = request.getParameter("ComponentId");
-            String spaceName = "";
-            if (StringUtil.isDefined(spaceId)) {
-                try {
-                    spaceName = Administration.get().getSpaceInstLightById(spaceId).getName();
-                    template.setAttribute("space", spaceId);
-                    template.setAttribute(MatomoInjectionFilter.TITLE, spaceName);
-                } catch (Exception e) {
-                    // empty name
-                }
-            }
+  public static String build(HttpServletRequest request, TrackableContent content, String userId,
+      String matomoUrl, String siteId) {
+    SilverpeasTemplate template = SilverpeasTemplateFactory.createSilverpeasTemplateOnCore(
+        "statistics");
+    template.setAttribute("matomoUrl", matomoUrl);
+    template.setAttribute("siteId", siteId);
 
-            String componentName = "";
-            if (StringUtil.isDefined(componentId)) {
-                try {
-                    componentName = Administration.get().getComponentInstLight(componentId).getName();
-                    template.setAttribute("component", componentId);
-                    template.setAttribute(MatomoInjectionFilter.TITLE, componentName);
-                } catch (Exception e) {
-                    // empty name
-                }
-            }
-            template.setAttribute("userId", userId);
-            template.setAttribute("content", "");
+    if (content.isContent()) {
+      template.setAttribute("space", "");
+      template.setAttribute("component", "");
+      template.setAttribute("userId", userId);
+      template.setAttribute("content", content.getContentType() + "_" + content.getContentId());
+      template.setAttribute(MatomoInjectionPoints.TITLE, content.getContentName());
+      template.setAttribute(MatomoInjectionPoints.VIRTUAL_PAGE, content.getPermalink());
 
-            if (StringUtil.isDefined(componentId)) {
-                template.setAttribute(MatomoInjectionFilter.VIRTUAL_PAGE, "/silverpeas/Component/" + componentId);
-            } else if (StringUtil.isDefined(spaceId)) {
-                template.setAttribute(MatomoInjectionFilter.VIRTUAL_PAGE, "/silverpeas/Space/" + spaceId);
-            }
-            return template.applyFileTemplate("matomo");
+      String script = template.applyFileTemplate("matomo");
+      script = script.replace(MatomoInjectionPoints.START_TAG_SCRIPT,
+          MatomoInjectionPoints.START_TAG_SCRIPT + "if (!document.body.dataset.matomoExecuted) " +
+          "{document.body.dataset.matomoExecuted = 'true';");
+      script = script.replace(MatomoInjectionPoints.END_TAG_SCRIPT,
+          "}" + MatomoInjectionPoints.END_TAG_SCRIPT);
+      return script;
+    } else {
+      String spaceId = request.getParameter("SpaceId");
+      String componentId = request.getParameter("ComponentId");
+      String spaceName;
+      if (StringUtil.isDefined(spaceId)) {
+        try {
+          spaceName = Administration.get().getSpaceInstLightById(spaceId).getName();
+          template.setAttribute("space", spaceId);
+          template.setAttribute(MatomoInjectionPoints.TITLE, spaceName);
+        } catch (Exception e) {
+          // empty name
         }
+      }
+
+      String componentName;
+      if (StringUtil.isDefined(componentId)) {
+        try {
+          componentName = Administration.get().getComponentInstLight(componentId).getName();
+          template.setAttribute("component", componentId);
+          template.setAttribute(MatomoInjectionPoints.TITLE, componentName);
+        } catch (Exception e) {
+          // empty name
+        }
+      }
+      template.setAttribute("userId", userId);
+      template.setAttribute("content", "");
+
+      if (StringUtil.isDefined(componentId)) {
+        template.setAttribute(MatomoInjectionPoints.VIRTUAL_PAGE,
+            "/silverpeas/Component/" + componentId);
+      } else if (StringUtil.isDefined(spaceId)) {
+        template.setAttribute(MatomoInjectionPoints.VIRTUAL_PAGE, "/silverpeas/Space/" + spaceId);
+      }
+      return template.applyFileTemplate("matomo");
     }
+  }
 
 }

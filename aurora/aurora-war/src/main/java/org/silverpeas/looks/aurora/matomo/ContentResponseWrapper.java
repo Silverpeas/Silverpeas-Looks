@@ -29,27 +29,27 @@ import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 
 /**
- * Wrapper used to capture the response output as a character stream
- * in order to modify it before sending it to the client.
+ * Wrapper used to capture the response output as a character stream in order to modify it before
+ * sending it to the client.
  */
 class ContentResponseWrapper extends HttpServletResponseWrapper {
-    private final CharArrayWriter charWriter = new CharArrayWriter();
-    private PrintWriter writer;
+  private final CharArrayWriter charWriter = new CharArrayWriter();
+  private PrintWriter writer;
 
-    public ContentResponseWrapper(HttpServletResponse response) {
-        super(response);
-    }
+  public ContentResponseWrapper(HttpServletResponse response) {
+    super(response);
+  }
 
-    @Override
-    public PrintWriter getWriter() {
-        if (writer == null) {
-            writer = new PrintWriter(charWriter);
-        }
-        return writer;
+  @Override
+  public PrintWriter getWriter() {
+    if (writer == null) {
+      writer = new PrintWriter(charWriter);
     }
+    return writer;
+  }
 
-    @Override
-    public String toString() {
-        return charWriter.toString();
-    }
+  @Override
+  public String toString() {
+    return charWriter.toString();
+  }
 }
