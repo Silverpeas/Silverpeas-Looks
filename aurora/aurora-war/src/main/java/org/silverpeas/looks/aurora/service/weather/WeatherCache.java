@@ -6,7 +6,7 @@ import org.silverpeas.kernel.cache.model.Cache;
 import org.silverpeas.core.cache.service.CacheAccessorProvider;
 import org.silverpeas.kernel.bundle.ResourceLocator;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.function.Supplier;
 
 /**

@@ -4,7 +4,7 @@ import org.silverpeas.core.admin.space.SpaceInstLight;
 
 public class BannerMainItem {
   
-  private SpaceInstLight space;
+  private final SpaceInstLight space;
 
   public BannerMainItem(SpaceInstLight space) {
     this.space = space;

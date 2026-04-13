@@ -5,11 +5,11 @@ import org.silverpeas.looks.aurora.service.weather.WeatherForecastData;
 import org.silverpeas.looks.aurora.service.weather.WeatherServiceRequester;
 import org.silverpeas.looks.aurora.service.weather.WeatherSettings;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.WebApplicationException;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.WebApplicationException;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -30,7 +30,6 @@ public class WeatherServiceAdapter extends HttpServlet {
       final WeatherForecastData data = getWeatherForecastData(cityId);
       res.setHeader("X-WeatherService", data.getWeatherService());
       res.setContentType(data.getMediaType().toString());
-      res.setHeader("charset", "UTF-8");
       Writer writer = res.getWriter();
       writer.write(data.getData());
     } catch (WebApplicationException e) {

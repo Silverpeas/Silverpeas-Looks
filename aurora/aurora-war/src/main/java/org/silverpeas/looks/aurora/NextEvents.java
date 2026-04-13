@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class NextEvents extends ListOfContributions {
 
-  private List<NextEventsDate> nextEventsDates;
+  private final List<NextEventsDate> nextEventsDates;
 
   public NextEvents(final List<NextEventsDate> nextEventsDates) {
     this.nextEventsDates = nextEventsDates;

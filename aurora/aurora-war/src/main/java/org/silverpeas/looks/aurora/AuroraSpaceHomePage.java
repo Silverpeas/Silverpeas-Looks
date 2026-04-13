@@ -33,30 +33,22 @@ import org.silverpeas.core.admin.user.model.UserDetail;
 import org.silverpeas.core.contribution.attachment.AttachmentService;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocument;
 import org.silverpeas.core.contribution.attachment.model.SimpleDocumentPK;
-import org.silverpeas.core.contribution.content.form.DataRecord;
-import org.silverpeas.core.contribution.content.form.Field;
-import org.silverpeas.core.contribution.content.form.Form;
-import org.silverpeas.core.contribution.content.form.PagesContext;
-import org.silverpeas.core.contribution.content.form.RecordSet;
+import org.silverpeas.core.contribution.content.form.*;
 import org.silverpeas.core.contribution.content.form.displayers.WysiwygFCKFieldDisplayer;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygContentTransformer;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplate;
 import org.silverpeas.core.contribution.template.publication.PublicationTemplateManager;
 import org.silverpeas.core.util.CollectionUtil;
+import org.silverpeas.core.util.URLUtil;
+import org.silverpeas.core.web.look.Shortcut;
+import org.silverpeas.kernel.logging.SilverLogger;
 import org.silverpeas.kernel.util.Pair;
 import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.core.util.URLUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.core.web.look.Shortcut;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
@@ -67,11 +59,11 @@ import static org.silverpeas.looks.aurora.AuroraSpaceHomePageZone.RIGHT;
 
 public class AuroraSpaceHomePage {
 
-  private Space space;
-  private String userLanguage;
+  private final Space space;
+  private final String userLanguage;
   private ComponentInstLight backOfficeApp;
   private DataRecord data;
-  private LookAuroraHelper look;
+  private final LookAuroraHelper look;
   private Form customForm;
 
   public static final String TEMPLATE_NAME = "auroraspacehomepage.xml";
@@ -135,8 +127,7 @@ public class AuroraSpaceHomePage {
   }
 
   public Map<AuroraSpaceHomePageZone, FreeZone> getFreeZones() {
-    return EnumSet.of(MAIN, RIGHT)
-        .stream()
+    return Stream.of(MAIN, RIGHT)
         .flatMap(p -> {
           final String prefix = p.name().toLowerCase();
           return ofNullable(getFieldWysiwygValue(prefix + "FreeContentValue"))
@@ -360,7 +351,7 @@ public class AuroraSpaceHomePage {
         String fieldValue = field.getValue();
         if (fieldValue != null) {
           String attachmentId =
-              fieldValue.substring(fieldValue.indexOf('_') + 1, fieldValue.length());
+              fieldValue.substring(fieldValue.indexOf('_') + 1);
           Optional<String> attachmentUrl = getAttachmentURL(attachmentId);
           if (attachmentUrl.isPresent()) {
             return attachmentUrl.get();

@@ -5,8 +5,8 @@ import org.silverpeas.core.admin.component.model.ComponentInstLight;
 
 public class App {
 
-  private ComponentInstLight component;
-  private String userLanguage;
+  private final ComponentInstLight component;
+  private final String userLanguage;
 
   public App(ComponentInstLight component, String userLanguage) {
     this.component = component;

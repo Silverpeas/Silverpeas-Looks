@@ -11,13 +11,13 @@ public class RSSFeeds {
   private static final String DISPLAYER_AGGREGATE = "aggregate";
   private static final String DISPLAYER_CARROUSEL = "carrousel";
 
-  private List<SPChannel> channels;
-  private List<RSSItem> agregatedItems;
+  private final List<SPChannel> channels;
+  private final List<RSSItem> aggregatedItems;
   private String displayer;
 
   public RSSFeeds(List<SPChannel> channels, List<RSSItem> items) {
     this.channels = channels;
-    this.agregatedItems = items;
+    this.aggregatedItems = items;
   }
 
   public List<SPChannel> getChannels() {
@@ -25,7 +25,7 @@ public class RSSFeeds {
   }
 
   public List<RSSItem> getAggregatedItems() {
-    return agregatedItems;
+    return aggregatedItems;
   }
 
   public boolean isTabs() { return DISPLAYER_TABS.equals(displayer); }

@@ -6,10 +6,10 @@ import org.silverpeas.core.util.WebEncodeHelper;
 
 public class Space {
 
-  private SpaceInstLight spaceInst;
+  private final SpaceInstLight spaceInst;
   private String intro;
   private String picture;
-  private String userLanguage;
+  private final String userLanguage;
 
   public Space(SpaceInstLight space, String userLanguage) {
     this.spaceInst = space;

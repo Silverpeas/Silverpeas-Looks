@@ -2,8 +2,8 @@ package org.silverpeas.looks.aurora.service.weather;
 
 import org.silverpeas.core.util.ServiceProvider;
 
-import javax.enterprise.inject.Default;
-import javax.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.util.AnnotationLiteral;
 
 /**
  * Requester of a remote weather service to fetch weather forecast data over several days.
@@ -30,7 +30,7 @@ public interface WeatherServiceRequester {
 
   /**
    * Request weather forecast data of the specified city. If the requesting fails, then a
-   * {@link javax.ws.rs.WebApplicationException} is thrown.
+   * {@link jakarta.ws.rs.WebApplicationException} is thrown.
    * @param cityId a unique identifier of a city. Such identifiers are specific to the weather
    * service.
    * @return a JSON or an XML representation of the weather forecast data.

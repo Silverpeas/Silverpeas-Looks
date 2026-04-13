@@ -8,7 +8,7 @@ import org.silverpeas.looks.aurora.service.almanach.CalendarEventOccurrenceEntit
  */
 public class Event {
 
-  private CalendarEventOccurrenceEntity decorated;
+  private final CalendarEventOccurrenceEntity decorated;
   private Shortcut appShortcut;
 
   public Event(CalendarEventOccurrenceEntity event) {

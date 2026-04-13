@@ -1,18 +1,18 @@
 package org.silverpeas.looks.aurora.service.weather;
 
+import jakarta.inject.Named;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.MediaType;
 import org.silverpeas.core.admin.user.model.User;
 import org.silverpeas.core.annotation.Service;
 
-import javax.inject.Named;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
-
 /**
  * Requester of the AccuWeather API service.
+ *
  * @author mmoquillon
  */
-@Named("AccuWeather")
 @Service
+@Named("AccuWeather")
 public class AccuWeatherRequester implements WeatherServiceRequester {
 
   private static final String API_URL =
@@ -22,15 +22,17 @@ public class AccuWeatherRequester implements WeatherServiceRequester {
   @Override
   public WeatherForecastData request(final String cityId) {
     final String language = User.getCurrentRequester().getUserPreferences().getLanguage();
-    final String weatherData = ClientBuilder.newClient()
-        .target(API_URL)
-        .path(cityId)
-        .queryParam("apikey", WeatherSettings.get().getAPIKey())
-        .queryParam("language", language)
-        .queryParam("metric", true)
-        .request()
-        .get(String.class);
-    return new WeatherForecastData(SERVICE_NAME, weatherData, MediaType.APPLICATION_JSON_TYPE);
+    try (var client = ClientBuilder.newClient()) {
+      final String weatherData = client
+          .target(API_URL)
+          .path(cityId)
+          .queryParam("apikey", WeatherSettings.get().getAPIKey())
+          .queryParam("language", language)
+          .queryParam("metric", true)
+          .request()
+          .get(String.class);
+      return new WeatherForecastData(SERVICE_NAME, weatherData, MediaType.APPLICATION_JSON_TYPE);
+    }
   }
 }
   

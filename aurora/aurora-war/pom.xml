@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.silverpeas.looks</groupId>
     <artifactId>aurora</artifactId>
-    <version>6.5-SNAPSHOT</version>
+    <version>6.5-ee-SNAPSHOT</version>
   </parent>
 
   <groupId>org.silverpeas.looks.aurora</groupId>
@@ -15,9 +15,8 @@
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jaxb-annotations</artifactId>
+      <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
     </dependency>
-
 	 <dependency>
       <groupId>org.silverpeas.components.quickinfo</groupId>
       <artifactId>silverpeas-quickinfo</artifactId>

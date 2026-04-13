@@ -6,15 +6,15 @@ import org.silverpeas.kernel.bundle.SettingBundle;
 import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.kernel.logging.SilverLogger;
 
-import javax.enterprise.context.SessionScoped;
+import jakarta.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Settings of a weather module dedicated to work with a remote weather service. By default
+ * Settings of a weather module dedicated to work with a remote weather service. By default,
  * those settings are defined in the properties/org/silverpeas/weather/settings/weather.properties
- * file but they can be defined in another properties file. In that case, the path of this file
+ * file, but they can be defined in another properties file. In that case, the path of this file
  * must be specified with {@link #setSettingsFile(String)} method. Only the cache time-to-live
  * defined in the default properties file is taken into account.
  * @author mmoquillon

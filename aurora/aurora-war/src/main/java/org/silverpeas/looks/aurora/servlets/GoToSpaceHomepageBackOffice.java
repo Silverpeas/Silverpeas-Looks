@@ -13,10 +13,10 @@ import org.silverpeas.core.web.look.LookHelper;
 import org.silverpeas.looks.aurora.AuroraSpaceHomePage;
 import org.silverpeas.looks.aurora.LookAuroraHelper;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -78,16 +78,20 @@ public class GoToSpaceHomepageBackOffice extends HttpServlet {
       component.setDomainFatherId(spaceId);
       component.setHidden(true);
       for (Parameter parameter : parameters) {
-        if (parameter.getName().equals("useSubscription")) {
-          parameter.setValue("no");
-        } else if (parameter.getName().equals("xmlTemplate")) {
-          parameter.setValue(AuroraSpaceHomePage.TEMPLATE_NAME);
-        } else if (parameter.getName().equals("xmlTemplate2")) {
-          // check if a custom template is defined for this space or a parent
-          String template = lookHelper.getSpaceHomePageCustomTemplate(spaceId);
-          if (StringUtil.isDefined(template)) {
-            parameter.setValue(template);
-          }
+        switch (parameter.getName()) {
+          case "useSubscription":
+            parameter.setValue("no");
+            break;
+          case "xmlTemplate":
+            parameter.setValue(AuroraSpaceHomePage.TEMPLATE_NAME);
+            break;
+          case "xmlTemplate2":
+            // check if a custom template is defined for this space or a parent
+            String template = lookHelper.getSpaceHomePageCustomTemplate(spaceId);
+            if (StringUtil.isDefined(template)) {
+              parameter.setValue(template);
+            }
+            break;
         }
       }
       component.setParameters(parameters);

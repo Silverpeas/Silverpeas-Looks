@@ -1,6 +1,6 @@
 package org.silverpeas.looks.aurora.service.weather;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * Weather forecast on several days as returned by a remote weather service.
