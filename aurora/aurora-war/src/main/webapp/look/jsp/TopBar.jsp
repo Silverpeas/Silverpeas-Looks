@@ -64,6 +64,8 @@
     <fmt:message var="labelSearch" key="look.banner.search"/>
     <fmt:message var="labelSearchButton" key="look.banner.search.button"/>
     <fmt:message var="labelSearchPlaceholder" key="look.banner.search.input.placeholder"/>
+    <fmt:message var="labelSearchDirectoryPlaceholder" key="look.banner.search.input.directory.placeholder"/>
+    
     <fmt:message var="labelSearchAdvanced" key="look.banner.search.advanced"/>
     <fmt:message var="labelSearchHelp" key="look.banner.help"/>
     <fmt:message var="labelSearchResults" key="look.banner.search.lastresults"/>
@@ -262,6 +264,12 @@
             directoryInput.val($('#query').val())
           }
         });
+        
+        
+        setTimeout(function() {
+        	let label = " ${labelSearchDirectoryPlaceholder}";
+  		$('input[name="queryDirectory"]').attr("placeholder", label);
+	}, 1000);
 
         $('#show-menu-spacePerso').hover(function() {
           $('.spacePerso').show();
