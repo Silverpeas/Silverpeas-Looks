@@ -90,6 +90,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       ".customtemplate.";
   private static final String QUICKINFO = "quickinfo";
   private final DelegatedNewsService delegatedNewsService;
+  private final Administration admin;
+  private final QuickInfoService quickInfoService;
+  private final WeatherSettings weatherSettings;
   private final LocalizationBundle messages;
   private LookSettings settings;
   private List<Domain> directoryDomains = null;
@@ -107,16 +110,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private LookAuroraHelper(HttpSession session) {
     super(session);
-
     delegatedNewsService = DelegatedNewsService.get();
-
+    admin = Administration.get();
+    quickInfoService = QuickInfoService.get();
     String language = getMainSessionController().getFavoriteLanguage();
-
     messages =
         ResourceLocator.getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
             language);
 
-    final WeatherSettings weatherSettings = WeatherSettings.get();
+    weatherSettings = WeatherSettings.get();
     weatherSettings.setSettingsFile(getSettings("home.weather.settings",
         WeatherSettings.DEFAULT_SETTINGS));
   }
@@ -260,7 +262,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return Collections.emptyList();
     }
 
-    return WeatherSettings.get().getCities();
+    return weatherSettings.getCities();
   }
 
   public List<PublicationDetail> getLatestPublications() {
@@ -299,7 +301,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         StringUtils.split(getSettings("home.publications.spaces.excluded", ""));
     for (String excludedSpaceId : excludedSpaceIds) {
       try {
-        String[] excludedAppId = Administration.get().getAllComponentIdsRecur(excludedSpaceId);
+        String[] excludedAppId = admin.getAllComponentIdsRecur(excludedSpaceId);
         excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedAppId);
       } catch (AdminException e) {
         SilverLogger.getLogger(this).error(e);
@@ -307,9 +309,11 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
 
     try {
-      SpaceInst personalSpace = Administration.get().getPersonalSpace(getUserId());
-      String[] excludedPersonalAppId = Administration.get().getAllComponentIds(personalSpace.getId());
-      excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedPersonalAppId);
+      SpaceInst personalSpace = admin.getPersonalSpace(getUserId());
+      if (personalSpace != null) {
+        String[] excludedPersonalAppId = admin.getAllComponentIds(personalSpace.getId());
+        excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedPersonalAppId);
+      }
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
     }
@@ -360,7 +364,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     int i = 1;
     for (News n : news) {
       if (i >= max) break;
-      News aNews = QuickInfoService.get().getNewsByForeignId(n.getPublicationId());
+      News aNews = quickInfoService.getNewsByForeignId(n.getPublicationId());
       AuroraNews an = new AuroraNews(aNews);
       an.setAppShortcut(getAppShortcut(aNews.getComponentInstanceId()));
       appNews.add(an);
@@ -373,7 +377,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<AuroraNews> delegatedNews = new ArrayList<>();
     List<News> news = getDelegatedNews();
     for (News n : news) {
-      News aNews = QuickInfoService.get().getNewsByForeignId(n.getPublicationId());
+      News aNews = quickInfoService.getNewsByForeignId(n.getPublicationId());
       AuroraNews an = new AuroraNews(aNews);
       an.setAppShortcut(getAppShortcut(aNews.getComponentInstanceId()));
       delegatedNews.add(an);
@@ -400,7 +404,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private Shortcut getAppShortcut(String appId) {
     Shortcut shortcut = null;
     try {
-      ComponentInst app = Administration.get().getComponentInst(appId);
+      ComponentInst app = admin.getComponentInst(appId);
       shortcut = new Shortcut("", "", app.getPermalink(), app.getLabel());
     } catch (AdminException e) {
       SilverLogger.getLogger(this).error(e);
@@ -428,7 +432,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private List<News> getNewsByComponentId(String allowedComponentId, boolean importantOnly) {
     // getting news from allowed component
-    List<News> allNews = QuickInfoService.get().getVisibleNews(allowedComponentId);
+    List<News> allNews = quickInfoService.getVisibleNews(allowedComponentId);
     if (!importantOnly) {
       return allNews;
     }
@@ -462,7 +466,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     try {
       List<SearchResult> results = SearchService.get().search(query);
       for (SearchResult result : results) {
-        News news = QuickInfoService.get().getNewsByForeignId(result.getId());
+        News news = quickInfoService.getNewsByForeignId(result.getId());
         if (importantOnly && news.isImportant()) {
           someNews.add(news);
         } else if (!importantOnly) {
@@ -882,7 +886,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public ComponentInstLight getConfigurationApp(String spaceId) {
-    OrganizationController oc = OrganizationController.get();
+    OrganizationController oc = getOrganisationController();
     List<ComponentInstLight> apps = getAppsByName(spaceId, "webPages");
     for (ComponentInstLight app : apps) {
       String xmlFormName = oc.getComponentParameterValue(app.getId(), "xmlTemplate");
@@ -896,7 +900,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   @SuppressWarnings("SameParameterValue")
   private List<ComponentInstLight> getAppsByName(String spaceId, String name) {
     List<ComponentInstLight> apps = new ArrayList<>();
-    OrganizationController oc = OrganizationController.get();
+    OrganizationController oc = getOrganisationController();
     String[] appsIds = oc.getAvailCompoIdsAtRoot(spaceId, getUserId());
     for (String appId : appsIds) {
       ComponentInstLight app = oc.getComponentInstLight(appId);
@@ -1081,7 +1085,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public NewUsersList getNewUsersList() {
     int nbUsersDisplayed = getSettings("home.users.nb", 0);
     if (nbUsersDisplayed > 0) {
-      final OrganizationController organizationController = OrganizationController.get();
+      final OrganizationController organizationController = getOrganisationController();
       UserDetailsSearchCriteria criteria = new UserDetailsSearchCriteria().onUserStatesToExclude(
           BLOCKED, DEACTIVATED, REMOVED);
       String groupId = getSettings("home.users.group", "-1");
@@ -1112,7 +1116,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   public NewUsersList getSpaceNewUsersList(String spaceId) {
     int nbUsersDisplayed = getSettings("space.homepage.users.nb", 0);
     if (nbUsersDisplayed > 0) {
-      final OrganizationController organizationController = OrganizationController.get();
+      final OrganizationController organizationController = getOrganisationController();
       final List<User> newUsers = of(organizationController.getAllComponentIdsRecur(spaceId))
           .flatMap(i -> of(organizationController.getAllUsers(i)).map(User.class::cast))
           .distinct()
@@ -1128,7 +1132,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<String> newsComponentsIds = getAppNewsIdSubscribed();
     for (String componentId : newsComponentsIds) {
       int maxHistory = getSettings("subscription.news.maxbycompoments", 10);
-      List<News> l = QuickInfoService.get().getVisibleNews(componentId);
+      List<News> l = quickInfoService.getVisibleNews(componentId);
       if (l.size() > maxHistory) {
         l = l.subList(0,maxHistory);
       }
@@ -1157,7 +1161,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     List<String> newsComponentsIds = getAppNewsIdSubscribed();
     List<AuroraNews> news = new ArrayList<>();
     for (String componentId : newsComponentsIds) {
-      List<News> l = QuickInfoService.get().getVisibleNews(componentId);
+      List<News> l = quickInfoService.getVisibleNews(componentId);
       for (News n : l) {
         AuroraNews auroraNews = new AuroraNews(n);
         news.add(auroraNews);
@@ -1176,7 +1180,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     ComponentInst app = null;
     if (StringUtil.isDefined(appId)) {
       try {
-        app = Administration.get().getComponentInst(appId);
+        app = admin.getComponentInst(appId);
       } catch (AdminException e) {
         SilverLogger.getLogger(this).error(e);
       }

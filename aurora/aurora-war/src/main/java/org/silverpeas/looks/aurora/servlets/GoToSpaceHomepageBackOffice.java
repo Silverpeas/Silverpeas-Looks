@@ -92,6 +92,8 @@ public class GoToSpaceHomepageBackOffice extends HttpServlet {
               parameter.setValue(template);
             }
             break;
+          default:
+            break;
         }
       }
       component.setParameters(parameters);

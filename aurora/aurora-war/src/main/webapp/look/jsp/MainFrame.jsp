@@ -7,9 +7,9 @@
 <%@ page import="static org.silverpeas.core.web.util.WebRedirection.REDIRECT_TO_COMPONENT" %>
 <%@ page import="static org.silverpeas.core.web.util.WebRedirection.REDIRECT_TO_SPACE" %>
 <%@ page import="static org.silverpeas.core.web.util.WebRedirection.*" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://www.silverpeas.com/tld/viewGenerator" prefix="view"%>
+<%@ taglib uri="jakarta.tags.core" prefix="c"%>
+<%@ taglib uri="jakarta.tags.fmt" prefix="fmt"%>
+<%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view"%>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/chat" prefix="chatTags" %>
 
 <%
