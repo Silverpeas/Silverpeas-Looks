@@ -6,11 +6,11 @@
   <parent>
     <groupId>org.silverpeas</groupId>
     <artifactId>silverpeas-project</artifactId>
-    <version>1.7-build260224</version>
+    <version>1.7</version>
   </parent>
   
   <artifactId>looks</artifactId>
-  <version>6.5-SNAPSHOT</version>
+  <version>6.5-jee-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Silverpeas Looks</name>
   
@@ -46,7 +46,7 @@
 
   <properties>
     <!-- property used by the CI to both deploy a build version and release the next stable version -->
-    <next.release>6.5</next.release>
+    <next.release>6.5-jee</next.release>
     <!-- Version of Silverpeas on which it depends -->
     <silverpeas.version>${project.version}</silverpeas.version>
     <core.version>${silverpeas.version}</core.version>
