@@ -98,6 +98,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       ".customtemplate.";
   private static final String QUICKINFO = "quickinfo";
   private final DelegatedNewsService delegatedNewsService;
+  private final Administration admin;
   private final LocalizationBundle messages;
   private LookSettings settings;
   private List<Domain> directoryDomains = null;
@@ -115,11 +116,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private LookAuroraHelper(HttpSession session) {
     super(session);
-
     delegatedNewsService = DelegatedNewsService.get();
-
+    admin = Administration.get();
     String language = getMainSessionController().getFavoriteLanguage();
-
     messages =
         ResourceLocator.getLocalizationBundle("org.silverpeas.looks.aurora.multilang.lookBundle",
             language);
@@ -272,12 +271,12 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public List<PublicationDetail> getLatestPublications() {
-    String spaceId = getSettings("home.publications.spaceid", "");
-    if (StringUtil.isDefined(spaceId)) {
-      return getLatestPublications(spaceId,
-          Integer.parseInt(getSettings("home.publications.nb", "3")));
+    String spaceId = getSettings("home.publications.spaceid", "").trim();
+    int pubCount = Integer.parseInt(getSettings("home.publications.nb", "3"));
+    if (StringUtil.isNotDefined(spaceId)) {
+      spaceId = null;
     }
-    return List.of();
+    return getLatestPublications(spaceId, pubCount);
   }
 
   public List<PublicationDetail> getMoreLatestPublications() {
@@ -307,7 +306,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         StringUtils.split(getSettings("home.publications.spaces.excluded", ""));
     for (String excludedSpaceId : excludedSpaceIds) {
       try {
-        String[] excludedAppId = Administration.get().getAllComponentIdsRecur(excludedSpaceId);
+        String[] excludedAppId = admin.getAllComponentIdsRecur(excludedSpaceId);
         excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedAppId);
       } catch (AdminException e) {
         SilverLogger.getLogger(this).error(e);
@@ -315,8 +314,8 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     }
 
     try {
-      SpaceInst personalSpace = Administration.get().getPersonalSpace(getUserId());
-      String[] excludedPersonalAppId = Administration.get().getAllComponentIds(personalSpace.getId());
+      SpaceInst personalSpace = admin.getPersonalSpace(getUserId());
+      String[] excludedPersonalAppId = admin.getAllComponentIds(personalSpace.getId());
       excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, excludedPersonalAppId);
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
@@ -408,7 +407,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   private Shortcut getAppShortcut(String appId) {
     Shortcut shortcut = null;
     try {
-      ComponentInst app = Administration.get().getComponentInst(appId);
+      ComponentInst app = admin.getComponentInst(appId);
       shortcut = new Shortcut("", "", app.getPermalink(), app.getLabel());
     } catch (AdminException e) {
       SilverLogger.getLogger(this).error(e);
@@ -1184,7 +1183,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     ComponentInst app = null;
     if (StringUtil.isDefined(appId)) {
       try {
-        app = Administration.get().getComponentInst(appId);
+        app = admin.getComponentInst(appId);
       } catch (AdminException e) {
         SilverLogger.getLogger(this).error(e);
       }
