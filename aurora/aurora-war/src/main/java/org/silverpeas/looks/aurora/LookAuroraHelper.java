@@ -69,7 +69,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.of;
 import static org.silverpeas.core.admin.space.SpaceInst.SPACE_KEY_PREFIX;
 import static org.silverpeas.core.admin.user.constant.UserState.*;
@@ -436,13 +435,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (!importantOnly) {
       return allNews;
     }
-    List<News> importantNews = new ArrayList<>();
-    for (News news : allNews) {
-      if (news.isImportant()) {
-        importantNews.add(news);
-      }
-    }
-    return importantNews;
+    return allNews.stream()
+        .filter(News::isImportant)
+        .toList();
   }
 
   public NewsList getAllNewsByTaxonomyPosition(String taxonomyPosition) {
@@ -467,9 +462,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       List<SearchResult> results = SearchService.get().search(query);
       for (SearchResult result : results) {
         News news = quickInfoService.getNewsByForeignId(result.getId());
-        if (importantOnly && news.isImportant()) {
-          someNews.add(news);
-        } else if (!importantOnly) {
+        if (!importantOnly || news.isImportant()) {
           someNews.add(news);
         }
       }
@@ -506,7 +499,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (!allowedComponentIds.isEmpty()) {
       final CalendarResourceURIs uri = CalendarResourceURIs.get();
       List<CalendarEventOccurrenceEntity> events =
-          CalendarWebManager.get(allowedComponentIds.get(0))
+          CalendarWebManager.get(allowedComponentIds.getFirst())
               .getNextEventOccurrences(allowedComponentIds, emptySet(), emptySet(), emptySet(),
                   AlmanachSettings.getZoneId(),
                   AlmanachSettings.getNbOccurrenceLimitOfShortNextEventView())
@@ -515,13 +508,13 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
                 entity.withOccurrencePermalinkUrl(uri.ofOccurrencePermalink(o));
                 return entity;
               })
-              .collect(toList());
+              .toList();
 
       result = filterNextEvents(events, nbDays, includeToday, onlyImportant);
     }
     NextEvents nextEvents = new NextEvents(result);
     if (allowedComponentIds.size() == 1) {
-      nextEvents.setApp(getAppById(allowedComponentIds.get(0)));
+      nextEvents.setApp(getAppById(allowedComponentIds.getFirst()));
     }
     return nextEvents;
   }
@@ -555,13 +548,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       return CollectionUtil
           .asList(getOrganisationController().getComponentIdsForUser(getUserId(), componentName));
     }
-    List<String> allowedComponentIds = new ArrayList<>();
-    for (String componentId : componentIds) {
-      if (isComponentAvailable(componentId)) {
-        allowedComponentIds.add(componentId);
-      }
-    }
-    return allowedComponentIds;
+    return Arrays.stream(componentIds)
+        .filter(this::isComponentAvailable)
+        .toList();
   }
 
   public List<PublicationDetail> getLastUpdatedPublicationsSince(String spaceId, int sinceNbDays,
@@ -584,7 +573,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         .getAllLinksOfCurrentUser()
         .stream()
         .filter(LinkDetail::isVisible)
-        .collect(toList());
+        .toList();
   }
 
   public Questions getQuestions() {
@@ -678,7 +667,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       displayLoginHomepage = true;
 
       if (!isUserCanDisplayMainHomePage()) {
-        spaceId = getBannerMainItems().get(0).getSpace().getId();
+        spaceId = getBannerMainItems().getFirst().getSpace().getId();
         displayLoginHomepage = false;
         login = null;
       }
@@ -782,7 +771,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .map(i -> getOrganisationController().getDomain(i.trim()))
           .filter(Objects::nonNull)
           .distinct()
-          .collect(toList());
+          .toList();
     }
     return directoryDomains;
   }
@@ -794,7 +783,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .map(groupId -> Group.getById(groupId.trim()))
           .filter(Objects::nonNull)
           .distinct()
-          .collect(toList());
+          .toList();
     }
     return directoryGroups;
   }
@@ -805,6 +794,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         ((isAnonymousUser() && settings.isDisplayDirectoryForAnonymous()) ||
             (!isAnonymousUser() && isAccessGuest() && settings.isDisplayDirectoryForGuest()) ||
             super.isDirectoryDisplayEnabled());
+  }
+
+  public boolean isBookmarkDisplayEnabled() {
+    return getSettings("banner.bookmark.enable");
   }
 
   public String getDirectoryURL() {
@@ -822,9 +815,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
   }
 
-  public boolean isBookmarkDisplayEnabled() {
-    return getSettings("banner.bookmark.enable");
-  }
   public RSSFeeds getRSSFeeds() {
     String componentId = getSettings("home.rss.appId", "");
     if (StringUtil.isDefined(componentId)) {
@@ -979,7 +969,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     } else {
       List<String> allowedComponentIds = getComponentIdsForNews(index);
       if (allowedComponentIds.size() == 1) {
-        uniqueAppId = allowedComponentIds.get(0);
+        uniqueAppId = allowedComponentIds.getFirst();
       }
       news = getNewsByComponentIds(allowedComponentIds, importantOnly);
     }
@@ -1071,7 +1061,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .stream()
           .filter(i -> includeSubSpaces || i.getSpaceId().equals(localSpaceId))
           .map(SilverpeasComponentInstance::getId)
-          .collect(toList());
+          .toList();
     } catch (AdminException e) {
       throw new SilverpeasRuntimeException(e);
     }
@@ -1108,7 +1098,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     NewUsersList newUsersList = new NewUsersList(users.subList(0, nbUsersDisplayed));
     newUsersList.setAvatar(getSettings(paramPrefix + "users.avatar", true));
     List<String> fields = of(split(getSettings(paramPrefix + "users.fields", ""), " "))
-        .collect(toList());
+        .toList();
     newUsersList.setFields(fields);
     return newUsersList;
   }
@@ -1121,7 +1111,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
           .flatMap(i -> of(organizationController.getAllUsers(i)).map(User.class::cast))
           .distinct()
           .sorted(new UserDetail.OnCreationDate().reversed())
-          .collect(toList());
+          .toList();
       return getNewUsersList(true, newUsers);
     }
     return null;
@@ -1144,16 +1134,15 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private List<String> getAppNewsIdSubscribed() {
-    List<String> newsComponentsIds = new ArrayList<>();
-    SubscriptionList subscriptions = SubscriptionServiceProvider.getSubscribeService().getByUserSubscriber(getUserId());
-    for (Object subscription: subscriptions) {
-      if (subscription instanceof ComponentSubscription) {
-        ComponentSubscription componentSubscription = (ComponentSubscription) subscription;
-        if (componentSubscription.getResource().getInstanceId().startsWith(QUICKINFO)) {
-          newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
-        }
-      }
-    }
+    List<String> newsComponentsIds;
+    SubscriptionList subscriptions =
+        SubscriptionServiceProvider.getSubscribeService().getByUserSubscriber(getUserId());
+    newsComponentsIds = subscriptions.stream()
+        .filter(s -> s instanceof ComponentSubscription cs &&
+            cs.getResource().getInstanceId().startsWith(QUICKINFO))
+        .map(s -> (ComponentSubscription) s)
+        .map(s -> s.getResource().getInstanceId())
+        .toList();
     return newsComponentsIds;
   }
 
