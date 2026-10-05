@@ -1,0 +1,166 @@
+/********************************/
+/** BackEnd Applications List **/
+/**This CSS code will be applied as long as the application's design remains outdated. **/
+/*******************************/
+
+ul.applicationsTypeList * {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+ul.applicationsTypeList {
+  padding: 0;
+  margin: 0;
+  width: auto;
+  height: 100%;
+  border-left: 0;
+  background: transparent url();
+
+}
+
+li.applicationsType {
+  width: auto;
+  height: auto;
+}
+
+li.applicationsType a.linkSee {
+  cursor: pointer;
+  line-height: 1.1em;
+  font-size: 1em;
+  color: #FFF;
+  display: inherit;
+  height: auto;
+  background: transparent url();
+  display: none;
+}
+
+li.applicationsType a span {
+  padding: 0;
+  display: inherit;
+  height: auto;
+}
+
+li.applicationsType a.linkSee:hover {
+  background-color: transparent;
+  background-position: 0 0;
+}
+
+li.applicationsType a.linkSee.select {
+  background-color: transparent;
+  color: inherit;
+  background-position: 0 0;
+}
+
+ul.applicationList {
+  position: relative;
+  top: inherit;
+  left: inherit;
+  background-color: transparent;
+  width: auto;
+  height: 100%;
+  margin: 0;
+  display: inherit;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+li.application {
+  position: relative;
+  display: block;
+  margin: 0 2em 2em 0;
+  padding: 1em;
+  width: auto;
+  height: auto;
+  float: none;
+  overflow: auto;
+  border: 0;
+  border-radius: 10px;
+  background: var(--bgColor-de-fond-clair-bloc-home) url();
+  flex-basis: 250px;
+}
+
+li.application:hover {
+  background: #FFF url();
+  box-shadow: -2px 2px 3px -1px rgba(0, 0, 0, 0.5);
+}
+
+
+li.application a {
+  padding: 0;
+  width: auto;
+  height: auto;
+  display: inherit;
+  vertical-align: middle;
+
+}
+
+li.application a:hover {
+  background: transparent url();
+}
+
+li.application img {
+  position: inherit;
+  bottom: inherit;
+  right: inherit;
+  border: 0;
+  float: left;
+  margin-right: 1em;
+  width: 35px;
+}
+
+li.application .applicationDescription {
+  font-size: inherit;
+  color: #666;
+  line-height: 1.1em;
+  display: none;
+  text-align: justify;
+  padding-right: 15px;
+}
+
+li.application .applicationName {
+  font-size: 1.2em;
+  font-weight: normal;
+  color: #444;
+  padding-left: 12px
+}
+
+.type_01 li.application {
+  height: auto;
+}
+
+.type_01 li.application a {
+  height: auto;
+}
+
+.type_01 li.application img {
+  position: inherit;
+  bottom: inherit;
+  right: inherit;
+}
+
+.type_01 li.application .applicationName {
+  font-size: 1.2em;
+  font-weight: normal;
+  color: #444;
+  padding-left: 12px
+}
+
+.type_01 li.application .applicationDescription {
+  line-height: 1.1em;
+  display: none;
+  text-align: justify;
+  padding-right: 15px;
+}
+
+.type_01 li.application a:hover,
+.type_01 a span,
+.type_02 a span,
+.type_03 a span,
+.type_04 a span,
+.type_05 a span,
+.type_06 a span {
+  background: transparent url();
+}
+
