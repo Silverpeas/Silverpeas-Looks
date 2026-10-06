@@ -126,11 +126,8 @@ li.application .applicationName {
   padding-left: 12px
 }
 
-.type_01 li.application {
-  height: auto;
-}
-
-.type_01 li.application a {
+.type_01 li.application,
+.type_01 li.application a { 
   height: auto;
 }
 
