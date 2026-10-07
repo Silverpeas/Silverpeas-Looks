@@ -429,13 +429,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         if (!importantOnly) {
             return allNews;
         }
-        List<News> importantNews = new ArrayList<>();
-        for (News news : allNews) {
-            if (news.isImportant()) {
-                importantNews.add(news);
-            }
-        }
-        return importantNews;
+        return allNews.stream()
+          .filter(News::isImportant)
+          .collect(Collectors.toList());
     }
 
     public NewsList getAllNewsByTaxonomyPosition(String taxonomyPosition) {
@@ -546,13 +542,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             return CollectionUtil
                     .asList(getOrganisationController().getComponentIdsForUser(getUserId(), componentName));
         }
-        List<String> allowedComponentIds = new ArrayList<>();
-        for (String componentId : componentIds) {
-            if (isComponentAvailable(componentId)) {
-                allowedComponentIds.add(componentId);
-            }
-        }
-        return allowedComponentIds;
+
+        return Arrays.stream(componentIds)
+            .filter(this::isComponentAvailable)
+            .collect(Collectors.toList());
     }
 
     public List<PublicationDetail> getLastUpdatedPublicationsSince(String spaceId, int sinceNbDays,
