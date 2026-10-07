@@ -56,7 +56,7 @@
     <dependency>
       <groupId>org.silverpeas.components.blog</groupId>
       <artifactId>silverpeas-blog</artifactId>
-      <version>${silverpeas.version}</version>
+      <version>${components.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
