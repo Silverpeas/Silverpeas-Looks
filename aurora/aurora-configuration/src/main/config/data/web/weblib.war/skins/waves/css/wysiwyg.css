@@ -1,0 +1,68 @@
+
+/********************** WYSIWYG *************************************/
+
+h2.wysiwyg-title1 {
+    border: 0;
+    font-size: 2em;
+    color: var(--color-text);
+    font-weight: 500;
+    line-height: 1em;
+    position: relative;
+    margin: 0 0 1em;
+    padding: 0.5em 0;
+}
+
+h2.wysiwyg-title1:after {
+    content: ' ';
+    background-color: var(--color-flashy-principale);
+    position: absolute;
+    bottom: 0em;
+    left: 0;
+    width: 2em;
+    height: 4px;
+}
+
+h3.wysiwyg-title2 {
+    border: 0;
+    color: var(--color-text);
+    font-size: 1.85em;
+    padding: 0.75em 0;
+    margin: 0 0 1em;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+strong.wysiwyg-focus {
+	background-color:var(--bgColor-color-im-info);
+	color:#000;
+	padding: 0.1em 0.2em;
+	font-weight: 500;
+}
+
+p.wysiwyg-important {
+	background-color: var(--bgColor-de-fond-clair);
+	border-radius: 0 10px 0 10px;
+	padding: 9.5px;
+	border: 1px solid var(--border-color-bloc-fond-clair);
+	font-size: 1.1em;
+}
+
+blockquote {
+	border: 0;
+	margin: 0;
+	padding-left: 1.5em;
+	font-style: italic;
+	color: #666;
+}
+
+#richContent a,
+.rich-content a, 
+.cke_editable a {
+	color: var(--color-flashy-principale);
+	text-decoration: underline;
+}
+#richContent a:hover,
+.rich-content a:hover,
+.cke_editable a:hover {
+	color: var(--color-action);
+}
