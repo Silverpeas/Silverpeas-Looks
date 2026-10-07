@@ -429,13 +429,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         if (!importantOnly) {
             return allNews;
         }
-        List<News> importantNews = new ArrayList<>();
-        for (News news : allNews) {
-            if (news.isImportant()) {
-                importantNews.add(news);
-            }
-        }
-        return importantNews;
+        return allNews.stream()
+          .filter(News::isImportant)
+          .collect(Collectors.toList());
     }
 
     public NewsList getAllNewsByTaxonomyPosition(String taxonomyPosition) {
@@ -546,13 +542,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             return CollectionUtil
                     .asList(getOrganisationController().getComponentIdsForUser(getUserId(), componentName));
         }
-        List<String> allowedComponentIds = new ArrayList<>();
-        for (String componentId : componentIds) {
-            if (isComponentAvailable(componentId)) {
-                allowedComponentIds.add(componentId);
-            }
-        }
-        return allowedComponentIds;
+
+        return Arrays.stream(componentIds)
+            .filter(this::isComponentAvailable)
+            .collect(Collectors.toList());
     }
 
     public List<PublicationDetail> getLastUpdatedPublicationsSince(String spaceId, int sinceNbDays,
@@ -1119,7 +1112,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         return null;
     }
 
-    public List<NewsList> getAllNewsBySubscription() {
+    public List<NewsList> getAllNewsBySubscription() throws AdminException {
         List<NewsList> news = new ArrayList<>();
         List<String> newsComponentsIds = getAppNewsIdSubscribed();
         for (String componentId : newsComponentsIds) {
@@ -1135,21 +1128,24 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         return news;
     }
 
-    private List<String> getAppNewsIdSubscribed() {
+    private List<String> getAppNewsIdSubscribed() throws AdminException {
         List<String> newsComponentsIds = new ArrayList<>();
         SubscriptionList subscriptions = SubscriptionServiceProvider.getSubscribeService().getByUserSubscriber(getUserId());
         for (Object subscription : subscriptions) {
             if (subscription instanceof ComponentSubscription) {
                 ComponentSubscription componentSubscription = (ComponentSubscription) subscription;
                 if (componentSubscription.getResource().getInstanceId().startsWith(QUICKINFO)) {
+                  ComponentInstLight componentInstLight = admin.getComponentInstLight(componentSubscription.getResource().getInstanceId());
+                  if (!componentInstLight.isRemoved()) {
                     newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
+                  }
                 }
             }
         }
         return newsComponentsIds;
     }
 
-    public List<AuroraNews> getLastNewsSubscribed() {
+    public List<AuroraNews> getLastNewsSubscribed() throws AdminException {
         List<String> newsComponentsIds = getAppNewsIdSubscribed();
         List<AuroraNews> news = new ArrayList<>();
         for (String componentId : newsComponentsIds) {
