@@ -2377,21 +2377,6 @@ silverpeas-calendar-event-occurrence-list .full-date {
 	padding: 0.5em;
 }
 
-/* QUESTION REPLY  */
-.publisher #menubar-creation-actions {
-	position: relative;
-	border: 0;
-	border-top: 1px solid #f1790f;
-	border-bottom: 1px solid #f1790f;
-	border-radius: 0;
-	right: inherit;
-	top: inherit;
-}
-
-.publisher .container-filter {
-	margin-right: 0;
-}
-
 /* CLASSIFIELD petites annonces */
 #classifieds #categories .ViewAllClassifiedsByCategory a,
 #classifieds #categories .newClassified a {
