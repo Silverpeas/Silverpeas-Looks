@@ -118,7 +118,7 @@
 
       whenSilverpeasReady(function() {
         // if right column is empty
-        if ($.trim($(".rightContent").text()).length === 0) {
+        if ($(".rightContent").text().trim().length === 0) {
           $(".rightContent").css("display", "none");
           $(".principalContent").css("margin-right", "0");
         }

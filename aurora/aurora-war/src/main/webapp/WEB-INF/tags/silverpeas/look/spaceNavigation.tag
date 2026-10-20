@@ -45,7 +45,7 @@
   <!--
   whenSilverpeasReady(function() {
     // if at least one item have got a description
-    if ($.trim($(".spaceNavigation li p").text()).length !== 0) {
+    if ($(".spaceNavigation li p").text().trim().length !== 0) {
       $(".spaceNavigation li").css("min-height", "43px");
       $(".spaceNavigation li").css("line-height", "40px");
     }

@@ -1596,17 +1596,6 @@ div.yuimenu {
 	border-bottom: 0
 }
 
-/* TCHAT */
-
-.jsxc_bar,
-#silverchat_roster_header {
-	background-color: var(--color-flashy-principale) !important;
-}
-
-#silverchat_roster_header #silverchat_notice span {
-	background-color: #000 !important;
-}
-
 /************ FONT SIZE & COLOR ***************/
 #blog #titresTopics a,
 #blog #titresArchives a,

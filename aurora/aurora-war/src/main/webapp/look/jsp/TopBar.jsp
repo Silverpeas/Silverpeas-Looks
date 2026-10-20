@@ -223,7 +223,7 @@
         }
       }
 
-      $("#inputSearchSwitchable").keypress(function(e) {
+      $("#inputSearchSwitchable").on("keypress", function(e) {
         if (e.which === 13) {
           e.preventDefault();
           searchEngine();
@@ -239,7 +239,7 @@
 
         $('#select-user-group-queryDirectory').hide();
 
-        $('#searchEngineScope').click(function() {
+        $('#searchEngineScope').on('click', function() {
           searchScope = searchEngineScope;
           $(this).removeClass('off').addClass('on');
           $('#directoryScope').removeClass('on').addClass('off');
@@ -249,7 +249,7 @@
           $('#query').show();
         });
 
-        $('#directoryScope').click(function() {
+        $('#directoryScope').on('click', function() {
           searchScope = directoryScope;
           $(this).removeClass('off').addClass('on');
           $('#searchEngineScope').removeClass('on').addClass('off');
@@ -270,14 +270,11 @@
   		$('input[name="queryDirectory"]').attr("placeholder", label);
 	}, 1000);
 
-        $('#show-menu-spacePerso').hover(function() {
+        $('#show-menu-spacePerso').on('mouseenter', function() {
           $('.spacePerso').show();
-        }, function() {
         });
 
-        $('.avatarName').hover(function() {
-
-        }, function() {
+        $('.avatarName').on('mouseleave', function() {
           $('.spacePerso').hide();
         });
 

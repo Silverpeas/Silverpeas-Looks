@@ -107,17 +107,17 @@
 
       $('.description-item-rssNews a').attr("target","_blank");
 
-      $('.deploy-item').click(function() {
+      $('.deploy-item').on('click', function() {
         $(this).children('.itemDeploy').toggle();
         $(this).toggleClass('open');
       });
-      $('.aggregate .rss_type a').click(function() {
+      $('.aggregate .rss_type a').on('click', function() {
         var channel = $(this).attr('id');
         $('.'+channel).toggle();
         $(this).toggleClass('off');
       });
 
-      $('.rss_tab .rss_type > a').click(function() {
+      $('.rss_tab .rss_type > a').on('click', function() {
         $('.rss_tab .selected').removeClass('selected');
         $(this).addClass('selected');
         var channel = $(this).attr('id');
@@ -125,7 +125,7 @@
         $('.'+channel).show();
       });
 
-      var firstFeed = $('.rss_tab .rss_type > a:first');
+      var firstFeed = $('.rss_tab .rss_type > a').first();
       firstFeed.addClass('selected');
       var firstFeedId = firstFeed.attr('id');
       $('.rss_tab .item-channel').hide();
