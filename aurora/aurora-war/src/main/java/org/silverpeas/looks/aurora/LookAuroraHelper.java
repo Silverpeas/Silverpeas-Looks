@@ -431,7 +431,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         }
         return allNews.stream()
           .filter(News::isImportant)
-          .collect(Collectors.toList());
+          .collect(toList());
     }
 
     public NewsList getAllNewsByTaxonomyPosition(String taxonomyPosition) {
@@ -545,7 +545,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
         return Arrays.stream(componentIds)
             .filter(this::isComponentAvailable)
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     public List<PublicationDetail> getLastUpdatedPublicationsSince(String spaceId, int sinceNbDays,
@@ -1112,40 +1112,40 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         return null;
     }
 
-    public List<NewsList> getAllNewsBySubscription() throws AdminException {
+    public List<NewsList> getAllNewsBySubscription() {
         List<NewsList> news = new ArrayList<>();
         List<String> newsComponentsIds = getAppNewsIdSubscribed();
         for (String componentId : newsComponentsIds) {
-            int maxHistory = getSettings("subscription.news.maxbycompoments", 10);
-            List<News> l = QuickInfoService.get().getVisibleNews(componentId);
-            if (l.size() > maxHistory) {
-                l = l.subList(0, maxHistory);
-            }
-            NewsList n = new NewsList(l, getAppById(componentId));
-            news.add(n);
+          int maxHistory = getSettings("subscription.news.maxbycompoments", 10);
+          List<News> l = QuickInfoService.get().getVisibleNews(componentId);
+          if (l.size() > maxHistory) {
+            l = l.subList(0, maxHistory);
+          }
+          NewsList n = new NewsList(l, getAppById(componentId));
+          news.add(n);
         }
 
         return news;
     }
 
-    private List<String> getAppNewsIdSubscribed() throws AdminException {
+    private List<String> getAppNewsIdSubscribed() {
         List<String> newsComponentsIds = new ArrayList<>();
         SubscriptionList subscriptions = SubscriptionServiceProvider.getSubscribeService().getByUserSubscriber(getUserId());
         for (Object subscription : subscriptions) {
             if (subscription instanceof ComponentSubscription) {
                 ComponentSubscription componentSubscription = (ComponentSubscription) subscription;
                 if (componentSubscription.getResource().getInstanceId().startsWith(QUICKINFO)) {
-                  ComponentInstLight componentInstLight = admin.getComponentInstLight(componentSubscription.getResource().getInstanceId());
-                  if (!componentInstLight.isRemoved()) {
-                    newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
-                  }
+                    ComponentInstLight componentInstLight = getOrganisationController().getComponentInstLight(componentSubscription.getResource().getInstanceId());
+                    if (isComponentAvailable(componentSubscription.getResource().getInstanceId())) {
+                      newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
+                    }
                 }
             }
         }
         return newsComponentsIds;
     }
 
-    public List<AuroraNews> getLastNewsSubscribed() throws AdminException {
+    public List<AuroraNews> getLastNewsSubscribed() {
         List<String> newsComponentsIds = getAppNewsIdSubscribed();
         List<AuroraNews> news = new ArrayList<>();
         for (String componentId : newsComponentsIds) {
