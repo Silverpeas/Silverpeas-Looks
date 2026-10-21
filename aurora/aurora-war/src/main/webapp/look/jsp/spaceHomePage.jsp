@@ -104,7 +104,7 @@
     <view:includePlugin name="pdc" />
     <view:includePlugin name="lightslideshow"/>
     <view:includePlugin name="toggle"/>
-    <view:script src="/look/jsp/js/responsiveslides.min.js"/>
+    <view:script src="/look/jsp/js/responsiveslides.js"/>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>

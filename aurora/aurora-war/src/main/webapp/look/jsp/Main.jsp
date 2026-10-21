@@ -69,7 +69,7 @@
       min-height:644px;
     }
     </style>
-    <script type="text/javascript" src="js/responsiveslides.min.js"></script>
+    <view:script src="/look/jsp/js/responsiveslides.js"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
