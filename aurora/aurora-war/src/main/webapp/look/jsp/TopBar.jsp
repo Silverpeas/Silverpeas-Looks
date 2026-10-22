@@ -85,7 +85,7 @@
     <view:includePlugin name="basketSelection"/>
     <view:includePlugin name="ticker" />
 
-    <view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise"/>
+    <view:loadScript src="js/jquery.smartmenus.min.js" jsPromiseName="smartMenuPromise" once="true"/>
     <link href="css/sm-core-css.css" rel="stylesheet" type="text/css" />
     <link href='css/${smartmenusSkin}/${smartmenusSkin}.css' rel='stylesheet' type='text/css' />
 
