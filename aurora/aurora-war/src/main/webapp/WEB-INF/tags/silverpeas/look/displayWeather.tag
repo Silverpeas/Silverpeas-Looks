@@ -131,7 +131,7 @@
        </c:forEach>
        var cityId = $.cookie(weatherCookieName);
        if (!cityId || !cities.includes(cityId)) {
-          cityId = $("#localisation-weather a:first").attr("id");
+          cityId = $("#localisation-weather a").first().attr("id");
        } else {
       }
        showWeather(cityId);

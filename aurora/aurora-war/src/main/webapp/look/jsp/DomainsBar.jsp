@@ -164,7 +164,7 @@ gef.setSpaceIdForCurrentRequest(spaceId);
    * Using "jQuery" instead of "$" at this level prevents of getting conficts with another
    * javascript plugin.
    */
-  jQuery(document).ready(function() {
+  jQuery(function() {
 	  <% if (displayPersonalSpace) { %>
 	    jQuery("#spacePerso .spaceURL").css("display", "block");
       openMySpace({

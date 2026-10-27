@@ -968,12 +968,6 @@ silverpeas-time-picker .txtlibform {
   font-family: "Courier New";
 }
 
-.jsxc_bar, #silverchat_roster_header {
-	background-color: var(--color-flashy-principale) !important;
-}
-#silverchat_roster_header #silverchat_notice span {
-    background-color: #000 !important;
-}
 /************ TAILLE DES POLICES CENTRALISEE ***************/
 
 #browseBar #breadCrumb a:visited, #browseBar #breadCrumb a:active, #browseBar #breadCrumb a:link, #browseBar #breadCrumb a:hover, #browseBar #breadCrumb, #browseBar .information {

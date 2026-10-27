@@ -104,7 +104,7 @@
     <view:includePlugin name="pdc" />
     <view:includePlugin name="lightslideshow"/>
     <view:includePlugin name="toggle"/>
-    <view:script src="/look/jsp/js/responsiveslides.min.js"/>
+    <view:script src="/look/jsp/js/responsiveslides.js"/>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
@@ -118,7 +118,7 @@
 
       whenSilverpeasReady(function() {
         // if right column is empty
-        if ($.trim($(".rightContent").text()).length === 0) {
+        if ($(".rightContent").text().trim().length === 0) {
           $(".rightContent").css("display", "none");
           $(".principalContent").css("margin-right", "0");
         }
