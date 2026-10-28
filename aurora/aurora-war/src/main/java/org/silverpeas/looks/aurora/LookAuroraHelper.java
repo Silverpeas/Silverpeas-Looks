@@ -1132,7 +1132,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         if (subscription instanceof ComponentSubscription) {
             ComponentSubscription componentSubscription = (ComponentSubscription) subscription;
             if (componentSubscription.getResource().getInstanceId().startsWith(QUICKINFO)) {
-                ComponentInstLight componentInstLight = getOrganisationController().getComponentInstLight(componentSubscription.getResource().getInstanceId());
                 if (isComponentAvailable(componentSubscription.getResource().getInstanceId())) {
                   newsComponentsIds.add(componentSubscription.getResource().getInstanceId());
                 }
