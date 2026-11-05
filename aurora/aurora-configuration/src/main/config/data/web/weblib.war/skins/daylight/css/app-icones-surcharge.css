@@ -1,0 +1,442 @@
+
+/********* SURCHARGE ICONES DES APP **********/
+.browseComponent {
+	position: relative;
+}
+
+#spaces .spaceLevel1On .browseComponent>img,
+#spaces .spaceLevel1On .browseComponentActiv>img {
+  display: none;
+}
+
+.spaceHome .spaceNavigation li.browse-component {
+  padding-left: 1em;
+}
+
+.spaceHome .spaceNavigation li div {
+    align-self: center;
+	line-height: 2em;
+}
+
+#nav .displayMenuAppIcons-true .app img ,
+.spaceHome .spaceNavigation li img {
+  display:none;
+}
+
+#nav .displayMenuAppIcons-true ul .app a, 
+#nav .displayMenuAppIcons-true ul .app a:hover, 
+#nav .displayMenuAppIcons-true ul .app a:focus, 
+#nav .displayMenuAppIcons-true ul .app a:active, 
+#nav .displayMenuAppIcons-true ul .app a.highlighted{
+	padding-left: 1.25em;
+}
+
+.spaceNavigation .browse-component[onclick*='goToComponentItem']::before {
+	content: '';
+	background-size: auto 100%;
+	width: calc(var(--sp-font-size) * 2);
+	height: calc(var(--sp-font-size) * 2);
+	display: inline-block;
+	margin: 0.25em auto;
+    align-self: center;
+}
+
+#spaces .spaceLevel1On .browseComponent>a,
+#spaces .spaceLevel1On .browseComponentActiv>a {
+    padding: 0.5em 0.5em 0.5em 1.15em;
+}
+
+#spaces .browseComponentActiv a::before,
+#spaces .browseComponent a::before,
+#nav  li.app>a::before ,
+.admin-navigation div a:has(.component-icon)::before {
+	content: '';
+	background-size: auto 100%;
+	width: calc(var(--sp-font-size) * 1.5);
+	height: calc(var(--sp-font-size) * 1.5);
+	display: inline-block;
+	margin: 0 0.5em 0 0;
+	vertical-align: text-bottom;
+}
+
+ul.applicationsTypeList .application a::before{
+	content: '';
+	background-image: var(--ico-app-workflow);
+	background-size: auto 100%;
+	width: calc(var(--sp-font-size) * 2);
+	height: calc(var(--sp-font-size) * 2);
+	display: inline-block;
+	margin: 0 0.5em 0 0;
+	vertical-align: text-bottom;
+}
+
+ul.applicationsTypeList li.application img,
+.admin-navigation div a img.component-icon {
+	display: none;
+}
+
+ul.applicationsTypeList li.application .applicationName {
+	padding:0.25em 0 0 0 ;
+}
+
+#contentSpacespacePerso a[href*="javaScript:openComponent"]::before {
+	content: '';
+	background-size: auto 100%;
+	width: calc(var(--sp-font-size) * 2);
+	height: calc(var(--sp-font-size) * 2);
+	display: inline-block;
+	margin: 0 0.5em 0 0;
+	vertical-align: middle;
+}
+
+.browseComponentActiv[id*='webPages'] a::before,
+.browseComponent[id*='webPages'] a::before,
+.spaceNavigation .browse-component[onclick*='webPages']::before,
+#nav .sm-silverpeas ul li[id*='webPages']>a::before,
+ul.applicationsTypeList #webPages a::before,
+.admin-navigation div a:has(img[src*='webPages'])::before {
+	background-image: var(--ico-app-webPages);
+}
+
+.browseComponentActiv[id*='kmelia'] a::before,
+.browseComponent[id*='kmelia'] a::before,
+.spaceNavigation .browse-component[onclick*='kmelia']::before,
+#nav .sm-silverpeas ul li[id*='kmelia']>a::before,
+.spaceNavigation .browse-component[onclick*='kmax']::before,
+#nav .sm-silverpeas ul li[id*='kmax']>a::before ,
+.spaceNavigation .browse-component[onclick*='toolbox']::before,
+#nav .sm-silverpeas ul li[id*='toolbox']>a::before,
+ul.applicationsTypeList #toolbox a::before,
+ul.applicationsTypeList #kmax a::before,
+ul.applicationsTypeList #kmelia a::before ,
+.admin-navigation div a:has(img[src*='toolbox'])::before ,
+.admin-navigation div a:has(img[src*='kmax'])::before ,
+.admin-navigation div a:has(img[src*='kmelia'])::before  {
+	background-image: var(--ico-app-kmelia);
+}
+
+.browseComponentActiv[id*='quickinfo'] a::before,
+.browseComponent[id*='quickinfo'] a::before,
+.spaceNavigation .browse-component[onclick*='quickinfo']::before,
+#nav .sm-silverpeas ul li[id*='quickinfo']>a::before ,
+ul.applicationsTypeList #quickinfo a::before,
+.admin-navigation div a:has(img[src*='quickinfo'])::before  {
+	background-image: var(--ico-app-quickinfo);
+}
+
+.browseComponentActiv[id*='rssAgregator'] a::before,
+.browseComponent[id*='rssAgregator'] a::before,
+.spaceNavigation .browse-component[onclick*='rssAgregator']::before,
+#nav .sm-silverpeas ul li[id*='rssAgregator']>a::before ,
+ul.applicationsTypeList #rssAgregator a::before ,
+.admin-navigation div a:has(img[src*='rssAgregator'])::before {
+	background-image: var(--ico-app-rssAgregator);
+}
+
+.browseComponentActiv[id*='almanach'] a::before,
+.browseComponent[id*='almanach'] a::before,
+.spaceNavigation .browse-component[onclick*='almanach']::before,
+#userCalendar0_PCI a:before,
+#nav .sm-silverpeas ul li[id*='almanach']>a::before,
+ul.applicationsTypeList #almanach a::before ,
+.admin-navigation div a:has(img[src*='almanach'])::before {
+	background-image: var(--ico-app-almanach);
+}
+
+.browseComponentActiv[id*='formsOnline'] a::before,
+.browseComponent[id*='formsOnline'] a::before,
+.spaceNavigation .browse-component[onclick*='formsOnline']::before,
+#nav .sm-silverpeas ul li[id*='formsOnline']>a::before ,
+ul.applicationsTypeList #formsOnline a::before,
+.admin-navigation div a:has(img[src*='formsOnline'])::before {
+	background-image: var(--ico-app-formsOnline);
+}
+
+.browseComponentActiv[id*='classifieds'] a::before,
+.browseComponent[id*='classifieds'] a::before,
+.spaceNavigation .browse-component[onclick*='classifieds']::before,
+#nav .sm-silverpeas ul li[id*='classifieds']>a::before ,
+ul.applicationsTypeList #classifieds a::before,
+.admin-navigation div a:has(img[src*='classifieds'])::before {
+	background-image: var(--ico-app-classifieds);
+}
+
+.browseComponentActiv[id*='mailinglist'] a::before,
+.browseComponent[id*='mailinglist'] a::before,
+.spaceNavigation .browse-component[onclick*='mailinglist']::before,
+#nav .sm-silverpeas ul li[id*='mailinglist']>a::before ,
+ul.applicationsTypeList #mailinglist a::before ,
+.admin-navigation div a:has(img[src*='mailinglist'])::before{
+	background-image: var(--ico-app-mailinglist);
+}
+
+
+.browseComponentActiv[id*='forums'] a::before,
+.browseComponent[id*='forums'] a::before,
+.spaceNavigation .browse-component[onclick*='forums']::before,
+#nav .sm-silverpeas ul li[id*='forums']>a::before ,
+ul.applicationsTypeList #forums a::before ,
+.admin-navigation div a:has(img[src*='forums'])::before{
+	background-image: var(--ico-app-forums);
+}
+
+.browseComponentActiv[id*='blog'] a::before,
+.browseComponent[id*='blog'] a::before,
+.spaceNavigation .browse-component[onclick*='blog']::before,
+#nav .sm-silverpeas ul li[id*='blog']>a::before,
+ul.applicationsTypeList #blog a::before ,
+.admin-navigation div a:has(img[src*='blog'])::before {
+	background-image: var(--ico-app-blog);
+}
+
+.browseComponentActiv[id*='hyperLink'] a::before,
+.browseComponent[id*='hyperLink'] a::before,
+.spaceNavigation .browse-component[onclick*='hyperLink']::before,
+#nav .sm-silverpeas ul li[id*='hyperLink']>a::before ,
+ul.applicationsTypeList #hyperLink a::before ,
+.admin-navigation div a:has(img[src*='hyperLink'])::before{
+	background-image: var(--ico-app-hyperLink);
+}
+
+.browseComponentActiv[id*='infoLetter'] a::before,
+.browseComponent[id*='infoLetter'] a::before,
+.spaceNavigation .browse-component[onclick*='infoLetter']::before,
+#nav .sm-silverpeas ul li[id*='infoLetter']>a::before ,
+ul.applicationsTypeList #infoLetter a::before ,
+.admin-navigation div a:has(img[src*='infoLetter'])::before{
+	background-image: var(--ico-app-infoLetter);
+}
+
+.browseComponentActiv[id*='gallery'] a::before,
+.browseComponent[id*='gallery'] a::before,
+.spaceNavigation .browse-component[onclick*='gallery']::before,
+#nav .sm-silverpeas ul li[id*='gallery']>a::before ,
+ul.applicationsTypeList #gallery a::before ,
+.admin-navigation div a:has(img[src*='gallery'])::before{
+	background-image: var(--ico-app-gallery);
+}
+
+.browseComponentActiv[id*='classifields'] a::before,
+.browseComponent[id*='classifields'] a::before,
+.spaceNavigation .browse-component[onclick*='classifields']::before,
+#nav .sm-silverpeas ul li[id*='classifields']>a::before ,
+ul.applicationsTypeList #classifields a::before,
+.admin-navigation div a:has(img[src*='classifields'])::before {
+	background-image: var(--ico-app-classifields);
+}
+
+.browseComponentActiv[id*='questionReply'] a::before,
+.browseComponent[id*='questionReply'] a::before,
+.spaceNavigation .browse-component[onclick*='questionReply']::before,
+#nav .sm-silverpeas ul li[id*='questionReply']>a::before ,
+ul.applicationsTypeList #questionReply a::before,
+.admin-navigation div a:has(img[src*='questionReply'])::before {
+	background-image: var(--ico-app-questionReply);
+}
+
+.browseComponentActiv[id*='classifields'] a::before,
+.browseComponent[id*='classifields'] a::before,
+.spaceNavigation .browse-component[onclick*='classifields']::before,
+#nav .sm-silverpeas ul li[id*='classifields']>a::before ,
+ul.applicationsTypeList #classifields a::before ,
+.admin-navigation div a:has(img[src*='classifields'])::before{
+	background-image: var(--ico-app-classifields);
+}
+
+.browseComponentActiv[id*='silverCrawler'] a::before,
+.browseComponent[id*='silverCrawler'] a::before,
+.spaceNavigation .browse-component[onclick*='silverCrawler']::before,
+#nav .sm-silverpeas ul li[id*='silverCrawler']>a::before ,
+ul.applicationsTypeList #silverCrawler a::before ,
+.admin-navigation div a:has(img[src*='silverCrawler'])::before{
+	background-image: var(--ico-app-silverCrawler);
+}
+
+.browseComponentActiv[id*='orgchartGroup'] a::before,
+.browseComponent[id*='orgchartGroup'] a::before,
+.spaceNavigation .browse-component[onclick*='orgchartGroup']::before,
+#nav .sm-silverpeas ul li[id*='orgchartGroup']>a::before ,
+ul.applicationsTypeList #orgchartGroup a::before,
+.admin-navigation div a:has(img[src*='orgchartGroup'])::before {
+	background-image: var(--ico-app-orgchartGroup);
+}
+
+.browseComponentActiv[id*='myDB'] a::before,
+.browseComponent[id*='myDB'] a::before,
+.spaceNavigation .browse-component[onclick*='myDB']::before,
+#nav .sm-silverpeas ul li[id*='myDB']>a::before,
+ul.applicationsTypeList #myDB a::before  ,
+.admin-navigation div a:has(img[src*='myDB'])::before{
+	background-image: var(--ico-app-myDB);
+}
+
+.browseComponentActiv[id*='organizationchart'] a::before,
+.browseComponent[id*='organizationchart'] a::before,
+.spaceNavigation .browse-component[onclick*='organizationchart']::before,
+#nav .sm-silverpeas ul li[id*='organizationchart']>a::before ,
+ul.applicationsTypeList #organizationchart a::before,
+.admin-navigation div a:has(img[src*='organizationchart'])::before {
+	background-image: var(--ico-app-organizationchart);
+}
+
+.browseComponentActiv[id*='connecteurJDBC'] a::before,
+.browseComponent[id*='connecteurJDBC'] a::before,
+.spaceNavigation .browse-component[onclick*='connecteurJDBC']::before,
+#nav .sm-silverpeas ul li[id*='connecteurJDBC']>a::before ,
+ul.applicationsTypeList #connecteurJDBC a::before ,
+.admin-navigation div a:has(img[src*='connecteurJDBC'])::before{
+	background-image: var(--ico-app-connecteurJDBC);
+}
+
+.browseComponentActiv[id*='hyperlink'] a::before,
+.browseComponent[id*='hyperlink'] a::before,
+.spaceNavigation .browse-component[onclick*='hyperlink']::before,
+#nav .sm-silverpeas ul li[id*='hyperlink']>a::before,
+ul.applicationsTypeList #hyperlink a::before  ,
+.admin-navigation div a:has(img[src*='hyperlink'])::before{
+	background-image: var(--ico-app-hyperlink);
+}
+
+.browseComponentActiv[id*='delegatednews'] a::before,
+.browseComponent[id*='delegatednews'] a::before,
+.spaceNavigation .browse-component[onclick*='delegatednews']::before,
+#nav .sm-silverpeas ul li[id*='delegatednews']>a::before ,
+ul.applicationsTypeList #delegatednews a::before ,
+.admin-navigation div a:has(img[src*='delegatednews'])::before{
+	background-image: var(--ico-app-delegatednews);
+}
+
+.browseComponentActiv[id*='whitePages'] a::before,
+.browseComponent[id*='whitePages'] a::before,
+.spaceNavigation .browse-component[onclick*='whitePages']::before,
+#nav .sm-silverpeas ul li[id*='whitePages']>a::before ,
+ul.applicationsTypeList #whitePages a::before ,
+.admin-navigation div a:has(img[src*='whitePages'])::before{
+	background-image: var(--ico-app-whitePages);
+}
+
+.browseComponentActiv[id*='pollingStation'] a::before,
+.browseComponent[id*='pollingStation'] a::before,
+.spaceNavigation .browse-component[onclick*='pollingStation']::before,
+#nav .sm-silverpeas ul li[id*='pollingStation']>a::before ,
+ul.applicationsTypeList #pollingStation a::before ,
+.admin-navigation div a:has(img[src*='pollingStation'])::before{
+	background-image: var(--ico-app-pollingStation);
+}
+
+.browseComponentActiv[id*='quizz'] a::before,
+.browseComponent[id*='quizz'] a::before,
+.spaceNavigation .browse-component[onclick*='quizz']::before,
+#nav .sm-silverpeas ul li[id*='quizz']>a::before ,
+ul.applicationsTypeList #quizz a::before ,
+.admin-navigation div a:has(img[src*='quizz'])::before{
+	background-image: var(--ico-app-quizz);
+}
+
+.browseComponentActiv[id*='spaceMembers'] a::before,
+.browseComponent[id*='spaceMembers'] a::before,
+.spaceNavigation .browse-component[onclick*='spaceMembers']::before,
+#nav .sm-silverpeas ul li[id*='spaceMembers']>a::before ,
+ul.applicationsTypeList #spaceMembers a::before,
+.admin-navigation div a:has(img[src*='spaceMembers'])::before {
+	background-image: var(--ico-app-spaceMembers);
+}
+
+.browseComponentActiv[id*='resourcesManager'] a::before,
+.browseComponent[id*='resourcesManager'] a::before,
+.spaceNavigation .browse-component[onclick*='resourcesManager']::before,
+#nav .sm-silverpeas ul li[id*='resourcesManager']>a::before,
+ul.applicationsTypeList #resourcesManager a::before ,
+.admin-navigation div a:has(img[src*='resourcesManager'])::before {
+	background-image: var(--ico-app-resourcesManager);
+}
+
+.browseComponentActiv[id*='projectManager'] a::before,
+.browseComponent[id*='projectManager'] a::before,
+.spaceNavigation .browse-component[onclick*='projectManager']::before,
+#nav .sm-silverpeas ul li[id*='projectManager']>a::before ,
+ul.applicationsTypeList #projectManager a::before ,
+.admin-navigation div a:has(img[src*='projectManager'])::before{
+	background-image: var(--ico-app-projectManager);
+}
+
+.browseComponentActiv[id*='survey'] a::before,
+.browseComponent[id*='survey'] a::before,
+.spaceNavigation .browse-component[onclick*='survey']::before,
+#nav .sm-silverpeas ul li[id*='survey']>a::before ,
+ul.applicationsTypeList #survey a::before ,
+.admin-navigation div a:has(img[src*='survey'])::before{
+	background-image: var(--ico-app-survey);
+}
+
+.browseComponentActiv[id*='yellowpages'] a::before,
+.browseComponent[id*='yellowpages'] a::before,
+.spaceNavigation .browse-component[onclick*='yellowpages']::before,
+#nav .sm-silverpeas ul li[id*='yellowpages']>a::before ,
+ul.applicationsTypeList #yellowpages a::before,
+.admin-navigation div a:has(img[src*='yellowpages'])::before {
+	background-image: var(--ico-app-yellowpages);
+}
+
+.browseComponentActiv[id*='community'] a::before,
+.browseComponent[id*='community'] a::before,
+.spaceNavigation .browse-component[onclick*='community']::before,
+#nav .sm-silverpeas ul li[id*='community']>a::before,
+ul.applicationsTypeList #community a::before ,
+.admin-navigation div a:has(img[src*='community'])::before {
+	background-image: var(--ico-app-community);
+}
+
+.browseComponentActiv[id*='suggestionBox'] a::before,
+.browseComponent[id*='suggestionBox'] a::before,
+.spaceNavigation .browse-component[onclick*='suggestionBox']::before,
+#nav .sm-silverpeas ul li[id*='suggestionBox']>a::before ,
+ul.applicationsTypeList #suggestionBox a::before ,
+.admin-navigation div a:has(img[src*='suggestionBox'])::before{
+	background-image: var(--ico-app-suggestionBox);
+}
+
+#contentSpacespacePerso #todo a::before {
+	background-image: var(--ico-todo);
+}
+
+#contentSpacespacePerso #notification a::before {
+	background-image: var(--ico-noti-b);
+}
+
+#contentSpacespacePerso #subscriptions a::before {
+	background-image: var(--ico-app-rssAgregator);
+}
+
+#contentSpacespacePerso #links a::before {
+	background-image: var(--ico-favoris);
+}
+
+#contentSpacespacePerso #personalize a::before {
+	background-image: var(--ico-user);
+}
+
+#contentSpacespacePerso .browseComponent[id*="userCalendar"] a::before,
+#contentSpacespacePerso .browseComponentActiv[id*="userCalendar"] a::before
+ {
+	background-image: var(--ico-app-almanach);
+}
+
+#contentSpacespacePerso #requests a::before {
+	background-image: var(--ico-app-connecteurJDBC);
+}
+
+#contentSpacespacePerso #scheduleevent a::before {
+	background-image: var(--ico-app-pollingStation);
+}
+
+#contentSpacespacePerso #notifAdmins a::before {
+	background-image: var(--ico-tchat);
+}
+
+#contentSpacespacePerso #clipboard a::before {
+	background-image: var(--ico-clipboard);
+}
+
+
+
