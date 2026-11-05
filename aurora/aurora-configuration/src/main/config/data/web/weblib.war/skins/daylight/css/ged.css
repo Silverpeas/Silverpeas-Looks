@@ -1,0 +1,686 @@
+/* =====================================================================
+   GED : Habillage en mode banque de fichier
+   Paramétrage de la GED :  Explorateur de dossier et Listing des fichiers
+   Le listing des fichiers permet la personnalisation de l'icone en fonction du type de fichier qu'elle intègre
+   Toutefois les fichiers ne seront pas listés
+   ===================================================================== */
+.treeView {
+    --sv-primary-selected: #d5eaf7;
+    --color-text-alt: #9fa1ae;
+    --ged-ico-folder: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fcba2e' d='M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8z'/%3E%3C/svg%3E");
+    --ged-ico-file: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2337a9ef' d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath fill='%23d5eaf7' d='M14 2v6h6z'/%3E%3C/svg%3E");
+    --ged-ico-trash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%239fa1ae' d='M9 3h6l1 2h4v2H4V5h4zm-3 6h12l-1 12H7z'/%3E%3C/svg%3E");
+    
+}
+
+/* ---------- Arbre des dossiers (jstree) : compact comme l'existant, flÃ¨ches et dossiers modernisÃ©s ---------- */
+.treeView {
+    --sv-chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%239fa1ae' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='m9 6 6 6-6 6'/%3E%3C/svg%3E");
+    --ged-ico-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='%2377d257'/%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' d='m7.5 12.5 3 3 6-6'/%3E%3C/svg%3E");
+    --ged-ico-hidden: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%239fa1ae' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M3 3l18 18'/%3E%3Cpath d='M10.6 6.1A9.7 9.7 0 0 1 12 6c5 0 9 6 9 6a16 16 0 0 1-2.7 3.2M6.6 6.6C4.4 8 3 12 3 12s4 6 9 6a8.9 8.9 0 0 0 4.4-1.2'/%3E%3C/g%3E%3C/svg%3E");
+    --ged-ico-folder-lock: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fcba2e' d='M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8z'/%3E%3Crect x='13' y='12' width='7' height='6' rx='1' fill='%232c2f3c'/%3E%3Cpath d='M14.5 12v-1.5a2 2 0 0 1 4 0V12' fill='none' stroke='%232c2f3c' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+
+
+.treeView #treeDiv1,
+.treeView #treeDiv1 * {
+    background-color: var(--bgColor-bloc-fond-clair);
+}
+
+
+.treeView #treeDiv1 .jstree-ocl,
+.treeView #treeDiv1 .jstree-themeicon {
+    display: inline-block;
+    vertical-align: top
+}
+
+.treeView #treeDiv1 .jstree-node {
+    display: block;
+    min-height: 1.8571rem;
+    line-height: 1.8571rem;
+    margin-left: 1.175rem;
+    font-size: 0
+}
+
+.treeView #treeDiv1 .jstree-anchor,
+.treeView #treeDiv1 .jstree-node>ul {
+    font-size: 1rem
+}
+
+.treeView #treeDiv1 .jstree-container-ul>.jstree-node {
+    margin-left: 0.1429rem
+}
+
+.treeView #treeDiv1 .jstree-anchor {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: top;
+    height: 1.8571rem;
+    line-height: 1.8571rem;
+    padding: 0 0.45rem 0 0.1429rem;
+    border-radius: var(--select-radius);
+    color: var(--color-text);
+    font-size: 1rem;
+    box-shadow: none !important;
+    border: 0 !important
+}
+
+.treeView #treeDiv1 .jstree-ocl {
+    width: 18px;
+    height: 1.8571rem;
+    background: none !important;
+    position: relative
+}
+
+.treeView #treeDiv1 .jstree-closed>.jstree-ocl,
+.treeView #treeDiv1 .jstree-open>.jstree-ocl {
+    background: var(--sv-chev) center/14px no-repeat !important;
+    transition: transform .15s ease
+}
+
+.treeView #treeDiv1 .jstree-open>.jstree-ocl {
+    transform: rotate(90deg)
+}
+
+.treeView #treeDiv1 .jstree-anchor>.jstree-themeicon {
+    width: 1.4286rem;
+    height: 1.8571rem;
+    margin-right: 4px;
+    background: var(--ged-ico-folder) center/17px no-repeat !important
+}
+
+.treeView #treeDiv1 .jstree-anchor>.jstree-themeicon[style*="basket"] {
+    background-image: var(--ged-ico-trash) !important
+}
+
+.treeView #treeDiv1 .jstree-anchor>.jstree-themeicon[style*="ok_alpha"] {
+    background-image: var(--ged-ico-check) !important;
+    background-size: 1.175rem !important
+}
+
+.treeView #treeDiv1 .jstree-anchor>.jstree-themeicon[style*="masque"] {
+    background-image: var(--ged-ico-hidden) !important
+}
+
+.treeView #treeDiv1 .jstree-anchor>.jstree-themeicon[style*="folder-bicolor"] {
+    background-image: var(--ged-ico-folder-lock) !important
+}
+
+.treeView #treeDiv1 .jstree-hovered {
+    background:var(--bgColor-bloc-fond-clair) !important;
+}
+
+.treeView #treeDiv1 .jstree-clicked {
+    background: var(--sv-primary-selected) !important;
+    color: var(--color-text) !important;
+    font-weight: 600
+}
+
+
+/* ---------- Barre du dossier courant (description, zone de crÃ©ation) ---------- */
+.treeView #topicDescription:not(:empty) {
+    padding: 0.75rem 0.875rem;
+    margin-bottom: 0.875rem;
+    border-radius: var(--radius-filtre);
+    background: var(--bgColor-bloc-fond-clair);
+    color: var(--color-text-alt)
+}
+
+/* ---------- Sous-dossiers (mode Â« un niveau Â») : tuiles du File Manager ---------- */
+.treeView #subTopics ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.875rem;
+    margin: 0 0 1.175rem;
+    padding: 0;
+    list-style: none
+}
+
+.treeView #subTopics li {
+    flex: 0 1 200px;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    max-height:100%;
+}
+
+.treeView #subTopics li a {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1429rem;
+    padding: 50px 0.875rem 0.75rem;
+    line-height: 1.35;
+    position: relative;
+    border: 1px solid var(--border-color-bloc-fond-clair);
+    border-radius: var(--radius-filtre);
+    background: var(--bgColor-bloc-fond-clair) var(--ged-ico-folder) 0.875rem 0.75rem/34px no-repeat;
+    color: var(--color-text);
+    text-decoration: none
+}
+
+.treeView #subTopics li a.trash {
+    background-image: var(--ged-ico-trash)
+}
+
+.treeView #subTopics li a:hover {
+    background-color: var(--bgColor-bloc-fond-clair);
+    border-color: var(--sv-primary-selected)
+}
+
+.treeView #subTopics li a strong {
+    font-weight: 600;
+    font-size: 1rem
+}
+
+.treeView #subTopics li a strong span {
+    margin-left: 4px;
+    padding: 0 1.4286rem;
+    border-radius: 0.75rem;
+    background: var(--bgColor-bloc-fond-clair);
+    color: var(--color-text-alt);
+    font-size: 0.875rem;
+    font-weight: 400
+}
+
+.treeView #subTopics li a>span {
+    font-size: 0.875rem;
+    color: var(--color-text-alt);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%
+}
+
+/* ---------- Liste des publications : tableau du File Manager ---------- */
+.treeView #pubList>br,
+.treeView #pubList form>br {
+    display: none
+}
+
+#pubList .tableBoard {
+    overflow: hidden;
+}
+
+#pubList #pubsCounter {
+    padding-left: 1rem;
+}
+
+.treeView #pubsHeader,
+#pubList #pubsHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 1.4286rem 0.875rem;
+    background: var(--bgColor-bloc-fond-clair);
+    border-radius: var(--radius-bloc) var(--radius-bloc) 0 0 ;
+    border-bottom: 1px solid var(--border-color-bloc-fond-clair);
+    color: var(--color-text-alt);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .3px
+}
+
+.treeView #pubsHeader>img {
+    display: none
+}
+
+.treeView #pubsCounter {
+    flex: 1 1 auto
+}
+
+.treeView #pubsCounter>span {
+    color: var(--color-text);
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0
+}
+
+.treeView #pubsSort select,
+.treeView #sortingList {
+    height: var(--height-input);
+    padding: 0 2rem 0 0.75rem;
+    border: 1px solid var(--border-color-bloc-fond-clair);
+    border-radius: var(--select-radius);
+    background-color: var(--bgColor-bloc-fond-clair);
+    color: var(--color-text);
+    font: 400 1rem var(--font-family);
+    text-transform: none
+}
+
+.treeView #pubList ul {
+    margin: 0;
+    padding: 0;
+    list-style: none
+}
+
+.treeView #pubList ul>li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 0.4rem 0.9rem;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid var(--border-color-bloc-fond-clair);
+    background: var(--bgColor-bloc-fond-clair)
+}
+
+.treeView #pubList ul>li:hover {
+    background:var(--bgColor-bloc-fond-clair);
+}
+
+.treeView #pubList ul>li:has(.selection input:checked) {
+    background-color: var(--sv-primary-selected)
+}
+
+.treeView #pubList .firstColumn {
+    flex-direction: column;
+    display: flex;
+    align-items: left;
+    gap: 0.75rem;
+    float: none;
+    width: auto
+}
+
+.treeView #pubList .selection input {
+    width: 1.175rem;
+    height: 1.175rem;
+    accent-color: var(--color-action);
+    margin: 0
+}
+
+.treeView #pubList .thumbnail img {
+    width: 2.5714rem;
+    height: 2.5714rem;
+    object-fit: cover;
+    border-radius: var(--select-radius)
+}
+
+.treeView #pubList .firstColumn:not(:has(.thumbnail))::after {
+    content: "";
+    width: 1.85rem;
+    height: 1.85rem;
+    background: var(--ged-ico-file) center/1.5714rem no-repeat
+}
+
+.treeView #pubList .publication {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    float: none;
+    align-content: end;
+}
+
+.treeView #pubList .publication-name a,
+.treeView #pubList .pub-link {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none
+}
+
+.treeView #pubList .publication-name a:hover .pub-link {
+    color: var(--color-action)
+}
+
+.treeView #pubList .description {
+    margin: 0.1429rem 0 0;
+    color: var(--color-text-alt);
+    font-size: 0.875rem;
+    line-height: 1.175rem
+}
+
+.treeView #pubList .line2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    color: var(--color-text-alt);
+    flex-wrap: wrap;
+    font-size: 0.875rem
+}
+
+.treeView #pubList .line2 span {
+    margin: 0
+}
+
+
+.treeView #pubList .files a {
+    color: var(--color-action);
+    text-decoration: none
+}
+
+.treeView #noPublicationMessage {
+    padding: 1.85rem;
+    text-align: center;
+    color: var(--color-text-alt)
+}
+
+/* Pagination */
+.treeView #pagination {
+    border-radius:0 0 var(--radius-bloc) var(--radius-bloc);
+}
+
+.treeView #pagination a,
+.treeView #pagination span {
+    min-width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    margin: 0 0.1429rem;
+    padding: 0 6px;
+    border-radius: var(--select-radius);
+    text-align: center;
+    color: var(--color-text);
+    text-decoration: none
+}
+
+.treeView #pagination a:hover {
+    background:var(--bgColor-bloc-fond-clair);
+}
+
+/* Boutons de la GED (crÃ©er, importerâ€¦) : boutons Willow */
+.treeView a.sp_button {
+    display: inline-flex;
+    align-items: center;
+    height: var(--height-input);
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--select-radius);
+    background: var(--color-action);
+    color: var(--color-text-sur-action) !important;
+    font: 600 1rem var(--font-family);
+    text-decoration: none;
+    box-shadow: none
+}
+
+/* ---------- Barre d'actions de sÃ©lection (ajoutÃ©e par ged-actions.js) : comme le File Manager SVAR ---------- */
+.treeView {
+    --sv-i-copy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%232c2f3c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='12' height='12' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/g%3E%3C/svg%3E");
+    --sv-i-cut: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%232c2f3c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/g%3E%3C/svg%3E");
+    --sv-i-export: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%232c2f3c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3'/%3E%3C/g%3E%3C/svg%3E");
+    --sv-i-trash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fe6158' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6'/%3E%3C/g%3E%3C/svg%3E");
+    --sv-i-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%239fa1ae' stroke-width='2.2' stroke-linecap='round' d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E");
+}
+
+
+/* Grandes icÃ´nes par type de fichier (vue Grille), mÃªmes formes que le File Manager SVAR */
+.treeView {
+    --sv-f-pdf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%23ee2b2b' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%23b81e1e' d='M58 0l22 22H58z'/%3E%3Ctext x='40' y='70' font-family='Arial' font-weight='700' font-size='20' fill='%23fff' text-anchor='middle'%3EPDF%3C/text%3E%3C/svg%3E");
+    --sv-f-texte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%2302a0e3' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%230277b3' d='M58 0l22 22H58z'/%3E%3Cpath stroke='%23fff' stroke-width='4' d='M14 40h52M14 52h52M14 64h52M14 76h36'/%3E%3C/svg%3E");
+    --sv-f-tableur: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%2377c043' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%235a9a2f' d='M58 0l22 22H58z'/%3E%3Cpath fill='none' stroke='%23fff' stroke-width='3.5' d='M16 38h48v40H16zM16 51h48M16 64h48M32 38v40M48 38v40'/%3E%3C/svg%3E");
+    --sv-f-presentation: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%23f47b20' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%23c25d10' d='M58 0l22 22H58z'/%3E%3Cpath fill='none' stroke='%23fff' stroke-width='4' d='M16 40h48v30H16zM40 70v10M30 80h20'/%3E%3C/svg%3E");
+    --sv-f-archive: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%23f5da49' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%23ddc439' d='M58 0l22 22H58z'/%3E%3Cpath stroke='%23fff' stroke-width='6' stroke-dasharray='6 6' d='M40 6v60'/%3E%3Crect x='32' y='66' width='16' height='14' rx='2' fill='%23fff'/%3E%3C/svg%3E");
+    --sv-f-media: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%237a67eb' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%235643c7' d='M58 0l22 22H58z'/%3E%3Cpath fill='%23fff' d='M30 42v34l28-17z'/%3E%3C/svg%3E");
+    --sv-f-publication: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%2364748b' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%23475569' d='M58 0l22 22H58z'/%3E%3Crect x='14' y='38' width='20' height='20' rx='2' fill='%23fff'/%3E%3Cpath stroke='%23fff' stroke-width='4' d='M42 42h24M42 54h24M14 70h52M14 82h52'/%3E%3C/svg%3E");
+    --sv-f-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%2314b8a6' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%230f766e' d='M58 0l22 22H58z'/%3E%3Crect x='14' y='36' width='52' height='44' rx='3' fill='none' stroke='%23fff' stroke-width='3.5'/%3E%3Ccircle cx='28' cy='47' r='5' fill='%23fff'/%3E%3Cpath fill='%23fff' d='M18 76l15-17 10 11 7-8 12 14z'/%3E%3C/svg%3E");
+    --sv-f-html: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Cpath fill='%2302a0e3' d='M0 0h58l22 22v78H0z'/%3E%3Cpath fill='%230277b3' d='M58 0l22 22H58z'/%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' d='M30 44L16 60l14 16M50 44l14 16-14 16'/%3E%3Cpath stroke='%23fff' stroke-width='4' stroke-linecap='round' d='M44 40L36 80'/%3E%3C/svg%3E");
+}
+
+/* --- vue Grille : cartes --- */
+.treeView #pubList ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bgColor-bloc-fond-clair);
+    width: auto;
+}
+
+.treeView #pubList ul>li {
+    position: relative;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    min-height: 0;
+    padding: 0.4rem 0.9rem 1rem;
+    border: 1px solid var(--border-color-bloc-fond-clair);
+    border-radius: var(--radius-filtre);
+    background: var(--bgColor-bloc-fond-clair) center 22px/auto 92px no-repeat;
+    box-shadow: 0 1px 2px rgba(44, 47, 60, .06)
+}
+
+.treeView #pubList ul>li:hover {
+    border-color: var(--color-action);
+    background-color: var(--bgColor-bloc-fond-clair)
+}
+
+.treeView #pubList ul>li:has(.selection input:checked) {
+    border-color: var(--color-action);
+    background-color: #f4faff;
+    box-shadow: 0 0 0 2px var(--sv-primary-selected)
+}
+
+.treeView #pubList li:has(img[src*="pdf"]) .firstColumn:not(:has(.thumbnail)):after {
+    background-image: var(--sv-f-pdf)
+}
+
+.treeView #pubList li:has(img[src*="word"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="odt"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="text"]) .firstColumn:not(:has(.thumbnail)):after {
+    background-image: var(--sv-f-texte)
+}
+
+.treeView #pubList li:has(img[src*="xsl"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="csv"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="excel"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="sheet"]) .firstColumn:not(:has(.thumbnail)):after {
+    background-image: var(--sv-f-tableur)
+}
+
+.treeView #pubList li:has(img[src*="power"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="presentation"]) .firstColumn:not(:has(.thumbnail)):after {
+    background-image: var(--sv-f-presentation)
+}
+
+.treeView #pubList li:has(img[src*="image"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="jpg"]) .firstColumn:not(:has(.thumbnail)):after  {
+    background-image: var(--sv-f-image)
+}
+
+.treeView #pubList li:has(img[src*="zip"]) .firstColumn:not(:has(.thumbnail)):after {
+    background-image: var(--sv-f-archive)
+}
+
+.treeView #pubList li:has(img[src*="html"]) .firstColumn:not(:has(.thumbnail)):after,
+.treeView #pubList li:has(img[src*="js.gif"]) .firstColumn:not(:has(.thumbnail)):after ,
+.treeView #pubList li:has(img[src*="page_white"]) .firstColumn:not(:has(.thumbnail)):after  {
+    background-image: var(--sv-f-html)
+}
+
+.treeView #pubList li .firstColumn:not(:has(.thumbnail)):after {
+    content: '';
+    display: block;
+    height: 108px;
+    width: 100%;
+    background-image: var(--sv-f-publication);
+    background-size: auto 100%;
+}
+
+.treeView #pubList .firstColumn::after,
+.treeView #pubList .thumbnail {
+    display: none
+}
+
+.treeView #pubList .publication-name a,
+.treeView #pubList .pub-link,
+.treeView #subTopics li a strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical
+}
+
+.treeView #pubList .description,
+.treeView #pubList .files {
+    display: none
+}
+
+/* vignette de la publication, si elle en a une, Ã  la place de l'icÃ´ne */
+.treeView #pubList li:has(.thumbnail img) {
+    background-image: none !important;
+}
+
+.treeView #pubList li:has(.thumbnail img) .thumbnail {
+    display: block;
+    height: 108px;
+    background: #CCC;
+    width: 100%;
+    float: none;
+    clear: both;
+    text-align: center;
+}
+
+.treeView #pubList li:has(.thumbnail img) .thumbnail img {
+    width: auto;
+    height: 108px;
+    object-fit: cover;
+    border-radius: var(--select-radius)
+}
+
+.treeView #pubList li:has(.thumbnail img) .firstColumn {
+    z-index: 2
+}
+
+/* ---------- Neutralisation des rÃ©glages d'origine de la GED (kmelia/jsp/styleSheets/kmelia.css) qui gÃªnaient la mise en page ---------- */
+.treeView #pubList .firstColumn {
+    float: none;
+    padding-left: 0;
+    position: static
+}
+
+.treeView #pubList .selection {
+    position: relative;
+    left: auto;
+    top: auto;
+    display: block;
+}
+
+.treeView #pubList .selection input {
+    display: inline-block !important
+}
+
+/* cases toujours visibles : elles servent Ã  la barre d'actions */
+.treeView #pubList .publication .line2,
+.treeView #pubList .publication .line3,
+.treeView #pubList .publication .files,
+.treeView #pubList .publication .publication-name {
+    padding-left: 0
+}
+
+.treeView #pubList .publication .files {
+    margin-top: 0.2857rem
+}
+
+.treeView #pubList ul li {
+    width: auto
+}
+
+.treeView #pubList ul li.over-publication {
+    background-color:var(--bgColor-bloc-fond-clair);
+}
+
+.treeView #subTopics ul li {
+    float: none;
+    width: auto;
+    height: auto;
+    margin: 0;
+    display: block;
+    border-radius: 0;
+}
+
+.treeView #subTopics ul li a,
+.treeView #subTopics ul li a.trash,
+.treeView #subTopics ul li a.toValidate,
+.treeView #subTopics ul li a.folder-with-rights,
+.treeView #subTopics ul li#topic_notvisibleContributions a {
+    height: auto;
+    overflow: visible;
+    border: 1px solid var(--border-color-bloc-fond-clair);
+    border-radius: var(--radius-filtre);
+    background-color: var(--bgColor-bloc-fond-clair);
+    background-repeat: no-repeat;
+    background-position: 0.875rem 0.75rem;
+    background-size: 34px
+}
+
+.treeView #subTopics ul li a {
+    background-image: var(--ged-ico-folder)
+}
+
+.treeView #subTopics ul li a.trash {
+    background-image: var(--ged-ico-trash)
+}
+
+.treeView #subTopics ul li a.toValidate {
+    background-image: var(--ged-ico-check)
+}
+
+.treeView #subTopics ul li a.folder-with-rights {
+    background-image: var(--ged-ico-folder-lock)
+}
+
+.treeView #subTopics ul li#topic_notvisibleContributions a {
+    background-image: var(--ged-ico-hidden)
+}
+
+.treeView #subTopics ul li a:hover {
+    background-color: var(--bgColor-bloc-fond-clair);
+    border-color: var(--sv-primary-selected)
+}
+
+.treeView #subTopics ul li a strong span {
+    position: static;
+    float: none
+}
+
+.treeView #subTopics ul li a strong span {
+   position: absolute;
+   color: var(--color-text);
+}
+
+.treeView #pubsHeader {
+    flex-wrap: wrap;
+    padding-right: 0.875rem;
+    box-sizing: border-box
+}
+
+.treeView #pubsSort {
+    flex: 0 1 auto;
+    min-width: 0
+}
+
+/* vue Grille : chaque carte reste dans sa case (kmelia.css impose width:100% sans box-sizing, d'oÃ¹ des cartes qui se chevauchaient) */
+.treeView #pubList ul>li {
+    width: auto !important;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 !important;
+    overflow: hidden
+}
+
+
+.treeView #pubList .permalink {
+    color: transparent;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: block;
+}
+
+.treeView #pubList .publication {
+    display: block;
+    min-width: 0
+}
+
+.treeView #pubList .publication-name,
+.treeView #pubList .line2 {
+    overflow: hidden;
+    text-overflow: ellipsis
+}

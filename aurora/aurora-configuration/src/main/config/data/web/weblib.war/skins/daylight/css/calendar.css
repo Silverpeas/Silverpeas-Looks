@@ -1,0 +1,522 @@
+/* =====================================================================
+   Agendas Silverpeas (application Calendrier/almanach et agenda personnel) habillÃ©s avec SVAR Willow â€” Calendar
+   RÃ©fÃ©rences : PENPOT/SVAR/build/screens-data/calendar/reference-svar-semaine-clair.png et reference-svar-mois-clair.png
+   (captures du composant @svar-ui/react-calendar, thÃ¨me Willow) ; jetons : SVAR-Willow-design-Tokens-DTCG-script.json.
+   Structure vÃ©rifiÃ©e dans Silverpeas-Core 6.4.8 : .silverpeas-calendar > .silverpeas-calendar-header (boutons de vue,
+   flÃ¨ches, pÃ©riode), .silverpeas-calendar-list (agendas), .silverpeas-calendar-container (FullCalendar 3.4 : classes .fc-*).
+   Les couleurs des Ã©vÃ©nements restent celles de leur agenda (choisies dans Silverpeas) ; seule leur forme change.
+   ===================================================================== */
+.silverpeas-calendar {
+    --sv-font-alt: #9fa1ae;
+    --sv-border: #e6e6e6;
+    --sv-weekend: #f9f8fe;
+    --sv-chev-g: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%232c2f3c' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' d='m15 6-6 6 6 6'/%3E%3C/svg%3E");
+    --sv-chev-d: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%232c2f3c' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' d='m9 6 6 6-6 6'/%3E%3C/svg%3E");
+
+    border: 1px solid var(--sv-border);
+    border-radius: var(--radius-filtre);
+    background: var(--bgColor-bloc-fond-clair);
+    overflow: hidden;
+}
+
+.silverpeas-calendar .sousNavBulle:after {
+    display: none;
+}
+
+/* ---------- Barre du haut (en-tÃªte Silverpeas : silverpeas-calendar-header.jsp), Ã  la maniÃ¨re de SVAR :
+   [mode d'affichage] [â€¹] [â€º] [Aujourd'hui] â€”â€”â€”â€” pÃ©riode au centre â€”â€”â€”â€” [Prochains Ã©vÃ©nements | Jour | Semaine | Mois | AnnÃ©e]
+   Le fuseau horaire (en position absolue dans silverpeas-calendar.css, il chevauchait les boutons) passe en petit sous la barre. */
+.silverpeas-calendar .silverpeas-calendar-header {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .sousNavBulle {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--bgColor-bloc-fond-clair);
+    box-shadow: none;
+    min-height: 0
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .top-part {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8571rem;
+    min-height: 3.5rem;
+    padding: 0.5714rem 0.7143rem;
+    border-bottom: 1px solid var(--sv-border);
+    box-sizing: border-box
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .top-part>span:not(.time-cursor) {
+    order: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0
+}
+
+/* vues : boutons groupÃ©s Ã  droite */
+.silverpeas-calendar .silverpeas-calendar-header a.view-button {
+    order: 3;
+    display: inline-flex;
+    align-items: center;
+    height: var(--height-input);
+    padding: 0 0.8571rem;
+    margin: 0 0 0 -1px;
+    border: 1px solid var(--sv-border);
+    border-radius: 0;
+    background: var(--bgColor-bloc-fond-clair);
+    text-decoration: none;
+    white-space: nowrap
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.view-button:first-child {
+    margin-left: auto;
+    border-radius: var(--select-radius) 0 0 var(--select-radius)
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.view-button:hover {
+    background: var(--border-color-bloc-fond-clair-hover)
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.view-button.selected {
+    background: var(--color-action);
+    border-color: var(--color-action);
+    color: #fff;
+    font-weight: 600;
+    position: relative;
+    z-index: 1
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .top-part>span.view-buttons-end {
+    display: none
+}
+
+/* navigation dans le temps */
+.silverpeas-calendar .silverpeas-calendar-header .time-cursor {
+    order: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.7143rem;
+    min-width: 0
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .time-cursor>span:first-child {
+    display: none
+}
+
+/* le tiret Â« - Â» */
+.silverpeas-calendar .silverpeas-calendar-header .time-cursor>span:nth-child(2) {
+    order: 1;
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.today-button {
+    display: inline-flex;
+    align-items: center;
+    height: var(--height-input);
+    padding: 0 1rem;
+    border: 0;
+    border-radius: var(--select-radius);
+    background: var(--border-color-bloc-fond-clair);
+    font-weight: 600 ;
+    text-decoration: none;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.today-button:hover {
+    background: var(--border-color-bloc-fond-clair-hover)
+}
+
+.silverpeas-calendar .silverpeas-calendar-header input.reference-day {
+    position: absolute;
+    width: 0 !important;
+    height: 0;
+    border: 0;
+    padding: 0;
+    margin: 0
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .ui-datepicker-trigger {
+    display: none
+}
+
+/* le choix du jour se fait en cliquant sur la pÃ©riode */
+.silverpeas-calendar .silverpeas-calendar-header a.btn_navigation {
+    display: inline-block;
+    width: var(--height-input);
+    height: var(--height-input);
+    margin: 0;
+    padding: 0;
+    border-radius: var(--select-radius);
+    background: var(--border-color-bloc-fond-clair) center/1.1429rem no-repeat;
+    flex: 0 0 auto
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.btn_navigation:hover {
+    background-color: var(--border-color-bloc-fond-clair-hover)
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.btn_navigation img {
+    display: none
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.btn_navigation.previous {
+    background-image: var(--sv-chev-g);
+    order: 1;
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.btn_navigation.next {
+    background-image: var(--sv-chev-d);
+    order: 3;
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .period-label {
+    order: 2;
+    flex: 1 1 auto;
+    width: auto !important;
+    height: auto;
+    min-width: 0;
+    padding: 0 0.5714rem;
+    background: none !important;
+    text-align: center;
+    cursor: pointer
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .period-label span {
+    display: inline;
+    width: auto !important;
+    padding: 0
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .period-label:hover>span {
+    color: var(--color-action)
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .period-label .inlineMessage {
+    font-size: 0.85rem
+}
+
+/* mode d'affichage (agenda / liste) : deux petits boutons Ã  icÃ´ne, le libellÃ© sert d'info-bulle */
+.silverpeas-calendar .silverpeas-calendar-header a.calendar-view-mode~*,
+.silverpeas-calendar .silverpeas-calendar-header a.calendar-view-mode {
+    flex: 0 0 auto
+}
+
+.silverpeas-calendar .silverpeas-calendar-header .top-part>span:not(.time-cursor)>span:first-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0)
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.calendar-view-mode,
+.silverpeas-calendar .silverpeas-calendar-header a.list-view-mode {
+    width: var(--height-input);
+    height: var(--height-input);
+    margin: 0 0 0 -1px;
+    border: 1px solid var(--sv-border);
+    background: var(--bgColor-bloc-fond-clair) center/1.1429rem no-repeat !important;
+    font-size: 0
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.calendar-view-mode {
+    border-radius: var(--select-radius) 0 0 var(--select-radius);
+    margin-left: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%232c2f3c' stroke-width='2' stroke-linecap='round'%3E%3Crect x='3' y='4' width='18' height='17' rx='2'/%3E%3Cpath d='M3 10h18M8 2v4M16 2v4'/%3E%3C/g%3E%3C/svg%3E") !important
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.list-view-mode {
+    border-radius: 0 var(--select-radius) var(--select-radius) 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%232c2f3c' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01'/%3E%3C/g%3E%3C/svg%3E") !important
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.calendar-view-mode.selected,
+.silverpeas-calendar .silverpeas-calendar-header a.list-view-mode.selected {
+    background-color: var(--color-action-selected) !important;
+    border-color: var(--color-action);
+    position: relative;
+    z-index: 1
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.calendar-view-mode:hover,
+.silverpeas-calendar .silverpeas-calendar-header a.list-view-mode:hover {
+    background-color: var(--border-color-bloc-fond-clair-hover) !important
+}
+
+/* prochains Ã©vÃ©nements : filtres par mois en pastilles */
+.silverpeas-calendar .silverpeas-calendar-header a.next-event-month-filter {
+    display: inline-flex;
+    align-items: center;
+    height: 2rem;
+    padding: 0 0.7143rem;
+    margin: 0 0.2857rem 0 0;
+    border: 1px solid var(--sv-border);
+    border-radius: 50%;
+    background: var(--bgColor-bloc-fond-clair) !important;
+    color: var(--color-text-clair) ;
+    font-size: 0.95rem;
+    text-decoration: none
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.next-event-month-filter.selected,
+.silverpeas-calendar .silverpeas-calendar-header a.next-event-month-filter:not(.selected):hover {
+    background: var(--color-action) !important;
+    border-color: var(--color-action);
+    color: var(--color-text-sur-action);
+    font-weight: 600
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.next-event-month-filter.selected:hover{
+    background: var(--border-color-bloc-fond-clair-hover) !important;
+    border-color:var(--border-color-bloc-fond-clair-hover);
+}
+
+.silverpeas-calendar .silverpeas-calendar-header a.next-event-month-filter.selected:hover:after{
+    content: ' x';
+    font-size:0.8em;
+    margin-left: 0.5em;
+    display: inline-block;
+}
+
+/* fuseau horaire : petit, sous la barre, sans chevaucher */
+.silverpeas-calendar .silverpeas-calendar-header .sousNavBulle #calendar-timezone {
+    position: static !important;
+    height: auto;
+    line-height: 1.4;
+    padding: 0.2857rem 0.7143rem 0;
+    background: none;
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--sv-font-alt)
+}
+
+/* ---------- Liste des agendas (pastilles de couleur) ---------- */
+.silverpeas-calendar silverpeas-calendar-list ul  {
+    padding: 0.5em 1em;
+}
+.silverpeas-calendar silverpeas-calendar-event-view-main .occurrence-extra .bloc, 
+.silverpeas-calendar silverpeas-calendar-event-view-main .occurrence-extra .bloc a, 
+.silverpeas-calendar .fc-list-item .occurrence-extra .bloc a, 
+.silverpeas-calendar silverpeas-calendar-event-occurrence-list-item .occurrence-extra .bloc, 
+.silverpeas-calendar silverpeas-calendar-event-occurrence-list-item .occurrence-extra .bloc a, 
+.fc-list-item .occurrence-extra .bloc a {
+  font-size: 1rem;
+}
+
+
+/* ---------- Grille FullCalendar ---------- */
+.silverpeas-calendar .fc {
+    font-size: 1rem;
+}
+
+.silverpeas-calendar .fc-toolbar {
+    display: none
+}
+
+/* barre FullCalendar remplacÃ©e par l'en-tÃªte Silverpeas */
+.silverpeas-calendar .fc td,
+.silverpeas-calendar .fc th,
+.silverpeas-calendar .fc-unthemed td,
+.silverpeas-calendar .fc-unthemed th,
+.silverpeas-calendar .fc-unthemed thead,
+.silverpeas-calendar .fc-unthemed tbody,
+.silverpeas-calendar .fc-unthemed .fc-row,
+.silverpeas-calendar .fc-unthemed .fc-divider,
+.silverpeas-calendar .fc-unthemed .fc-popover {
+    border-color: var(--sv-border)
+}
+
+.silverpeas-calendar .fc-view-container {
+    background: var(--bgColor-bloc-fond-clair)
+}
+
+/* en-tÃªtes de jours */
+.silverpeas-calendar .fc-head .fc-day-header,
+.silverpeas-calendar th.fc-day-header {
+    height: 3.8571rem;
+    vertical-align: middle;
+    background: var(--bgColor-bloc-fond-clair)
+}
+
+.silverpeas-calendar .fc-head .fc-day-header a {
+    color: inherit;
+    text-decoration: none
+}
+
+/* week-end lÃ©gÃ¨rement teintÃ©, jours hors du mois grisÃ©s, comme SVAR */
+.silverpeas-calendar .fc-bg .fc-sat,
+.silverpeas-calendar .fc-bg .fc-sun {
+    background: var(--sv-weekend)
+}
+
+.silverpeas-calendar .fc-bg .fc-other-month {
+    background: var(--border-color-bloc-fond-clair)
+}
+
+.silverpeas-calendar .fc-day-top .fc-day-number,
+.silverpeas-calendar .fc-basic-view .fc-day-number {
+    float: right;
+    padding: 0.5714rem 0.7143rem 0.1429rem;
+}
+
+.silverpeas-calendar .fc-other-month .fc-day-number,
+.silverpeas-calendar .fc-day-top.fc-other-month {
+    color: var(--sv-font-alt);
+    opacity: 1
+}
+
+/* aujourd'hui : case bleu pÃ¢le, chiffre bleu en gras */
+.silverpeas-calendar .fc-unthemed td.fc-today {
+    background: transparent
+}
+
+.silverpeas-calendar .fc-month-view .fc-bg td.fc-today {
+    background: var(--color-action-selected)
+}
+
+/* vue mois : case du jour en bleu pÃ¢le (vues jour/semaine : seul l'en-tÃªte du jour est mis en avant, comme SVAR) */
+.silverpeas-calendar .fc-agenda-view th.fc-today {
+    color: var(--color-action);
+    font-weight: 700
+}
+
+.silverpeas-calendar .fc-day-top.fc-today .fc-day-number,
+.silverpeas-calendar th.fc-today {
+    color: var(--color-action);
+    font-weight: 700
+}
+
+/* colonne des heures */
+.silverpeas-calendar .fc-axis {
+    font-size: 0.85rem;
+    color: var(--sv-font-alt);
+    padding: 0 0.5714rem;
+    vertical-align: top
+}
+
+.silverpeas-calendar .fc-time-grid .fc-slats td {
+    height: 2.8571rem
+}
+
+.silverpeas-calendar .fc-time-grid .fc-slats .fc-minor td {
+    border-top-color: transparent
+}
+
+.silverpeas-calendar .fc-time-grid .fc-slats .fc-axis span {
+    position: relative;
+    top: 0.4286rem
+}
+
+.silverpeas-calendar .fc-day-grid .fc-axis {
+    font-size: 0
+}
+
+/* Â« toute la journÃ©e Â» : la bande reste, le libellÃ© se fait discret */
+.silverpeas-calendar .fc-now-indicator {
+    border-color: #fe6158
+}
+
+/* ---------- Ã‰vÃ©nements : blocs pleins, coins de 3 px, heure en gras puis titre (couleur de l'agenda conservÃ©e) ---------- */
+.silverpeas-calendar .fc-event {
+    border: 0 !important;
+    border-radius: var(--select-radius);
+    padding: 0.1429rem 0.4286rem;
+    box-shadow: none
+}
+
+.silverpeas-calendar .fc-event .fc-time {
+    font-weight: 600
+}
+
+.silverpeas-calendar .fc-time-grid-event {
+    padding: 0.4286rem 0.7143rem;
+    border-radius: var(--select-radius)
+}
+
+.silverpeas-calendar .fc-time-grid-event .fc-bg {
+    display: none
+}
+
+/* FullCalendar ajoute un voile blanc qui dÃ©lave la couleur */
+.silverpeas-calendar .fc-time-grid-event.fc-short {
+    padding: 0.2143rem 0.7143rem
+}
+
+.silverpeas-calendar .fc-time-grid-event .fc-time {
+    font-size: 0.95rem;
+    margin-bottom: 0.1429rem
+}
+
+.silverpeas-calendar .fc-time-grid-event .fc-title {
+    font-size: 1rem
+}
+
+.silverpeas-calendar .fc-day-grid-event {
+    margin: 0.1429rem 0.2857rem 0;
+    padding: 0.2143rem 0.7143rem
+}
+
+/* vue mois : chaque Ã©vÃ©nement est une capsule pleine, de la couleur de l'agenda (couleur posÃ©e en style par FullCalendar), texte blanc â€” comme SVAR */
+.silverpeas-calendar .fc-month-view .fc-day-grid-event {
+    color: #fff !important;
+    padding: 0.2143rem 0.5714rem;
+    min-height: 1.5714rem;
+    box-sizing: border-box
+}
+
+.silverpeas-calendar .fc-month-view .fc-day-grid-event .fc-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: inherit
+}
+
+.silverpeas-calendar .fc-month-view .fc-day-grid-event .fc-title {
+    font-weight: 400;
+    color: inherit
+}
+
+.silverpeas-calendar .fc-month-view .fc-day-grid-event .fc-time {
+    font-weight: 600;
+    color: inherit;
+    opacity: .9
+}
+
+.silverpeas-calendar .fc-month-view .fc-day-grid-event .fc-time {
+    margin-right: 0.4286rem
+}
+
+.silverpeas-calendar .fc-event:hover {
+    filter: brightness(1.05)
+}
+
+.silverpeas-calendar .fc-more {
+    color: var(--color-action);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding-left: 0.5714rem
+}
+
+.silverpeas-calendar .fc-popover {
+    border-radius: var(--radius-filtre);
+    box-shadow: 0 4px 20px rgba(44, 47, 60, .12)
+}
+
+.silverpeas-calendar .fc-popover .fc-header {
+    background: var(--border-color-bloc-fond-clair);
+    padding: 0.4286rem 0.7143rem
+}
+
+/* ---------- Liste des prochains Ã©vÃ©nements ---------- */
+.silverpeas-calendar silverpeas-calendar-event-occurrence-list {
+    display: block;
+    padding: 0.5714rem 0.8571rem
+}
