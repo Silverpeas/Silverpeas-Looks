@@ -608,7 +608,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
         questions.size() > 1 && questions.size() > nb) {
       Predicate<Question> shouldTryAgain =
-          q -> faqs.getList().stream().anyMatch(f -> q.getPK().getId().equals(f.getPK().getId()));
+          q -> faqs.getList().stream().anyMatch(f -> q.getId().equals(f.getId()));
       int j = 0;
       while (j < nb) {
         int i = RANDOM.nextInt(questions.size() - 1);
