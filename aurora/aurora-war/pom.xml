@@ -89,6 +89,18 @@
       <artifactId>resteasy-client</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core</groupId>
+      <artifactId>silverpeas-core-test</artifactId>
+      <version>${core.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.silverpeas.core.services</groupId>
+      <artifactId>silverpeas-core-silverstatistics</artifactId>
+      <version>${core.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   
   <build>

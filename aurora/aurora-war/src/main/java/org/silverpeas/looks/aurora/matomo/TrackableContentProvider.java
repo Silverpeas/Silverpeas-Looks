@@ -4,6 +4,7 @@ import org.silverpeas.components.blog.model.PostDetail;
 import org.silverpeas.components.blog.service.BlogService;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.annotation.Provider;
 import org.silverpeas.core.calendar.CalendarEvent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -18,6 +19,9 @@ import java.util.regex.Pattern;
 
 @Provider
 class TrackableContentProvider {
+
+  private static final Pattern QUICKINFO_INSTANCE_PATTERN =
+      Pattern.compile("/Rquickinfo/([^/]+)/");
 
   @Inject
   private BlogService blogService;
@@ -36,7 +40,7 @@ class TrackableContentProvider {
     if (path.contains("ViewPublication")) {
       setContentFromPublication(httpReq, content);
     } else if (path.contains("/Rquickinfo/") && path.contains("/View")) {
-      setContentFromNews(httpReq, content);
+      setContentFromNews(httpReq, path, content);
     } else if (path.contains("/CalendarEvent/") && !path.contains("possibledurations")) {
       setContentFromCalendarEvent(content, path);
     } else if (path.contains("Rdirectory")) {
@@ -93,13 +97,21 @@ class TrackableContentProvider {
     content.setContentName(CalendarEvent.getById(id).getTitle());
   }
 
-  private void setContentFromNews(HttpServletRequest httpReq, TrackableContent content) {
-    content.setContentType("News");
-    content.setContent(true);
-    content.setContentId(httpReq.getParameter("Id"));
-    News n = quickInfoService.getNews(content.getContentId());
-    content.setContentName(n.getTitle());
-    content.setPermalink(n.getPermalink());
+  private void setContentFromNews(HttpServletRequest httpReq, String path,
+      TrackableContent content) {
+    Matcher matcher = QUICKINFO_INSTANCE_PATTERN.matcher(path);
+    if (!matcher.find()) {
+      return;
+    }
+    String newsId = httpReq.getParameter("Id");
+    News news = quickInfoService.getNews(new ResourceReference(newsId, matcher.group(1)));
+    if (news != null) {
+      content.setContentType("News");
+      content.setContent(true);
+      content.setContentId(newsId);
+      content.setContentName(news.getTitle());
+      content.setPermalink(news.getPermalink());
+    }
   }
 
   private void setContentFromPublication(HttpServletRequest httpReq,
