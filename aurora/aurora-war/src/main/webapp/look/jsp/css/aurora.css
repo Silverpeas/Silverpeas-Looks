@@ -315,13 +315,13 @@
   display: none;
 }
 
-.main-home-page #last-publication-home .sp-path,
+.main-home-page :is(#last-publication-home, .latest-publications) .sp-path,
 .main-home-page #carrousel-actualite .sp-path,
 .main-home-page #secondaryNews .sp-path,
 .main-home-page #thirdNews .sp-path,
 .main-home-page #home-event .sp-path,
 .aurora-list-news .sp-path,
-.spaceHome #last-publication-home .sp-path {
+.spaceHome :is(#last-publication-home, .latest-publications) .sp-path {
   display: none;
 }
 

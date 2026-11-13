@@ -1124,7 +1124,7 @@ label.select-header:before {
   overflow: hidden;
 }
 
-.main-home-page #last-publication-home,
+.main-home-page :is(#last-publication-home, .latest-publications),
 .main-home-page #rssNews,
 .main-home-page #freeZone {
   margin-left: 260px;

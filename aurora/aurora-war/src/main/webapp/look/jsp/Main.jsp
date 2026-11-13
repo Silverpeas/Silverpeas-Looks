@@ -57,6 +57,7 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
+    <script src="${pageContext.request.contextPath}/look/jsp/js/silverpeas-latest-publications.js" defer></script>
     <view:link href="/look/jsp/css/aurora.css"/>
   </jsp:attribute>
   <jsp:body>

@@ -295,6 +295,18 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   @Override
   public List<PublicationDetail> getLatestPublications(String spaceId, int nbPublis) {
+    return getLatestPublications(spaceId, nbPublis, true);
+  }
+
+  /**
+   * Gets visible publications with the same exclusions as the home page.
+   * @param spaceId the target space
+   * @param nbPublis the maximum number of publications
+   * @param includeSubspaces whether descendants are included
+   * @return publications accessible to the current reader
+   */
+  public List<PublicationDetail> getLatestPublications(String spaceId, int nbPublis,
+      boolean includeSubspaces) {
     String[] excludedComponentIds =
         StringUtils.split(getSettings("home.publications.components.excluded", ""));
     String[] excludedSpaceIds =
@@ -316,6 +328,18 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     } catch(Exception e) {
       SilverLogger.getLogger(this).error(e);
+    }
+
+    if (!includeSubspaces) {
+      try {
+        Set<String> directComponents = new HashSet<>(Arrays.asList(admin.getAllComponentIds(spaceId)));
+        String[] descendantComponents = Arrays.stream(admin.getAllComponentIdsRecur(spaceId))
+            .filter(Predicate.not(directComponents::contains)).toArray(String[]::new);
+        excludedComponentIds = ArrayUtils.addAll(excludedComponentIds, descendantComponents);
+      } catch (AdminException e) {
+        SilverLogger.getLogger(this).error(e);
+        return Collections.emptyList();
+      }
     }
 
     List<PublicationDetail> publications =
@@ -619,7 +643,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
         questions.size() > 1 && questions.size() > nb) {
       Predicate<Question> shouldTryAgain =
-          q -> faqs.getList().stream().anyMatch(f -> q.getPK().getId().equals(f.getPK().getId()));
+          q -> faqs.getList().stream().anyMatch(f -> q.getId().equals(f.getId()));
       int j = 0;
       while (j < nb) {
         int i = RANDOM.nextInt(questions.size() - 1);

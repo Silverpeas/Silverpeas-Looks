@@ -98,6 +98,7 @@
     <view:link href="/look/jsp/css/themes.css"/>
     <viewTags:spaceNavigationCSS/>
     <viewTags:spacePublicationsCSS/>
+    <script src="${pageContext.request.contextPath}/look/jsp/js/silverpeas-latest-publications.js" defer></script>
     <view:link href="/look/jsp/css/aurora.css"/>
   </jsp:attribute>
   <jsp:body>

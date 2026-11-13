@@ -55,7 +55,7 @@
   order: 1;
 }
 
-.principal-main-container #last-publication-home {
+.principal-main-container :is(#last-publication-home, .latest-publications) {
   order: 3;
 }
 
@@ -1188,11 +1188,11 @@ div.user-card .avatar,
 
 /* LES DERNIERES PUBLI */
 
-.principal-main-container #last-publication-home {
+.principal-main-container :is(#last-publication-home, .latest-publications) {
   position: relative;
 }
 
-.principal-main-container #last-publication-home:before {
+.principal-main-container :is(#last-publication-home, .latest-publications):before {
   background: transparent url(../imgDesign/deco-publications.png) 0 0 no-repeat;
   content: ' ';
   display: block;
@@ -1270,19 +1270,19 @@ div.user-card .avatar,
   margin-top: 0px;
 }
 
-#last-publication-home .last-publication-list li,
+:is(#last-publication-home, .latest-publications) .last-publication-list li,
 #faq-home p {
   padding-bottom: 1em;
   margin-bottom: 0;
 }
 
-#last-publication-home .last-publication-list li {
+:is(#last-publication-home, .latest-publications) .last-publication-list li {
   background-color: var(--bgColor-bloc-fond-clair);
   padding: 1em;
   margin-bottom: 1em;
 }
 
-#last-publication-home .last-publication-list a,
+:is(#last-publication-home, .latest-publications) .last-publication-list a,
 .eventName a,
 .main-bookmark a {
   display: block;
@@ -1293,13 +1293,13 @@ div.user-card .avatar,
   margin-bottom: 0;
 }
 
-#last-publication-home .last-publication-list a:hover,
+:is(#last-publication-home, .latest-publications) .last-publication-list a:hover,
 .eventName a:hover,
 .main-bookmark a:hover {
   color: var(--color-flashy-principale);
 }
 
-#last-publication-home .last-publication-list span {
+:is(#last-publication-home, .latest-publications) .last-publication-list span {
   color: #777;
   font-size: 14px;
 }
@@ -1308,7 +1308,7 @@ div.user-card .avatar,
 .main-home-page .secteur-container > h4,
 #portletPages h2.portlet-title,
 #portletPages h4.portlet-title,
-.spaceHome #last-publication-home h4,
+.spaceHome :is(#last-publication-home, .latest-publications) h4,
 .spaceHome #cg-favorit-home h4,
 .main-home-page #bloc-advancedSeach h4,
 .spaceHome #portletPages .header h2,
@@ -1639,7 +1639,7 @@ div.user-card .avatar,
   text-transform: uppercase;
 }
 
-.spaceHome #last-publication-home {
+.spaceHome :is(#last-publication-home, .latest-publications) {
   float: left;
   width: 48%;
 }
@@ -1785,7 +1785,7 @@ div.user-card .avatar,
     font-size: 12px;
   }
 
-  .principal-main-container #last-publication-home::before {
+  .principal-main-container :is(#last-publication-home, .latest-publications)::before {
     background-position: right 0;
     background-size: auto 71%;
   }

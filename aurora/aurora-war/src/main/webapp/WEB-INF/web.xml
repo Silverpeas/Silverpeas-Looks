@@ -34,4 +34,12 @@
     <servlet-name>GoToSpaceHomepageBackoffice</servlet-name>
     <url-pattern>/AuroraSpaceHomepageBackoffice</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>LatestPublications</servlet-name>
+    <servlet-class>org.silverpeas.looks.aurora.servlets.LatestPublicationsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LatestPublications</servlet-name>
+    <url-pattern>/LatestPublications</url-pattern>
+  </servlet-mapping>
 </web-app>

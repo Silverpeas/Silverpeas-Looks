@@ -996,7 +996,7 @@ label.select-header:before {
   margin-bottom:1em;
 }
 
-.main-home-page #last-publication-home,
+.main-home-page :is(#last-publication-home, .latest-publications),
 .main-home-page #rssNews,
 .main-home-page #freeZone {
   margin-left: 260px;

@@ -40,13 +40,15 @@
               required="true"
               type="java.util.List<org.silverpeas.core.contribution.publication.model.PublicationDetail>" %>
 
+<%@ attribute name="embedded" required="false" type="java.lang.Boolean" %>
+
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
 <fmt:message var="labelPublicationsMore" key="look.home.publications.more"/>
 
 <c:if test="${not empty publications}">
-<div id="last-publication-home" class="secteur-container">
+<div <c:if test="${not embedded}">id="last-publication-home"</c:if> class="secteur-container latest-publications">
   <h4>${labelPublications}</h4>
-  <div id="last-publicationt-main-container">
+  <div <c:if test="${not embedded}">id="last-publicationt-main-container"</c:if> class="latest-publications-main-container">
     <ul class="last-publication-list">
       <c:forEach var="publication" items="${publications}">
         <c:set var="newPubliCssClass" value=""/>
@@ -56,7 +58,7 @@
         <c:set var="pubInstanceId" value="${publication.instanceId}"/>
         <jsp:useBean id="pubInstanceId" type="java.lang.String"/>
         <c:set var="fromSpaceClasses" value='<%=OrganizationController.get().getPathToComponent(pubInstanceId).stream().map(s -> "fromSpace-" + s.getId()).collect(Collectors.joining(" "))%>'/>
-        <li class="${fromSpaceClasses} fromInst-${pubInstanceId}${newPubliCssClass}" onclick="spWindow.loadLink('${publication.permalink}')">
+        <li class="${fromSpaceClasses} fromInst-${pubInstanceId}${newPubliCssClass}">
           <a class="sp-link publication-name" href="${publication.permalink}">
             <c:out value="${publication.name}"/></a>
           <view:componentPath componentId="${pubInstanceId}" includeComponent="false"/>
@@ -66,10 +68,12 @@
         </li>
       </c:forEach>
     </ul>
+    <c:if test="${not embedded}">
     <div id="morePublications-link-page">
       <a title="${labelPublicationsMore}" href="/silverpeas/look/jsp/listOfPublications.jsp"
          class="link-more sp-link"><span>${labelPublicationsMore}</span></a>
     </div>
+    </c:if>
   </div>
 </div>
 </c:if>

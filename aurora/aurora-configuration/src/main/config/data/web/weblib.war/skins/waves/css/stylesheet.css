@@ -1626,7 +1626,7 @@ div.yuimenu {
 	color: var(--color-titre-avec-deux-couleurs);
 }
 
-#last-publication-home .last-publication-list span {
+:is(#last-publication-home, .latest-publications) .last-publication-list span {
 	color: var(--color-text-clair);
 	font-size: 1em;
 }
@@ -1635,7 +1635,7 @@ div.yuimenu {
 .main-home-page .secteur-container>h4,
 #portletPages h2.portlet-title,
 #portletPages h4.portlet-title,
-.spaceHome #last-publication-home h4,
+.spaceHome :is(#last-publication-home, .latest-publications) h4,
 .main-home-page #bloc-advancedSeach h4,
 .spaceHome #portletPages .header>* .spaceHome #bloc-advancedSeach h4 {
 	font-size: 2em;
@@ -1992,7 +1992,7 @@ silverpeas-calendar-event-occurrence-list .full-date {
 	order: 5;
 }
 
-.spaceHome .principalContent #last-publication-home {
+.spaceHome .principalContent :is(#last-publication-home, .latest-publications) {
 	order: 6;
 }
 
@@ -2719,7 +2719,7 @@ silverpeas-calendar-event-occurrence-list div.section-day-date {
 	margin-top: 0;
 }
 
-.principal-main-container #last-publication-home {
+.principal-main-container :is(#last-publication-home, .latest-publications) {
 	order: 1;
 	flex-basis: calc(50% - 3em);
 	margin-top: 0;
@@ -3360,11 +3360,11 @@ div.user-card .field {
 
 /* BLOC LAST PUBLICATION */
 
-.principal-main-container #last-publication-home {
+.principal-main-container :is(#last-publication-home, .latest-publications) {
 	position: relative;
 }
 
-.principal-main-container #last-publication-home:before {
+.principal-main-container :is(#last-publication-home, .latest-publications):before {
 	background: transparent url(../imgDesign/deco-publications.png) 0 0 no-repeat;
 	content: ' ';
 	display: block;
@@ -3383,13 +3383,13 @@ div.user-card .field {
 
 
 /* On expose tous les emplacements */
-.main-home-page #last-publication-home .sp-path,
+.main-home-page :is(#last-publication-home, .latest-publications) .sp-path,
 .main-home-page #carrousel-actualite .sp-path,
 .main-home-page #secondaryNews .sp-path,
 .main-home-page #thirdNews .sp-path,
 .main-home-page #home-event .sp-path,
 .aurora-list-news .sp-path,
-.spaceHome #last-publication-home .sp-path {
+.spaceHome :is(#last-publication-home, .latest-publications) .sp-path {
 	display: inline-block;
 }
 
@@ -3414,23 +3414,23 @@ span.sp-path>.sp-path-spaces span:last-child:before {
 	display: inline-block;
 }
 
-#last-publication-home .last-publication-list li,
+:is(#last-publication-home, .latest-publications) .last-publication-list li,
 #faq-home p {
 	padding-bottom: 1em;
 	margin-bottom: 0;
 }
 
-#last-publication-home .last-publication-list li {
+:is(#last-publication-home, .latest-publications) .last-publication-list li {
 	background-color: var(--bgColor-de-fond-clair-bloc-home);
 	padding: 1em;
 	margin-bottom: 1em;
 }
 
-.main-home-page #last-publication-home .last-publication-list li {
+.main-home-page :is(#last-publication-home, .latest-publications) .last-publication-list li {
 	background-color: var(--bgColor-de-fond-clair-bloc-home);
 }
 
-#last-publication-home .last-publication-list a,
+:is(#last-publication-home, .latest-publications) .last-publication-list a,
 .eventName a {
 	display: block;
 	color: var(--color-text);
@@ -3942,12 +3942,12 @@ button.button:hover,
 
 	.main-home-page .principal-main-container>div,
 	.principal-main-container #carrousel-actualite,
-	.principal-main-container #last-publication-home {
+	.principal-main-container :is(#last-publication-home, .latest-publications) {
 		margin: 0 0 3em 0;
 		flex-basis: calc(100% - 3em);
 	}
 
-	.principal-main-container #last-publication-home::before {
+	.principal-main-container :is(#last-publication-home, .latest-publications)::before {
 		background-position: right 0;
 		background-size: auto 71%;
 	}

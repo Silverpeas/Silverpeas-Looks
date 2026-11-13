@@ -1423,7 +1423,7 @@ button,
 }
 
 
-.spaceHome #last-publication-home .header h4 {
+.spaceHome :is(#last-publication-home, .latest-publications) .header h4 {
   color: #777777;
   font-weight: 100;
   margin: 0px;

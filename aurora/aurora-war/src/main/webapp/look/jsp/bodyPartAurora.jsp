@@ -124,3 +124,5 @@
     })();
   </script>
 </c:if>
+
+<script src="${pageContext.request.contextPath}/look/jsp/js/silverpeas-latest-publications.js" defer></script>
