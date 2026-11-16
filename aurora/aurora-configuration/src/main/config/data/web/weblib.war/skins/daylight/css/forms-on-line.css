@@ -1,0 +1,472 @@
+/* =====================================================================
+   « Nos démarches en ligne » (application formsOnline) — habillage de la maquette validée le 27/10/2026
+   (Idéés-Design\formulaires\maquettes\sdis\formulaire-sdis.html) : en-tête anthracite à liseré or, cartes de groupe à
+   en-tête anthracite, champs SVAR Willow, choix en tuiles (sélection bleue SVAR), barre de boutons collée en bas,
+   couleur d'accent du look (rouge #84001F pour SDIS, via --color-flashy-principale).
+   Balisage réel vérifié dans le code source 6.4.8 :
+   - formsOnline/jsp/newFormInstance.jsp et editFormInstance.jsp : div#header-OnlineForm (h2.title + description),
+     form[name=newInstanceForm] puis view:buttonPane (div.sp_buttonPane > a.sp_button, « Envoyer » = .validateButton) ;
+   - viewInstance.jsp : #header-OnlineForm, ul.steps-OnlineForm > li.step-OnlineForm ; formsList.jsp : #all-formsOnline,
+     #my-formsOnline, .formsOnline-waitMyAction (cartes .secteur-container li > a > span.form-title + span.form-description) ;
+   - XmlForm.display (Silverpeas-Core) : div.forms > ul.fields > li.field.field_<nom>#form-row-<nom> > label.txtlibform + div.fieldInput ;
+     choix radio / case : table > tr > td > input + libellé (RadioButtonDisplayer, CheckBoxDisplayer) ; obligatoire : img mandatoryField.gif ;
+     formulaires à mise en page HTML : fieldset.skinFieldset > legend + div.fields > div.field.
+   Les étapes et la frise de la maquette demandent un script (à faire ensuite) : cette feuille habille la page entière.
+   ===================================================================== */
+body:has(#header-OnlineForm),
+body:has(#all-formsOnline),
+body:has(#my-formsOnline) {
+  --ico-app-formsOnline-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFF' d='M17.03 11.03a.75.75 0 1 0-1.06-1.06L11 14.94l-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0zm-1.036-6.946A2.25 2.25 0 0 0 13.75 2h-3.5a2.25 2.25 0 0 0-2.236 2H6.25A2.25 2.25 0 0 0 4 6.25v13.5A2.25 2.25 0 0 0 6.25 22h11.5A2.25 2.25 0 0 0 20 19.75V6.25A2.25 2.25 0 0 0 17.75 4h-1.764zm0 .012L16 4.25q0-.078-.005-.154M10.25 6.5h3.5c.78 0 1.467-.397 1.871-1h2.129a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H6.25a.75.75 0 0 1-.75-.75V6.25a.75.75 0 0 1 .75-.75h2.129c.404.603 1.091 1 1.871 1m0-3h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1 0-1.5'/%3E%3C/svg%3E");
+  --fx-asterisque: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath fill='%2384001F' d='M4.2 0h1.6l-.2 3.6 3.1-1.9.8 1.4L6.3 4.7l3.2 1.6-.8 1.4-3.1-1.9.2 3.7H4.2l.2-3.7-3.1 1.9-.8-1.4 3.2-1.6L.5 3.1l.8-1.4 3.1 1.9z'/%3E%3C/svg%3E");
+}
+
+/* ---------- en-tête du formulaire (nouvelle demande, brouillon, consultation) */
+#header-OnlineForm {
+    padding: 1em 1em 1em 4em;
+    margin: 0 0 1em 0;
+    border-radius: var(--radius-bloc);
+    background: var(--color-flashy-principale) var(--ico-app-formsOnline-white) 1em center  no-repeat ;
+    background-size: 2em auto;
+    color: var(--color-text-sur-flashy-principale);
+    min-height: auto;
+}
+
+/* ---------- le formulaire : une carte par groupe */
+
+.formsOnline form .forms {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.formsOnline form .forms>h2.form-title {
+  margin: 0;
+  color: #232d3e;
+}
+
+/* formulaire simple (modèle XML) : la liste des champs devient une carte, avec un en-tête anthracite */
+.formsOnline form .forms>ul.fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em 20px;
+  margin: 0;
+  padding: 66px 20px 20px;
+  list-style: none;
+  position: relative;
+  border: 1px solid var(--border-color-bloc-fond-clair);
+  border-radius: var(--radius-bloc);
+  background:var(--bgColor-bloc-fond-clair);
+  overflow: hidden;
+}
+
+.formsOnline form .forms>ul.fields::before {
+  content: " ";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 1rem;
+  background-color: var(--color-foncee);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M3 10h11v2H3zm0-2h11V6H3zm0 8h7v-2H3zm15.01-3.13l.71-.71a.996.996 0 0 1 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71zm-.71.71l-5.3 5.3V21h2.12l5.3-5.3z'/%3E%3C/svg%3E");
+  background-position: right 1em center;
+  background-repeat: no-repeat;
+  background-size: 2em auto;
+  height: 1.5em;
+}
+
+/* formulaire à mise en page HTML : chaque fieldset devient une carte */
+.formsOnline form fieldset.skinFieldset,
+div fieldset.skinFieldset, 
+div.cell fieldset.skinFieldset {
+  width: auto;
+  border: 1px solid var(--border-color-bloc-fond-clair);
+  border-radius: var(--radius-bloc);
+  background:var(--bgColor-bloc-fond-clair);
+}
+
+.formsOnline form:not(form[name="creationForm"]) fieldset.skinFieldset>legend {
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 15px 20px;
+  background: var(--color-foncee);
+  color: var(--color-text-sur-foncee);
+  border: 0;
+}
+
+.formsOnline form:not(form[name="creationForm"]) fieldset.skinFieldset>legend+* {
+  clear: both;
+}
+
+.formsOnline form:not(form[name="creationForm"]) fieldset.skinFieldset>.fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em 20px;
+  padding: 20px;
+  clear: both;
+}
+
+/* ---------- un champ : libellé, aide, saisie */
+.formsOnline form:not(form[name="creationForm"]) .fields>li.field,
+.formsOnline form:not(form[name="creationForm"]) .fields>div.field {
+  flex: 1 1 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  float: none;
+  width: auto;
+}
+
+.formsOnline form:not(form[name="creationForm"]) .field>label.txtlibform {
+  display: block;
+  width: auto;
+  float: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.formsOnline form:not(form[name="creationForm"]) .field>label.txtlibform:empty {
+  display: none;
+}
+
+.formsOnline form:not(form[name="creationForm"]) .field .fieldInput {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  float: none;
+}
+
+.formsOnline form:not(form[name="creationForm"]) .field .fieldInput:empty,
+.formsOnline form:not(form[name="creationForm"]) .field:has(> .fieldInput:empty):has(> label:empty) {
+  display: none;
+}
+
+.formsOnline form:not(form[name="creationForm"]) img[src*="mandatoryField"] {
+  content: var(--fx-asterisque);
+  display: inline-block;
+  flex: 0 0 9px;
+  width: 9px !important;
+  height: 9px !important;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
+.formsOnline form:not(form[name="creationForm"]) .txtnote {
+  color: var(--color-text-clair);
+}
+
+.formsOnline form:not(form[name="creationForm"]) .forms>.legend {
+  color: var(--color-text-clair);
+}
+
+/* saisies SVAR Willow */
+.formsOnline form input[type="text"],
+.formsOnline form input:not([type]),
+.formsOnline form input[type="email"],
+.formsOnline form input[type="number"],
+.formsOnline form select,
+.formsOnline form textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  height: var(--height-input);
+  padding: 0 0.75em;
+  border: 1px solid var(--border-color-bloc-fond-clair-hover);
+  border-radius: var(--select-radius);
+  background-color: #fff;
+  font: inherit;
+  outline: none;
+}
+
+.formsOnline form input[type="text"]:not(.dateToPick) {
+  flex: 1 1 320px;
+  width: auto;
+}
+
+.formsOnline form textarea {
+  flex: 1 1 100%;
+  height: auto;
+  min-height: 110px;
+  padding: 0.25em 0.5em;
+  resize: vertical;
+}
+
+.formsOnline form select {
+  appearance: none;
+  min-width: 220px;
+  padding-right: 34px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%239fa1ae' stroke-width='2' stroke-linecap='round' d='m7 10 5 5 5-5'/%3E%3C/svg%3E") right 8px center/18px no-repeat;
+}
+
+.formsOnline form input:hover,
+.formsOnline form select:hover,
+.formsOnline form textarea:hover {
+  border-color: #c9ccd6;
+}
+
+.formsOnline form input:focus,
+.formsOnline form select:focus,
+.formsOnline form textarea:focus {
+  border-color: var(--color-action);
+}
+
+.formsOnline form input.dateToPick {
+  width: 160px;
+  padding-right: 36px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%2337a9ef' stroke-width='2' stroke-linecap='round'%3E%3Crect x='3' y='4' width='18' height='17' rx='2'/%3E%3Cpath d='M3 10h18M8 2v4M16 2v4'/%3E%3C/g%3E%3C/svg%3E") right 9px center/18px no-repeat;
+}
+
+.skinFieldset .field input[type="file"] {
+  width: 100%;
+}
+
+.formsOnline form input[type="file"] {
+  font: inherit;
+  color: var(--color-text-clair);
+}
+
+.formsOnline form input[type="file"]::file-selector-button {
+  height:calc( var(--height-input) - 2px );
+  margin: 0 1em 0 0;
+  padding: 0.25em 0.5em;
+  background: var(--bgColor-btn-secondaire);
+  border-radius: var(--radius-btn-secondaire);
+  border: 1px solid var(--border-color-btn-secondaire);
+  color: var(--color-text-btn-secondaire);
+  cursor: pointer;
+}
+
+.formsOnline form input[type="file"]::file-selector-button:hover {
+  background: var(--bgColor-btn-secondaire-hover);
+  color: var(--color-text-btn-secondaire);
+}
+
+/* choix radio / cases : tuiles (sélection bleue SVAR) */
+.formsOnline form .fieldInput table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: auto;
+  flex: 1 1 auto;
+}
+
+.formsOnline form .fieldInput table tbody,
+.formsOnline form .fieldInput table tr {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.formsOnline form .fieldInput table td:has(> input[type="radio"]),
+.formsOnline form .fieldInput table td:has(> input[type="checkbox"]) {
+  padding:0.5em 1em 0.5em 0;
+}
+
+
+/* un seul choix (« J'atteste… oui ») : tuile à gauche, largeur du contenu */
+.formsOnline form .fieldInput table:has(td:only-child) {
+  flex: 0 0 auto;
+}
+
+.formsOnline form .fieldInput table tr:has(> td:only-child)>td {
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  padding-right: 1em;
+}
+
+/* ---------- barre de boutons collée en bas (Envoyer, Enregistrer le brouillon, Annuler) */
+body:has(.formsOnline form) .sp_buttonPane {
+  position: sticky;
+  bottom: 1em;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1em;
+  margin: 1em 0 0;
+  padding: 1em;
+  border: 1px solid var(--border-color-bloc-fond-clair);
+  border-radius: var(--radius-bloc);
+  background: rgba(255, 255, 255, .8);
+}
+
+
+.sp_buttonPane a.validateButton::before {
+  content: '';
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  vertical-align: text-bottom;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M5 18h14v2H5zm4.6-2.7L5 10.7l2-1.9l2.6 2.6L17 4l2 2z'/%3E%3C/svg%3E");
+}
+/* ---------- consultation d'une demande : étapes du circuit */
+
+#header-OnlineForm .steps-OnlineForm {
+  color: var(--color-text);
+}
+/* ---------- accueil de l'application : choix du formulaire et mes demandes */
+#all-formsOnline .secteur-container>ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1em;
+}
+
+#all-formsOnline .secteur-container li {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-color-bloc-fond-clair);
+  border-radius: var(--radius-bloc);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  }
+
+#all-formsOnline .secteur-container li:hover {
+  border-color: var(--color-action);
+}
+
+#all-formsOnline .secteur-container li>a,
+#all-formsOnline.lecteur-view .secteur-container li>a,
+#all-formsOnline .secteur-container li:not(:has(>a)),
+#all-formsOnline.lecteur-view .secteur-container li:not(:has(>a)) {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 1em 1em 1em 64px;
+  position: relative;
+  text-decoration: none;
+}
+
+#all-formsOnline .secteur-container li>a::before,
+#all-formsOnline .secteur-container li:not(:has(>a))::before  {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #232d3e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2'/%3E%3Cpath d='M9 8h6M9 12h6M9 16h4'/%3E%3C/g%3E%3C/svg%3E") center/18px no-repeat;
+}
+
+#all-formsOnline .secteur-container li:not(:has(>a))::before  {
+  background-color:#ccc ;
+}
+
+#all-formsOnline .secteur-container .form-title {
+  font-size: 1.2em;
+}
+
+#all-formsOnline .secteur-container li:hover .form-title {
+  color: var(--color-flashy-principale);
+}
+
+#all-formsOnline .secteur-container .form-description {
+  color: var(--color-text-clair);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#all-formsOnline .secteur-container .form-nbRequests {
+  align-self: flex-start;
+  margin-top: 0.25em;
+  padding: 1px 0.5em;
+  border-radius: var(--radius-bloc);
+  background: var(--border-color-bloc-fond-clair);
+  color: var(--color-text-clair);
+}
+
+#all-formsOnline .secteur-container .header h3,
+.my-formsOnline-title,
+.formsOnline-waitMyAction-title {
+  color:var(--color-text);
+}
+
+.my-formsOnline-title strong,
+.formsOnline-waitMyAction-title strong {
+  color: var(--color-flashy-principale);
+}
+
+#my-formsOnline .secteur-container ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45em;
+}
+
+#my-formsOnline .secteur-container li a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em 0.75em;
+  padding: 1em ;
+  text-decoration: none;
+}
+
+#my-formsOnline .secteur-container li a:hover {
+  background: var(--color-action-selected);
+  color: inherit;
+}
+
+#my-formsOnline .ask-form-date {
+  color: var(--color-text-clair);
+}
+
+#all-formsOnline ul li .operation {
+  top: 2px;
+}
+
+#my-formsOnline ul li {
+    line-height: auto; 
+    height: auto; 
+}
+
+@media (max-width: 767px) {
+  #header-OnlineForm {
+    padding: 1em;
+  }
+
+  .formsOnline form .forms>ul.fields,
+  .formsOnline form fieldset.skinFieldset>.fields {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .formsOnline form .fieldInput table td:has(> input) {
+    flex: 1 1 calc(50% - 0.5em);
+  }
+
+  body:has(.formsOnline form) .sp_buttonPane {
+    bottom: 0.5em;
+    padding: 0.65em;
+    gap: 0.5em;
+  }
+
+  body:has(.formsOnline form) .sp_buttonPane a {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  body:has(.formsOnline form) .sp_buttonPane a[href$="Main"] {
+    margin-right: 0;
+  }
+}
