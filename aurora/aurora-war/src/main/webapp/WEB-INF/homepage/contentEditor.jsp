@@ -27,7 +27,7 @@
   <view:sp-head-part>
     <title>Prototype des contenus libres Aurora</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/wysiwyg/jsp/ckeditor/ckeditor.js"/>
+    <view:includePlugin name="wysiwyg"/>
     <view:script src="/look/jsp/js/homepage-content.js"/>
   </view:sp-head-part>
   <view:sp-body-part>
