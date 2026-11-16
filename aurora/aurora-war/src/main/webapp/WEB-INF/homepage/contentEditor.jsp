@@ -45,7 +45,7 @@
       </form>
       <p id="homepage-status" role="status" aria-live="polite"></p>
       <h2>Aperçu enregistré</h2>
-      <iframe id="homepage-preview" title="Aperçu du contenu enregistré" sandbox></iframe>
+      <iframe id="homepage-preview" title="Aperçu du contenu enregistré" sandbox="allow-same-origin"></iframe>
     </main>
   </view:sp-body-part>
 </view:sp-page>

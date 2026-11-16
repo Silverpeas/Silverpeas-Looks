@@ -155,7 +155,7 @@ class HomepageContentServletTest {
   void previewIsSandboxed() throws Exception {
     when(request.getParameter("action")).thenReturn("view");
     servlet.doGet(request, response);
-    verify(response).setHeader(eq("Content-Security-Policy"), startsWith("sandbox;"));
+    verify(response).setHeader(eq("Content-Security-Policy"), eq("sandbox allow-same-origin; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'self'"));
     verify(response).setHeader("X-Content-Type-Options", "nosniff");
   }
 

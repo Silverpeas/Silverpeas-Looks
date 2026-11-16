@@ -178,7 +178,7 @@ public class HomepageContentServlet extends HttpServlet {
       response.getOutputStream().write(bytes);
     } else if ("view".equals(action)) {
       response.setContentType("text/html;charset=UTF-8");
-      response.setHeader("Content-Security-Policy", "sandbox; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'self'");
+      response.setHeader("Content-Security-Policy", "sandbox allow-same-origin; default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'self'");
       response.getWriter().write(store.read(page, widget, language).html());
     } else if ("load".equals(action)) {
       contentResponse(response, store.read(page, widget, language), csrf);

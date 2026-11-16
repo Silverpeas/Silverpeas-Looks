@@ -68,6 +68,8 @@ La résistance effective à une mise à jour doit encore être testée avec l'in
   16 millions de pixels avant décodage. Les images acceptées par ImageIO sont réencodées en PNG.
   SVG et autres fichiers non reconnus comme images sont refusés ; les images ne sont jamais exécutables.
 - HTML filtré côté serveur par le sanitiseur du Core. L'aperçu est isolé par sandbox et CSP.
+  L'origine est conservée pour accéder aux images protégées par la session, sans autoriser les scripts.
+  Le filtre de CKEditor autorise explicitement les images insérées par le téléversement dédié.
   Les scripts et les iframes ne font pas partie du contenu pris en charge par ce prototype.
 - Chaque fichier est remplacé atomiquement. Un jeton de révision refuse une sauvegarde devenue
   obsolète ; les accès sont sérialisés par une instance du service dans une JVM.
