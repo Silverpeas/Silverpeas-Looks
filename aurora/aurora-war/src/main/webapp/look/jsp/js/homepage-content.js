@@ -22,6 +22,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /* Prototype #15592: image uploads and persistence belong to Aurora, not WebPages. */
+// Silverpeas stamps XMLHttpRequest with its session CSRF token; fetch is not stamped.
+function homepageContentRequest(target, options = {}) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    // A context-relative URL lets the platform recognize this as a Silverpeas request.
+    xhr.open(options.method || 'GET', target.pathname + target.search, true);
+    Object.entries(options.headers || {}).forEach(([name, value]) => xhr.setRequestHeader(name, value));
+    let body = options.body;
+    if (body instanceof URLSearchParams) {
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+      body = body.toString();
+    }
+    xhr.onload = () => {
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject(new Error(xhr.status === 409
+            ? 'Ce contenu a été modifié ailleurs. Rechargez la page avant de réessayer.'
+            : `Opération impossible (${xhr.status}).`));
+        return;
+      }
+      try {
+        resolve(JSON.parse(xhr.responseText));
+      } catch (error) {
+        reject(new Error('Réponse du serveur invalide. Vérifiez votre session.'));
+      }
+    };
+    xhr.onerror = () => reject(new Error('Impossible de joindre le serveur.'));
+    xhr.ontimeout = () => reject(new Error('Le serveur ne répond pas. Réessayez.'));
+    xhr.timeout = 60000;
+    xhr.send(body || null);
+  });
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const endpoint = new URL(window.location.href);
@@ -45,15 +77,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   let revision;
   let csrf;
   let busy = false;
-  const request = async (target, options = {}) => {
-    const response = await fetch(target, {credentials: 'same-origin', ...options});
-    if (!response.ok) {
-      throw new Error(response.status === 409
-          ? 'Ce contenu a été modifié ailleurs. Rechargez la page avant de réessayer.'
-          : `Opération impossible (${response.status}).`);
-    }
-    return response.json();
-  };
+  const request = homepageContentRequest;
   const refreshPreview = () => {
     const target = url('view');
     target.searchParams.set('v', Date.now());

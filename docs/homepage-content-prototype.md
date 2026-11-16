@@ -62,6 +62,7 @@ La résistance effective à une mise à jour doit encore être testée avec l'in
 - Pour lire un contenu ou une image : administration plateforme, ou skin actif du demandeur,
   ou droit de consultation de l'espace. L'accès anonyme sans session Silverpeas n'est pas pris en charge.
 - Jeton CSRF en session requis pour les sauvegardes et les images ; aucune écriture par GET.
+  Les appels utilisent XMLHttpRequest pour recevoir également le jeton CSRF X-STKN du Core.
 - Identifiants de chemin validés, liens symboliques refusés, noms d'images générés côté serveur.
 - Téléversement limité à 5 Mio par fichier, requête multipart à 6 Mio ; dimensions limitées à
   16 millions de pixels avant décodage. Les images acceptées par ImageIO sont réencodées en PNG.
@@ -87,3 +88,5 @@ L'écriture du HTML et celle des properties sont deux remplacements de fichiers 
 ne constituent pas une transaction globale en cas de crash. Le verrou et la révision ne couvrent
 pas plusieurs JVM ; ne pas activer l'édition sur plusieurs nœuds avant d'ajouter une coordination
 distribuée. Ces points sont à résoudre avant une utilisation en production.
+
+Tests du transport JavaScript : `node --test aurora/aurora-war/src/test/javascript/homepage-content-request.test.cjs`.
