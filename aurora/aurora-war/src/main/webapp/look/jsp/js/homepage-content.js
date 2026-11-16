@@ -93,12 +93,13 @@ window.addEventListener('DOMContentLoaded', async () => {
       customConfig: '',
       language: 'fr',
       height: 300,
+      extraPlugins: 'image',
       // The custom upload inserts images without CKEditor's Image toolbar command.
       extraAllowedContent: 'img[!src,alt,width,height]{width,height}',
       removePlugins: 'imagebank,filebank,uploadimage,uploadfile,uploadwidget,uploadfiles,allmedias',
       toolbar: [
         ['Bold', 'Italic', 'Underline', 'RemoveFormat'],
-        ['NumberedList', 'BulletedList', 'Link', 'Unlink', 'Table'],
+        ['NumberedList', 'BulletedList', 'Link', 'Unlink', 'Image', 'Table'],
         ['Format', 'Source', 'Undo', 'Redo']
       ]
     });

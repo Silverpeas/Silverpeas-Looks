@@ -28,7 +28,7 @@
     <title>Prototype des contenus libres Aurora</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
     <view:includePlugin name="wysiwyg"/>
-    <view:script src="/look/jsp/js/homepage-content.js"/>
+    <view:script src="/look/jsp/js/homepage-content.js?prototype=15592-images-v2"/>
   </view:sp-head-part>
   <view:sp-body-part>
     <main class="homepage-content-editor">
