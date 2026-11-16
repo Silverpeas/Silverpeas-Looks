@@ -31,6 +31,14 @@
 	padding-left: 1.25em;
 }
 
+#nav .displayMenuAppIcons-true .has-mega-menu ul .app a, 
+#nav .displayMenuAppIcons-true .has-mega-menu ul .app a:hover, 
+#nav .displayMenuAppIcons-true .has-mega-menu ul .app a:focus, 
+#nav .displayMenuAppIcons-true .has-mega-menu ul .app a:active, 
+#nav .displayMenuAppIcons-true .has-mega-menu ul .app a.highlighted{
+	padding-left:0em;
+}
+
 .spaceNavigation .browse-component[onclick*='goToComponentItem']::before {
 	content: '';
 	background-size: auto 100%;

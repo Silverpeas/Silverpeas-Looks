@@ -346,10 +346,14 @@
     font-size: 0.875rem
 }
 
+.treeView #pubList .state {
+    color: var(--color-text-alt);
+    font-size: 0.875rem
+}
+
 .treeView #pubList .line2 span {
     margin: 0
 }
-
 
 .treeView #pubList .files a {
     color: var(--color-action);
