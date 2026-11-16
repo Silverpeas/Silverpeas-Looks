@@ -14,13 +14,17 @@ Sur une installation où elle vaut `/silverpeas/data`, les données sont stocké
 Après connexion à Silverpeas, ouvrir dans le même navigateur :
 
 - Pour un administrateur de plateforme :
-  `/silverpeas/AuroraHomepageContent?action=editor&kind=skins&owner=waves&widget=bienvenue&language=fr`
+  `/silverpeas/AuroraHomepageContent?action=editor&kind=skins&widget=bienvenue&language=fr`
 - Pour l'administrateur de l'espace WA123 :
   `/silverpeas/AuroraHomepageContent?action=editor&kind=spaces&owner=WA123&widget=presentation&language=fr`
 
 Remplacer le contexte `/silverpeas`, le nom du skin et l'identifiant d'espace si nécessaire.
-Pour les skins, employer le nom du look actif, sans extension `.properties` (par exemple `waves`
-pour le look `Waves`). Le nom du propriétaire et celui du widget sont des identifiants stables :
+Pour les skins, ne pas fixer le propriétaire dans le lien d’édition : Aurora le déduit du bundle
+du skin réellement actif dans la session. Par exemple, l’alias `Initial` peut désigner
+`Aurora.properties` et produit alors le dossier `skins/Aurora`. Un alias `Waves` associé à
+`waves.properties` produit `skins/waves`. Les préférences utilisateur et le repli de configuration
+sont donc ceux déjà résolus par Silverpeas. Une URL d’édition portant un autre propriétaire est
+redirigée vers le skin actif ; les références explicites des images restent stables. Le nom du propriétaire et celui du widget sont des identifiants stables :
 lettres, chiffres, tirets et underscores, 80 caractères maximum. La langue est explicitement choisie.
 
 Saisir un titre et un texte, insérer une image avec le champ dédié, puis enregistrer. L'aperçu affiche

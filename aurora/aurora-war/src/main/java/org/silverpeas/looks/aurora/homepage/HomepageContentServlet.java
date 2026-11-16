@@ -34,6 +34,8 @@ import org.silverpeas.core.admin.service.OrganizationController;
 import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygContentTransformer;
 import org.silverpeas.core.util.JSONCodec;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
+import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import java.net.URLEncoder;
 import org.silverpeas.kernel.logging.SilverLogger;
 
 import javax.imageio.ImageIO;
@@ -94,10 +96,29 @@ public class HomepageContentServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         return;
       }
-      HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
       String action = request.getParameter("action");
+      String activeSkin = "";
+      if ("skins".equals(request.getParameter("kind"))) {
+        var factory = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+        if (factory == null) {
+          response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+          return;
+        }
+        activeSkin = skinId(factory);
+        if ("editor".equals(action) && !activeSkin.equals(request.getParameter("owner"))) {
+          if (!controller.getCurrentUserDetail().isAccessAdmin()) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+          }
+          response.sendRedirect(request.getContextPath() + "/AuroraHomepageContent?action=editor&kind=skins&owner="
+              + activeSkin + "&widget=" + encode(request.getParameter("widget"))
+              + "&language=" + encode(request.getParameter("language")));
+          return;
+        }
+      }
+      HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
       boolean edit = write || !"asset".equals(action) && !"view".equals(action);
-      if (!isAllowed(controller, page, edit)) {
+      if (!isAllowed(controller, page, edit, activeSkin)) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
         return;
       }
@@ -129,7 +150,7 @@ public class HomepageContentServlet extends HttpServlet {
     }
   }
 
-  boolean isAllowed(MainSessionController controller, HomepagePage page, boolean edit) {
+  boolean isAllowed(MainSessionController controller, HomepagePage page, boolean edit, String activeSkin) {
     var user = controller.getCurrentUserDetail();
     if (user == null || !user.isActivatedState() && !user.isAnonymous()) {
       return false;
@@ -138,13 +159,24 @@ public class HomepageContentServlet extends HttpServlet {
       return true;
     }
     if ("skins".equals(page.kind())) {
-      return !edit && page.owner().equalsIgnoreCase(controller.getFavoriteLook());
+      return !edit && page.owner().equals(activeSkin);
     }
     var organization = OrganizationController.get();
     if (edit) {
       return Arrays.asList(organization.getUserManageableSpaceIds(user.getId())).contains(page.owner());
     }
     return organization.isSpaceAvailable(page.owner(), user.getId());
+  }
+
+  static String skinId(GraphicElementFactory factory) {
+    String bundle = factory.getFavoriteLookSettings().getBaseBundleName();
+    String id = bundle.substring(bundle.lastIndexOf('.') + 1);
+    HomepagePage.validateIdentifier(id);
+    return id;
+  }
+
+  private String encode(String value) {
+    return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8);
   }
 
   private void write(HttpServletRequest request, HttpServletResponse response, HomepagePage page,

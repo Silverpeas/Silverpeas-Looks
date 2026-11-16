@@ -27,6 +27,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
+import org.silverpeas.kernel.bundle.SettingBundle;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -79,7 +81,12 @@ class HomepageContentServletTest {
     when(controller.getCurrentUserDetail()).thenReturn(user);
     when(user.isActivatedState()).thenReturn(true);
     when(user.getId()).thenReturn("42");
-    when(controller.getFavoriteLook()).thenReturn("Waves");
+    when(controller.getFavoriteLook()).thenReturn("Initial");
+    var factory = mock(GraphicElementFactory.class);
+    var skin = mock(SettingBundle.class);
+    when(factory.getFavoriteLookSettings()).thenReturn(skin);
+    when(skin.getBaseBundleName()).thenReturn("org.silverpeas.util.viewGenerator.settings.waves");
+    when(session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT)).thenReturn(factory);
     when(request.getParameter("kind")).thenReturn("skins");
     when(request.getParameter("owner")).thenReturn("waves");
     when(request.getParameter("widget")).thenReturn("welcome");
@@ -105,9 +112,9 @@ class HomepageContentServletTest {
 
   @Test
   void skinReadAccessIsLimitedToTheCurrentSkin() {
-    assertTrue(servlet.isAllowed(controller, new HomepagePage("skins", "waves"), false));
-    assertFalse(servlet.isAllowed(controller, new HomepagePage("skins", "other"), false));
-    assertFalse(servlet.isAllowed(controller, new HomepagePage("skins", "waves"), true));
+    assertTrue(servlet.isAllowed(controller, new HomepagePage("skins", "waves"), false, "waves"));
+    assertFalse(servlet.isAllowed(controller, new HomepagePage("skins", "other"), false, "waves"));
+    assertFalse(servlet.isAllowed(controller, new HomepagePage("skins", "waves"), true, "waves"));
   }
 
   @Test
@@ -117,10 +124,10 @@ class HomepageContentServletTest {
       mocked.when(OrganizationController::get).thenReturn(organization);
       when(organization.isSpaceAvailable("WA123", "42")).thenReturn(true);
       when(organization.getUserManageableSpaceIds("42")).thenReturn(new String[]{"WA456"});
-      assertTrue(servlet.isAllowed(controller, new HomepagePage("spaces", "WA123"), false));
-      assertFalse(servlet.isAllowed(controller, new HomepagePage("spaces", "WA123"), true));
-      assertFalse(servlet.isAllowed(controller, new HomepagePage("spaces", "WA456"), false));
-      assertTrue(servlet.isAllowed(controller, new HomepagePage("spaces", "WA456"), true));
+      assertTrue(servlet.isAllowed(controller, new HomepagePage("spaces", "WA123"), false, "waves"));
+      assertFalse(servlet.isAllowed(controller, new HomepagePage("spaces", "WA123"), true, "waves"));
+      assertFalse(servlet.isAllowed(controller, new HomepagePage("spaces", "WA456"), false, "waves"));
+      assertTrue(servlet.isAllowed(controller, new HomepagePage("spaces", "WA456"), true, "waves"));
     }
   }
 
@@ -203,6 +210,25 @@ class HomepageContentServletTest {
     verify(response).sendError(400);
     verify(part).delete();
     assertFalse(Files.exists(root.resolve("skins/waves/widgets/welcome/assets")));
+  }
+
+  @Test
+  void defaultAliasResolvesToTheActualAuroraBundle() {
+    var factory = mock(GraphicElementFactory.class);
+    var settings = mock(SettingBundle.class);
+    when(factory.getFavoriteLookSettings()).thenReturn(settings);
+    when(settings.getBaseBundleName()).thenReturn("org.silverpeas.util.viewGenerator.settings.Aurora");
+    assertEquals("Aurora", HomepageContentServlet.skinId(factory));
+  }
+
+  @Test
+  void editorRedirectsToTheEffectiveSkinInsteadOfTrustingTheUrl() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getContextPath()).thenReturn("/silverpeas");
+    when(request.getParameter("action")).thenReturn("editor");
+    when(request.getParameter("owner")).thenReturn("wrong-skin");
+    servlet.doGet(request, response);
+    verify(response).sendRedirect("/silverpeas/AuroraHomepageContent?action=editor&kind=skins&owner=waves&widget=welcome&language=fr");
   }
 
 }
