@@ -114,3 +114,12 @@ révision et empêchent un ancien éditeur de les écraser.
 
 Les zones WebPages existantes sont conservées. L’ordre ne déplace pas les anciens
 blocs. La gestion des homes d’espace reste une étape ultérieure.
+
+### Interface de gestion
+
+La gestion et l’éditeur utilisent le cadre, le fil d’Ariane et les panneaux
+Silverpeas. La liste s’appuie sur un tableau Silverpeas paginé, sans tri manuel
+pour conserver l’ordre configuré des zones. Elle distingue les zones visibles et
+masquées et prévoit un état vide. Les titres sont échappés avant insertion dans
+les cellules du tableau. L’éditeur regroupe les réglages d’affichage, le contenu,
+l’insertion d’image et les actions ; l’aperçu enregistré est repliable.

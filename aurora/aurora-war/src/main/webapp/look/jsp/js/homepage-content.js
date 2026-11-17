@@ -78,8 +78,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   const image = document.getElementById('homepage-image');
   const title = document.getElementById('homepage-title');
   const preview = document.getElementById('homepage-preview');
-  document.getElementById('homepage-context').textContent =
-      `${context.get('kind')} / ${context.get('owner')} / ${context.get('widget')} / ${context.get('language')}`;
   let editor;
   let revision;
   let csrf;

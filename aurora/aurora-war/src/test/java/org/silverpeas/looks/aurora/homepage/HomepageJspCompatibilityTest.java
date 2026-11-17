@@ -26,12 +26,16 @@ package org.silverpeas.looks.aurora.homepage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -66,4 +70,46 @@ class HomepageJspCompatibilityTest {
       assertTrue(compiled, () -> diagnostics.getDiagnostics().toString());
     }
   }
+  @Test
+  void managementViewsUseSupportedSilverpeasTagsAndAttributes() throws Exception {
+    var factory = DocumentBuilderFactory.newInstance();
+    factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    var tags = new HashMap<String, Set<String>>();
+    var required = new HashMap<String, Set<String>>();
+    try (var stream = getClass().getResourceAsStream("/META-INF/viewGenerator.tld")) {
+      var definitions = factory.newDocumentBuilder().parse(stream).getElementsByTagName("tag");
+      for (int i = 0; i < definitions.getLength(); i++) {
+        var definition = (org.w3c.dom.Element) definitions.item(i);
+        String name = definition.getElementsByTagName("name").item(0).getTextContent().trim();
+        var attributes = definition.getElementsByTagName("attribute");
+        var allowed = new HashSet<String>();
+        var mandatory = new HashSet<String>();
+        for (int j = 0; j < attributes.getLength(); j++) {
+          var attribute = (org.w3c.dom.Element) attributes.item(j);
+          String attributeName = attribute.getElementsByTagName("name").item(0).getTextContent().trim();
+          allowed.add(attributeName);
+          var requirement = attribute.getElementsByTagName("required");
+          if (requirement.getLength() > 0 &&
+              "true".equals(requirement.item(0).getTextContent().trim())) {
+            mandatory.add(attributeName);
+          }
+        }
+        tags.put(name, allowed);
+        required.put(name, mandatory);
+      }
+    }
+    for (String view : List.of("manage.jsp", "contentEditor.jsp")) {
+      String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
+      var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
+      while (uses.find()) {
+        String name = uses.group(1);
+        assertTrue(tags.containsKey(name), "Unknown Silverpeas tag: " + name);
+        var used = Pattern.compile("([\\w-]+)=\"").matcher(uses.group(2)).results()
+            .map(match -> match.group(1)).collect(Collectors.toSet());
+        assertTrue(tags.get(name).containsAll(used), "Unsupported attributes on " + name);
+        assertTrue(used.containsAll(required.get(name)), "Missing required attributes on " + name);
+      }
+    }
+  }
+
 }

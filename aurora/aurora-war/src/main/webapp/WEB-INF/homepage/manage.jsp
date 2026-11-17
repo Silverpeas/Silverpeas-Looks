@@ -24,40 +24,77 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<c:url value="/look/jsp/Main.jsp" var="homeUrl"/>
+<c:url value="/AuroraHomepageContent" var="manageUrl">
+  <c:param name="action" value="manage"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
+<c:url value="/AuroraHomepageContent" var="addUrl">
+  <c:param name="action" value="editor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="widget" value="${newWidgetId}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
 <view:sp-page>
   <view:sp-head-part>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-ui-v1"/>
   </view:sp-head-part>
-  <view:sp-body-part>
-    <main class="homepage-content-editor">
-      <h1>Zones libres de la page d’accueil</h1>
-      <p>Les zones sont ajoutées après les blocs existants de chaque colonne. L’ordre concerne les zones libres entre elles.</p>
-      <ul>
-        <c:forEach items="${homepageWidgets}" var="widget">
-          <c:url value="/AuroraHomepageContent" var="editUrl">
-            <c:param name="action" value="editor"/>
-            <c:param name="kind" value="${param.kind}"/>
-            <c:param name="owner" value="${param.owner}"/>
-            <c:param name="widget" value="${widget.id}"/>
-            <c:param name="language" value="${homepageLanguage}"/>
-          </c:url>
-          <li><a href="<c:out value='${editUrl}'/>"><c:out value="${empty widget.title ? widget.id : widget.title}"/></a>
-            — <c:out value="${widget.zone}"/> — ordre <c:out value="${widget.order}"/>
-            — <c:out value="${widget.enabled ? 'activée' : 'désactivée'}"/>
-          </li>
-        </c:forEach>
-      </ul>
-      <c:url value="/AuroraHomepageContent" var="addUrl">
-        <c:param name="action" value="editor"/>
-        <c:param name="kind" value="${param.kind}"/>
-        <c:param name="owner" value="${param.owner}"/>
-        <c:param name="widget" value="${newWidgetId}"/>
-        <c:param name="language" value="${homepageLanguage}"/>
-      </c:url>
-      <p><a href="<c:out value='${addUrl}'/>">Ajouter une zone libre</a></p>
-      <c:url value="/look/jsp/Main.jsp" var="homeUrl"/>
-      <p><a href="<c:out value='${homeUrl}'/>">Retour à la page d’accueil</a></p>
-    </main>
+  <view:sp-body-part cssClass="homepage-content-page">
+    <view:browseBar>
+      <view:browseBarElt label="Page d’accueil" link="${homeUrl}"/>
+      <view:browseBarElt label="Zones libres"/>
+    </view:browseBar>
+    <view:window>
+      <view:frame>
+        <main class="homepage-content-editor homepage-content-management">
+          <h1>Zones libres de la page d’accueil</h1>
+          <p class="homepage-introduction">Ajoutez vos textes et images, puis choisissez où les afficher sur la page d’accueil.</p>
+          <view:buttonPane>
+            <view:button label="Ajouter une zone libre" action="${addUrl}"/>
+            <view:button label="Voir la page d’accueil" action="${homeUrl}" classes="homepage-secondary-action"/>
+          </view:buttonPane>
+          <c:choose>
+            <c:when test="${empty homepageWidgets}">
+              <view:board>
+                <div class="homepage-empty-state">
+                  <h2>Aucune zone libre pour le moment</h2>
+                  <p>Utilisez « Ajouter une zone libre » pour créer votre premier contenu.</p>
+                </div>
+              </view:board>
+            </c:when>
+            <c:otherwise>
+              <view:arrayPane var="homepageContentZones" routingAddress="${manageUrl}" numberLinesPerPage="20">
+                <view:arrayColumn title="Zone libre" sortable="false"/>
+                <view:arrayColumn title="Colonne" sortable="false"/>
+                <view:arrayColumn title="Ordre" sortable="false"/>
+                <view:arrayColumn title="Affichage" sortable="false"/>
+                <c:forEach items="${homepageWidgets}" var="widget">
+                  <c:url value="/AuroraHomepageContent" var="editUrl">
+                    <c:param name="action" value="editor"/>
+                    <c:param name="kind" value="${param.kind}"/>
+                    <c:param name="owner" value="${param.owner}"/>
+                    <c:param name="widget" value="${widget.id}"/>
+                    <c:param name="language" value="${homepageLanguage}"/>
+                  </c:url>
+                  <c:set var="editLink"><a href="<c:out value='${editUrl}'/>"><c:out value="${empty widget.title ? 'Zone sans titre' : widget.title}"/></a></c:set>
+                  <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
+                  <view:arrayLine id="${widget.id}">
+                    <view:arrayCellText text="${editLink}"/>
+                    <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
+                    <view:arrayCellText text="${widget.order}"/>
+                    <view:arrayCellText text="${displayStatus}"/>
+                  </view:arrayLine>
+                </c:forEach>
+              </view:arrayPane>
+            </c:otherwise>
+          </c:choose>
+          <p class="homepage-help">Les zones libres apparaissent après les blocs existants de chaque colonne. Les plus petits numéros d’ordre s’affichent en premier.</p>
+        </main>
+      </view:frame>
+    </view:window>
   </view:sp-body-part>
 </view:sp-page>

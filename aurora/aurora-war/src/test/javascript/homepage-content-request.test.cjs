@@ -85,7 +85,12 @@ test('an expired session returning HTML is reported as an invalid response', asy
 
 test('editor loads placement and submits it with the content revision', async () => {
   const elements = new Map();
+  const editorJsp = fs.readFileSync(path.resolve(__dirname,
+      '../../main/webapp/WEB-INF/homepage/contentEditor.jsp'), 'utf8');
+  const ids = new Set([...editorJsp.matchAll(/id="([^"]+)"/g)].map(match => match[1]));
+  ids.add('main');
   function element(id) {
+    assert.ok(ids.has(id), `Missing editor control: ${id}`);
     if (!elements.has(id)) elements.set(id, {value: '', disabled: false,
       dataset: {language: 'fr'}, handlers: {}, addEventListener(name, callback) {
         this.handlers[name] = callback;
