@@ -41,8 +41,8 @@
 <%@ page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
 <%@ page import="org.silverpeas.core.web.mvc.controller.MainSessionController" %>
 <%
-  var homepageController = MainSessionController.getInstance(session);
-  var homepageFactory = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+  MainSessionController homepageController = MainSessionController.getInstance(session);
+  GraphicElementFactory homepageFactory = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
   request.setAttribute("homepageAdmin", homepageController.getCurrentUserDetail().isAccessAdmin());
   request.setAttribute("homepageLanguage", homepageController.getFavoriteLanguage());
   request.setAttribute("homepageWidgets", HomepageContentStore.forInstallation().widgets(
