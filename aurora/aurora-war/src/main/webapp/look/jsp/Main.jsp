@@ -72,7 +72,7 @@
 <c:set var="showWeather" value="${not empty weatherCities}"/>
 
 
-<c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
+
 
 <c:set var="bookmarks" value="${lookHelper.bookmarks}"/>
 <c:set var="showBookmarksAreaWhenEmpty" value="${settings.displayBookmarksAreaWhenEmpty}"/>
@@ -95,21 +95,21 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-subscriptions-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-shortcuts-v1"/>
   </jsp:attribute>
   <jsp:body>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-subscriptions-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-shortcuts-v1"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css?version=15592-subscriptions-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-shortcuts-v1"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
-    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-subscriptions-v1"/>
+    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-shortcuts-v1"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
-    <view:script src="/look/jsp/js/homepage-main.js?version=15592-subscriptions-v1"/>
+    <view:script src="/look/jsp/js/homepage-main.js?version=15592-shortcuts-v1"/>
   </jsp:body>
 </view:sp-head-part>
 <view:sp-body-part cssClass="main-home-page">
@@ -147,7 +147,7 @@
 
     <div class="principal-main-container">
 
-      <viewTags:displayShortcuts shortcuts="${shortcuts}"/>
+
 
 
 

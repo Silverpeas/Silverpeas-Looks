@@ -45,7 +45,7 @@ async function editor(status = 200, configured = false, publications = false, ep
   }
   const calls = [];
   let start;
-  const data = {group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -61,7 +61,10 @@ async function editor(status = 200, configured = false, publications = false, ep
   }
   vm.runInNewContext(source, {URL, URLSearchParams, XMLHttpRequest: XHR,
     document: {getElementById(id) { return controls[id] || null; }},
-    window: {location: {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth',
+    window: {AuroraHomeShortcuts: {
+      load(entries) { controls.entries = entries; },
+      serialize(body) { body.set('count', controls.entries.length); controls.entries.forEach((entry, index) => Object.keys(entry).forEach(key => body.set('entry.' + index + '.' + key, entry[key]))); }
+    }, location: {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth',
       search: '?action=newsEditor&kind=skins&owner=waves&widget=news-fourth'},
       addEventListener(event, callback) { start = callback; }}});
   await start();
@@ -267,6 +270,26 @@ test('subscriptions editor saves the limit and more link without an administrato
   const body = new URLSearchParams(saved.body);
   assert.equal(body.get('size'), '8');
   assert.equal(body.get('showMore'), 'false');
+  assert.equal(body.get('zone'), 'right');
+  assert.equal(body.get('revision'), 'first');
+  assert.equal(body.has('source'), false);
+});
+
+test('home shortcuts editor loads ordered entries and sends them with protected common placement', async () => {
+  const {controls, calls, submit} = await editor(200, true, false, false, 'shortcuts');
+  assert.equal(controls['news-save'].disabled, false);
+  assert.match(calls[0].url, /action=loadShortcuts/);
+  assert.equal(controls.entries[0].target, 'bottomFrame');
+  controls.entries[0].label = 'Autres documents';
+  controls['news-zone'].value = 'right';
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /action=saveShortcuts/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  const body = new URLSearchParams(saved.body);
+  assert.equal(body.get('count'), '1');
+  assert.equal(body.get('entry.0.label'), 'Autres documents');
+  assert.equal(body.get('entry.0.target'), 'bottomFrame');
   assert.equal(body.get('zone'), 'right');
   assert.equal(body.get('revision'), 'first');
   assert.equal(body.has('source'), false);

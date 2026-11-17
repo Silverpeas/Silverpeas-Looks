@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class HomepageJspCompatibilityTest {
   @TempDir
@@ -123,7 +124,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {
@@ -173,4 +174,19 @@ class HomepageJspCompatibilityTest {
     assertTrue(tag.contains("<c:url var=\"allNewsUrl\" value=\"/look/jsp/listOfNewsBySubscription.jsp\"/>"));
   }
 
+
+  @Test
+  void homeShortcutsRenderThroughTheCommonModelWithEscapedLinksAndUniqueIds() throws Exception {
+    String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    String tag = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayShortcuts.tag"));
+    assertFalse(main.contains("lookHelper.mainShortcuts"));
+    assertFalse(main.contains("<viewTags:displayShortcuts"));
+    assertTrue(widgets.contains("shortcuts=\"${widget.shortcutsConfiguration.entries}\""));
+    assertTrue(tag.contains("id=\"<c:out"));
+    assertTrue(tag.contains("<c:out value=\"${empty title ? labelShortcuts : title}\"/>"));
+    assertTrue(tag.contains("href=\"<c:out value='${shortcut.url}'/>\""));
+    assertTrue(tag.contains("rel=\"${shortcut.target == '_blank' ? 'noopener noreferrer' : ''}\""));
+    assertTrue(tag.contains("<c:if test=\"${not empty shortcuts}\">"));
+  }
 }

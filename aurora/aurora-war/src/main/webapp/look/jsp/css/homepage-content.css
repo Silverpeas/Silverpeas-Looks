@@ -157,3 +157,15 @@
     padding: 0.5rem;
   }
 }
+
+.homepage-shortcut-entry {
+  margin: 1em 0;
+  padding: 1em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.homepage-shortcut-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}

@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer les actualités des abonnements</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-subscriptions-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-shortcuts-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>

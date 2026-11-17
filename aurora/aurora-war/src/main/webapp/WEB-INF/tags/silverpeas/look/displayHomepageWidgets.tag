@@ -41,6 +41,10 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'shortcuts'}">
+        <viewTags:displayShortcuts shortcuts="${widget.shortcutsConfiguration.entries}"
+            id="homepage-content-${widget.id}" title="${widget.title}"/>
+      </c:when>
       <c:when test="${widget.type == 'subscriptions'}">
         <viewTags:displayNewsSubscribed enabled="${true}" listOfNews="${subscriptions[widget.id]}"
             id="homepage-content-${widget.id}" title="${widget.title}"

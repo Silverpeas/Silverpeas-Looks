@@ -25,13 +25,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const status = document.getElementById('news-status');
   const save = document.getElementById('news-save');
   const widgetType = document.getElementById('news-form').dataset.widgetType;
-  const community = ['faq', 'users', 'subscriptions'].includes(widgetType);
+  const community = ['faq', 'users', 'subscriptions', 'shortcuts'].includes(widgetType);
   const configurationAction = prefix => prefix + widgetType[0].toUpperCase() + widgetType.slice(1);
   const feed = ['events', 'rss'].includes(widgetType);
   const ephemeris = widgetType === 'ephemeris';
   const commonFields = {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'};
   const publications = document.getElementById('news-space');
-  const fields = widgetType === 'subscriptions' ? {...commonFields, size: 'size', showMore: 'show-more'} : community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
+  const fields = widgetType === 'shortcuts' ? commonFields : widgetType === 'subscriptions' ? {...commonFields, size: 'size', showMore: 'show-more'} : community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
     ? {source: 'source', selection: 'selection'} : {group: 'group', avatar: 'avatar', fields: 'fields'})} : feed ? {...commonFields, source: 'source', ...(widgetType === 'events'
     ? {maxDays: 'max-days', includeToday: 'include-today', personal: 'personal', importantOnly: 'important', showMore: 'show-more'}
     : {rendering: 'rendering'})} : ephemeris ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'} : publications ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled',
@@ -78,6 +78,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('news-context').textContent = 'Choisissez le contenu et l’emplacement de ce widget.';
   try {
     const data = await request(community ? configurationAction('load') : feed ? (widgetType === 'events' ? 'loadEvents' : 'loadRss') : ephemeris ? 'loadEphemeris' : publications ? 'loadPublications' : 'loadNews');
+    if (widgetType === 'shortcuts') { window.AuroraHomeShortcuts.load(data.entries); }
     revision = data.revision;
     csrf = data.csrf;
     Object.keys(fields).forEach(key => {
@@ -106,6 +107,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (!community && !feed && !ephemeris && !publications && control('source').value === 'applications') {
       body.set('source', applications.value.trim().replace(/\s+/g, ' '));
     }
+    if (widgetType === 'shortcuts') { window.AuroraHomeShortcuts.serialize(body); }
     if (community) {
       ['source', 'group', 'fields'].filter(key => fields[key]).forEach(key =>
         body.set(key, control(key).value.trim().replace(/\s+/g, ' ')));

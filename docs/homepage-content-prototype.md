@@ -254,3 +254,23 @@ masqués ne récupèrent rien, et une liste vide ne s’affiche pas. Le tag cons
 attributs existants pour les autres usages, ajoute titre/identifiant uniques et le
 lien complet reste activé par défaut. Le lien utilise le contexte de l’application.
 Le réglage `subscription.news.maxbycompoments` de la page complète reste distinct.
+
+
+Les raccourcis de la home (`shortcuts`) sont administrables par instance : titre,
+colonne, ordre et visibilité, et liste ordonnée de 0 à 100 liens. Chaque lien a un
+libellé (200 caractères maximum), une URL (2048), une icône facultative et une cible
+(vide, `_self`, `_blank`, `_parent`, `_top` ou nom de fenêtre comme `bottomFrame`).
+L’éditeur permet l’ajout, la suppression et le déplacement des liens. Les URL
+relatives et les ancres sont conservées ; HTTP/HTTPS et mailto sont acceptés pour
+les liens, HTTP/HTTPS pour les icônes. Les schémas exécutables/data et les caractères
+de contrôle sont rejetés. Les valeurs affichées sont échappées. La protection
+noopener s’applique aux nouvelles fenêtres `_blank`, en conservant les cibles nommées.
+
+`shortcuts-legacy` (principale, ordre 0) reprend uniquement `Shortcut.home.*` via
+`getMainShortcuts()`, sans écrire avant enregistrement ; la sauvegarde le remplace
+sans doublon. Les raccourcis `Shortcut.tool.*`, `getToolsShortcuts()` et TopBar.jsp
+restent inchangés. Les raccourcis des homes d’espace gardent leur configuration.
+Les widgets vides et masqués ne sont pas affichés. Les classes et identifiants du
+rendu administré sont propres à chaque instance : placement dans le flux des deux
+colonnes, sans les positions absolues du bloc historique. Les révisions incluent
+l’ordre et tous les champs des liens ; contrôle admin, CSRF et conflits 409.

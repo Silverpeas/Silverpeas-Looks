@@ -426,7 +426,8 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 10));
+        value instanceof java.util.List<?> widgets && widgets.size() == 11));
+    verify(request).setAttribute(eq("newShortcutsWidgetId"), argThat(v -> v.toString().startsWith("shortcuts-")));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");
@@ -621,4 +622,53 @@ class HomepageContentServletTest {
     assertTrue(output.toString().contains("\"size\":6"));
   }
 
+
+  @Test
+  void homeShortcutsSaveRequiresAdminCsrfAndFreshRevisionAndValidatesTheOrderedList() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("saveShortcuts");
+    when(request.getParameter("widget")).thenReturn("shortcuts-test");
+    when(request.getParameter("title")).thenReturn("Mes liens");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("8");
+    when(request.getParameter("count")).thenReturn("1");
+    when(request.getParameter("entry.0.label")).thenReturn("Documents & outils");
+    when(request.getParameter("entry.0.url")).thenReturn("/silverpeas/Component/kmelia12");
+    when(request.getParameter("entry.0.iconUrl")).thenReturn("/weblib/icon.png");
+    when(request.getParameter("entry.0.target")).thenReturn("bottomFrame");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var page = new HomepagePage("skins", "waves");
+    var saved = store.readWidget(page, "shortcuts-test", "fr");
+    assertEquals("bottomFrame", saved.shortcutsConfiguration().entries().getFirst().target());
+    assertEquals("right", saved.getZone());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    when(request.getParameter("action")).thenReturn("loadShortcuts");
+    clearInvocations(response);
+    servlet.doGet(request, response);
+    verify(response, never()).sendError(anyInt());
+    assertTrue(output.toString().contains("\"entries\":[{\"label\":\"Documents & outils\""));
+    when(request.getParameter("action")).thenReturn("saveShortcuts");
+    when(request.getParameter("revision")).thenReturn(saved.content().revision());
+    when(request.getParameter("entry.0.url")).thenReturn("javascript:alert(1)");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(400);
+    assertEquals(saved.content().revision(), store.read(page, "shortcuts-test", "fr").revision());
+    when(request.getParameter("count")).thenReturn("101");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(400);
+  }
 }

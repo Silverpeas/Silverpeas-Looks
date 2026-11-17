@@ -170,6 +170,25 @@ public final class HomepageWidgets {
     return result;
   }
 
+  public static HomepageContentStore.Widget shortcutsWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"shortcuts".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a home shortcuts widget");
+      }
+      return saved;
+    }
+    var entries = "shortcuts-legacy".equals(id) ? helper.getMainShortcuts().stream()
+        .map(link -> new HomepageContentStore.HomeShortcut(link.getAltText(), link.getUrl(),
+            link.getIconURL(), link.getTarget())).toList() : List.<HomepageContentStore.HomeShortcut>of();
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Raccourcis", "", "",
+            new HomepageContentStore.Layout("main", 0, true)),
+        "shortcuts", null, 0, null, null, null, null, null, null,
+        new HomepageContentStore.ShortcutsConfiguration(entries));
+  }
+
   public static HomepageContentStore.Widget subscriptionsWidget(HomepageContentStore store,
       HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
     var saved = store.readWidget(page, id, language);
@@ -235,6 +254,10 @@ public final class HomepageWidgets {
     if ("skins".equals(page.kind()) &&
         widgets.stream().noneMatch(widget -> widget.id().equals("subscriptions-legacy"))) {
       widgets.add(subscriptionsWidget(store, page, "subscriptions-legacy", language, helper));
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("shortcuts-legacy"))) {
+      widgets.add(shortcutsWidget(store, page, "shortcuts-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

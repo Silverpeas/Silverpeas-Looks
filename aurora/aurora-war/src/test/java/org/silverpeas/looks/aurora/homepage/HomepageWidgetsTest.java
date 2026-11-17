@@ -104,7 +104,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(10, initial.size());
+    assertEquals(11, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -112,7 +112,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(10, changed.size());
+    assertEquals(11, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -419,4 +419,80 @@ class HomepageWidgetsTest {
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SubscriptionsConfiguration(101, true));
   }
 
+
+  @Test
+  void homeShortcutsUseOnlyHomeDefaultsAndSaveIndependentOrderedInstances() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    when(helper.getMainShortcuts()).thenReturn(List.of(
+        new org.silverpeas.core.web.look.Shortcut("/weblib/home.png", "bottomFrame", "/silverpeas/Component/kmelia1", "Documents")));
+    var legacy = HomepageWidgets.shortcutsWidget(store, page, "shortcuts-legacy", "fr", helper);
+    assertEquals("Documents", legacy.shortcutsConfiguration().entries().getFirst().label());
+    assertEquals("bottomFrame", legacy.shortcutsConfiguration().entries().getFirst().target());
+    assertEquals("main", legacy.getZone());
+    assertEquals(0, legacy.getOrder());
+    assertFalse(Files.exists(root.resolve("skins")));
+    verify(helper, never()).getToolsShortcuts();
+    verify(helper, never()).getShortcuts("tool");
+    var layout = new HomepageContentStore.Layout("right", 12, false);
+    var first = new HomepageContentStore.HomeShortcut("A & B", "https://example.org/?a=1&b=2", "", "_blank");
+    var second = new HomepageContentStore.HomeShortcut("Autre", "../other", "/weblib/icon.png", "bottomFrame");
+    var config = new HomepageContentStore.ShortcutsConfiguration(List.of(first, second));
+    store.saveShortcutsWidget(page, legacy.id(), "fr", "Liens", layout, config, "");
+    store.saveShortcutsWidget(page, "shortcuts-other", "fr", "Autres liens", layout,
+        new HomepageContentStore.ShortcutsConfiguration(List.of(second)), "");
+    var reopened = new HomepageContentStore(root);
+    var saved = reopened.readWidget(page, legacy.id(), "fr");
+    assertEquals(config, saved.shortcutsConfiguration());
+    assertEquals(layout, saved.content().layout());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream().filter(w -> w.id().equals(legacy.id())).count());
+    assertEquals(List.of(second), reopened.readWidget(page, "shortcuts-other", "fr").shortcutsConfiguration().entries());
+    store.saveShortcutsWidget(page, legacy.id(), "fr", "Liens", layout,
+        new HomepageContentStore.ShortcutsConfiguration(List.of(second, first)), saved.content().revision());
+    var reordered = store.readWidget(page, legacy.id(), "fr");
+    assertNotEquals(saved.content().revision(), reordered.content().revision());
+    assertEquals(List.of(second, first), reordered.shortcutsConfiguration().entries());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveShortcutsWidget(page, legacy.id(), "fr", "", layout,
+        config, saved.content().revision()));
+    store.saveShortcutsWidget(page, legacy.id(), "fr", "Liens", layout,
+        new HomepageContentStore.ShortcutsConfiguration(List.of()), reordered.content().revision());
+    assertTrue(reopened.readWidget(page, legacy.id(), "fr").shortcutsConfiguration().entries().isEmpty());
+    assertFalse(Files.readString(root.resolve("skins/waves/page.properties")).contains("widget.shortcuts-legacy.entry."));
+  }
+
+  @Test
+  void shortcutsRejectInvalidLinksAndCrossTypeConversionsIncludingReservedIds() throws Exception {
+    var store = new HomepageContentStore(root);
+    var layout = new HomepageContentStore.Layout("main", 0, true);
+    var config = new HomepageContentStore.ShortcutsConfiguration(List.of());
+    for (String id : List.of("shortcuts-legacy", "shortcuts-extra")) {
+      store.saveShortcutsWidget(page, id, "fr", "", layout, config, "");
+      assertThrows(IllegalArgumentException.class, () -> store.save(page, id, "fr", "", "", ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page, id, "fr", "", layout, ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page, id, "fr", "", layout, news(""), 0));
+      assertThrows(IllegalArgumentException.class, () -> store.savePublicationsWidget(page, id, "fr", "", layout,
+          new HomepageContentStore.PublicationsConfiguration("", 3, true), ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, id, "fr", "", layout, "rss", null,
+          new HomepageContentStore.RssConfiguration("", "tabs"), ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveCommunityWidget(page, id, "fr", "", layout, "faq",
+          new HomepageContentStore.FaqConfiguration("", 1, "random"), null, ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveSubscriptionsWidget(page, id, "fr", "", layout,
+          new HomepageContentStore.SubscriptionsConfiguration(4, true), ""));
+    }
+    for (String id : List.of("subscriptions-legacy", "faq-legacy", "users-legacy", "events-legacy", "rss-legacy", "ephemeris-legacy", "publications-legacy", "news-legacy-1")) {
+      assertThrows(IllegalArgumentException.class, () -> store.saveShortcutsWidget(page, id, "fr", "", layout, config, ""));
+    }
+    store.save(page, "html", "fr", "", "", "");
+    assertThrows(IllegalArgumentException.class, () -> store.saveShortcutsWidget(page, "html", "fr", "", layout, config, ""));
+    for (String url : List.of("", "javascript:alert(1)", "JaVaScRiPt:alert(1)", "data:text/html,hello", "vbscript:foo", "https://example.org/\nfoo")) {
+      assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.HomeShortcut("Lien", url, "", ""));
+    }
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.HomeShortcut("Lien", "/ok", "data:image/svg+xml,foo", ""));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.HomeShortcut("Lien", "/ok", "", "bad target"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.ShortcutsConfiguration(java.util.Collections.nCopies(101,
+        new HomepageContentStore.HomeShortcut("", "#", "", ""))));
+    for (String url : List.of("https://example.org", "http://example.org", "/silverpeas/Main", "../Main", "#anchor", "mailto:contact@example.org")) {
+      assertDoesNotThrow(() -> new HomepageContentStore.HomeShortcut("", url, "", "bottomFrame"));
+    }
+  }
 }

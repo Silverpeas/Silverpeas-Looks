@@ -72,7 +72,12 @@ public class HomepageContentStore {
       PublicationsConfiguration publicationsConfiguration,
       EventsConfiguration eventsConfiguration, RssConfiguration rssConfiguration,
       FaqConfiguration faqConfiguration, UsersConfiguration usersConfiguration,
-      SubscriptionsConfiguration subscriptionsConfiguration) {
+      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration) {
+    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
+        PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
+        FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions) {
+      this(id, content, type, news, legacyIndex, publications, events, rss, faq, users, subscriptions, null);
+    }
     public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
         PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
         FaqConfiguration faq, UsersConfiguration users) {
@@ -99,6 +104,7 @@ public class HomepageContentStore {
     public FaqConfiguration getFaqConfiguration() { return faqConfiguration; }
     public UsersConfiguration getUsersConfiguration() { return usersConfiguration; }
     public SubscriptionsConfiguration getSubscriptionsConfiguration() { return subscriptionsConfiguration; }
+    public ShortcutsConfiguration getShortcutsConfiguration() { return shortcutsConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
@@ -156,7 +162,8 @@ public class HomepageContentStore {
             settings.getProperty(prefix + ".fields", "")) : null,
         "subscriptions".equals(type) ? new SubscriptionsConfiguration(
             Integer.parseInt(settings.getProperty(prefix + ".size", "4")),
-            Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null);
+            Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null,
+        "shortcuts".equals(type) ? readShortcuts(settings, prefix) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -197,6 +204,11 @@ public class HomepageContentStore {
       configurationVersion = properties.getProperty(prefix + ".size", "4") + "\u0000"
           + properties.getProperty(prefix + ".showMore", "true");
     }
+    if ("shortcuts".equals(properties.getProperty(prefix + ".type"))) {
+      configurationVersion = readShortcuts(properties, prefix).entries().stream()
+          .map(entry -> String.join("\u0000", entry.label(), entry.url(), entry.iconUrl(), entry.target()))
+          .collect(Collectors.joining("\u0000"));
+    }
     String version = properties.containsKey(prefix + ".type")
         ? revision(!"html".equals(properties.getProperty(prefix + ".type"))
             ? title + layout + configurationVersion : title + layout, html) : "";
@@ -211,7 +223,7 @@ public class HomepageContentStore {
 
   public synchronized void saveConfigured(HomepagePage page, String widget, String language,
       String title, String html, String expectedRevision, Layout layout) throws IOException {
-    if ("subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
+    if ("shortcuts-legacy".equals(widget) || "subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }
     Content previous = read(page, widget, language);
@@ -255,7 +267,7 @@ public class HomepageContentStore {
 
   public synchronized void saveNewsWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, NewsConfiguration news, int legacyIndex) throws IOException {
-    if ("subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
+    if ("shortcuts-legacy".equals(widget) || "subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
       throw new IllegalArgumentException("Invalid legacy news reference");
     }
     var properties = properties(page);
@@ -336,7 +348,7 @@ public class HomepageContentStore {
       String title, Layout layout, String expectedRevision) throws IOException {
     var properties = properties(page);
     String prefix = "widget." + widget;
-    if ("subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
+    if ("shortcuts-legacy".equals(widget) || "subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
         !"ephemeris".equals(properties.getProperty(prefix + ".type", "ephemeris"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }
@@ -346,6 +358,91 @@ public class HomepageContentStore {
     registerWidget(properties, widget);
     configureLayout(properties, prefix, title, layout);
     properties.setProperty(prefix + ".type", "ephemeris");
+    saveProperties(page, properties);
+  }
+
+  /** An ordered home shortcut, separate from the toolbar shortcuts. */
+  public record HomeShortcut(String label, String url, String iconUrl, String target) {
+    public HomeShortcut {
+      label = label == null ? "" : label.trim();
+      url = url == null ? "" : url.trim();
+      iconUrl = iconUrl == null ? "" : iconUrl.trim();
+      target = target == null ? "" : target.trim();
+      if (label.length() > 200 || label.indexOf('\u0000') >= 0 || url.isEmpty() ||
+          !safeShortcutUrl(url, false) || !safeShortcutUrl(iconUrl, true) ||
+          !target.matches("(?:|_self|_blank|_parent|_top|[A-Za-z][A-Za-z0-9_-]{0,63})")) {
+        throw new IllegalArgumentException("Invalid home shortcut");
+      }
+    }
+    public String getAltText() { return label; }
+    public String getUrl() { return url; }
+    public String getIconURL() { return iconUrl; }
+    public String getTarget() { return target; }
+  }
+
+  private static boolean safeShortcutUrl(String url, boolean image) {
+    if (url.length() > 2048 || url.chars().anyMatch(c -> Character.isISOControl(c) || c == '\\')) {
+      return false;
+    }
+    // Relative links and anchors are valid; executable and data schemes are not.
+    int colon = url.indexOf(':');
+    int boundary = java.util.stream.IntStream.of(url.indexOf('/'), url.indexOf('?'), url.indexOf('#'))
+        .filter(i -> i >= 0).min().orElse(Integer.MAX_VALUE);
+    return colon < 0 || colon > boundary ||
+        url.matches(image ? "(?i)https?://.+" : "(?i)(?:https?://.+|mailto:.+)");
+  }
+
+  public record ShortcutsConfiguration(java.util.List<HomeShortcut> entries) {
+    public ShortcutsConfiguration {
+      if (entries == null || entries.size() > 100 || entries.stream().anyMatch(java.util.Objects::isNull)) {
+        throw new IllegalArgumentException("Invalid home shortcuts configuration");
+      }
+      entries = java.util.List.copyOf(entries);
+    }
+    public java.util.List<HomeShortcut> getEntries() { return entries; }
+  }
+
+  private ShortcutsConfiguration readShortcuts(Properties properties, String prefix) {
+    int count = Integer.parseInt(properties.getProperty(prefix + ".count", "0"));
+    if (count < 0 || count > 100) {
+      throw new IllegalArgumentException("Invalid home shortcut count");
+    }
+    return new ShortcutsConfiguration(java.util.stream.IntStream.range(0, count).mapToObj(index -> {
+      String key = prefix + ".entry." + index;
+      return new HomeShortcut(properties.getProperty(key + ".label", ""),
+          properties.getProperty(key + ".url", ""), properties.getProperty(key + ".iconUrl", ""),
+          properties.getProperty(key + ".target", ""));
+    }).toList());
+  }
+
+  public synchronized void saveShortcutsWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, ShortcutsConfiguration configuration, String expectedRevision)
+      throws IOException {
+    HomepagePage.validateIdentifier(widget);
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if (configuration == null || java.util.List.of("subscriptions-legacy", "faq-legacy", "users-legacy",
+        "events-legacy", "rss-legacy", "ephemeris-legacy", "publications-legacy").contains(widget) ||
+        HomepageWidgets.legacyIndex(widget) != 0 ||
+        !"shortcuts".equals(properties.getProperty(prefix + ".type", "shortcuts"))) {
+      throw new IllegalArgumentException("Invalid home shortcuts widget");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "shortcuts");
+    properties.keySet().removeIf(key -> key.toString().startsWith(prefix + ".entry."));
+    properties.setProperty(prefix + ".count", String.valueOf(configuration.entries().size()));
+    for (int index = 0; index < configuration.entries().size(); index++) {
+      var entry = configuration.entries().get(index);
+      String key = prefix + ".entry." + index;
+      properties.setProperty(key + ".label", entry.label());
+      properties.setProperty(key + ".url", entry.url());
+      properties.setProperty(key + ".iconUrl", entry.iconUrl());
+      properties.setProperty(key + ".target", entry.target());
+    }
     saveProperties(page, properties);
   }
 
@@ -362,7 +459,7 @@ public class HomepageContentStore {
       String title, Layout layout, SubscriptionsConfiguration configuration, String expectedRevision)
       throws IOException {
     HomepagePage.validateIdentifier(widget);
-    if (configuration == null || "faq-legacy".equals(widget) || "users-legacy".equals(widget) ||
+    if (configuration == null || "shortcuts-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) ||
         "events-legacy".equals(widget) || "rss-legacy".equals(widget) ||
         "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) ||
         HomepageWidgets.legacyIndex(widget) != 0) {
@@ -413,6 +510,7 @@ public class HomepageContentStore {
     var properties = properties(page);
     String prefix = "widget." + widget;
     String reservedType = switch (widget) {
+      case "shortcuts-legacy" -> "shortcuts";
       case "subscriptions-legacy" -> "subscriptions";
       case "faq-legacy" -> "faq";
       case "users-legacy" -> "users";
@@ -475,6 +573,7 @@ public class HomepageContentStore {
     String prefix = "widget." + widget;
     HomepagePage.validateIdentifier(widget);
     String reservedType = switch (widget) {
+      case "shortcuts-legacy" -> "shortcuts";
       case "subscriptions-legacy" -> "subscriptions";
       case "faq-legacy" -> "faq";
       case "users-legacy" -> "users";
@@ -521,7 +620,7 @@ public class HomepageContentStore {
       String expectedRevision) throws IOException {
     var properties = properties(page);
     String prefix = "widget." + widget;
-    if ("subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
+    if ("shortcuts-legacy".equals(widget) || "subscriptions-legacy".equals(widget) || "faq-legacy".equals(widget) || "users-legacy".equals(widget) || "events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
         !"publications".equals(properties.getProperty(prefix + ".type", "publications"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }

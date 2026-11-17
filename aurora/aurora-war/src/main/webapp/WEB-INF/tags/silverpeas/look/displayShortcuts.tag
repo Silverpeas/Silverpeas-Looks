@@ -34,24 +34,27 @@
               required="true"
               type="java.util.List" %>
 
+<%@ attribute name="id" required="false" type="java.lang.String" %>
+<%@ attribute name="title" required="false" type="java.lang.String" %>
+
 <fmt:message var="labelShortcuts" key="look.home.shortcuts"/>
 
 <c:if test="${not empty shortcuts}">
-  <div class="secteur-container cg-favorit" id="cg-favorit-home">
-    <h4>${labelShortcuts}</h4>
-    <div class="cg-favorit-main-container">
-      <ul class="cg-favorit-list">
+  <div class="secteur-container ${empty id ? 'cg-favorit' : 'homepage-shortcuts'}" id="<c:out value='${empty id ? "cg-favorit-home" : id}'/>">
+    <h4><c:out value="${empty title ? labelShortcuts : title}"/></h4>
+    <div class="${empty id ? 'cg-favorit-main-container' : 'homepage-shortcuts-container'}">
+      <ul class="${empty id ? 'cg-favorit-list' : 'homepage-shortcuts-list'}">
         <c:forEach var="shortcut" items="${shortcuts}">
           <c:set var="className" value="sp-link"/>
           <c:if test="${shortcut.target == '_blank'}">
             <c:set var="className" value=""/>
           </c:if>
           <li>
-            <a class="${className}" href="${shortcut.url}" title="${shortcut.altText}" target="${shortcut.target}">
+            <a class="${className}" href="<c:out value='${shortcut.url}'/>" title="<c:out value='${shortcut.altText}'/>" target="<c:out value='${shortcut.target}'/>" rel="${shortcut.target == '_blank' ? 'noopener noreferrer' : ''}">
               <c:if test="${not empty shortcut.iconURL}">
-                <img alt="${shortcut.altText}" src="${shortcut.iconURL}" />
+                <img alt="" src="<c:out value='${shortcut.iconURL}'/>" />
               </c:if>
-              <span>${shortcut.altText}</span>
+              <span><c:out value="${empty shortcut.altText ? shortcut.url : shortcut.altText}"/></span>
             </a>
           </li>
         </c:forEach>
