@@ -170,6 +170,33 @@ public final class HomepageWidgets {
     return result;
   }
 
+  public static HomepageContentStore.Widget subscriptionsWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"subscriptions".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a subscriptions widget");
+      }
+      return saved;
+    }
+    boolean legacy = "subscriptions-legacy".equals(id);
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Actualités des abonnements", "", "",
+            new HomepageContentStore.Layout("main", 70,
+                !legacy || helper.getLookSettings().isDisplayLastSubscribedNews())),
+        "subscriptions", null, 0, null, null, null, null, null,
+        legacy ? helper.getDefaultSubscriptionsConfiguration()
+            : new HomepageContentStore.SubscriptionsConfiguration(4, true));
+  }
+
+  public static Map<String, List<org.silverpeas.looks.aurora.AuroraNews>> subscriptions(
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    Map<String, List<org.silverpeas.looks.aurora.AuroraNews>> result = new LinkedHashMap<>();
+    widgets.stream().filter(widget -> widget.isEnabled() && "subscriptions".equals(widget.type()))
+        .forEach(widget -> result.put(widget.id(), helper.getConfiguredSubscriptions(widget.subscriptionsConfiguration())));
+    return result;
+  }
+
   public static List<HomepageContentStore.Widget> all(HomepageContentStore store,
       HomepagePage page, String language, LookAuroraHelper helper) throws IOException {
     var widgets = new ArrayList<>(store.widgets(page, language));
@@ -204,6 +231,10 @@ public final class HomepageWidgets {
           widgets.add(communityWidget(store, page, id, language, helper, type));
         }
       }
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("subscriptions-legacy"))) {
+      widgets.add(subscriptionsWidget(store, page, "subscriptions-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

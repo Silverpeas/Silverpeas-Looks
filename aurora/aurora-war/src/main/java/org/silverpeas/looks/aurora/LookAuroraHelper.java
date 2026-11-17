@@ -1217,14 +1217,26 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             cs.getResource().getInstanceId().startsWith(QUICKINFO))
         .map(s -> (ComponentSubscription) s)
         .map(s -> s.getResource().getInstanceId())
+        .distinct()
         .toList();
     return newsComponentsIds;
   }
 
+  public HomepageContentStore.SubscriptionsConfiguration getDefaultSubscriptionsConfiguration() {
+    return new HomepageContentStore.SubscriptionsConfiguration(getSettings("home.subscription.news.max", 4), true);
+  }
+
   public List<AuroraNews> getLastNewsSubscribed() {
+    return getConfiguredSubscriptions(getDefaultSubscriptionsConfiguration());
+  }
+
+  public List<AuroraNews> getConfiguredSubscriptions(HomepageContentStore.SubscriptionsConfiguration configuration) {
     List<String> newsComponentsIds = getAppNewsIdSubscribed();
     List<AuroraNews> news = new ArrayList<>();
     for (String componentId : newsComponentsIds) {
+      if (!isComponentAvailable(componentId)) {
+        continue;
+      }
       List<News> l = quickInfoService.getVisibleNews(componentId);
       for (News n : l) {
         AuroraNews auroraNews = new AuroraNews(n);
@@ -1232,7 +1244,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       }
     }
     news.sort((n1, n2) -> n2.getNews().getPublishDate().compareTo(n1.getNews().getPublishDate()));
-    int max = getSettings("home.subscription.news.max",4);
+    int max = configuration.size();
     if (news.size() > max) {
       news = news.subList(0, max);
     }

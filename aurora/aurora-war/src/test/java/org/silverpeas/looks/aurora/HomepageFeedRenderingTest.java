@@ -38,7 +38,8 @@ class HomepageFeedRenderingTest {
       switch (invocation.getMethod().getName()) {
         case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
             "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers",
-            "getDefaultFaqConfiguration", "getDefaultUsersConfiguration" -> { return invocation.callRealMethod(); }
+            "getDefaultFaqConfiguration", "getDefaultUsersConfiguration", "getConfiguredSubscriptions",
+            "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
         case "getOrganisationController" -> { return organization; }
         case "getUserId" -> { return "42"; }
         case "getSettings" -> { return invocation.getArgument(1); }
@@ -140,6 +141,41 @@ class HomepageFeedRenderingTest {
     assertEquals(List.of(older), helper.getConfiguredNewUsers(config).getUsers());
     when(organization.searchUsers(any())).thenReturn(new org.silverpeas.core.util.SilverpeasArrayList<>(List.of()));
     assertTrue(helper.getConfiguredNewUsers(config).getUsers().isEmpty());
+  }
+
+  @Test
+  void subscriptionsUseTheReaderAndSkipLostAccessThenSortAndLimitVisibleNews() throws Exception {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var quickinfo = mock(org.silverpeas.components.quickinfo.model.QuickInfoService.class);
+    var field = LookAuroraHelper.class.getDeclaredField("quickInfoService");
+    field.setAccessible(true);
+    field.set(helper, quickinfo);
+    var service = mock(org.silverpeas.core.subscription.SubscriptionService.class);
+    var subscriptions = new org.silverpeas.core.subscription.util.SubscriptionList();
+    subscriptions.add(new org.silverpeas.core.subscription.service.ComponentSubscription("42", "quickinfo12"));
+    subscriptions.add(new org.silverpeas.core.subscription.service.ComponentSubscription("42", "quickinfo34"));
+    subscriptions.add(new org.silverpeas.core.subscription.service.ComponentSubscription("42", "quickinfo12"));
+    subscriptions.add(new org.silverpeas.core.subscription.service.ComponentSubscription("42", "almanach12"));
+    when(service.getByUserSubscriber("42")).thenReturn(subscriptions);
+    when(organization.isComponentAvailableToUser("quickinfo12", "42")).thenReturn(true);
+    var older = mock(org.silverpeas.components.quickinfo.model.News.class);
+    var newer = mock(org.silverpeas.components.quickinfo.model.News.class);
+    when(older.getPublishDate()).thenReturn(new java.util.Date(1000));
+    when(newer.getPublishDate()).thenReturn(new java.util.Date(2000));
+    when(quickinfo.getVisibleNews("quickinfo12")).thenReturn(List.of(older, newer));
+    try (var provider = mockStatic(org.silverpeas.core.subscription.SubscriptionServiceProvider.class)) {
+      provider.when(org.silverpeas.core.subscription.SubscriptionServiceProvider::getSubscribeService).thenReturn(service);
+      var result = helper.getConfiguredSubscriptions(new HomepageContentStore.SubscriptionsConfiguration(1, false));
+      assertEquals(List.of(newer), result.stream().map(AuroraNews::getNews).toList());
+      verify(service).getByUserSubscriber("42");
+      verify(quickinfo).getVisibleNews("quickinfo12");
+      verify(quickinfo, never()).getVisibleNews("quickinfo34");
+      verify(quickinfo, never()).getVisibleNews("almanach12");
+      when(service.getByUserSubscriber("42")).thenReturn(new org.silverpeas.core.subscription.util.SubscriptionList());
+      assertTrue(helper.getLastNewsSubscribed().isEmpty());
+      verifyNoMoreInteractions(quickinfo);
+    }
   }
 
 }

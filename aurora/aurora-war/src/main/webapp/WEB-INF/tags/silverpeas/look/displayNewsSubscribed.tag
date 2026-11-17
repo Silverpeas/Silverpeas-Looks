@@ -44,10 +44,13 @@
               type="java.util.List<org.silverpeas.looks.aurora.AuroraNews>" %>
 
 
+<%@ attribute name="id" type="java.lang.String" required="false" %>
+<%@ attribute name="title" type="java.lang.String" required="false" %>
+<%@ attribute name="showMore" type="java.lang.Boolean" required="false" %>
 <c:if test="${enabled}">
     <c:if test="${not empty listOfNews}">
-        <div class="secteur-container subscription-news" id="myNews-subscription">
-            <h4>${labelTitle}</h4>
+        <div class="secteur-container subscription-news" id="${empty id ? 'myNews-subscription' : id}">
+            <h4><c:out value="${empty title ? labelTitle : title}"/></h4>
             <ul class="listing-news">
                 <c:forEach var="news" items="${listOfNews}">
                     <c:choose>
@@ -82,10 +85,13 @@
                     </li>
                 </c:forEach>
             </ul>
-            <div id="myNews-link-page">
-                <a title="${labelAllPublished}" href="/silverpeas/look/jsp/listOfNewsBySubscription.jsp"
+            <c:if test="${empty showMore or showMore}">
+            <c:url var="allNewsUrl" value="/look/jsp/listOfNewsBySubscription.jsp"/>
+            <div class="subscription-news-more">
+                <a title="${labelAllPublished}" href="${allNewsUrl}"
                    class="link-more sp-link"><span>${labelAllPublished}</span></a>
             </div>
+            </c:if>
         </div>
     </c:if>
 </c:if>

@@ -251,3 +251,23 @@ for (const type of ['faq', 'users']) {
     }
   });
 }
+
+test('subscriptions editor saves the limit and more link without an administrator-defined source', async () => {
+  const {controls, calls, submit} = await editor(200, true, false, false, 'subscriptions');
+  assert.equal(controls['news-save'].disabled, false);
+  assert.match(calls[0].url, /action=loadSubscriptions/);
+  controls['news-size'].value = '8';
+  controls['news-zone'].value = 'right';
+  controls['news-show-more'].checked = false;
+  controls['news-enabled'].checked = true;
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /action=saveSubscriptions/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  const body = new URLSearchParams(saved.body);
+  assert.equal(body.get('size'), '8');
+  assert.equal(body.get('showMore'), 'false');
+  assert.equal(body.get('zone'), 'right');
+  assert.equal(body.get('revision'), 'first');
+  assert.equal(body.has('source'), false);
+});

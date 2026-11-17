@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -212,6 +212,14 @@ public class HomepageContentServlet extends HttpServlet {
                 option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("saveSubscriptions".equals(action)) {
+      store.saveSubscriptionsWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")),
+              Boolean.parseBoolean(request.getParameter("enabled"))),
+          new HomepageContentStore.SubscriptionsConfiguration(Integer.parseInt(request.getParameter("size")),
+              option(request, "showMore")), request.getParameter("revision"));
+      subscriptionsResponse(request, response, page, widget, language, "");
     } else if ("saveFaq".equals(action) || "saveUsers".equals(action)) {
       boolean faq = "saveFaq".equals(action);
       store.saveCommunityWidget(page, widget, language, request.getParameter("title"),
@@ -308,6 +316,10 @@ public class HomepageContentServlet extends HttpServlet {
         request.setAttribute("feedRss", feeds);
       }
       request.getRequestDispatcher("/WEB-INF/homepage/feedWidget.jsp").forward(request, response);
+    } else if ("loadSubscriptions".equals(action)) {
+      subscriptionsResponse(request, response, page, widget, language, csrf);
+    } else if ("subscriptionsEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/subscriptionsEditor.jsp").forward(request, response);
     } else if ("loadFaq".equals(action) || "loadUsers".equals(action)) {
       communityResponse(request, response, page, widget, language, csrf,
           "loadFaq".equals(action) ? "faq" : "users");
@@ -364,6 +376,7 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
       request.setAttribute("newEventsWidgetId", "events-" + UUID.randomUUID());
+      request.setAttribute("newSubscriptionsWidgetId", "subscriptions-" + UUID.randomUUID());
       request.setAttribute("newFaqWidgetId", "faq-" + UUID.randomUUID());
       request.setAttribute("newUsersWidgetId", "users-" + UUID.randomUUID());
       request.setAttribute("newRssWidgetId", "rss-" + UUID.randomUUID());
@@ -374,6 +387,20 @@ public class HomepageContentServlet extends HttpServlet {
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void subscriptionsResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf) throws IOException {
+    var model = HomepageWidgets.subscriptionsWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"));
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o
+        .put("configured", !content.revision().isEmpty()).put("title", content.title())
+        .put("zone", content.layout().zone()).put("order", content.layout().order())
+        .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf)
+        .put("size", model.subscriptionsConfiguration().size())
+        .put("showMore", model.subscriptionsConfiguration().showMore())));
   }
 
   private void communityResponse(HttpServletRequest request, HttpServletResponse response,

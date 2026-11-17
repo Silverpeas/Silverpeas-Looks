@@ -87,6 +87,13 @@
   <c:param name="widget" value="${newUsersWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addSubscriptionsUrl">
+  <c:param name="action" value="subscriptionsEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="widget" value="${newSubscriptionsWidgetId}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
 <view:sp-page>
   <view:sp-head-part>
     <title>Modifier la page d’accueil</title>
@@ -110,6 +117,7 @@
             <view:button label="Ajouter les flux RSS" action="${addRssUrl}"/>
             <view:button label="Ajouter une FAQ" action="${addFaqUrl}"/>
             <view:button label="Ajouter les nouveaux utilisateurs" action="${addUsersUrl}"/>
+            <view:button label="Ajouter les actualités des abonnements" action="${addSubscriptionsUrl}"/>
             <view:button label="Ajouter une zone libre" action="${addUrl}"/>
             <view:button label="Voir la page d’accueil" action="${homeUrl}" classes="homepage-secondary-action"/>
           </view:buttonPane>
@@ -131,7 +139,7 @@
                 <view:arrayColumn title="Affichage" sortable="false"/>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="${widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : 'editor'))))))}"/>
+                    <c:param name="action" value="${widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : 'editor')))))))}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -141,7 +149,7 @@
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
-                    <view:arrayCellText text="${widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : 'Zone libre'))))))}"/>
+                    <view:arrayCellText text="${widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : 'Zone libre')))))))}"/>
                     <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
                     <view:arrayCellText text="${widget.order}"/>
                     <view:arrayCellText text="${displayStatus}"/>

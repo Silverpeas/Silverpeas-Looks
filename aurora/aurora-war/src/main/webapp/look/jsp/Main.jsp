@@ -58,6 +58,7 @@
   request.setAttribute("homepageWidgets", homepageWidgets);
   request.setAttribute("homepageNews", homepageNews);
   request.setAttribute("homepageQuestions", HomepageWidgets.questions(homepageWidgets, homepageHelper));
+  request.setAttribute("homepageSubscriptions", HomepageWidgets.subscriptions(homepageWidgets, homepageHelper));
   request.setAttribute("homepageUsers", HomepageWidgets.users(homepageWidgets, homepageHelper));
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepageWidgets, homepageHelper));
   request.setAttribute("isAtLeastOneCarousel", homepageNews.values().stream()
@@ -69,7 +70,7 @@
 
 <c:set var="weatherCities" value="${lookHelper.weatherCities}"/>
 <c:set var="showWeather" value="${not empty weatherCities}"/>
-<c:set var="showLastSubscribedNews" value="${settings.displayLastSubscribedNews}"/>
+
 
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
 
@@ -78,10 +79,7 @@
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
 <c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
-<c:if test="${showLastSubscribedNews}">
-  <c:set var="subscribedListOfNews" value="${lookHelper.lastNewsSubscribed}"/>
-  <jsp:useBean id="subscribedListOfNews" type="java.util.List<org.silverpeas.looks.aurora.AuroraNews>"/>
-</c:if>
+
 
 
 
@@ -97,21 +95,21 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-community-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-subscriptions-v1"/>
   </jsp:attribute>
   <jsp:body>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-community-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-subscriptions-v1"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css?version=15592-community-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-subscriptions-v1"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
-    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-community-v1"/>
+    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-subscriptions-v1"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
-    <view:script src="/look/jsp/js/homepage-main.js?version=15592-community-v1"/>
+    <view:script src="/look/jsp/js/homepage-main.js?version=15592-subscriptions-v1"/>
   </jsp:body>
 </view:sp-head-part>
 <view:sp-body-part cssClass="main-home-page">
@@ -144,14 +142,14 @@
       <viewTags:displayFormSearch searchForm="${searchForm}" extraFieldPeriod="${settings.extraSearchFieldPeriodUsed}" extraFieldSpace="${settings.extraSearchFieldSpaceUsed}"/>
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
-      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" questions="${homepageQuestions}" users="${homepageUsers}" zone="right"/>
+      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" questions="${homepageQuestions}" users="${homepageUsers}" subscriptions="${homepageSubscriptions}" zone="right"/>
     </div>
 
     <div class="principal-main-container">
 
       <viewTags:displayShortcuts shortcuts="${shortcuts}"/>
 
-      <viewTags:displayNewsSubscribed enabled="${showLastSubscribedNews}" listOfNews="${subscribedListOfNews}"/>
+
 
 
 
@@ -159,7 +157,7 @@
 
       <viewTags:displayFreeZone freeZone="${lookHelper.freeZone}" freeZoneId="freeZone"/>
 
-      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" questions="${homepageQuestions}" users="${homepageUsers}" zone="main"/>
+      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" questions="${homepageQuestions}" users="${homepageUsers}" subscriptions="${homepageSubscriptions}" zone="main"/>
 
     </div>
   </div>

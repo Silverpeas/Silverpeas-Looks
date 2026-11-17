@@ -51,7 +51,7 @@ class HomepageJspCompatibilityTest {
     assertTrue(jsp.contains("request.setAttribute(\"homepageWidgets\", homepageWidgets)"));
     assertTrue(jsp.contains("request.setAttribute(\"homepageNews\", homepageNews)"));
     for (String zone : List.of("main", "right")) {
-      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" publications=\"${homepagePublications}\" questions=\"${homepageQuestions}\" users=\"${homepageUsers}\" zone=\"" + zone + "\""));
+      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" publications=\"${homepagePublications}\" questions=\"${homepageQuestions}\" users=\"${homepageUsers}\" subscriptions=\"${homepageSubscriptions}\" zone=\"" + zone + "\""));
     }
     assertTrue(jsp.contains("homepageNews.values().stream()"));
     assertTrue(!jsp.contains("<viewTags:displayNews listOfNews="));
@@ -123,7 +123,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {
@@ -155,6 +155,22 @@ class HomepageJspCompatibilityTest {
       assertTrue(!java.util.regex.Pattern.compile("#faq-home(?!, \\.homepage-faq)").matcher(css).find());
       assertTrue(!java.util.regex.Pattern.compile("#new-users-home(?!, \\.homepage-users)").matcher(css).find());
     }
+  }
+
+  @Test
+  void subscriptionsRenderOnlyThroughTheCommonModelWithScopedIdsAndOptionalLink() throws Exception {
+    String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    String tag = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayNewsSubscribed.tag"));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(!main.contains("lookHelper.lastNewsSubscribed"));
+    assertTrue(!main.contains("<viewTags:displayNewsSubscribed"));
+    assertTrue(main.contains("HomepageWidgets.subscriptions(homepageWidgets, homepageHelper)"));
+    assertTrue(widgets.contains("showMore=\"${widget.subscriptionsConfiguration.showMore}\""));
+    assertTrue(tag.contains("id=\"${empty id ? 'myNews-subscription' : id}\""));
+    assertTrue(tag.contains("<c:out value=\"${empty title ? labelTitle : title}\"/>"));
+    assertTrue(tag.contains("${empty showMore or showMore}"));
+    assertTrue(!tag.contains("id=\"myNews-link-page\""));
+    assertTrue(tag.contains("<c:url var=\"allNewsUrl\" value=\"/look/jsp/listOfNewsBySubscription.jsp\"/>"));
   }
 
 }

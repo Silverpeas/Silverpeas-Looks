@@ -43,6 +43,9 @@ class HomepageWidgetsTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultSubscriptionsConfiguration()).thenReturn(
+        new HomepageContentStore.SubscriptionsConfiguration(4, true));
+    when(settings.isDisplayLastSubscribedNews()).thenReturn(true);
     when(helper.getDefaultFaqConfiguration()).thenReturn(
         new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random"));
     when(helper.getDefaultUsersConfiguration()).thenReturn(
@@ -101,7 +104,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(9, initial.size());
+    assertEquals(10, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -109,7 +112,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(9, changed.size());
+    assertEquals(10, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -368,6 +371,52 @@ class HomepageWidgetsTest {
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.UsersConfiguration("group12", 5, true, "phone"));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.UsersConfiguration("", -1, true, "phone"));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.UsersConfiguration("", 5, true, "phone\" onclick=bad"));
+  }
+
+  @Test
+  void subscriptionsPersistIndependentSettingsAndReplaceLegacyWithoutFetchingHiddenContent() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    var legacy = HomepageWidgets.subscriptionsWidget(store, page, "subscriptions-legacy", "fr", helper);
+    assertEquals(helper.getDefaultSubscriptionsConfiguration(), legacy.subscriptionsConfiguration());
+    assertTrue(legacy.isEnabled());
+    when(helper.getLookSettings().isDisplayLastSubscribedNews()).thenReturn(false);
+    assertFalse(HomepageWidgets.subscriptionsWidget(store, page, legacy.id(), "fr", helper).isEnabled());
+    assertFalse(Files.exists(root.resolve("skins")));
+    var configuration = new HomepageContentStore.SubscriptionsConfiguration(7, false);
+    var layout = new HomepageContentStore.Layout("right", 8, false);
+    for (String id : List.of(legacy.id(), "subscriptions-extra")) {
+      store.saveSubscriptionsWidget(page, id, "fr", "Mes abonnements", layout, configuration, "");
+    }
+    var restored = new HomepageContentStore(root);
+    var saved = restored.readWidget(page, "subscriptions-extra", "fr");
+    assertEquals(configuration, saved.subscriptionsConfiguration());
+    assertEquals(layout, saved.content().layout());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream().filter(w -> w.id().equals(legacy.id())).count());
+    HomepageWidgets.subscriptions(restored.widgets(page, "fr"), helper);
+    verify(helper, never()).getConfiguredSubscriptions(any());
+    store.saveSubscriptionsWidget(page, saved.id(), "fr", "Mes abonnements", layout,
+        new HomepageContentStore.SubscriptionsConfiguration(8, true), saved.content().revision());
+    assertNotEquals(saved.content().revision(), store.read(page, saved.id(), "fr").revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveSubscriptionsWidget(page, saved.id(), "fr",
+        "", layout, configuration, saved.content().revision()));
+    store.saveSubscriptionsWidget(page, "subscriptions-visible", "fr", "", new HomepageContentStore.Layout("main", 3, true), configuration, "");
+    HomepageWidgets.subscriptions(store.widgets(page, "fr"), helper);
+    verify(helper).getConfiguredSubscriptions(configuration);
+    assertThrows(IllegalArgumentException.class, () -> store.save(page, legacy.id(), "fr", "", "", ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page, legacy.id(), "fr", "", layout, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page, legacy.id(), "fr", "", layout, news(""), 0));
+    assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, legacy.id(), "fr", "", layout, "rss", null,
+        new HomepageContentStore.RssConfiguration("", "tabs"), ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveCommunityWidget(page, legacy.id(), "fr", "", layout,
+        "faq", new HomepageContentStore.FaqConfiguration("", 1, "random"), null, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.savePublicationsWidget(page, legacy.id(), "fr", "", layout,
+        new HomepageContentStore.PublicationsConfiguration("", 3, true), ""));
+    for (String id : List.of("faq-legacy", "users-legacy", "events-legacy", "rss-legacy", "ephemeris-legacy", "publications-legacy", "news-legacy-1")) {
+      assertThrows(IllegalArgumentException.class, () -> store.saveSubscriptionsWidget(page, id, "fr", "", layout, configuration, ""));
+    }
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SubscriptionsConfiguration(0, true));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SubscriptionsConfiguration(101, true));
   }
 
 }

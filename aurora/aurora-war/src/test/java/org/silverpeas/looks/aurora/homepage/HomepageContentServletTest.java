@@ -95,6 +95,9 @@ class HomepageContentServletTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultSubscriptionsConfiguration()).thenReturn(
+        new HomepageContentStore.SubscriptionsConfiguration(4, true));
+    when(settings.isDisplayLastSubscribedNews()).thenReturn(true);
     when(helper.getDefaultFaqConfiguration()).thenReturn(
         new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random"));
     when(helper.getDefaultUsersConfiguration()).thenReturn(
@@ -423,7 +426,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 9));
+        value instanceof java.util.List<?> widgets && widgets.size() == 10));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");
@@ -583,6 +586,39 @@ class HomepageContentServletTest {
       verify(response).sendError(403);
       when(request.getParameter("owner")).thenReturn("waves");
     }
+  }
+
+  @Test
+  void subscriptionsSaveRequiresAdminCsrfAndFreshRevisionAndLoadsTheSavedSettings() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("saveSubscriptions");
+    when(request.getParameter("widget")).thenReturn("subscriptions-test");
+    when(request.getParameter("title")).thenReturn("Mes abonnements");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("8");
+    when(request.getParameter("size")).thenReturn("6");
+    when(request.getParameter("showMore")).thenReturn("false");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var saved = store.readWidget(new HomepagePage("skins", "waves"), "subscriptions-test", "fr");
+    assertEquals(new HomepageContentStore.SubscriptionsConfiguration(6, false), saved.subscriptionsConfiguration());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    when(request.getParameter("action")).thenReturn("loadSubscriptions");
+    clearInvocations(response);
+    servlet.doGet(request, response);
+    verify(response, never()).sendError(anyInt());
+    assertTrue(output.toString().contains("\"size\":6"));
   }
 
 }

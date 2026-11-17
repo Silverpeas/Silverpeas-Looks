@@ -236,3 +236,21 @@ sans doublon. Le rendu passe par le tag commun ; les blocs masqués ne récupèr
 aucune donnée et les blocs vides ne s’affichent pas. Les cartes utilisateurs restent
 rendues avec le DOM initial pour conserver leur initialisation native. Les styles des
 quatre skins couvrent les classes des nouvelles instances sans identifiant HTML partagé.
+
+
+Les actualités des abonnements (`subscriptions`) rejoignent le registre commun :
+plusieurs instances, titre, colonne, ordre, visibilité, limite de 1 à 100 actualités
+et option du lien vers la liste complète. La source reste toujours les abonnements
+du lecteur aux applications QuickInfo, sans identifiant de source imposé par l’admin.
+Les applications devenues inaccessibles sont exclues avant toute récupération des
+actualités visibles ; les abonnements à la même application sont dédupliqués. Les
+résultats restent triés par date de publication décroissante avant la limite globale.
+
+L’instance virtuelle `subscriptions-legacy` (principale, ordre 70) conserve
+`home.subscription.news` et `home.subscription.news.max`, sans écriture au chargement.
+Sa sauvegarde remplace le bloc historique sans doublon. Le nombre et le lien sont
+inclus dans la révision ; la sauvegarde garde les protections admin/CSRF. Les blocs
+masqués ne récupèrent rien, et une liste vide ne s’affiche pas. Le tag conserve ses
+attributs existants pour les autres usages, ajoute titre/identifiant uniques et le
+lien complet reste activé par défaut. Le lien utilise le contexte de l’application.
+Le réglage `subscription.news.maxbycompoments` de la page complète reste distinct.
