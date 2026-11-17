@@ -101,7 +101,7 @@
     <view:link href="/look/jsp/css/aurora.css"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-admin-button-v1"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
@@ -119,7 +119,12 @@
       <c:param name="kind" value="skins"/>
       <c:param name="language" value="${homepageLanguage}"/>
     </c:url>
-    <p><a href="<c:out value='${manageHomepageUrl}'/>">Modifier la page d’accueil</a></p>
+    <div class="homepage-administration wrapper">
+      <a class="sp_button homepage-edit-button" href="<c:out value='${manageHomepageUrl}'/>">
+        <span class="homepage-edit-icon" aria-hidden="true">✎</span>
+        <span>Modifier la page d’accueil</span>
+      </a>
+    </div>
   </c:if>
   <div class="main wrapper clearfix">
     <div class="right-main-container">
