@@ -38,16 +38,27 @@
               required="true"
               type="java.lang.String" %>
 
+<%@ attribute name="id" required="false" type="java.lang.String" %>
+<%@ attribute name="title" required="false" type="java.lang.String" %>
+<%@ attribute name="showMore" required="false" type="java.lang.Boolean" %>
+<c:set var="eventsId" value="${empty id ? 'home-event' : id}"/>
+<c:set var="calendarId" value="${eventsId}-calendar"/>
+<c:set var="eventsListId" value="${eventsId}-list"/>
+<c:if test="${empty id}">
+  <c:set var="calendarId" value="calendar"/>
+  <c:set var="eventsListId" value="eventList"/>
+</c:if>
+
 <fmt:message var="labelEvents" key="look.home.events.next"/>
 <fmt:message var="labelEventsMore" key="look.home.events.more"/>
 
 <c:if test="${not empty nextEvents.nextEventsDates}">
-  <div class="secteur-container events portlet" id="home-event">
+  <div class="secteur-container events portlet homepage-events" id="${eventsId}">
     <div class="header">
-      <h4 class="portlet-title">${labelEvents}</h4>
+      <h4 class="portlet-title"><c:out value="${empty title ? labelEvents : title}"/></h4>
     </div>
-    <div class="portlet-content" id="calendar">
-      <ul class="eventList" id="eventList">
+    <div class="portlet-content" id="${calendarId}">
+      <ul class="eventList" id="${eventsListId}">
         <c:forEach var="date" items="${nextEvents.nextEventsDates}">
           <li class="events">
             <div class="eventShortDate">
@@ -90,21 +101,23 @@
         </c:forEach>
       </ul>
     </div>
-    <c:choose>
-      <c:when test="${not empty nextEvents.uniqueAppURL}">
-        <a title="${labelEventsMore}" href="${nextEvents.uniqueAppURL}" class="link-more sp-permalink">
-          <span>${labelEventsMore}</span>
-        </a>
-      </c:when>
-      <c:otherwise>
-        <div id="events-link-apps">
-          <c:forEach items="${nextEvents.appShortcuts}" var="appAlmanachShortcut">
-            <a title="${labelEventsMore}" href="${appAlmanachShortcut.url}" class="link-more sp-permalink" id="link-app-${appAlmanachShortcut.target}">
-              <span>${appAlmanachShortcut.altText}</span>
-            </a>
-          </c:forEach>
-        </div>
-      </c:otherwise>
-    </c:choose>
+    <c:if test="${showMore ne false}">
+      <c:choose>
+        <c:when test="${not empty nextEvents.uniqueAppURL}">
+          <a title="${labelEventsMore}" href="${nextEvents.uniqueAppURL}" class="link-more sp-permalink">
+            <span>${labelEventsMore}</span>
+          </a>
+        </c:when>
+        <c:otherwise>
+          <div class="events-link-apps">
+            <c:forEach items="${nextEvents.appShortcuts}" var="appAlmanachShortcut">
+              <a title="${labelEventsMore}" href="${appAlmanachShortcut.url}" class="link-more sp-permalink">
+                <span>${appAlmanachShortcut.altText}</span>
+              </a>
+            </c:forEach>
+          </div>
+        </c:otherwise>
+      </c:choose>
+    </c:if>
   </div>
 </c:if>

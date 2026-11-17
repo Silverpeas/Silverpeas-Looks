@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer les actualités</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-buttons-v3"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-feeds-v5"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>

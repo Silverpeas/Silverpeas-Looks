@@ -31,20 +31,21 @@ const source = fs.readFileSync(path.resolve(__dirname,
 const jsp = fs.readFileSync(path.resolve(__dirname,
   '../../main/webapp/WEB-INF/homepage/newsEditor.jsp'), 'utf8');
 
-async function editor(status = 200, configured = false, publications = false, ephemeris = false) {
+async function editor(status = 200, configured = false, publications = false, ephemeris = false, feedType = '') {
   const controls = {};
-  const markup = ephemeris ? fs.readFileSync(path.resolve(__dirname,
+  const markup = feedType ? fs.readFileSync(path.resolve(__dirname,
+    '../../main/webapp/WEB-INF/homepage/' + feedType + 'Editor.jsp'), 'utf8') : ephemeris ? fs.readFileSync(path.resolve(__dirname,
     '../../main/webapp/WEB-INF/homepage/ephemerisEditor.jsp'), 'utf8') : publications ? fs.readFileSync(path.resolve(__dirname,
     '../../main/webapp/WEB-INF/homepage/publicationsEditor.jsp'), 'utf8') : jsp;
   for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
-      dataset: {widgetType: ephemeris ? 'ephemeris' : ''},
-      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all'].includes(match[1]) ? 'checkbox' : 'text',
+      dataset: {widgetType: feedType || (ephemeris ? 'ephemeris' : '')},
+      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today'].includes(match[1]) ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
   const calls = [];
   let start;
-  const data = {title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -184,3 +185,32 @@ test('ephemeris editor saves common placement and visibility through protected t
   assert.equal(body.get('revision'), 'first');
   assert.equal(body.has('source'), false);
 });
+
+for (const type of ['events', 'rss']) {
+  test(type + ' editor saves source, placement and specific settings with CSRF and revision', async () => {
+    const {controls, calls, submit} = await editor(200, true, false, false, type);
+    assert.equal(controls['news-save'].disabled, false);
+    controls['news-source'].value = type === 'events' ? ' almanach12   almanach34 ' : ' rssaggregator12 ';
+    controls['news-zone'].value = 'main';
+    controls['news-enabled'].checked = false;
+    if (type === 'events') {
+      assert.equal(controls['news-personal'].checked, true);
+      assert.equal(controls['news-include-today'].checked, false);
+      controls['news-max-days'].value = 5;
+    } else { controls['news-rendering'].value = 'tabs'; }
+    await submit();
+    const saved = calls.at(-1);
+    assert.match(saved.url, new RegExp('action=save' + (type === 'events' ? 'Events' : 'Rss')));
+    assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+    const body = new URLSearchParams(saved.body);
+    assert.equal(body.get('revision'), 'first');
+    assert.equal(body.get('zone'), 'main');
+    assert.equal(body.get('enabled'), 'false');
+    assert.equal(body.get('source'), type === 'events' ? 'almanach12 almanach34' : 'rssaggregator12');
+    if (type === 'events') {
+      assert.equal(body.get('maxDays'), '5');
+      assert.equal(body.get('personal'), 'true');
+      assert.equal(body.get('includeToday'), 'false');
+    } else { assert.equal(body.get('rendering'), 'tabs'); }
+  });
+}

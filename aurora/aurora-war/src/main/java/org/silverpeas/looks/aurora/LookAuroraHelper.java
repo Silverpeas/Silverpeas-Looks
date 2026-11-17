@@ -1,5 +1,7 @@
 package org.silverpeas.looks.aurora;
 
+import org.silverpeas.looks.aurora.homepage.HomepageContentStore;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.ArrayUtils;
@@ -483,21 +485,27 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return someNews;
   }
 
+  public HomepageContentStore.EventsConfiguration getDefaultEventsConfiguration() {
+    return new HomepageContentStore.EventsConfiguration(getSettings("home.events.appId", "").trim()
+        .replaceAll("\\s+", " "), getSettings("home.events.maxDays", 2),
+        getSettings("home.events.today.include", true),
+        getSettings("home.events.personal.include", false),
+        getSettings("home.events.importantOnly", true), true);
+  }
+
   public NextEvents getNextEvents() {
-    final String[] appIds = split(getSettings("home.events.appId", ""), ' ');
-    final List<String> allowedComponentIds = getAllowedComponents("almanach", appIds);
-    if (getSettings("home.events.personal.include", false)) {
+    return getConfiguredNextEvents(getDefaultEventsConfiguration());
+  }
+
+  public NextEvents getConfiguredNextEvents(HomepageContentStore.EventsConfiguration configuration) {
+    final List<String> allowedComponentIds = new ArrayList<>(
+        getAllowedComponents("almanach", split(configuration.source(), ' ')));
+    if (configuration.personal()) {
       PersonalComponent.getByName("userCalendar").ifPresent(c -> allowedComponentIds
           .add(PersonalComponentInstance.from(User.getCurrentRequester(), c).getId()));
     }
-    return getNextEvents(allowedComponentIds);
-  }
-
-  private NextEvents getNextEvents(List<String> allowedComponentIds) {
-    boolean includeToday = getSettings("home.events.today.include", true);
-    int nbDays = getSettings("home.events.maxDays", 2);
-    boolean fetchOnlyImportant = getSettings("home.events.importantOnly", true);
-    return getNextEvents(allowedComponentIds, includeToday, nbDays, fetchOnlyImportant);
+    return getNextEvents(allowedComponentIds, configuration.includeToday(),
+        configuration.maxDays(), configuration.importantOnly());
   }
 
   protected NextEvents getNextEvents(List<String> allowedComponentIds, boolean includeToday,
@@ -822,15 +830,24 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getDirectoryDomains().stream().map(Domain::getId).collect(Collectors.joining(","));
   }
 
+  public HomepageContentStore.RssConfiguration getDefaultRssConfiguration() {
+    return new HomepageContentStore.RssConfiguration(getSettings("home.rss.appId", "").trim(),
+        getSettings("home.rss.displayer", "aggregate"));
+  }
+
   public RSSFeeds getRSSFeeds() {
-    String componentId = getSettings("home.rss.appId", "");
-    if (StringUtil.isDefined(componentId)) {
+    return getConfiguredRSSFeeds(getDefaultRssConfiguration());
+  }
+
+  public RSSFeeds getConfiguredRSSFeeds(HomepageContentStore.RssConfiguration configuration) {
+    String componentId = configuration.source();
+    if (StringUtil.isDefined(componentId) && isComponentAvailable(componentId)) {
       RSSService rssService = RSSServiceProvider.getRSSService();
       try {
         List<RSSItem> allItems = rssService.getApplicationItems(componentId, true);
         List<SPChannel> channels = rssService.getAllChannels(componentId);
         RSSFeeds rssFeeds = new RSSFeeds(channels, allItems);
-        rssFeeds.setDisplayer(getSettings("home.rss.displayer", "aggregate"));
+        rssFeeds.setDisplayer(configuration.rendering());
         return rssFeeds;
       } catch (Exception e) {
         SilverLogger.getLogger(this).error(e);

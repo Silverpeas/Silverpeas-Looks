@@ -95,6 +95,10 @@ class HomepageContentServletTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultEventsConfiguration()).thenReturn(
+        new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
+    when(helper.getDefaultRssConfiguration()).thenReturn(
+        new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
     when(helper.getDefaultPublicationsConfiguration()).thenReturn(
         new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
@@ -415,7 +419,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 5));
+        value instanceof java.util.List<?> widgets && widgets.size() == 7));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");
@@ -443,6 +447,87 @@ class HomepageContentServletTest {
   void regularUserCannotManageEvenWhenOwnerIsOmitted() throws Exception {
     when(request.getParameter("action")).thenReturn("manage");
     when(request.getParameter("owner")).thenReturn(null);
+    servlet.doGet(request, response);
+    verify(response).sendError(403);
+  }
+
+  @Test
+  void eventsAndRssRequireAdminCsrfAndFreshRevision() throws Exception {
+    for (String type : java.util.List.of("Events", "Rss")) {
+      prepareNewsSave();
+      when(request.getParameter("action")).thenReturn("save" + type);
+      when(request.getParameter("widget")).thenReturn(type.toLowerCase() + "-test");
+      when(request.getParameter("title")).thenReturn("Titre");
+      when(request.getParameter("zone")).thenReturn("main");
+      when(request.getParameter("order")).thenReturn("2");
+      when(request.getParameter("source")).thenReturn(type.equals("Events") ? "almanach12" : "rssaggregator12");
+      when(request.getParameter("maxDays")).thenReturn("4");
+      when(request.getParameter("rendering")).thenReturn("tabs");
+      when(request.getParameter("includeToday")).thenReturn("false");
+      when(request.getParameter("personal")).thenReturn("true");
+      when(request.getParameter("showMore")).thenReturn("false");
+      when(user.isAccessAdmin()).thenReturn(false);
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response).sendError(403);
+      when(user.isAccessAdmin()).thenReturn(true);
+      when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response).sendError(403);
+      when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response, never()).sendError(anyInt());
+      var saved = store.readWidget(new HomepagePage("skins", "waves"), type.toLowerCase() + "-test", "fr");
+      assertEquals(type.toLowerCase(), saved.type());
+      if (type.equals("Events")) {
+        assertTrue(saved.eventsConfiguration().personal());
+        assertFalse(saved.eventsConfiguration().includeToday());
+        assertFalse(saved.eventsConfiguration().showMore());
+      } else {
+        assertEquals("tabs", saved.rssConfiguration().rendering());
+      }
+      servlet.doPost(request, response);
+      verify(response).sendError(409);
+    }
+  }
+
+  @Test
+  void feedRenderingAllowsReadersOnActiveSkinAndSkipsHiddenAndMissingWidgets() throws Exception {
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+    var page = new HomepagePage("skins", "waves");
+    var events = new HomepageContentStore.EventsConfiguration("*", 2, true, false, false, true);
+    store.saveFeedWidget(page, "events-hidden", "fr", "", new HomepageContentStore.Layout("main", 2, false), "events", events, null, "");
+    when(request.getParameter("action")).thenReturn("renderFeed");
+    for (String id : java.util.List.of("events-hidden", "missing")) {
+      when(request.getParameter("widget")).thenReturn(id);
+      servlet.doGet(request, response);
+      verify(helper, never()).getConfiguredNextEvents(any());
+      verify(helper, never()).getConfiguredRSSFeeds(any());
+    }
+    verify(response, times(2)).setStatus(204);
+    var dispatcher = mock(jakarta.servlet.RequestDispatcher.class);
+    when(request.getRequestDispatcher("/WEB-INF/homepage/feedWidget.jsp")).thenReturn(dispatcher);
+    var visibleEvents = mock(org.silverpeas.looks.aurora.NextEvents.class);
+    when(visibleEvents.getNextEventsDates()).thenReturn(java.util.List.of(mock(org.silverpeas.looks.aurora.NextEventsDate.class)));
+    when(helper.getConfiguredNextEvents(any())).thenReturn(visibleEvents);
+    var visibleRss = new org.silverpeas.looks.aurora.RSSFeeds(java.util.List.of(),
+        java.util.List.of(mock(org.silverpeas.components.rssaggregator.model.RSSItem.class)));
+    when(helper.getConfiguredRSSFeeds(any())).thenReturn(visibleRss);
+    when(request.getParameter("widget")).thenReturn("events-legacy");
+    servlet.doGet(request, response);
+    verify(helper).getConfiguredNextEvents(new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
+    verify(dispatcher).forward(request, response);
+    when(request.getParameter("widget")).thenReturn("rss-legacy");
+    servlet.doGet(request, response);
+    verify(helper).getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
+    when(helper.getConfiguredRSSFeeds(any())).thenReturn(null);
+    clearInvocations(response, dispatcher);
+    servlet.doGet(request, response);
+    verify(response).setStatus(204);
+    verifyNoInteractions(dispatcher);
+    when(request.getParameter("owner")).thenReturn("Aurora");
     servlet.doGet(request, response);
     verify(response).sendError(403);
   }

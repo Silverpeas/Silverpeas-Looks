@@ -38,6 +38,16 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'events' or widget.type == 'rss'}">
+        <c:url value="/AuroraHomepageContent" var="feedUrl">
+          <c:param name="action" value="renderFeed"/>
+          <c:param name="kind" value="skins"/>
+          <c:param name="owner" value="${homepageOwner}"/>
+          <c:param name="widget" value="${widget.id}"/>
+          <c:param name="language" value="${homepageLanguage}"/>
+        </c:url>
+        <div id="homepage-widget-${widget.id}" class="homepage-feed-part" data-feed-url="<c:out value='${feedUrl}'/>"></div>
+      </c:when>
       <c:when test="${widget.type == 'ephemeris'}">
         <viewTags:displayEphemeris id="homepage-widget-${widget.id}" title="${widget.title}"/>
       </c:when>

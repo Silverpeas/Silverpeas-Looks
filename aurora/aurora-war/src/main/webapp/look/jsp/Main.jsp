@@ -45,6 +45,7 @@
 <%
   MainSessionController homepageController = MainSessionController.getInstance(session);
   GraphicElementFactory homepageFactory = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+  request.setAttribute("homepageOwner", HomepageContentServlet.skinId(homepageFactory));
   request.setAttribute("homepageAdmin", homepageController.getCurrentUserDetail().isAccessAdmin());
   request.setAttribute("homepageLanguage", homepageController.getFavoriteLanguage());
   HomepagePage homepagePage = new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory));
@@ -58,7 +59,9 @@
   request.setAttribute("homepageNews", homepageNews);
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepageWidgets, homepageHelper));
   request.setAttribute("isAtLeastOneCarousel", homepageNews.values().stream()
-      .filter(news -> !news.isEmpty()).anyMatch(news -> news.getRenderingType().isCarousel()));
+      .filter(news -> !news.isEmpty()).anyMatch(news -> news.getRenderingType().isCarousel()) || homepageWidgets.stream()
+      .filter(widget -> widget.isEnabled() && "rss".equals(widget.type()))
+      .anyMatch(widget -> "carrousel".equals(widget.rssConfiguration().rendering())));
 %>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 
@@ -92,20 +95,21 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
-    <view:link href="/look/jsp/css/aurora.css"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-feeds-v5"/>
   </jsp:attribute>
   <jsp:body>
-    <view:link href="/look/jsp/css/aurora.css"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-feeds-v5"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css?version=15592-admin-button-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-feeds-v5"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
+    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-feeds-v5"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
-    <view:script src="/look/jsp/js/homepage-main.js"/>
+    <view:script src="/look/jsp/js/homepage-main.js?version=15592-feeds-v5"/>
   </jsp:body>
 </view:sp-head-part>
 <view:sp-body-part cssClass="main-home-page">
@@ -128,7 +132,6 @@
 
       <viewTags:displayFreeZone freeZone="${lookHelper.thinFreeZone}" freeZoneId="thinFreeZone"/>
 
-      <div id="next-event-part"></div>
 
       <viewTags:displayFAQ questions="${questions}"/>
 
@@ -149,7 +152,6 @@
       <viewTags:displayNewsSubscribed enabled="${showLastSubscribedNews}" listOfNews="${subscribedListOfNews}"/>
 
 
-      <div id="rss-part"></div>
 
       <viewTags:displayNewUsers newUsers="${newUsers}"/>
 

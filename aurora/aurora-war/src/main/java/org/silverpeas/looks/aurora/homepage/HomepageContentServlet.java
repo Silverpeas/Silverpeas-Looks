@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -117,7 +117,7 @@ public class HomepageContentServlet extends HttpServlet {
         }
       }
       HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
-      boolean edit = write || !"asset".equals(action) && !"view".equals(action);
+      boolean edit = write || !"asset".equals(action) && !"view".equals(action) && !"renderFeed".equals(action);
       if (!isAllowed(controller, page, edit, activeSkin)) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
         return;
@@ -212,6 +212,19 @@ public class HomepageContentServlet extends HttpServlet {
                 option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("saveEvents".equals(action) || "saveRss".equals(action)) {
+      boolean events = "saveEvents".equals(action);
+      store.saveFeedWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")),
+              Boolean.parseBoolean(request.getParameter("enabled"))), events ? "events" : "rss",
+          events ? new HomepageContentStore.EventsConfiguration(request.getParameter("source"),
+              Integer.parseInt(request.getParameter("maxDays")), option(request, "includeToday"),
+              Boolean.parseBoolean(request.getParameter("personal")),
+              Boolean.parseBoolean(request.getParameter("importantOnly")), option(request, "showMore")) : null,
+          events ? null : new HomepageContentStore.RssConfiguration(request.getParameter("source"),
+              request.getParameter("rendering")), request.getParameter("revision"));
+      feedResponse(request, response, page, widget, language, "", events ? "events" : "rss");
     } else if ("saveEphemeris".equals(action)) {
       store.saveEphemerisWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
@@ -255,7 +268,40 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("loadEphemeris".equals(action)) {
+    if ("renderFeed".equals(action)) {
+      var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
+          request.getSession(false).getAttribute("Silverpeas_LookHelper");
+      var model = HomepageWidgets.all(store, page, language, helper).stream()
+          .filter(candidate -> candidate.id().equals(widget)).findFirst().orElse(null);
+      if (model == null || !model.isEnabled() ||
+          !java.util.List.of("events", "rss").contains(model.type())) {
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return;
+      }
+      request.setAttribute("feedWidget", model);
+      if ("events".equals(model.type())) {
+        var events = helper.getConfiguredNextEvents(model.eventsConfiguration());
+        if (events == null || events.getNextEventsDates().isEmpty()) {
+          response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+          return;
+        }
+        request.setAttribute("feedEvents", events);
+      } else {
+        var feeds = helper.getConfiguredRSSFeeds(model.rssConfiguration());
+        if (feeds == null || feeds.getAggregatedItems().isEmpty()) {
+          response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+          return;
+        }
+        request.setAttribute("feedRss", feeds);
+      }
+      request.getRequestDispatcher("/WEB-INF/homepage/feedWidget.jsp").forward(request, response);
+    } else if ("loadEvents".equals(action) || "loadRss".equals(action)) {
+      feedResponse(request, response, page, widget, language, csrf,
+          "loadEvents".equals(action) ? "events" : "rss");
+    } else if ("eventsEditor".equals(action) || "rssEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/" +
+          ("eventsEditor".equals(action) ? "eventsEditor.jsp" : "rssEditor.jsp")).forward(request, response);
+    } else if ("loadEphemeris".equals(action)) {
       ephemerisResponse(request, response, page, widget, language, csrf);
     } else if ("ephemerisEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/ephemerisEditor.jsp").forward(request, response);
@@ -299,6 +345,8 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newWidgetId", "html-" + UUID.randomUUID());
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
+      request.setAttribute("newEventsWidgetId", "events-" + UUID.randomUUID());
+      request.setAttribute("newRssWidgetId", "rss-" + UUID.randomUUID());
       request.setAttribute("newEphemerisWidgetId", "ephemeris-" + UUID.randomUUID());
       request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp").forward(request, response);
     } else if ("editor".equals(action)) {
@@ -306,6 +354,28 @@ public class HomepageContentServlet extends HttpServlet {
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void feedResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf, String type) throws IOException {
+    var model = HomepageWidgets.feedWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"), type);
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> {
+      o.put("configured", !content.revision().isEmpty()).put("title", content.title())
+          .put("zone", content.layout().zone()).put("order", content.layout().order())
+          .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf);
+      if ("events".equals(type)) {
+        var configuration = model.eventsConfiguration();
+        o.put("source", configuration.source()).put("maxDays", configuration.maxDays())
+            .put("includeToday", configuration.includeToday()).put("personal", configuration.personal())
+            .put("importantOnly", configuration.importantOnly()).put("showMore", configuration.showMore());
+      } else {
+        o.put("source", model.rssConfiguration().source()).put("rendering", model.rssConfiguration().rendering());
+      }
+      return o;
+    }));
   }
 
   private void ephemerisResponse(HttpServletRequest request, HttpServletResponse response,

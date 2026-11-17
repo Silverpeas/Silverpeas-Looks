@@ -43,6 +43,10 @@ class HomepageWidgetsTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultEventsConfiguration()).thenReturn(
+        new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
+    when(helper.getDefaultRssConfiguration()).thenReturn(
+        new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
     when(helper.getDefaultPublicationsConfiguration()).thenReturn(
         new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
@@ -93,7 +97,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(5, initial.size());
+    assertEquals(7, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -101,7 +105,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(5, changed.size());
+    assertEquals(7, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -247,6 +251,56 @@ class HomepageWidgetsTest {
     store.saveConfigured(page, "html", "fr", "", "", "", layout);
     assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page,
         "html", "fr", "", layout, ""));
+  }
+
+  @Test
+  void eventsAndRssPreserveDefaultsPersistMultipleInstancesAndProtectRevisionsAndTypes() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    var events = HomepageWidgets.feedWidget(store, page, "events-legacy", "fr", helper, "events");
+    var rss = HomepageWidgets.feedWidget(store, page, "rss-legacy", "fr", helper, "rss");
+    assertEquals("almanach12", events.eventsConfiguration().source());
+    assertEquals("tabs", rss.rssConfiguration().rendering());
+    assertFalse(Files.exists(root.resolve("skins")));
+    var layout = new HomepageContentStore.Layout("right", 12, false);
+    var configuration = new HomepageContentStore.EventsConfiguration("*", 5, false, true, false, false);
+    store.saveFeedWidget(page, events.id(), "fr", "Agenda", layout, "events", configuration, null, "");
+    var saved = new HomepageContentStore(root).readWidget(page, events.id(), "fr");
+    assertEquals(configuration, saved.eventsConfiguration());
+    assertEquals(layout, saved.content().layout());
+    store.saveFeedWidget(page, "events-second", "fr", "Autre", layout, "events", configuration, null, "");
+    assertEquals(2, HomepageWidgets.all(store, page, "fr", helper).stream()
+        .filter(widget -> "events".equals(widget.type())).count());
+    var changed = new HomepageContentStore.EventsConfiguration("almanach24", 2, true, false, true, true);
+    store.saveFeedWidget(page, saved.id(), "fr", "Agenda", layout, "events", changed, null, saved.content().revision());
+    assertNotEquals(saved.content().revision(), store.read(page, saved.id(), "fr").revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveFeedWidget(page, saved.id(), "fr",
+        "Agenda", layout, "events", configuration, null, saved.content().revision()));
+    assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, null, "fr", "", layout,
+        "events", configuration, null, ""));
+    for (String mode : List.of("aggregate", "tabs", "carrousel")) {
+      var rssConfiguration = new HomepageContentStore.RssConfiguration("rssaggregator12", mode);
+      store.saveFeedWidget(page, "rss-" + mode, "fr", "Veille", layout, "rss", null, rssConfiguration, "");
+      assertEquals(rssConfiguration, new HomepageContentStore(root).readWidget(page, "rss-" + mode, "fr").rssConfiguration());
+    }
+    assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, "events-legacy", "fr",
+        "", layout, "rss", null, rss.rssConfiguration(), ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, "publications-legacy", "fr",
+        "", layout, "events", configuration, null, ""));
+    for (String id : List.of("events-legacy", "rss-legacy")) {
+      assertThrows(IllegalArgumentException.class, () -> store.save(page, id, "fr", "", "", ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page, id, "fr", "", layout, ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page, id, "fr", "", layout, news(""), 0));
+      assertThrows(IllegalArgumentException.class, () -> store.savePublicationsWidget(page, id, "fr", "", layout,
+          new HomepageContentStore.PublicationsConfiguration("", 3, true), ""));
+    }
+    store.saveConfigured(page, "html", "fr", "", "", "", layout);
+    assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, "html", "fr", "", layout,
+        "events", configuration, null, ""));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.EventsConfiguration("quickinfo1", 2, true, false, false, true));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.EventsConfiguration("*", 0, true, false, false, true));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("https://feed.invalid", "tabs"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("rssaggregator12", "unknown"));
   }
 
 }

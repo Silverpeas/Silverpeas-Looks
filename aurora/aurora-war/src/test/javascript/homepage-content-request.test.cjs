@@ -133,19 +133,19 @@ test('editor loads placement and submits it with the content revision', async ()
   assert.equal(save.options.body.get('html'), '<p>Modifié</p>');
 });
 
-test('homepage keeps asynchronous legacy blocks and navigation', () => {
+test('homepage loads configured asynchronous widgets independently and keeps navigation', () => {
   const loads = [];
   let link;
   const context = {whenSilverpeasReady(callback) { callback(); },
-    $: callback => callback(), document: {querySelectorAll: () => []},
+    $: callback => callback(), document: {querySelectorAll: selector => selector === '.homepage-feed-part'
+      ? [{id: 'widget-events', dataset: {feedUrl: '/events'}}, {id: 'widget-rss', dataset: {feedUrl: '/rss'}}] : []},
     sp: {ajaxRequest(url) { return {loadTarget(target) { loads.push([url, target]); }}; }},
     StringUtil: {isDefined: value => Boolean(value)},
     spWindow: {loadLink(url) { link = url; }}, webContext: '/silverpeas'};
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.resolve(__dirname,
       '../../main/webapp/look/jsp/js/homepage-main.js'), 'utf8'), context);
-  assert.deepEqual(loads, [['parts/MainNextEventsPart.jsp', '#next-event-part'],
-    ['parts/MainRSSPart.jsp', '#rss-part']]);
+  assert.deepEqual(loads, [['/events', '#widget-events'], ['/rss', '#widget-rss']]);
   context.changeBody('/example');
   assert.equal(link, '/silverpeas/example');
 });
@@ -154,10 +154,9 @@ test('all ephemeris widgets render after DOM readiness using the existing calend
   const widgets = [{textContent: ''}, {textContent: ''}];
   let ready;
   const context = {whenSilverpeasReady: callback => callback(),
-    $: callback => { ready = callback; },
+    $: callback => { if (!ready) { ready = callback; } },
     document: {querySelectorAll(selector) {
-      assert.equal(selector, '.homepage-ephemeris-name');
-      return widgets;
+      return selector === '.homepage-ephemeris-name' ? widgets : [];
     }},
     ephemeris: {getTodayEphemerisName: () => 'Élisabeth'},
     sp: {ajaxRequest: () => ({loadTarget() {}})}};

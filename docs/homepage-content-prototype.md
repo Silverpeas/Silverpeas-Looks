@@ -190,3 +190,26 @@ remplace dans le registre commun, sans doublon. L’ancien affichage des éphém
 est retiré du bloc météo sur la home générale ; la météo reste à sa place avec
 ses réglages et sa condition historique d’affichage. Les autres usages du tag
 météo gardent leur comportement. Aucun service externe supplémentaire.
+
+
+Les prochains événements (`events`) et les flux RSS (`rss`) rejoignent le registre
+commun avec titre, colonne, ordre et visibilité, et plusieurs instances possibles.
+Les événements proposent des agendas sources (`*`, identifiants `almanach` séparés
+par des espaces, ou vide), de 1 à 100 jours comportant des événements, l’inclusion
+d’aujourd’hui et de l’agenda personnel du lecteur, le filtre des événements importants
+et les liens « Voir l’agenda ». Le nombre porte sur les jours qui contiennent des
+événements, conformément au helper historique ; la limite de récupération du calendrier
+reste celle de la plateforme.
+Les RSS utilisent une application `rssaggregator` accessible au lecteur (vide : aucun
+flux) et les modes `aggregate`, `tabs`, `carrousel`. Les liens RSS s’ouvrent dans un
+nouvel onglet. Les onglets, filtres, descriptions et carrousels sont isolés par instance.
+
+Les instances virtuelles `events-legacy` (droite, ordre 10) et `rss-legacy` (principale,
+ordre 50) reprennent les réglages `home.events.*` et `home.rss.*` sans écrire de données.
+La sauvegarde remplace ces instances dans le registre sans doublon. Les blocs historiques
+séparés sont retirés de Main.jsp, mais leurs fragments restent disponibles pour les
+autres usages. Le rendu commun utilise `action=renderFeed` avec authentification et
+contrôle du skin actif, puis les helpers filtrent les sources selon les droits du lecteur.
+Les blocs masqués ne récupèrent aucune donnée ; les blocs vides ne sont pas affichés.
+Le chargement reste asynchrone, avec initialisation RSS après insertion dans le DOM.
+Les éditeurs conservent les protections administrateur/CSRF et le contrôle de révision.

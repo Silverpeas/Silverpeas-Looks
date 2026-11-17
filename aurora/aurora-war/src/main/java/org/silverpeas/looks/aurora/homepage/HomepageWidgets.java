@@ -107,6 +107,27 @@ public final class HomepageWidgets {
             new HomepageContentStore.Layout("right", 0, enabled)), "ephemeris", null, 0);
   }
 
+  public static HomepageContentStore.Widget feedWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper, String type)
+      throws IOException {
+    if (!List.of("events", "rss").contains(type)) {
+      throw new IllegalArgumentException("Invalid feed type");
+    }
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!type.equals(saved.type())) {
+        throw new IllegalArgumentException("Unexpected widget type");
+      }
+      return saved;
+    }
+    boolean events = "events".equals(type);
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content(events ? "Prochains événements" : "Flux RSS", "", "",
+            new HomepageContentStore.Layout(events ? "right" : "main", events ? 10 : 50, true)),
+        type, null, 0, null, events ? helper.getDefaultEventsConfiguration() : null,
+        events ? null : helper.getDefaultRssConfiguration());
+  }
+
   public static List<HomepageContentStore.Widget> all(HomepageContentStore store,
       HomepagePage page, String language, LookAuroraHelper helper) throws IOException {
     var widgets = new ArrayList<>(store.widgets(page, language));
@@ -125,6 +146,14 @@ public final class HomepageWidgets {
     if ("skins".equals(page.kind()) &&
         widgets.stream().noneMatch(widget -> widget.id().equals("ephemeris-legacy"))) {
       widgets.add(ephemerisWidget(store, page, "ephemeris-legacy", language, helper));
+    }
+    if ("skins".equals(page.kind())) {
+      for (String type : List.of("events", "rss")) {
+        String id = type + "-legacy";
+        if (widgets.stream().noneMatch(widget -> widget.id().equals(id))) {
+          widgets.add(feedWidget(store, page, id, language, helper, type));
+        }
+      }
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

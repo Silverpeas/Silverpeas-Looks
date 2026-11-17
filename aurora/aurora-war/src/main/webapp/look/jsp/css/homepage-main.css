@@ -65,3 +65,91 @@ html, body {
 .main-home-page .homepage-publications .sp-path {
   display: none;
 }
+
+
+.main-home-page .homepage-ephemeris h4 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 0.6em;
+  min-height: 0;
+  line-height: 1.35;
+  padding-bottom: 0;
+  margin-bottom: 0.5em;
+}
+.main-home-page .homepage-ephemeris h4::after {
+  display: none;
+}
+.main-home-page .homepage-ephemeris h4 span {
+  margin: 0;
+}
+.main-home-page .homepage-ephemeris .date-today {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 0.8em;
+  color: var(--color-flashy-principale, inherit);
+}
+.main-home-page .homepage-ephemeris .homepage-ephemeris-name {
+  padding: 0;
+  margin: 0 0 1em;
+  font-style: italic;
+  line-height: 1.5;
+}
+.main-home-page .homepage-ephemeris-name:not(:empty)::before {
+  content: 'Nous fêtons les ';
+}
+
+.main-home-page .homepage-feed-part {
+  width: 100%;
+  flex-basis: 100%;
+}
+.main-home-page .homepage-feed-part:empty {
+  display: none;
+}
+.main-home-page .homepage-events {
+  position: relative;
+  margin-bottom: 2em;
+}
+.main-home-page .homepage-events ul.eventList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.main-home-page .homepage-events .eventInfo {
+  border: 0;
+  padding: 0;
+}
+.main-home-page .homepage-events .eventLongDate {
+  overflow-wrap: anywhere;
+}
+.main-home-page .homepage-events .eventName a {
+  overflow-wrap: anywhere;
+}
+.main-home-page .homepage-rss .itemDeploy[hidden] {
+  display: none;
+}
+.main-home-page .homepage-rss .rss_type {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+}
+.main-home-page .homepage-rss .homepage-rss-slider {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-home-page .homepage-events li.events {
+  background-color: var(--bgColor-de-fond-clair-bloc-home, #fff);
+  padding: 1em;
+  min-height: auto;
+  margin-bottom: 1em;
+}
+.main-home-page .homepage-rss.rss_tab .rss_type a {
+  background-color: var(--color-foncee, #5c5c5c);
+  color: var(--color-text-sur-foncee, #fff);
+}
+.main-home-page .homepage-rss.rss_tab .rss_type a.selected {
+  background-color: var(--color-flashy-principale, #5c5c5c);
+  color: var(--color-text-sur-flashy-principale, #fff);
+}

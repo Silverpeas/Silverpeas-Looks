@@ -69,7 +69,12 @@ public class HomepageContentStore {
 
   public record Widget(String id, Content content, String type,
       NewsConfiguration newsConfiguration, int legacyIndex,
-      PublicationsConfiguration publicationsConfiguration) {
+      PublicationsConfiguration publicationsConfiguration,
+      EventsConfiguration eventsConfiguration, RssConfiguration rssConfiguration) {
+    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
+        PublicationsConfiguration publications) {
+      this(id, content, type, news, legacyIndex, publications, null, null);
+    }
     public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex) {
       this(id, content, type, news, legacyIndex, null);
     }
@@ -78,6 +83,8 @@ public class HomepageContentStore {
     }
     public NewsConfiguration getNewsConfiguration() { return newsConfiguration; }
     public PublicationsConfiguration getPublicationsConfiguration() { return publicationsConfiguration; }
+    public EventsConfiguration getEventsConfiguration() { return eventsConfiguration; }
+    public RssConfiguration getRssConfiguration() { return rssConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
@@ -117,7 +124,15 @@ public class HomepageContentStore {
         "publications".equals(type) ? new PublicationsConfiguration(
             settings.getProperty(prefix + ".spaceId", ""),
             Integer.parseInt(settings.getProperty(prefix + ".size", "3")),
-            Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null);
+            Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null,
+        "events".equals(type) ? new EventsConfiguration(settings.getProperty(prefix + ".source", ""),
+            Integer.parseInt(settings.getProperty(prefix + ".maxDays", "2")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".includeToday", "true")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".personal", "false")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".importantOnly", "true")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null,
+        "rss".equals(type) ? new RssConfiguration(settings.getProperty(prefix + ".source", ""),
+            settings.getProperty(prefix + ".rendering", "aggregate")) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -143,6 +158,12 @@ public class HomepageContentStore {
           .map(key -> properties.getProperty(prefix + "." + key, ""))
           .collect(Collectors.joining("\u0000"));
     }
+    if (java.util.List.of("events", "rss").contains(properties.getProperty(prefix + ".type", ""))) {
+      configurationVersion = java.util.List.of("source", "maxDays", "includeToday", "personal",
+          "importantOnly", "showMore", "rendering").stream()
+          .map(key -> properties.getProperty(prefix + "." + key, ""))
+          .collect(Collectors.joining("\u0000"));
+    }
     String version = properties.containsKey(prefix + ".type")
         ? revision(!"html".equals(properties.getProperty(prefix + ".type"))
             ? title + layout + configurationVersion : title + layout, html) : "";
@@ -157,7 +178,7 @@ public class HomepageContentStore {
 
   public synchronized void saveConfigured(HomepagePage page, String widget, String language,
       String title, String html, String expectedRevision, Layout layout) throws IOException {
-    if ("ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
+    if ("events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }
     Content previous = read(page, widget, language);
@@ -201,7 +222,7 @@ public class HomepageContentStore {
 
   public synchronized void saveNewsWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, NewsConfiguration news, int legacyIndex) throws IOException {
-    if ("ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
+    if ("events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
       throw new IllegalArgumentException("Invalid legacy news reference");
     }
     var properties = properties(page);
@@ -282,7 +303,7 @@ public class HomepageContentStore {
       String title, Layout layout, String expectedRevision) throws IOException {
     var properties = properties(page);
     String prefix = "widget." + widget;
-    if ("publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
+    if ("events-legacy".equals(widget) || "rss-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
         !"ephemeris".equals(properties.getProperty(prefix + ".type", "ephemeris"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }
@@ -292,6 +313,66 @@ public class HomepageContentStore {
     registerWidget(properties, widget);
     configureLayout(properties, prefix, title, layout);
     properties.setProperty(prefix + ".type", "ephemeris");
+    saveProperties(page, properties);
+  }
+
+  public record EventsConfiguration(String source, int maxDays, boolean includeToday,
+      boolean personal, boolean importantOnly, boolean showMore) {
+    public EventsConfiguration {
+      if (source == null || !source.matches("(?:|\\*|almanach[0-9]+(?: almanach[0-9]+)*)") ||
+          maxDays < 1 || maxDays > 100) {
+        throw new IllegalArgumentException("Invalid events configuration");
+      }
+    }
+    public boolean isShowMore() { return showMore; }
+  }
+
+  public record RssConfiguration(String source, String rendering) {
+    public RssConfiguration {
+      if (source == null || !source.matches("(?:|rssaggregator[0-9]+)") ||
+          !java.util.List.of("aggregate", "tabs", "carrousel").contains(rendering)) {
+        throw new IllegalArgumentException("Invalid RSS configuration");
+      }
+    }
+  }
+
+  public synchronized void saveFeedWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, String type, EventsConfiguration events,
+      RssConfiguration rss, String expectedRevision) throws IOException {
+    if (!java.util.List.of("events", "rss").contains(type) ||
+        ("events".equals(type) ? events == null : rss == null)) {
+      throw new IllegalArgumentException("Invalid feed widget");
+    }
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    HomepagePage.validateIdentifier(widget);
+    String reservedType = switch (widget) {
+      case "events-legacy" -> "events";
+      case "rss-legacy" -> "rss";
+      case "ephemeris-legacy" -> "ephemeris";
+      case "publications-legacy" -> "publications";
+      default -> HomepageWidgets.legacyIndex(widget) != 0 ? "news" : type;
+    };
+    if (!type.equals(reservedType) || !type.equals(properties.getProperty(prefix + ".type", type))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", type);
+    if ("events".equals(type)) {
+      properties.setProperty(prefix + ".source", events.source());
+      properties.setProperty(prefix + ".maxDays", String.valueOf(events.maxDays()));
+      properties.setProperty(prefix + ".includeToday", String.valueOf(events.includeToday()));
+      properties.setProperty(prefix + ".personal", String.valueOf(events.personal()));
+      properties.setProperty(prefix + ".importantOnly", String.valueOf(events.importantOnly()));
+      properties.setProperty(prefix + ".showMore", String.valueOf(events.showMore()));
+    } else {
+      properties.setProperty(prefix + ".source", rss.source());
+      properties.setProperty(prefix + ".rendering", rss.rendering());
+    }
     saveProperties(page, properties);
   }
 
@@ -309,7 +390,7 @@ public class HomepageContentStore {
       String expectedRevision) throws IOException {
     var properties = properties(page);
     String prefix = "widget." + widget;
-    if ("ephemeris-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
+    if ("events-legacy".equals(widget) || "rss-legacy".equals(widget) || "ephemeris-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
         !"publications".equals(properties.getProperty(prefix + ".type", "publications"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }

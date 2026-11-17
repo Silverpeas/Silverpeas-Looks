@@ -33,6 +33,9 @@ whenSilverpeasReady(function() {
       element.textContent = ephemeris.getTodayEphemerisName();
     });
   });
-  sp.ajaxRequest('parts/MainNextEventsPart.jsp').loadTarget('#next-event-part');
-  sp.ajaxRequest('parts/MainRSSPart.jsp').loadTarget('#rss-part');
+  $(function() {
+    document.querySelectorAll('.homepage-feed-part').forEach(element => {
+      sp.ajaxRequest(element.dataset.feedUrl).loadTarget('#' + element.id);
+    });
+  });
 });

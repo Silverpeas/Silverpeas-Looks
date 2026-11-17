@@ -34,6 +34,12 @@
               required="true"
               type="org.silverpeas.looks.aurora.RSSFeeds" %>
 
+<%@ attribute name="id" required="false" type="java.lang.String" %>
+<%@ attribute name="title" required="false" type="java.lang.String" %>
+<c:set var="rssId" value="${empty id ? 'rssNews' : id}"/>
+<c:set var="rssSliderId" value="${rssId}-slider"/>
+<c:if test="${empty id}"><c:set var="rssSliderId" value="rss-slider"/></c:if>
+
 <fmt:message var="labelRSS" key="look.home.rssFeeds"/>
 
 <c:set var="rssDisplayMode" value="aggregate"/>
@@ -44,16 +50,16 @@
   <c:set var="rssDisplayMode" value="rss_carrousel" />
 </c:if>
 
-<c:if test="${not empty rssFeeds}">
+<c:if test="${not empty rssFeeds and not empty rssFeeds.aggregatedItems}">
   <c:set var="rssChannels" value="${rssFeeds.channels}"/>
   <c:set var="onceChannel" value="${fn:length(rssChannels) == 1}"/>
   <c:set var="rssItems" value="${rssFeeds.aggregatedItems}"/>
 
-  <div id="rssNews" class="feed-home secteur-container ${rssDisplayMode} onceChannel-${onceChannel}">
-    <h4>${labelRSS}</h4>
+  <div id="${rssId}" class="homepage-rss feed-home secteur-container ${rssDisplayMode} onceChannel-${onceChannel}">
+    <h4><c:out value="${empty title ? labelRSS : title}"/></h4>
     <c:choose>
       <c:when test="${rssFeeds.carrousel}">
-        <ul id="rss-slider">
+        <ul id="${rssSliderId}" class="homepage-rss-slider">
           <!-- Display each RSS items -->
           <c:forEach var="rssItem" items="${rssItems}">
             <li class="item-channel channel_${rssItem.channelId}">
@@ -67,7 +73,7 @@
       <c:otherwise>
         <div class="rss_type">
           <c:forEach var="rssChannel" items="${rssChannels}">
-            <a href="#" id="channel_${rssChannel.PK.id}" class="link" onclick="return false;"><span>${rssChannel.feed.title}</span></a>
+            <a href="#" data-channel="channel_${rssChannel.PK.id}" class="link"><span>${rssChannel.feed.title}</span></a>
           </c:forEach>
         </div>
         <ul>
@@ -79,7 +85,7 @@
                 <a href="${rssItem.itemLink}" target="_blank">${rssItem.itemTitle}</a>
               </h3>
               <div class="lastUpdate-item-rssNews"><view:formatDateTime value="${rssItem.itemDate}"/></div>
-              <div class="itemDeploy" style="display:none;">
+              <div class="itemDeploy" hidden>
                 <div class="description-item-rssNews">${rssItem.itemDescription}</div>
                 <br class="clear"/>
               </div>
@@ -91,45 +97,5 @@
 
   </div>
 
-  <script type="text/javascript">
-    whenSilverpeasReady(function() {
-
-      <c:if test="${rssFeeds.carrousel}">
-        $("#rss-slider").responsiveSlides({
-          auto: true,
-          pager: false,
-          nav: false,
-          speed: 500,
-          pause: true,
-          timeout: 6000
-        });
-      </c:if>
-
-      $('.description-item-rssNews a').attr("target","_blank");
-
-      $('.deploy-item').click(function() {
-        $(this).children('.itemDeploy').toggle();
-        $(this).toggleClass('open');
-      });
-      $('.aggregate .rss_type a').click(function() {
-        var channel = $(this).attr('id');
-        $('.'+channel).toggle();
-        $(this).toggleClass('off');
-      });
-
-      $('.rss_tab .rss_type > a').click(function() {
-        $('.rss_tab .selected').removeClass('selected');
-        $(this).addClass('selected');
-        var channel = $(this).attr('id');
-        $('.item-channel').hide();
-        $('.'+channel).show();
-      });
-
-      var firstFeed = $('.rss_tab .rss_type > a:first');
-      firstFeed.addClass('selected');
-      var firstFeedId = firstFeed.attr('id');
-      $('.rss_tab .item-channel').hide();
-      $('.rss_tab .'+firstFeedId).show();
-    });
-  </script>
+  <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-feeds-v5"/>
 </c:if>
