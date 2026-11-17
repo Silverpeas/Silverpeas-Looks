@@ -93,6 +93,76 @@ class HomepageContentServletTest {
     when(request.getParameter("language")).thenReturn("fr");
   }
 
+  private void prepareNewsSave() {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("action")).thenReturn("saveNews");
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    when(request.getParameter("index")).thenReturn("1");
+    when(request.getParameter("source")).thenReturn("quickinfo12");
+    when(request.getParameter("size")).thenReturn("5");
+    when(request.getParameter("rendering")).thenReturn("LIST");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("importantOnly")).thenReturn("true");
+    when(request.getParameter("revision")).thenReturn("");
+  }
+
+  @Test
+  void newsSaveEnforcesAdministratorCsrfAndRevision() throws Exception {
+    prepareNewsSave();
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    assertNull(store.readNews(new HomepagePage("skins", "waves"), 1));
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    assertEquals("quickinfo12", store.readNews(new HomepagePage("skins", "waves"), 1).source());
+    assertTrue(output.toString().contains("revision"));
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+  }
+
+  @Test
+  void newsEditorRedirectKeepsBlockIndex() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getContextPath()).thenReturn("/silverpeas");
+    when(request.getParameter("action")).thenReturn("newsEditor");
+    when(request.getParameter("owner")).thenReturn(null);
+    when(request.getParameter("index")).thenReturn("3");
+    servlet.doGet(request, response);
+    verify(response).sendRedirect(contains("&index=3"));
+  }
+
+  @Test
+  void newsLoadUsesThemeConfigurationUntilSaved() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("action")).thenReturn("loadNews");
+    when(request.getParameter("index")).thenReturn("2");
+    var helper = mock(org.silverpeas.looks.aurora.LookAuroraHelper.class);
+    when(session.getAttribute("Silverpeas_LookHelper")).thenReturn(helper);
+    when(helper.getDefaultNewsConfiguration(2)).thenReturn(
+        new HomepageContentStore.NewsConfiguration("delegated", -1, false, "LIST", true, ""));
+    servlet.doGet(request, response);
+    assertTrue(output.toString().contains("delegated"));
+    assertTrue(output.toString().contains("\"configured\":false"));
+    verify(response, never()).sendError(anyInt());
+  }
+
+  @Test
+  void invalidNewsSaveCannotChangeStorage() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("size")).thenReturn("0");
+    servlet.doPost(request, response);
+    verify(response).sendError(400);
+    assertNull(store.readNews(new HomepagePage("skins", "waves"), 1));
+  }
+
   @Test
   void editorRequiresAnAuthenticatedSession() throws Exception {
     when(request.getSession(false)).thenReturn(null);

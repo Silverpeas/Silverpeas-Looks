@@ -104,14 +104,15 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
           }
           response.sendRedirect(request.getContextPath() + "/AuroraHomepageContent?action=" + action + "&kind=skins&owner="
               + activeSkin + "&widget=" + encode(request.getParameter("widget"))
-              + "&language=" + encode(request.getParameter("language")));
+              + "&language=" + encode(request.getParameter("language"))
+              + ("newsEditor".equals(action) ? "&index=" + encode(request.getParameter("index")) : ""));
           return;
         }
       }
@@ -188,7 +189,15 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void write(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action) throws IOException, ServletException {
-    if ("upload".equals(action)) {
+    if ("saveNews".equals(action)) {
+      store.saveNews(page, Integer.parseInt(request.getParameter("index")),
+          new HomepageContentStore.NewsConfiguration(request.getParameter("source"),
+              Integer.parseInt(request.getParameter("size")),
+              Boolean.parseBoolean(request.getParameter("importantOnly")),
+              request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
+              request.getParameter("revision")));
+      newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
+    } else if ("upload".equals(action)) {
       String name = UUID.randomUUID() + ".png";
       store.saveAsset(page, widget, name, image(request));
       String url = request.getContextPath() + "/AuroraHomepageContent?kind=" + page.kind()
@@ -216,7 +225,11 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("asset".equals(action)) {
+    if ("loadNews".equals(action)) {
+      newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), csrf);
+    } else if ("newsEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/newsEditor.jsp").forward(request, response);
+    } else if ("asset".equals(action)) {
       byte[] bytes = store.readAsset(page, widget, request.getParameter("name"));
       response.setContentType("image/png");
       response.setContentLength(bytes.length);
@@ -236,6 +249,19 @@ public class HomepageContentServlet extends HttpServlet {
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void newsResponse(HttpServletRequest request, HttpServletResponse response, HomepagePage page, int index, String csrf)
+      throws IOException {
+    var saved = store.readNews(page, index);
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
+        request.getSession(false).getAttribute("Silverpeas_LookHelper");
+    var configuration = saved != null ? saved : helper.getDefaultNewsConfiguration(index);
+    json(response, JSONCodec.encodeObject(o -> o.put("configured", saved != null)
+        .put("source", configuration.source()).put("size", configuration.size())
+        .put("importantOnly", configuration.importantOnly()).put("rendering", configuration.rendering())
+        .put("enabled", configuration.enabled()).put("revision", configuration.revision())
+        .put("csrf", csrf)));
   }
 
   private byte[] image(HttpServletRequest request) throws IOException, ServletException {

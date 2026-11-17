@@ -943,6 +943,59 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return mainSearchTemplate;
   }
 
+  public org.silverpeas.looks.aurora.homepage.HomepageContentStore.NewsConfiguration
+      getDefaultNewsConfiguration(int index) {
+    if (index < 1 || index > 3) {
+      throw new IllegalArgumentException("Invalid news block");
+    }
+    String key = index == 1 ? PROPERTY_NEWS_MAIN
+        : index == 2 ? PROPERTY_NEWS_SECONDARY : PROPERTY_NEWS_THIRD;
+    String rendering = getSettings(key + ".displayer", "");
+    return new org.silverpeas.looks.aurora.homepage.HomepageContentStore.NewsConfiguration(
+        getSettings(key, ""), getSettings(key + ".size", -1),
+        getSettings(key + ".importantOnly", false),
+        StringUtil.isDefined(rendering) ? rendering.toUpperCase(java.util.Locale.ROOT) : "CAROUSEL",
+        StringUtil.isDefined(getSettings(key, "")), "");
+  }
+
+  public NewsList getConfiguredNews(int index,
+      org.silverpeas.looks.aurora.homepage.HomepageContentStore.NewsConfiguration configuration) {
+    if (configuration == null) {
+      return getNewsList(index);
+    }
+    List<News> news = new ArrayList<>();
+    String source = configuration.source();
+    String uniqueAppId = "";
+    if (configuration.enabled() && StringUtil.isDefined(source)) {
+      if ("delegated".equals(source)) {
+        news = getDelegatedNews();
+      } else if ("taxonomy".equals(source)) {
+        String key = index == 1 ? PROPERTY_NEWS_MAIN
+            : index == 2 ? PROPERTY_NEWS_SECONDARY : PROPERTY_NEWS_THIRD;
+        news = getNewsByTaxonomyPosition(getAllowedComponents(QUICKINFO, "*"),
+            configuration.importantOnly(), getSettings(key + ".taxonomy.position", ""));
+      } else {
+        List<String> allowedIds = getAllowedComponents(QUICKINFO, split(source, ' '));
+        if (allowedIds.size() == 1) {
+          uniqueAppId = allowedIds.getFirst();
+        }
+        news = getNewsByComponentIds(allowedIds, configuration.importantOnly());
+      }
+    }
+    NewsList result = new NewsList(news, getAppById(uniqueAppId));
+    if (configuration.size() != -1 && news.size() > configuration.size()) {
+      result.limitNews(configuration.size());
+    }
+    String key = index == 1 ? PROPERTY_NEWS_MAIN
+        : index == 2 ? PROPERTY_NEWS_SECONDARY : PROPERTY_NEWS_THIRD;
+    if (getSettings(key + ".taxonomy.display", false)) {
+      result.withTaxonomyButtons();
+    }
+    setupMainHomePageNewsListDisplay(key, result);
+    result.setRenderingType(NewsList.RenderingType.valueOf(configuration.rendering()));
+    return result;
+  }
+
   private NewsList getNewsList(int index) {
     String key = PROPERTY_NEWS_MAIN;
     if (index == 2) {

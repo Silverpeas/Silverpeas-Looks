@@ -29,6 +29,7 @@
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
 <%@ page import="java.util.stream.Stream" %>
 <%@ page import="org.silverpeas.looks.aurora.NewsList" %>
+<%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
 <%@ page import="java.util.function.Predicate" %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
@@ -64,11 +65,23 @@
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
 <c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
-<c:set var="listOfNews" value="${lookHelper.news}"/>
+<%
+  request.setAttribute("listOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
+      .getConfiguredNews(1, HomepageContentStore.forInstallation().readNews(
+          new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 1)));
+%>
 <jsp:useBean id="listOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
-<c:set var="secondaryListOfNews" value="${lookHelper.secondaryNews}"/>
+<%
+  request.setAttribute("secondaryListOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
+      .getConfiguredNews(2, HomepageContentStore.forInstallation().readNews(
+          new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 2)));
+%>
 <jsp:useBean id="secondaryListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
-<c:set var="thirdListOfNews" value="${lookHelper.thirdNews}"/>
+<%
+  request.setAttribute("thirdListOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
+      .getConfiguredNews(3, HomepageContentStore.forInstallation().readNews(
+          new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 3)));
+%>
 <jsp:useBean id="thirdListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
 
 <c:if test="${showLastSubscribedNews}">

@@ -51,7 +51,21 @@
     <view:window>
       <view:frame>
         <main class="homepage-content-editor homepage-content-management">
-          <h1>Zones libres de la page d’accueil</h1>
+          <h1>Modifier la page d’accueil</h1>
+          <h2>Actualités</h2>
+          <p>Configurez les trois blocs existants. Sans enregistrement, leurs réglages actuels sont conservés.</p>
+          <view:buttonPane>
+            <c:forEach begin="1" end="3" var="newsIndex">
+              <c:url value="/AuroraHomepageContent" var="newsUrl">
+                <c:param name="action" value="newsEditor"/>
+                <c:param name="kind" value="${param.kind}"/>
+                <c:param name="owner" value="${param.owner}"/>
+                <c:param name="index" value="${newsIndex}"/>
+              </c:url>
+              <view:button label="Actualités ${newsIndex}" action="${newsUrl}"/>
+            </c:forEach>
+          </view:buttonPane>
+          <h2>Zones libres</h2>
           <p class="homepage-introduction">Ajoutez vos textes et images, puis choisissez où les afficher sur la page d’accueil.</p>
           <view:buttonPane>
             <view:button label="Ajouter une zone libre" action="${addUrl}"/>

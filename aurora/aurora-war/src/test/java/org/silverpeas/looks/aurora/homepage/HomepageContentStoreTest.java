@@ -37,6 +37,46 @@ class HomepageContentStoreTest {
   Path root;
 
   @Test
+  void newsConfigurationIsPersistentIsolatedAndDoesNotCreateHtmlWidgets() throws Exception {
+    var store = new HomepageContentStore(root);
+    var page = new HomepagePage("skins", "waves");
+    assertNull(store.readNews(page, 1));
+    store.save(page, "welcome", "fr", "Bienvenue", "Bonjour", "");
+    var configuration = new HomepageContentStore.NewsConfiguration("quickinfo12 quickinfo34",
+        5, true, "LIST", false, "");
+    store.saveNews(page, 1, configuration);
+    var reopened = new HomepageContentStore(root);
+    var saved = reopened.readNews(page, 1);
+    assertEquals("quickinfo12 quickinfo34", saved.source());
+    assertEquals(5, saved.size());
+    assertTrue(saved.importantOnly());
+    assertFalse(saved.enabled());
+    assertEquals("LIST", saved.rendering());
+    assertFalse(saved.revision().isBlank());
+    assertNull(reopened.readNews(page, 2));
+    assertNull(reopened.readNews(new HomepagePage("skins", "Aurora"), 1));
+    assertEquals(1, reopened.widgets(page, "fr").size());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveNews(page, 1, configuration));
+    store.saveNews(page, 1, new HomepageContentStore.NewsConfiguration("*", -1, false,
+        "CAROUSEL", true, saved.revision()));
+    assertEquals(-1, reopened.readNews(page, 1).size());
+  }
+
+  @Test
+  void invalidNewsConfigurationIsRejected() {
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.NewsConfiguration(
+        "../quickinfo", 10, false, "LIST", true, ""));
+    for (int size : new int[]{-2, 0, 101}) {
+      assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.NewsConfiguration(
+          "*", size, false, "LIST", true, ""));
+    }
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.NewsConfiguration(
+        "*", 10, false, "invalid", true, ""));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore(root)
+        .readNews(new HomepagePage("skins", "waves"), 4));
+  }
+
+  @Test
   void contentSurvivesReopeningAndIsIsolatedByOwnerWidgetAndLanguage() throws Exception {
     var store = new HomepageContentStore(root);
     var page = new HomepagePage("skins", "waves");

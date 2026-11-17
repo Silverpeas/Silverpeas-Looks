@@ -123,3 +123,24 @@ pour conserver l’ordre configuré des zones. Elle distingue les zones visibles
 masquées et prévoit un état vide. Les titres sont échappés avant insertion dans
 les cellules du tableau. L’éditeur regroupe les réglages d’affichage, le contenu,
 l’insertion d’image et les actions ; l’aperçu enregistré est repliable.
+
+### Actualités de la home générale
+
+La gestion propose les trois blocs d’actualités existants. Chaque bloc conserve
+les réglages du thème tant qu’aucune configuration n’est enregistrée. L’éditeur
+charge ces valeurs avant la première sauvegarde. Les réglages persistés par skin
+sont placés dans `homepages/skins/<bundle>/news-<1..3>.properties`, indépendamment
+des widgets HTML et de la langue. Ils portent sur la source, la limite (1 à 100
+ou -1 sans limite), les actualités importantes, la présentation et la visibilité.
+La sauvegarde exige les droits administrateur, les protections CSRF et la révision
+chargée ; un conflit renvoie HTTP 409.
+
+Les sources proposées sont toutes les applications autorisées, les actualités
+déléguées, la position du plan de classement déjà configurée dans le thème ou une
+liste d’identifiants quickinfo. Le filtrage des droits du lecteur reste effectué
+par le helper existant ; le filtre « importantes » ne concerne pas les actualités
+déléguées. La source « toutes » d’un bloc configuré couvre toutes les applications
+autorisées, sans exclusion automatique des sources des autres blocs. Les dimensions
+des images et les boutons du plan de classement restent ceux du thème.
+Les trois blocs conservent leur emplacement actuel dans la colonne principale.
+Les actualités issues des abonnements restent indépendantes.
