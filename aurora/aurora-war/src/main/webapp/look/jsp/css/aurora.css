@@ -329,7 +329,7 @@
   display: none;
 }
 
-.main-home-page #new-users-home,
+.main-home-page :is(#new-users-home, .homepage-users),
 .principalContent #spaceQuiskInfo {
   display: block;
 }
@@ -383,7 +383,7 @@
 }
 
 /************* New users list *****************/
-.main-home-page #new-users-home .new-users-list {
+.main-home-page :is(#new-users-home, .homepage-users) .new-users-list {
   list-style: none;
 }
 

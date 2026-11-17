@@ -734,7 +734,7 @@ label.select-header:before {
 }
 
 /*** FAQ ***/
-#faq-home {
+:is(#faq-home, .homepage-faq) {
   margin-bottom: 2em;
 }
 

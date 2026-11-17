@@ -34,11 +34,13 @@
               required="true"
               type="org.silverpeas.looks.aurora.NewUsersList" %>
 
+<%@ attribute name="id" type="java.lang.String" required="false" %>
+<%@ attribute name="title" type="java.lang.String" required="false" %>
 <fmt:message var="labelNewUsers" key="look.home.users.new"/>
 
 <c:if test="${not empty newUsers.users}">
-  <div class="secteur-container" id="new-users-home">
-    <h4>${labelNewUsers}</h4>
+  <div class="secteur-container homepage-users" id="${empty id ? 'new-users-home' : id}">
+    <h4><c:out value="${empty title ? labelNewUsers : title}"/></h4>
     <div class="new-users-main-container">
       <ul class="new-users-list">
         <c:forEach var="user" items="${newUsers.users}">

@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -212,6 +212,19 @@ public class HomepageContentServlet extends HttpServlet {
                 option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("saveFaq".equals(action) || "saveUsers".equals(action)) {
+      boolean faq = "saveFaq".equals(action);
+      store.saveCommunityWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")),
+              Boolean.parseBoolean(request.getParameter("enabled"))), faq ? "faq" : "users",
+          faq ? new HomepageContentStore.FaqConfiguration(request.getParameter("source"),
+              Integer.parseInt(request.getParameter("size")), request.getParameter("selection")) : null,
+          faq ? null : new HomepageContentStore.UsersConfiguration(request.getParameter("group"),
+              Integer.parseInt(request.getParameter("size")),
+              Boolean.parseBoolean(request.getParameter("avatar")), request.getParameter("fields")),
+          request.getParameter("revision"));
+      communityResponse(request, response, page, widget, language, "", faq ? "faq" : "users");
     } else if ("saveEvents".equals(action) || "saveRss".equals(action)) {
       boolean events = "saveEvents".equals(action);
       store.saveFeedWidget(page, widget, language, request.getParameter("title"),
@@ -295,6 +308,11 @@ public class HomepageContentServlet extends HttpServlet {
         request.setAttribute("feedRss", feeds);
       }
       request.getRequestDispatcher("/WEB-INF/homepage/feedWidget.jsp").forward(request, response);
+    } else if ("loadFaq".equals(action) || "loadUsers".equals(action)) {
+      communityResponse(request, response, page, widget, language, csrf,
+          "loadFaq".equals(action) ? "faq" : "users");
+    } else if ("faqEditor".equals(action) || "usersEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/" + action + ".jsp").forward(request, response);
     } else if ("loadEvents".equals(action) || "loadRss".equals(action)) {
       feedResponse(request, response, page, widget, language, csrf,
           "loadEvents".equals(action) ? "events" : "rss");
@@ -346,6 +364,8 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
       request.setAttribute("newEventsWidgetId", "events-" + UUID.randomUUID());
+      request.setAttribute("newFaqWidgetId", "faq-" + UUID.randomUUID());
+      request.setAttribute("newUsersWidgetId", "users-" + UUID.randomUUID());
       request.setAttribute("newRssWidgetId", "rss-" + UUID.randomUUID());
       request.setAttribute("newEphemerisWidgetId", "ephemeris-" + UUID.randomUUID());
       request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp").forward(request, response);
@@ -354,6 +374,29 @@ public class HomepageContentServlet extends HttpServlet {
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void communityResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf, String type) throws IOException {
+    var model = HomepageWidgets.communityWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"), type);
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> {
+      o.put("configured", !content.revision().isEmpty()).put("title", content.title())
+          .put("zone", content.layout().zone()).put("order", content.layout().order())
+          .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf);
+      if ("faq".equals(type)) {
+        var configuration = model.faqConfiguration();
+        o.put("source", configuration.source()).put("size", configuration.size())
+            .put("selection", configuration.selection());
+      } else {
+        var configuration = model.usersConfiguration();
+        o.put("group", configuration.group()).put("size", configuration.size())
+            .put("avatar", configuration.avatar()).put("fields", configuration.fields());
+      }
+      return o;
+    }));
   }
 
   private void feedResponse(HttpServletRequest request, HttpServletResponse response,

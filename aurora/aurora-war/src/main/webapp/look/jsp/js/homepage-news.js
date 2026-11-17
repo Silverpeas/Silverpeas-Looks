@@ -25,11 +25,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   const status = document.getElementById('news-status');
   const save = document.getElementById('news-save');
   const widgetType = document.getElementById('news-form').dataset.widgetType;
+  const community = ['faq', 'users'].includes(widgetType);
+  const configurationAction = prefix => prefix + widgetType[0].toUpperCase() + widgetType.slice(1);
   const feed = ['events', 'rss'].includes(widgetType);
   const ephemeris = widgetType === 'ephemeris';
   const commonFields = {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'};
   const publications = document.getElementById('news-space');
-  const fields = feed ? {...commonFields, source: 'source', ...(widgetType === 'events'
+  const fields = community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
+    ? {source: 'source', selection: 'selection'} : {group: 'group', avatar: 'avatar', fields: 'fields'})} : feed ? {...commonFields, source: 'source', ...(widgetType === 'events'
     ? {maxDays: 'max-days', includeToday: 'include-today', personal: 'personal', importantOnly: 'important', showMore: 'show-more'}
     : {rendering: 'rendering'})} : ephemeris ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'} : publications ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled',
     spaceId: 'space', size: 'size', showMore: 'show-more'} : {source: 'source', size: 'size', rendering: 'rendering',
@@ -64,17 +67,17 @@ window.addEventListener('DOMContentLoaded', async () => {
   });
   const applications = document.getElementById('news-applications');
   const refreshSource = () => {
-    if (feed || ephemeris || publications) { return; }
+    if (community || feed || ephemeris || publications) { return; }
     const selected = control('source').value === 'applications';
     document.getElementById('news-applications-field').hidden = !selected;
     applications.required = selected;
   };
-  if (!feed && !ephemeris && !publications) { control('source').addEventListener('change', refreshSource); }
+  if (!community && !feed && !ephemeris && !publications) { control('source').addEventListener('change', refreshSource); }
   let revision;
   let csrf;
   document.getElementById('news-context').textContent = 'Choisissez le contenu et l’emplacement de ce widget.';
   try {
-    const data = await request(feed ? (widgetType === 'events' ? 'loadEvents' : 'loadRss') : ephemeris ? 'loadEphemeris' : publications ? 'loadPublications' : 'loadNews');
+    const data = await request(community ? configurationAction('load') : feed ? (widgetType === 'events' ? 'loadEvents' : 'loadRss') : ephemeris ? 'loadEphemeris' : publications ? 'loadPublications' : 'loadNews');
     revision = data.revision;
     csrf = data.csrf;
     Object.keys(fields).forEach(key => {
@@ -82,7 +85,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (input.type === 'checkbox') { input.checked = data[key]; }
       else { input.value = data[key]; }
     });
-    if (!feed && !ephemeris && !publications && data.source && !['*', 'delegated', 'taxonomy'].includes(data.source)) {
+    if (!community && !feed && !ephemeris && !publications && data.source && !['*', 'delegated', 'taxonomy'].includes(data.source)) {
       control('source').value = 'applications';
       applications.value = data.source;
     }
@@ -100,12 +103,16 @@ window.addEventListener('DOMContentLoaded', async () => {
       const input = control(key);
       body.set(key, input.type === 'checkbox' ? input.checked : input.value);
     });
-    if (!feed && !ephemeris && !publications && control('source').value === 'applications') {
+    if (!community && !feed && !ephemeris && !publications && control('source').value === 'applications') {
       body.set('source', applications.value.trim().replace(/\s+/g, ' '));
+    }
+    if (community) {
+      ['source', 'group', 'fields'].filter(key => fields[key]).forEach(key =>
+        body.set(key, control(key).value.trim().replace(/\s+/g, ' ')));
     }
     if (feed) { body.set('source', control('source').value.trim().replace(/\s+/g, ' ')); }
     try {
-      const data = await request(feed ? (widgetType === 'events' ? 'saveEvents' : 'saveRss') : ephemeris ? 'saveEphemeris' : publications ? 'savePublications' : 'saveNews', body, csrf);
+      const data = await request(community ? configurationAction('save') : feed ? (widgetType === 'events' ? 'saveEvents' : 'saveRss') : ephemeris ? 'saveEphemeris' : publications ? 'savePublications' : 'saveNews', body, csrf);
       revision = data.revision;
       status.textContent = 'Configuration enregistrée. Rechargez la page d’accueil pour la voir.';
     } catch (error) { status.textContent = error.message; }

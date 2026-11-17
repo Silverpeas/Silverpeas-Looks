@@ -43,6 +43,10 @@ class HomepageWidgetsTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultFaqConfiguration()).thenReturn(
+        new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random"));
+    when(helper.getDefaultUsersConfiguration()).thenReturn(
+        new HomepageContentStore.UsersConfiguration("12", 5, true, "title phone"));
     when(helper.getDefaultEventsConfiguration()).thenReturn(
         new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
     when(helper.getDefaultRssConfiguration()).thenReturn(
@@ -97,7 +101,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(7, initial.size());
+    assertEquals(9, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -105,7 +109,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(7, changed.size());
+    assertEquals(9, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -301,6 +305,69 @@ class HomepageWidgetsTest {
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.EventsConfiguration("*", 0, true, false, false, true));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("https://feed.invalid", "tabs"));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("rssAgregator12", "unknown"));
+  }
+
+  @Test
+  void communityWidgetsPreserveLegacyDefaultsAndPersistIndependentInstances() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    var layout = new HomepageContentStore.Layout("main", 12, false);
+    var faq = HomepageWidgets.communityWidget(store, page, "faq-legacy", "fr", helper, "faq");
+    var users = HomepageWidgets.communityWidget(store, page, "users-legacy", "fr", helper, "users");
+    assertEquals(helper.getDefaultFaqConfiguration(), faq.faqConfiguration());
+    assertEquals(helper.getDefaultUsersConfiguration(), users.usersConfiguration());
+    assertFalse(Files.exists(root.resolve("skins")));
+    for (String id : List.of("faq-legacy", "faq-extra")) {
+      store.saveCommunityWidget(page, id, "fr", "Questions", layout, "faq",
+          new HomepageContentStore.FaqConfiguration("questionReply34", 3, "first"), null, "");
+    }
+    for (String id : List.of("users-legacy", "users-extra")) {
+      store.saveCommunityWidget(page, id, "fr", "Bienvenue", layout, "users", null,
+          new HomepageContentStore.UsersConfiguration("34", 4, false, "phone"), "");
+    }
+    var restored = new HomepageContentStore(root);
+    var saved = restored.readWidget(page, "users-extra", "fr");
+    assertEquals(new HomepageContentStore.UsersConfiguration("34", 4, false, "phone"), saved.usersConfiguration());
+    assertEquals(new HomepageContentStore.FaqConfiguration("questionReply34", 3, "first"),
+        restored.readWidget(page, "faq-extra", "fr").faqConfiguration());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream().filter(w -> w.id().equals("faq-legacy")).count());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream().filter(w -> w.id().equals("users-legacy")).count());
+    HomepageWidgets.questions(restored.widgets(page, "fr"), helper);
+    HomepageWidgets.users(restored.widgets(page, "fr"), helper);
+    verify(helper, never()).getConfiguredQuestions(any());
+    verify(helper, never()).getConfiguredNewUsers(any());
+    var visible = new HomepageContentStore.Layout("right", 4, true);
+    store.saveCommunityWidget(page, "faq-visible", "fr", "Questions", visible, "faq", faq.faqConfiguration(), null, "");
+    store.saveCommunityWidget(page, "users-visible", "fr", "Bienvenue", visible, "users", null, users.usersConfiguration(), "");
+    HomepageWidgets.questions(store.widgets(page, "fr"), helper);
+    HomepageWidgets.users(store.widgets(page, "fr"), helper);
+    verify(helper).getConfiguredQuestions(faq.faqConfiguration());
+    verify(helper).getConfiguredNewUsers(users.usersConfiguration());
+    store.saveCommunityWidget(page, saved.id(), "fr", "Bienvenue", layout, "users", null,
+        new HomepageContentStore.UsersConfiguration("34", 4, true, "phone"), saved.content().revision());
+    assertNotEquals(saved.content().revision(), store.read(page, saved.id(), "fr").revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveCommunityWidget(page, saved.id(), "fr",
+        "Bienvenue", layout, "users", null, saved.usersConfiguration(), saved.content().revision()));
+    for (String id : List.of("faq-legacy", "users-legacy")) {
+      assertThrows(IllegalArgumentException.class, () -> store.save(page, id, "fr", "", "", ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page, id, "fr", "", layout, ""));
+      assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page, id, "fr", "", layout, news(""), 0));
+      assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, id, "fr", "", layout, "rss", null,
+          new HomepageContentStore.RssConfiguration("", "tabs"), ""));
+      assertThrows(IllegalArgumentException.class, () -> store.savePublicationsWidget(page, id, "fr", "", layout,
+          new HomepageContentStore.PublicationsConfiguration("", 3, true), ""));
+    }
+    assertThrows(IllegalArgumentException.class, () -> store.saveCommunityWidget(page, "events-legacy", "fr", "", layout,
+        "faq", faq.faqConfiguration(), null, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveCommunityWidget(page, "faq-legacy", "fr", "", layout,
+        "users", null, users.usersConfiguration(), ""));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.FaqConfiguration("questionreply12", 2, "random"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.FaqConfiguration("questionReply12", 0, "random"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.FaqConfiguration("", 1, "bad"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.FaqConfiguration("", 1, null));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.UsersConfiguration("group12", 5, true, "phone"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.UsersConfiguration("", -1, true, "phone"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.UsersConfiguration("", 5, true, "phone\" onclick=bad"));
   }
 
 }

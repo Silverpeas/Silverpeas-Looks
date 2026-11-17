@@ -33,13 +33,15 @@
               required="true"
               type="org.silverpeas.looks.aurora.Questions" %>
 
+<%@ attribute name="id" type="java.lang.String" required="false" %>
+<%@ attribute name="title" type="java.lang.String" required="false" %>
 <fmt:message var="labelQuestions" key="look.home.faq.title"/>
 <fmt:message var="labelQuestionsPost" key="look.home.faq.post"/>
 <fmt:message var="labelQuestionsMore" key="look.home.faq.more"/>
 
 <c:if test="${not empty questions.list}">
-  <div class="secteur-container faq" id="faq-home">
-    <h4>${labelQuestions}</h4>
+  <div class="secteur-container homepage-faq faq" id="${empty id ? 'faq-home' : id}">
+    <h4><c:out value="${empty title ? labelQuestions : title}"/></h4>
     <div class="FAQ-entry-main-container">
       <div class="FAQ-entry">
         <c:forEach var="question" items="${questions.list}">

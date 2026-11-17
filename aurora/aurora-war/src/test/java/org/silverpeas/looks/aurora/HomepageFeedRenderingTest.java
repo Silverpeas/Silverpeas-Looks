@@ -37,7 +37,8 @@ class HomepageFeedRenderingTest {
     return mock(LookAuroraHelper.class, invocation -> {
       switch (invocation.getMethod().getName()) {
         case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
-            "getDefaultRssConfiguration", "getRSSFeeds" -> { return invocation.callRealMethod(); }
+            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers",
+            "getDefaultFaqConfiguration", "getDefaultUsersConfiguration" -> { return invocation.callRealMethod(); }
         case "getOrganisationController" -> { return organization; }
         case "getUserId" -> { return "42"; }
         case "getSettings" -> { return invocation.getArgument(1); }
@@ -76,4 +77,69 @@ class HomepageFeedRenderingTest {
       verifyNoMoreInteractions(service);
     }
   }
+  @Test
+  void faqRespectsReaderRightsAndSelectionSizeWithoutRepeatingQuestions() throws Exception {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var manager = mock(org.silverpeas.components.questionreply.service.QuestionManager.class);
+    try (var provider = mockStatic(org.silverpeas.components.questionreply.service.QuestionManagerProvider.class)) {
+      provider.when(org.silverpeas.components.questionreply.service.QuestionManagerProvider::getQuestionManager).thenReturn(manager);
+      assertNull(helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random")));
+      provider.verifyNoInteractions();
+      when(organization.isComponentAvailableToUser("questionReply12", "42")).thenReturn(true);
+      when(organization.getUserProfiles("42", "questionReply12")).thenReturn(new String[]{"writer"});
+      var q1 = mock(org.silverpeas.components.questionreply.model.Question.class);
+      var q2 = mock(org.silverpeas.components.questionreply.model.Question.class);
+      var q3 = mock(org.silverpeas.components.questionreply.model.Question.class);
+      when(manager.getQuestions("questionReply12")).thenReturn(List.of(q1, q2, q3));
+      var first = helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 2, "first"));
+      assertEquals(List.of(q1, q2), first.getList());
+      assertTrue(first.isCanAskAQuestion());
+      var random = helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random"));
+      assertEquals(2, random.getList().size());
+      assertEquals(2, new java.util.HashSet<>(random.getList()).size());
+      assertTrue(List.of(q1, q2, q3).containsAll(random.getList()));
+      when(organization.getUserProfiles("42", "questionReply12")).thenReturn(new String[]{"reader"});
+      var all = helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 10, "first"));
+      assertEquals(List.of(q1, q2, q3), all.getList());
+      assertFalse(all.isCanAskAQuestion());
+      when(manager.getQuestions("questionReply12")).thenReturn(List.of());
+      assertNull(helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random")));
+    }
+  }
+
+  @Test
+  void newUsersSortByCreationAndHandleSmallEmptyAndDisabledLists() {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var disabled = new HomepageContentStore.UsersConfiguration("", 0, true, "");
+    assertNull(helper.getConfiguredNewUsers(disabled));
+    verifyNoInteractions(organization);
+    var older = new org.silverpeas.core.admin.user.model.UserDetail();
+    older.setId("1");
+    older.setCreationDate(new java.util.Date(1000));
+    var newer = new org.silverpeas.core.admin.user.model.UserDetail();
+    newer.setId("2");
+    newer.setCreationDate(new java.util.Date(2000));
+    when(organization.searchUsers(any())).thenReturn(new org.silverpeas.core.util.SilverpeasArrayList<>(List.of(older, newer)));
+    var config = new HomepageContentStore.UsersConfiguration("34", 5, false, "phone title");
+    var users = helper.getConfiguredNewUsers(config);
+    assertEquals(List.of(newer, older), users.getUsers());
+    assertFalse(users.isAvatar());
+    assertEquals(List.of("phone", "title"), users.getFields());
+    var criterion = org.mockito.ArgumentCaptor.forClass(org.silverpeas.core.admin.user.model.UserDetailsSearchCriteria.class);
+    verify(organization).searchUsers(criterion.capture());
+    assertArrayEquals(new String[]{"34"}, criterion.getValue().getCriterionOnGroupIds());
+    assertTrue(java.util.Arrays.asList(criterion.getValue().getCriterionOnUserStatesToExclude())
+        .containsAll(List.of(org.silverpeas.core.admin.user.constant.UserState.BLOCKED,
+            org.silverpeas.core.admin.user.constant.UserState.DEACTIVATED,
+            org.silverpeas.core.admin.user.constant.UserState.REMOVED)));
+    assertEquals(List.of(newer), helper.getConfiguredNewUsers(
+        new HomepageContentStore.UsersConfiguration("", 1, true, "")).getUsers());
+    when(organization.searchUsers(any())).thenReturn(new org.silverpeas.core.util.SilverpeasArrayList<>(List.of(older)));
+    assertEquals(List.of(older), helper.getConfiguredNewUsers(config).getUsers());
+    when(organization.searchUsers(any())).thenReturn(new org.silverpeas.core.util.SilverpeasArrayList<>(List.of()));
+    assertTrue(helper.getConfiguredNewUsers(config).getUsers().isEmpty());
+  }
+
 }

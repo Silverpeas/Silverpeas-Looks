@@ -95,6 +95,10 @@ class HomepageContentServletTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultFaqConfiguration()).thenReturn(
+        new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random"));
+    when(helper.getDefaultUsersConfiguration()).thenReturn(
+        new HomepageContentStore.UsersConfiguration("12", 5, true, "title phone"));
     when(helper.getDefaultEventsConfiguration()).thenReturn(
         new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
     when(helper.getDefaultRssConfiguration()).thenReturn(
@@ -419,7 +423,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 7));
+        value instanceof java.util.List<?> widgets && widgets.size() == 9));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");
@@ -530,6 +534,55 @@ class HomepageContentServletTest {
     when(request.getParameter("owner")).thenReturn("Aurora");
     servlet.doGet(request, response);
     verify(response).sendError(403);
+  }
+
+  @Test
+  void communitySettingsRequireAdminCsrfAndFreshRevision() throws Exception {
+    for (String type : java.util.List.of("Faq", "Users")) {
+      prepareNewsSave();
+      when(request.getParameter("action")).thenReturn("save" + type);
+      when(request.getParameter("widget")).thenReturn(type.toLowerCase() + "-test");
+      when(request.getParameter("title")).thenReturn("Titre");
+      when(request.getParameter("zone")).thenReturn("right");
+      when(request.getParameter("order")).thenReturn("22");
+      when(request.getParameter("source")).thenReturn("questionReply12");
+      when(request.getParameter("size")).thenReturn("3");
+      when(request.getParameter("selection")).thenReturn("first");
+      when(request.getParameter("group")).thenReturn("42");
+      when(request.getParameter("avatar")).thenReturn("false");
+      when(request.getParameter("fields")).thenReturn("phone title");
+      when(user.isAccessAdmin()).thenReturn(false);
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response).sendError(403);
+      when(user.isAccessAdmin()).thenReturn(true);
+      when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response).sendError(403);
+      when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response, never()).sendError(anyInt());
+      var saved = store.readWidget(new HomepagePage("skins", "waves"), type.toLowerCase() + "-test", "fr");
+      assertEquals(type.toLowerCase(), saved.type());
+      if (type.equals("Faq")) {
+        assertEquals(new HomepageContentStore.FaqConfiguration("questionReply12", 3, "first"), saved.faqConfiguration());
+      } else {
+        assertEquals(new HomepageContentStore.UsersConfiguration("42", 3, false, "phone title"), saved.usersConfiguration());
+      }
+      servlet.doPost(request, response);
+      verify(response).sendError(409);
+      when(request.getParameter("action")).thenReturn("load" + type);
+      clearInvocations(response);
+      servlet.doGet(request, response);
+      verify(response, never()).sendError(anyInt());
+      when(user.isAccessAdmin()).thenReturn(false);
+      when(request.getParameter("owner")).thenReturn("prima");
+      servlet.doGet(request, response);
+      verify(response).sendError(403);
+      when(request.getParameter("owner")).thenReturn("waves");
+    }
   }
 
 }

@@ -27,6 +27,8 @@
 <%@ attribute name="news" required="true" type="java.util.Map" %>
 <%@ attribute name="widgets" required="true" type="java.util.List" %>
 <%@ attribute name="zone" required="true" type="java.lang.String" %>
+<%@ attribute name="questions" type="java.util.Map" required="false" %>
+<%@ attribute name="users" type="java.util.Map" required="false" %>
 <c:forEach items="${widgets}" var="widget">
   <c:if test="${widget.enabled and widget.zone == zone}">
     <c:choose>
@@ -37,6 +39,12 @@
         <viewTags:displayPublications lookHelper="${sessionScope['Silverpeas_LookHelper']}"
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
+      </c:when>
+      <c:when test="${widget.type == 'faq'}">
+        <viewTags:displayFAQ questions="${questions[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
+      </c:when>
+      <c:when test="${widget.type == 'users'}">
+        <viewTags:displayNewUsers newUsers="${users[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
       </c:when>
       <c:when test="${widget.type == 'events' or widget.type == 'rss'}">
         <c:url value="/AuroraHomepageContent" var="feedUrl">

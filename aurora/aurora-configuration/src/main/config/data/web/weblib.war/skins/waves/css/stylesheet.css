@@ -1617,7 +1617,7 @@ div.yuimenu {
 	color: var(--color-text-clair);
 }
 
-#faq-home h4 span,
+:is(#faq-home, .homepage-faq) h4 span,
 .spaceHome #bloc-advancedSeach h4 span,
 .spaceHome #portletPages .header * span,
 .spaceHome #portletPages .header h2.portlet-title span {
@@ -1677,7 +1677,7 @@ div.yuimenu {
 }
 
 .main-home-page #bloc-advancedSeach h4,
-.main-home-page #faq-home h4 {
+.main-home-page :is(#faq-home, .homepage-faq) h4 {
 	display: block;
 	justify-content: center;
 	width: auto;
@@ -2277,13 +2277,13 @@ silverpeas-calendar-event-occurrence-list .full-date {
 	height: auto;
 }
 
-.main-home-page #faq-home h4 {
+.main-home-page :is(#faq-home, .homepage-faq) h4 {
 	min-height: auto;
 }
 
 .main-home-page #bloc-advancedSeach h4:after,
 .spaceHome #bloc-advancedSeach h4:after,
-.main-home-page #faq-home h4:after,
+.main-home-page :is(#faq-home, .homepage-faq) h4:after,
 .main-home-page #weather-home h4:after {
 	border: 0;
 	height: 0;
@@ -2697,7 +2697,7 @@ silverpeas-calendar-event-occurrence-list div.section-day-date {
 	order: 4;
 }
 
-#faq-home {
+:is(#faq-home, .homepage-faq) {
 	order: 5;
 	padding: 1em 0;
 	text-align: center;
@@ -2729,7 +2729,7 @@ silverpeas-calendar-event-occurrence-list div.section-day-date {
 	order: 2;
 }
 
-.principal-main-container #new-users-home {
+.principal-main-container :is(#new-users-home, .homepage-users) {
 	order: 3;
 }
 
@@ -3246,12 +3246,12 @@ ul li.category:last-child,
 }
 
 /* BLOC NEW USER */
-.main-home-page #new-users-home .new-users-list {
+.main-home-page :is(#new-users-home, .homepage-users) .new-users-list {
 	margin: 0;
 	padding: 0;
 }
 
-.principal-main-container #new-users-home::before {
+.principal-main-container :is(#new-users-home, .homepage-users)::before {
 	background: transparent url(../imgDesign/welcome.png) 0 0 no-repeat;
 	content: ' ';
 	display: block;
@@ -3263,15 +3263,15 @@ ul li.category:last-child,
 	height: 150px;
 }
 
-.principal-main-container #new-users-home h4 {
+.principal-main-container :is(#new-users-home, .homepage-users) h4 {
 	padding-left: 100px;
 }
 
-#new-users-home .new-users-list li {
+:is(#new-users-home, .homepage-users) .new-users-list li {
 	margin-bottom: 2em;
 }
 
-#new-users-home .new-users-list .field.userToZoom {
+:is(#new-users-home, .homepage-users) .new-users-list .field.userToZoom {
 	font-size: 1em;
 	font-weight: 500;
 	padding-top: 0.25em;
@@ -3282,11 +3282,11 @@ ul li.category:last-child,
 	margin-bottom: 1em
 }
 
-#new-users-home div.user-card {
+:is(#new-users-home, .homepage-users) div.user-card {
 	width: 100%;
 }
 
-#new-users-home div.user-card .field {
+:is(#new-users-home, .homepage-users) div.user-card .field {
 	width: calc(100% - 62px - 1em);
 }
 
@@ -3310,7 +3310,7 @@ ul li.category:last-child,
 	padding: 0;
 }
 
-#new-users-home div.user-card {
+:is(#new-users-home, .homepage-users) div.user-card {
 	background-color: var(--bgColor-de-fond-clair-bloc-home);
 	margin-bottom: 0;
 	display: flex;
@@ -3320,7 +3320,7 @@ ul li.category:last-child,
 	min-height: 90px;
 }
 
-#new-users-home div.user-card .avatar,
+:is(#new-users-home, .homepage-users) div.user-card .avatar,
 #spaceUsers div.user-card .avatar,
 #spaceManager .list-responsible-user .profilPhoto {
 	position: absolute;
@@ -3415,7 +3415,7 @@ span.sp-path>.sp-path-spaces span:last-child:before {
 }
 
 #last-publication-home .last-publication-list li,
-#faq-home p {
+:is(#faq-home, .homepage-faq) p {
 	padding-bottom: 1em;
 	margin-bottom: 0;
 }
@@ -3625,11 +3625,11 @@ ul#categories .category,
 
 /*** FAQ BLOC ***/
 
-#faq-home {
+:is(#faq-home, .homepage-faq) {
 	position: relative;
 }
 
-#faq-home p a {
+:is(#faq-home, .homepage-faq) p a {
 	display: block;
 	font-size: 18px;
 	font-style: italic;
@@ -3642,12 +3642,12 @@ ul#categories .category,
 	position: relative;
 }
 
-#faq-home .FAQ-entry {
+:is(#faq-home, .homepage-faq) .FAQ-entry {
 	padding-bottom: 88px;
 	position: relative;
 }
 
-#faq-home .FAQ-entry:after {
+:is(#faq-home, .homepage-faq) .FAQ-entry:after {
 	background: transparent url(../imgDesign/deco-faq.png) bottom left no-repeat;
 	content: ' ';
 	position: absolute;
@@ -3657,7 +3657,7 @@ ul#categories .category,
 	height: 105px;
 }
 
-#faq-home p a:after {
+:is(#faq-home, .homepage-faq) p a:after {
 	content: ' ';
 	position: absolute;
 	bottom: -16px;
@@ -3670,14 +3670,14 @@ ul#categories .category,
 	border-left: 7px solid transparent;
 }
 
-#faq-home .link-add.sp-link {
+:is(#faq-home, .homepage-faq) .link-add.sp-link {
 	position: absolute;
 	bottom: 81px;
 	right: 0;
 	margin: 0;
 }
 
-#faq-home .link-more.sp-link {
+:is(#faq-home, .homepage-faq) .link-more.sp-link {
 	width: calc(100% - 3em);
 }
 

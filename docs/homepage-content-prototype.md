@@ -200,7 +200,7 @@ d’aujourd’hui et de l’agenda personnel du lecteur, le filtre des événeme
 et les liens « Voir l’agenda ». Le nombre porte sur les jours qui contiennent des
 événements, conformément au helper historique ; la limite de récupération du calendrier
 reste celle de la plateforme.
-Les RSS utilisent une application `rssaggregator` accessible au lecteur (vide : aucun
+Les RSS utilisent une application `rssAgregator` accessible au lecteur (vide : aucun
 flux) et les modes `aggregate`, `tabs`, `carrousel`. Les liens RSS s’ouvrent dans un
 nouvel onglet. Les onglets, filtres, descriptions et carrousels sont isolés par instance.
 
@@ -213,3 +213,26 @@ contrôle du skin actif, puis les helpers filtrent les sources selon les droits 
 Les blocs masqués ne récupèrent aucune donnée ; les blocs vides ne sont pas affichés.
 Le chargement reste asynchrone, avec initialisation RSS après insertion dans le DOM.
 Les éditeurs conservent les protections administrateur/CSRF et le contrôle de révision.
+
+
+La FAQ (`faq`) et les nouveaux utilisateurs (`users`) utilisent également le registre
+commun, avec plusieurs instances indépendantes et les mêmes protections de sauvegarde.
+La FAQ configure une application `questionReply<id>` (vide : aucune question), de 1 à
+100 questions, et une sélection aléatoire sans répétition ou les premières questions
+renvoyées par l’application. L’accès à l’application et le droit de poser une question
+restent évalués pour le lecteur. La sélection aléatoire inclut désormais toutes les
+questions, y compris la dernière de la liste.
+
+Les nouveaux utilisateurs configurent un groupe numérique (vide ou `-1` : tous),
+un nombre de 0 à 100, les avatars et les identifiants des champs de profil séparés
+par des espaces. Les comptes bloqués, désactivés et supprimés sont exclus ; le tri
+reste la date de création décroissante. Une liste vide ou plus courte que la limite
+est correctement rendue sans perdre son dernier utilisateur. 0 désactive la récupération.
+
+Les instances virtuelles `faq-legacy` (droite, ordre 20) et `users-legacy` (principale,
+ordre 60) reprennent `home.faq.*` et `home.users.*` sans écriture. `users-legacy` est
+masquée lorsque `home.users.nb` vaut 0. La sauvegarde remplace leur instance virtuelle
+sans doublon. Le rendu passe par le tag commun ; les blocs masqués ne récupèrent
+aucune donnée et les blocs vides ne s’affichent pas. Les cartes utilisateurs restent
+rendues avec le DOM initial pour conserver leur initialisation native. Les styles des
+quatre skins couvrent les classes des nouvelles instances sans identifiant HTML partagé.

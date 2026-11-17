@@ -11,7 +11,6 @@ import org.silverpeas.components.delegatednews.model.DelegatedNews;
 import org.silverpeas.components.delegatednews.service.DelegatedNewsService;
 import org.silverpeas.components.questionreply.QuestionReplyException;
 import org.silverpeas.components.questionreply.model.Question;
-import org.silverpeas.components.questionreply.service.QuestionManager;
 import org.silverpeas.components.questionreply.service.QuestionManagerProvider;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
@@ -66,7 +65,6 @@ import org.silverpeas.looks.aurora.service.weather.City;
 import org.silverpeas.looks.aurora.service.weather.WeatherSettings;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptySet;
@@ -82,7 +80,6 @@ import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
 
   private static final String DEFAULT_VALUE = "toBeDefined";
-  private static final Random RANDOM = new Random();
   private static final String BANNER_ALL_SPACES = "*";
   private static final String PROPERTY_NEWS_MAIN = "home.news";
   private static final String PROPERTY_NEWS_SECONDARY = "home.news.secondary";
@@ -592,9 +589,18 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public Questions getQuestions() {
+    return getConfiguredQuestions(getDefaultFaqConfiguration());
+  }
+
+  public HomepageContentStore.FaqConfiguration getDefaultFaqConfiguration() {
+    return new HomepageContentStore.FaqConfiguration(getSettings("home.faq.appId", "").trim(),
+        getSettings("home.faq.nb", 1),
+        "random".equalsIgnoreCase(getSettings("home.faq.display", "random")) ? "random" : "first");
+  }
+
+  public Questions getConfiguredQuestions(HomepageContentStore.FaqConfiguration configuration) {
     Questions faqs = new Questions();
-    QuestionManager qm = QuestionManagerProvider.getQuestionManager();
-    String appId = getSettings("home.faq.appId", "");
+    String appId = configuration.source();
     if (StringUtil.isDefined(appId) && isComponentAvailable(appId)) {
       faqs.setAppId(appId);
       try {
@@ -603,9 +609,9 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         if (role != null) {
           faqs.setCanAskAQuestion(role.isGreaterThanOrEquals(SilverpeasRole.WRITER));
         }
-        List<Question> questions = qm.getQuestions(appId);
+        List<Question> questions = QuestionManagerProvider.getQuestionManager().getQuestions(appId);
         if (CollectionUtil.isNotEmpty(questions)) {
-          return filterFAQsMatchingQuestions(faqs, questions);
+          return filterFAQsMatchingQuestions(faqs, questions, configuration);
         }
       } catch (QuestionReplyException e) {
         SilverLogger.getLogger(this).error(e);
@@ -615,30 +621,12 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   private Questions filterFAQsMatchingQuestions(final Questions faqs,
-      final List<Question> questions) {
-    int nb = getSettings("home.faq.nb", 1);
-    if (nb > questions.size()) {
-      nb = questions.size();
+      final List<Question> questions, HomepageContentStore.FaqConfiguration configuration) {
+    var selected = new ArrayList<>(questions);
+    if ("random".equals(configuration.selection())) {
+      java.util.Collections.shuffle(selected);
     }
-    if ("random".equalsIgnoreCase(getSettings("home.faq.display", "random")) &&
-        questions.size() > 1 && questions.size() > nb) {
-      Predicate<Question> shouldTryAgain =
-          q -> faqs.getList().stream().anyMatch(f -> q.getId().equals(f.getId()));
-      int j = 0;
-      while (j < nb) {
-        int i = RANDOM.nextInt(questions.size() - 1);
-        Question question = questions.get(i);
-        boolean tryAgain = shouldTryAgain.test(question);
-        if (!tryAgain) {
-          faqs.add(question);
-          j++;
-        }
-      }
-    } else {
-      for (int i = 0; i < nb; i++) {
-        faqs.add(questions.get(i));
-      }
-    }
+    selected.stream().limit(configuration.size()).forEach(faqs::add);
     return faqs;
   }
 
@@ -1150,20 +1138,30 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public NewUsersList getNewUsersList() {
-    int nbUsersDisplayed = getSettings("home.users.nb", 0);
-    if (nbUsersDisplayed > 0) {
-      final OrganizationController organizationController = getOrganisationController();
-      UserDetailsSearchCriteria criteria = new UserDetailsSearchCriteria().onUserStatesToExclude(
-          BLOCKED, DEACTIVATED, REMOVED);
-      String groupId = getSettings("home.users.group", "-1");
-      if (!"-1".equals(groupId)) {
-        criteria.onGroupIds(groupId);
-      }
-      final List<User> users = organizationController.searchUsers(criteria);
-      users.sort(new UserDetail.OnCreationDate().reversed());
-      return getNewUsersList(false, users);
+    return getConfiguredNewUsers(getDefaultUsersConfiguration());
+  }
+
+  public HomepageContentStore.UsersConfiguration getDefaultUsersConfiguration() {
+    return new HomepageContentStore.UsersConfiguration(getSettings("home.users.group", "-1").trim(),
+        getSettings("home.users.nb", 0), getSettings("home.users.avatar", true),
+        getSettings("home.users.fields", "").trim().replaceAll("\\s+", " "));
+  }
+
+  public NewUsersList getConfiguredNewUsers(HomepageContentStore.UsersConfiguration configuration) {
+    if (configuration.size() == 0) {
+      return null;
     }
-    return null;
+    UserDetailsSearchCriteria criteria = new UserDetailsSearchCriteria().onUserStatesToExclude(
+        BLOCKED, DEACTIVATED, REMOVED);
+    if (!configuration.group().isEmpty() && !"-1".equals(configuration.group())) {
+      criteria.onGroupIds(configuration.group());
+    }
+    final List<User> users = new ArrayList<>(getOrganisationController().searchUsers(criteria));
+    users.sort(new UserDetail.OnCreationDate().reversed());
+    NewUsersList result = new NewUsersList(users.subList(0, Math.min(configuration.size(), users.size())));
+    result.setAvatar(configuration.avatar());
+    result.setFields(configuration.fields().isEmpty() ? List.of() : List.of(configuration.fields().split(" ")));
+    return result;
   }
 
   private NewUsersList getNewUsersList(boolean spaceScope, List<User> users) {

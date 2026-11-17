@@ -51,7 +51,7 @@ class HomepageJspCompatibilityTest {
     assertTrue(jsp.contains("request.setAttribute(\"homepageWidgets\", homepageWidgets)"));
     assertTrue(jsp.contains("request.setAttribute(\"homepageNews\", homepageNews)"));
     for (String zone : List.of("main", "right")) {
-      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" publications=\"${homepagePublications}\" zone=\"" + zone + "\""));
+      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" publications=\"${homepagePublications}\" questions=\"${homepageQuestions}\" users=\"${homepageUsers}\" zone=\"" + zone + "\""));
     }
     assertTrue(jsp.contains("homepageNews.values().stream()"));
     assertTrue(!jsp.contains("<viewTags:displayNews listOfNews="));
@@ -123,7 +123,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {
@@ -134,6 +134,26 @@ class HomepageJspCompatibilityTest {
         assertTrue(tags.get(name).containsAll(used), "Unsupported attributes on " + name);
         assertTrue(used.containsAll(required.get(name)), "Missing required attributes on " + name);
       }
+    }
+  }
+
+  @Test
+  void communityWidgetsUseUniqueIdsAndSharedStylesAcrossSkins() throws Exception {
+    String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    assertTrue(!main.contains("lookHelper.questions"));
+    assertTrue(!main.contains("lookHelper.newUsersList"));
+    for (String tag : List.of("displayFAQ.tag", "displayNewUsers.tag")) {
+      String markup = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look", tag));
+      assertTrue(markup.contains("<%@ attribute name=\"id\""));
+      assertTrue(markup.contains("<c:out value=\"${empty title"));
+    }
+    Path base = Path.of("../aurora-configuration/src/main/config/data/web/weblib.war");
+    for (String skin : List.of("Aurora/css/main.css", "skins/Sobre/css/main.css",
+        "skins/prima/css/main.css", "skins/waves/css/stylesheet.css")) {
+      String css = Files.readString(base.resolve(skin));
+      assertTrue(css.contains(":is(#faq-home, .homepage-faq)"));
+      assertTrue(!java.util.regex.Pattern.compile("#faq-home(?!, \\.homepage-faq)").matcher(css).find());
+      assertTrue(!java.util.regex.Pattern.compile("#new-users-home(?!, \\.homepage-users)").matcher(css).find());
     }
   }
 

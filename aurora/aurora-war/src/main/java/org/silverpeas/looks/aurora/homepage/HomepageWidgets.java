@@ -128,6 +128,48 @@ public final class HomepageWidgets {
         events ? null : helper.getDefaultRssConfiguration());
   }
 
+  public static HomepageContentStore.Widget communityWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper, String type)
+      throws IOException {
+    if (!List.of("faq", "users").contains(type)) {
+      throw new IllegalArgumentException("Invalid community type");
+    }
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!type.equals(saved.type())) {
+        throw new IllegalArgumentException("Unexpected widget type");
+      }
+      return saved;
+    }
+    boolean faq = "faq".equals(type);
+    boolean legacy = (type + "-legacy").equals(id);
+    var users = faq ? null : legacy ? helper.getDefaultUsersConfiguration()
+        : new HomepageContentStore.UsersConfiguration("", 5, true, "title phone fonction");
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content(faq ? "FAQ" : "Nouveaux utilisateurs", "", "",
+            new HomepageContentStore.Layout(faq ? "right" : "main", faq ? 20 : 60,
+                faq || users.size() > 0)),
+        type, null, 0, null, null, null,
+        faq ? legacy ? helper.getDefaultFaqConfiguration()
+            : new HomepageContentStore.FaqConfiguration("", 1, "random") : null, users);
+  }
+
+  public static Map<String, org.silverpeas.looks.aurora.Questions> questions(
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    Map<String, org.silverpeas.looks.aurora.Questions> result = new LinkedHashMap<>();
+    widgets.stream().filter(widget -> widget.isEnabled() && "faq".equals(widget.type()))
+        .forEach(widget -> result.put(widget.id(), helper.getConfiguredQuestions(widget.faqConfiguration())));
+    return result;
+  }
+
+  public static Map<String, org.silverpeas.looks.aurora.NewUsersList> users(
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    Map<String, org.silverpeas.looks.aurora.NewUsersList> result = new LinkedHashMap<>();
+    widgets.stream().filter(widget -> widget.isEnabled() && "users".equals(widget.type()))
+        .forEach(widget -> result.put(widget.id(), helper.getConfiguredNewUsers(widget.usersConfiguration())));
+    return result;
+  }
+
   public static List<HomepageContentStore.Widget> all(HomepageContentStore store,
       HomepagePage page, String language, LookAuroraHelper helper) throws IOException {
     var widgets = new ArrayList<>(store.widgets(page, language));
@@ -152,6 +194,14 @@ public final class HomepageWidgets {
         String id = type + "-legacy";
         if (widgets.stream().noneMatch(widget -> widget.id().equals(id))) {
           widgets.add(feedWidget(store, page, id, language, helper, type));
+        }
+      }
+    }
+    if ("skins".equals(page.kind())) {
+      for (String type : List.of("faq", "users")) {
+        String id = type + "-legacy";
+        if (widgets.stream().noneMatch(widget -> widget.id().equals(id))) {
+          widgets.add(communityWidget(store, page, id, language, helper, type));
         }
       }
     }

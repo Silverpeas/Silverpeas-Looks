@@ -40,12 +40,12 @@ async function editor(status = 200, configured = false, publications = false, ep
   for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
       dataset: {widgetType: feedType || (ephemeris ? 'ephemeris' : '')},
-      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today'].includes(match[1]) ? 'checkbox' : 'text',
+      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar'].includes(match[1]) ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
   const calls = [];
   let start;
-  const data = {maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -212,5 +212,42 @@ for (const type of ['events', 'rss']) {
       assert.equal(body.get('personal'), 'true');
       assert.equal(body.get('includeToday'), 'false');
     } else { assert.equal(body.get('rendering'), 'tabs'); }
+  });
+}
+
+for (const type of ['faq', 'users']) {
+  test(type + ' editor saves normalized settings with placement, CSRF and revision', async () => {
+    const {controls, calls, submit} = await editor(200, true, false, false, type);
+    assert.equal(controls['news-save'].disabled, false);
+    assert.match(calls[0].url, new RegExp('action=load' + (type === 'faq' ? 'Faq' : 'Users')));
+    controls['news-size'].value = '3';
+    controls['news-zone'].value = 'right';
+    controls['news-enabled'].checked = false;
+    if (type === 'faq') {
+      controls['news-source'].value = ' questionReply12 ';
+      controls['news-selection'].value = 'first';
+    } else {
+      assert.equal(controls['news-avatar'].checked, true);
+      controls['news-group'].value = ' 34 ';
+      controls['news-fields'].value = ' phone   title ';
+      controls['news-avatar'].checked = false;
+    }
+    await submit();
+    const saved = calls.at(-1);
+    assert.match(saved.url, new RegExp('action=save' + (type === 'faq' ? 'Faq' : 'Users')));
+    assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+    const body = new URLSearchParams(saved.body);
+    assert.equal(body.get('revision'), 'first');
+    assert.equal(body.get('size'), '3');
+    assert.equal(body.get('zone'), 'right');
+    assert.equal(body.get('enabled'), 'false');
+    if (type === 'faq') {
+      assert.equal(body.get('source'), 'questionReply12');
+      assert.equal(body.get('selection'), 'first');
+    } else {
+      assert.equal(body.get('group'), '34');
+      assert.equal(body.get('fields'), 'phone title');
+      assert.equal(body.get('avatar'), 'false');
+    }
   });
 }

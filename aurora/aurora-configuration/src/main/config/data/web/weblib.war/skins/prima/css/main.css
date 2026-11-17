@@ -23,7 +23,7 @@
   order: 3;
 }
 
-#faq-home {
+:is(#faq-home, .homepage-faq) {
   order: 4;
   padding: 1em 0;
   text-align: center;
@@ -59,7 +59,7 @@
   order: 3;
 }
 
-.principal-main-container #new-users-home {
+.principal-main-container :is(#new-users-home, .homepage-users) {
   order: 2;
 }
 
@@ -1053,12 +1053,12 @@ a#search-help-header {
 }
 
 /* LES NOUVEAUX UTILISATEURS */
-.main-home-page #new-users-home .new-users-list {
+.main-home-page :is(#new-users-home, .homepage-users) .new-users-list {
   margin: 0;
   padding: 0;
 }
 
-.principal-main-container #new-users-home::before {
+.principal-main-container :is(#new-users-home, .homepage-users)::before {
   background: transparent url(../imgDesign/welcome.png) 0 0 no-repeat;
   content: ' ';
   display: block;
@@ -1070,7 +1070,7 @@ a#search-help-header {
   height: 150px;
 }
 
-.main-home-page #new-users-home .new-users-main-container {
+.main-home-page :is(#new-users-home, .homepage-users) .new-users-main-container {
   background-color: var(--bgColor-bloc-fond-clair);
   border-radius: 15px;
   padding: 15px;
@@ -1078,12 +1078,12 @@ a#search-help-header {
 
 
 
-#new-users-home .new-users-list {
+:is(#new-users-home, .homepage-users) .new-users-list {
   padding: 0;
   margin: 0;
 }
 
-#new-users-home .new-users-list li {
+:is(#new-users-home, .homepage-users) .new-users-list li {
   margin-bottom: 1em;
   height: auto;
   flex-basis: 254px;
@@ -1091,12 +1091,12 @@ a#search-help-header {
   margin-right: 1em;
 }
 
-#new-users-home .new-users-list .field.userToZoom {
+:is(#new-users-home, .homepage-users) .new-users-list .field.userToZoom {
   font-size: 1em;
   font-weight: 500;
 }
 
-#new-users-home div.user-card,
+:is(#new-users-home, .homepage-users) div.user-card,
 #spaceUsers div.user-card {
   border: 0;
   background-color:var(--bgColor-bloc-fond-clair);
@@ -1104,27 +1104,27 @@ a#search-help-header {
   display: flex;
 }
 
-.main-home-page #new-users-home div.user-card ,
-.spaceHome #new-users-home div.user-card{
+.main-home-page :is(#new-users-home, .homepage-users) div.user-card ,
+.spaceHome :is(#new-users-home, .homepage-users) div.user-card{
   background-color:transparent;
 }
 
-.spaceHome  #new-users-home .new-users-list {
+.spaceHome  :is(#new-users-home, .homepage-users) .new-users-list {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
 }
 #spaceUsers div.user-card,
 #spaceUsers div.user-card .field,
-#new-users-home div.user-card,
-#new-users-home div.user-card .field {
+:is(#new-users-home, .homepage-users) div.user-card,
+:is(#new-users-home, .homepage-users) div.user-card .field {
   width: auto;
 }
 div.user-card .avatar {
   border:0;
 }
 
-.spaceHome #new-users-home ul li {
+.spaceHome :is(#new-users-home, .homepage-users) ul li {
   display: none !important;
 }
 .list-users .intfdcolor {
@@ -1153,7 +1153,7 @@ div.user-card .avatar {
   padding: 0;
 }
 
-#new-users-home div.user-card {
+:is(#new-users-home, .homepage-users) div.user-card {
   margin-bottom: 0;
   display: flex;
   position: relative;
@@ -1162,7 +1162,7 @@ div.user-card .avatar {
   min-height: 90px;
 }
 
-#new-users-home div.user-card .avatar,
+:is(#new-users-home, .homepage-users) div.user-card .avatar,
 #spaceUsers div.user-card .avatar,
 #spaceManager .list-responsible-user .profilPhoto {
   position: absolute;
@@ -1271,7 +1271,7 @@ div.user-card .avatar,
 }
 
 #last-publication-home .last-publication-list li,
-#faq-home p {
+:is(#faq-home, .homepage-faq) p {
   padding-bottom: 1em;
   margin-bottom: 0;
 }
@@ -1338,7 +1338,7 @@ div.user-card .avatar,
 }
 
 .main-home-page #user-favorit-home h4,
-.main-home-page #new-users-home h4 {
+.main-home-page :is(#new-users-home, .homepage-users) h4 {
   font-size: 28px;
   color: var(--color-flashy-principale);
   font-weight: 800;
@@ -1365,7 +1365,7 @@ div.user-card .avatar,
 }
 
 #user-favorit-home h4::after,
-.main-home-page #new-users-home h4::after {
+.main-home-page :is(#new-users-home, .homepage-users) h4::after {
   content: ' ';
   height: 1px;
   background-color: var(--color-flashy-principale);
@@ -1380,7 +1380,7 @@ div.user-card .avatar,
 }
 
 #user-favorit-home h4::before,
-.main-home-page #new-users-home h4::before {
+.main-home-page :is(#new-users-home, .homepage-users) h4::before {
   content: ' ';
   height: 1px;
   background-color: var(--color-flashy-principale);
@@ -1390,7 +1390,7 @@ div.user-card .avatar,
 
 
 .main-home-page #bloc-advancedSeach h4,
-.main-home-page #faq-home h4 {
+.main-home-page :is(#faq-home, .homepage-faq) h4 {
   display: block;
   justify-content: center;
   width: auto;
@@ -1399,8 +1399,8 @@ div.user-card .avatar,
   margin-right: auto;
 }
 
-.main-home-page #faq-home h4::before,
-.main-home-page #faq-home h4::after,
+.main-home-page :is(#faq-home, .homepage-faq) h4::before,
+.main-home-page :is(#faq-home, .homepage-faq) h4::after,
 .main-home-page #bloc-advancedSeach h4::before,
 .main-home-page #bloc-advancedSeach h4::after {
   display: none;
@@ -1437,7 +1437,7 @@ div.user-card .avatar,
   color: var(--couleur-principale);
 }
 
-#faq-home h4 span,
+:is(#faq-home, .homepage-faq) h4 span,
 .spaceHome #bloc-advancedSeach h4 span,
 .spaceHome #portletPages .header h4 span,
 .spaceHome #portletPages .header h2 span,
@@ -1549,7 +1549,7 @@ div.user-card .avatar,
 
 /*** FAQ bloc ***/
 
-#faq-home p a {
+:is(#faq-home, .homepage-faq) p a {
   display: block;
   font-size: 18px;
   font-style: italic;
@@ -1562,12 +1562,12 @@ div.user-card .avatar,
   position: relative;
 }
 
-#faq-home .FAQ-entry {
+:is(#faq-home, .homepage-faq) .FAQ-entry {
   padding-bottom: 105px;
   position: relative;
 }
 
-#faq-home .FAQ-entry:after {
+:is(#faq-home, .homepage-faq) .FAQ-entry:after {
   background: #FFFFFF url(../imgDesign/deco-faq.png) bottom left no-repeat;
   content: ' ';
   position: absolute;
@@ -1577,7 +1577,7 @@ div.user-card .avatar,
   height: 105px;
 }
 
-#faq-home p a:after {
+:is(#faq-home, .homepage-faq) p a:after {
   content: ' ';
   position: absolute;
   bottom: -16px;
@@ -1600,7 +1600,7 @@ div.user-card .avatar,
 #directory form .sp_button,
 #directory #indexAndSearch .sp_button,
 .sp_button, button.button,
-#faq-home .link-add.sp-link {
+:is(#faq-home, .homepage-faq) .link-add.sp-link {
   font-weight: 600;
   text-transform: uppercase;
 }
