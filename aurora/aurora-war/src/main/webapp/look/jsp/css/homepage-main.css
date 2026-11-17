@@ -61,3 +61,7 @@ html, body {
     font-size: 0.9em;
   }
 }
+
+.main-home-page .homepage-publications .sp-path {
+  display: none;
+}

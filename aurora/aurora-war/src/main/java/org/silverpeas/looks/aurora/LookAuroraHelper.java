@@ -264,6 +264,13 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return weatherSettings.getCities();
   }
 
+  public org.silverpeas.looks.aurora.homepage.HomepageContentStore.PublicationsConfiguration
+      getDefaultPublicationsConfiguration() {
+    return new org.silverpeas.looks.aurora.homepage.HomepageContentStore.PublicationsConfiguration(
+        getSettings("home.publications.spaceid", "").trim(),
+        Integer.parseInt(getSettings("home.publications.nb", "3")), true);
+  }
+
   public List<PublicationDetail> getLatestPublications() {
     String spaceId = getSettings("home.publications.spaceid", "").trim();
     int pubCount = Integer.parseInt(getSettings("home.publications.nb", "3"));

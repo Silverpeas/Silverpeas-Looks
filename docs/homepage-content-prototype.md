@@ -126,22 +126,22 @@ l’insertion d’image et les actions ; l’aperçu enregistré est repliable.
 
 ### Base commune des widgets de la home générale
 
-Zones libres et actualités sont des instances identifiées, ajoutables sans limite
+Zones libres, actualités et dernières publications sont des instances identifiées, ajoutables sans limite
 fixée à trois. Elles partagent `Widget`, `Content` et `Layout` : type, titre,
 colonne `main`/`right`, ordre et visibilité. Le registre `widgets` de
-`page.properties` contient les deux types. Les réglages propres aux actualités
+`page.properties` contient les trois types. Les réglages propres aux actualités
 (source, limite, importantes uniquement, liste/carrousel) utilisent le même
 préfixe `widget.<id>`. La révision couvre ensemble le placement, le titre et ces
 réglages. Les actualités sont communes aux langues ; le HTML reste multilingue.
 
 `HomepageWidgets` assemble la liste commune triée par ordre puis identifiant et
 prépare les actualités visibles avec le helper existant, qui filtre les droits
-du lecteur. Le tag `displayHomepageWidgets` distribue les deux types dans chaque
+du lecteur. Le tag `displayHomepageWidgets` distribue les trois types dans chaque
 colonne. L’ordre est partagé entre types, dans le groupe de widgets placé après
 les autres blocs existants de chaque colonne. Les carrousels sont initialisés
 indépendamment, une seule fois chacun, après construction du DOM.
 
-La gestion propose « Ajouter des actualités » et « Ajouter une zone libre »,
+La gestion propose « Ajouter des actualités », « Ajouter les dernières publications » et « Ajouter une zone libre »,
 puis un tableau commun. Les trois anciens blocs d’actualités y sont exposés comme
 instances `news-legacy-1..3`. Sans sauvegarde, leur contenu conserve les réglages
 historiques du thème ou les anciennes configurations `news-<index>.properties`.
@@ -155,7 +155,26 @@ déléguées, la position du plan de classement du thème ou une liste d’ident
 quickinfo. La source toutes d’une instance configurée couvre toutes les applications
 autorisées, sans exclusion automatique des autres instances. Le filtre importantes
 ne concerne pas les actualités déléguées. La limite est de 1 à 100 ou -1 sans limite.
-Dimensions des images et boutons du plan de classement restent hérités du thème
+Deux options indépendantes contrôlent les liens « + d’actualités » (applications et
+plan de classement) et « Voir les actualités ». Elles valent vrai par défaut, y
+compris pour les configurations antérieures ; les anciennes révisions restent valides.
+Dimensions des images et contenu des boutons du plan de classement restent hérités du thème
 (bloc principal pour une nouvelle instance). Les abonnements restent indépendants.
 Sauvegarde réservée aux administrateurs avec protections CSRF et révision (HTTP 409
 en cas de conflit). Le type d’une instance existante ne peut pas être changé.
+
+
+Les dernières publications partagent titre, colonne, ordre et visibilité avec les
+zones libres et les actualités. Leur configuration comporte un espace source
+facultatif (identifiant numérique ou WA suivi de chiffres ; vide pour tous les
+espaces accessibles), un nombre maximal de 1 à 100 et la visibilité du lien vers
+la liste complète. Cette liste complète reste globale, comme auparavant.
+La récupération passe par `LookAuroraHelper.getLatestPublications(spaceId, size)` :
+les droits du lecteur et exclusions du thème (applications, espaces, espace personnel
+et actualités) sont conservés. Les blocs vides ne sont pas affichés.
+L’ancien bloc est exposé comme instance virtuelle `publications-legacy`, initialisée
+avec les réglages `home.publications.spaceid/nb`. Il rejoint le groupe commun à
+l’ordre 40 par défaut et n’est plus rendu séparément. Aucune écriture au chargement ;
+l’enregistrement remplace cette instance sans doublon. Plusieurs nouvelles instances
+peuvent être ajoutées. Paramètres communs aux langues, mêmes droits admin/CSRF et
+contrôle de révision que les autres widgets.

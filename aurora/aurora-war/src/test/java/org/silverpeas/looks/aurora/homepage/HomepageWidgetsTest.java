@@ -40,6 +40,8 @@ class HomepageWidgetsTest {
 
   private LookAuroraHelper helper() {
     var helper = mock(LookAuroraHelper.class);
+    when(helper.getDefaultPublicationsConfiguration()).thenReturn(
+        new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
         new HomepageContentStore.NewsConfiguration("*", 10, false, "LIST", true, ""));
     return helper;
@@ -88,7 +90,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(3, initial.size());
+    assertEquals(4, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -96,7 +98,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(3, changed.size());
+    assertEquals(4, changed.size());
     assertEquals("news-legacy-2", changed.getFirst().id());
     assertFalse(changed.getFirst().isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -122,4 +124,91 @@ class HomepageWidgetsTest {
     verify(helper).getConfiguredNews(3, null);
     assertEquals(4, rendered.size());
   }
+  @Test
+  void buttonSettingsDefaultToVisibleAndParticipateInRevision() throws Exception {
+    var store = new HomepageContentStore(root);
+    var layout = new HomepageContentStore.Layout("main", 1, true);
+    store.saveNewsWidget(page, "news", "fr", "Infos", layout, news(""), 0);
+    var first = store.readWidget(page, "news", "fr");
+    assertTrue(first.newsConfiguration().showMoreNews());
+    assertTrue(first.newsConfiguration().showAllNews());
+    store.saveNewsWidget(page, "news", "fr", "Infos", layout,
+        new HomepageContentStore.NewsConfiguration("*", 5, false, "LIST", true,
+            first.content().revision(), false, true), 0);
+    var changed = new HomepageContentStore(root).readWidget(page, "news", "fr");
+    assertFalse(changed.newsConfiguration().showMoreNews());
+    assertTrue(changed.newsConfiguration().showAllNews());
+    assertNotEquals(first.content().revision(), changed.content().revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveNewsWidget(page,
+        "news", "fr", "Infos", layout, news(first.content().revision()), 0));
+  }
+
+  @Test
+  void publicationsReplaceLegacyWithoutDuplicatesAndSharePlacementAndRevision() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    var virtual = HomepageWidgets.publicationsWidget(store, page, "publications-legacy", "fr", helper);
+    assertEquals("WA12", virtual.publicationsConfiguration().spaceId());
+    assertFalse(Files.exists(root.resolve("skins")));
+    var layout = new HomepageContentStore.Layout("right", 2, true);
+    var configuration = new HomepageContentStore.PublicationsConfiguration("WA42", 8, false);
+    store.savePublicationsWidget(page, virtual.id(), "fr", "Documents", layout, configuration, "");
+    var saved = new HomepageContentStore(root).readWidget(page, virtual.id(), "fr");
+    assertEquals(configuration, saved.publicationsConfiguration());
+    assertEquals("right", saved.getZone());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream()
+        .filter(widget -> "publications".equals(widget.type())).count());
+    store.savePublicationsWidget(page, "publications-hidden", "fr", "Masqué",
+        new HomepageContentStore.Layout("main", 1, false), configuration, "");
+    store.saveConfigured(page, "html", "fr", "Intro", "", "",
+        new HomepageContentStore.Layout("right", 1, true));
+    assertEquals(List.of("html", "publications-hidden", "publications-legacy"),
+        store.widgets(page, "fr").stream().map(HomepageContentStore.Widget::getId).toList());
+    HomepageWidgets.publications(HomepageWidgets.all(store, page, "fr", helper), helper);
+    verify(helper, times(1)).getLatestPublications("WA42", 8);
+    store.savePublicationsWidget(page, virtual.id(), "fr", "Documents", layout,
+        new HomepageContentStore.PublicationsConfiguration("", 8, true), saved.content().revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.savePublicationsWidget(page,
+        virtual.id(), "fr", "Documents", layout, configuration, saved.content().revision()));
+    assertThrows(IllegalArgumentException.class, () -> store.save(page, virtual.id(), "fr", "", "", ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page,
+        virtual.id(), "fr", "", layout, news(""), 0));
+    assertThrows(IllegalArgumentException.class, () -> store.savePublicationsWidget(page,
+        "news-legacy-1", "fr", "", layout, configuration, ""));
+    assertThrows(IllegalArgumentException.class, () ->
+        new HomepageContentStore.PublicationsConfiguration("../x", 3, true));
+    assertThrows(IllegalArgumentException.class, () ->
+        new HomepageContentStore.PublicationsConfiguration("", 0, true));
+  }
+
+  @Test
+  void existingNewsDefaultsToVisibleButtonsWithoutChangingItsRevision() throws Exception {
+    var store = new HomepageContentStore(root);
+    var folder = root.resolve("skins/waves");
+    Files.createDirectories(folder);
+    Files.writeString(folder.resolve("page.properties"), """
+        widgets=news-old
+        widget.news-old.type=news
+        widget.news-old.title=Infos
+        widget.news-old.source=*
+        widget.news-old.size=5
+        widget.news-old.importantOnly=false
+        widget.news-old.rendering=LIST
+        widget.news-old.legacyIndex=0
+        """);
+    String previousInput = "Infos" + new HomepageContentStore.Layout("main", 10, true)
+        + String.join("\u0000", "*", "5", "false", "LIST", "0") + "\u0000";
+    String previousRevision = java.util.HexFormat.of().formatHex(
+        java.security.MessageDigest.getInstance("SHA-256").digest(
+            previousInput.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+    var widget = store.readWidget(page, "news-old", "fr");
+    assertEquals(previousRevision, widget.content().revision());
+    assertTrue(widget.newsConfiguration().showMoreNews());
+    assertTrue(widget.newsConfiguration().showAllNews());
+    store.saveNewsWidget(page, widget.id(), "fr", widget.getTitle(), widget.content().layout(),
+        new HomepageContentStore.NewsConfiguration("*", 5, false, "LIST", true,
+            previousRevision, false, false), 0);
+    assertFalse(store.readWidget(page, widget.id(), "fr").newsConfiguration().showAllNews());
+  }
+
 }

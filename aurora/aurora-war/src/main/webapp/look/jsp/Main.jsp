@@ -56,6 +56,7 @@
       HomepageContentStore.forInstallation(), homepagePage, homepageWidgets, homepageHelper);
   request.setAttribute("homepageWidgets", homepageWidgets);
   request.setAttribute("homepageNews", homepageNews);
+  request.setAttribute("homepagePublications", HomepageWidgets.publications(homepageWidgets, homepageHelper));
   request.setAttribute("isAtLeastOneCarousel", homepageNews.values().stream()
       .filter(news -> !news.isEmpty()).anyMatch(news -> news.getRenderingType().isCarousel()));
 %>
@@ -68,7 +69,6 @@
 
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
 <c:set var="questions" value="${lookHelper.questions}"/>
-<c:set var="publications" value="${lookHelper.latestPublications}"/>
 <c:set var="bookmarks" value="${lookHelper.bookmarks}"/>
 <c:set var="showBookmarksAreaWhenEmpty" value="${settings.displayBookmarksAreaWhenEmpty}"/>
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
@@ -140,7 +140,7 @@
       <viewTags:displayFormSearch searchForm="${searchForm}" extraFieldPeriod="${settings.extraSearchFieldPeriodUsed}" extraFieldSpace="${settings.extraSearchFieldSpaceUsed}"/>
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
-      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" zone="right"/>
+      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="right"/>
     </div>
 
     <div class="principal-main-container">
@@ -149,7 +149,6 @@
 
       <viewTags:displayNewsSubscribed enabled="${showLastSubscribedNews}" listOfNews="${subscribedListOfNews}"/>
 
-      <viewTags:displayPublications lookHelper="${lookHelper}" publications="${publications}"/>
 
       <div id="rss-part"></div>
 
@@ -157,7 +156,7 @@
 
       <viewTags:displayFreeZone freeZone="${lookHelper.freeZone}" freeZoneId="freeZone"/>
 
-      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" zone="main"/>
+      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="main"/>
 
     </div>
   </div>

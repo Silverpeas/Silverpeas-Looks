@@ -43,6 +43,8 @@
               type="java.lang.String" %>
 
 <%@ attribute name="title" required="false" type="java.lang.String" %>
+<%@ attribute name="showMoreNews" required="false" type="java.lang.Boolean" %>
+<%@ attribute name="showAllNews" required="false" type="java.lang.Boolean" %>
 <view:script src="/look/jsp/js/homepage-news-display.js"/>
 
 <c:set var="imageSize" value="${listOfNews.imageSize}"/>
@@ -92,7 +94,7 @@
         </li>
       </c:forEach>
     </ul>
-    <c:if test="${not empty id}">
+    <c:if test="${not empty id and showAllNews != false}">
       <div id="moreNews-link-page">
         <a title="${labelDelegatedNewsMore}"
            href="/silverpeas/look/jsp/listOfAppsNews.jsp?delegated=${delegated}"
@@ -100,14 +102,15 @@
       </div>
     </c:if>
 
-    <c:if test="${not empty listOfNews.buttons}">
+    <c:if test="${showMoreNews != false and not empty listOfNews.buttons}">
       <div class="news-link-taxonomy">
         <c:forEach var="button" items="${listOfNews.buttons}">
           <a title="${labelNewsMore}" href="listOfNews.jsp?TaxonomyPosition=${button.param}&Label=${button.label}" class="link-more ${button.paramAsCSS}">${button.label}</a>
         </c:forEach>
       </div>
     </c:if>
-    <c:choose>
+    <c:if test="${showMoreNews != false}">
+      <c:choose>
       <c:when test="${not empty listOfNews.uniqueAppURL}">
         <a title="${labelNewsMore}" href="${listOfNews.uniqueAppURL}" class="link-more sp-link"><span>${labelNewsMore}</span></a>
       </c:when>
@@ -118,7 +121,8 @@
           </c:forEach>
         </div>
       </c:otherwise>
-    </c:choose>
+      </c:choose>
+    </c:if>
   </div>
 
 </c:if>

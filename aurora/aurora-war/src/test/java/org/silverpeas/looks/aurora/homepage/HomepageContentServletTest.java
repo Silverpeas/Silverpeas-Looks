@@ -92,6 +92,8 @@ class HomepageContentServletTest {
     when(request.getParameter("widget")).thenReturn("welcome");
     when(request.getParameter("language")).thenReturn("fr");
     var helper = mock(org.silverpeas.looks.aurora.LookAuroraHelper.class);
+    when(helper.getDefaultPublicationsConfiguration()).thenReturn(
+        new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
         new HomepageContentStore.NewsConfiguration("", -1, false, "LIST", false, ""));
     when(session.getAttribute("Silverpeas_LookHelper")).thenReturn(helper);
@@ -112,15 +114,49 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void publicationsEnforceRightsCsrfPersistSettingsAndRejectStaleRevision() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("savePublications");
+    when(request.getParameter("widget")).thenReturn("publications-test");
+    when(request.getParameter("title")).thenReturn("Documents");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("4");
+    when(request.getParameter("spaceId")).thenReturn("WA12");
+    when(request.getParameter("showMore")).thenReturn("false");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var saved = store.readWidget(new HomepagePage("skins", "waves"), "publications-test", "fr");
+    assertEquals("right", saved.getZone());
+    assertFalse(saved.publicationsConfiguration().showMore());
+    assertTrue(output.toString().contains("\"spaceId\":\"WA12\""));
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+  }
+
+  @Test
   void dynamicNewsUsesTheSharedPlacementAndRevision() throws Exception {
     prepareNewsSave();
     when(request.getParameter("widget")).thenReturn("news-fourth");
     when(request.getParameter("title")).thenReturn("Vie des équipes");
     when(request.getParameter("zone")).thenReturn("right");
     when(request.getParameter("order")).thenReturn("7");
+    when(request.getParameter("showMoreNews")).thenReturn("false");
+    when(request.getParameter("showAllNews")).thenReturn("true");
     servlet.doPost(request, response);
     verify(response, never()).sendError(anyInt());
     var widget = store.readWidget(new HomepagePage("skins", "waves"), "news-fourth", "fr");
+    assertFalse(widget.newsConfiguration().showMoreNews());
+    assertTrue(widget.newsConfiguration().showAllNews());
     assertEquals("news", widget.type());
     assertEquals("Vie des équipes", widget.getTitle());
     assertEquals("right", widget.getZone());
@@ -348,7 +384,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 3));
+        value instanceof java.util.List<?> widgets && widgets.size() == 4));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");

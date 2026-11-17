@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -199,7 +199,8 @@ public class HomepageContentServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("size")),
                 Boolean.parseBoolean(request.getParameter("importantOnly")),
                 request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
-                request.getParameter("revision")), HomepageWidgets.legacyIndex(widget));
+                request.getParameter("revision"), option(request, "showMoreNews"),
+                option(request, "showAllNews")), HomepageWidgets.legacyIndex(widget));
         newsWidgetResponse(request, response, page, widget, language, "");
       } else {
         store.saveNews(page, Integer.parseInt(request.getParameter("index")),
@@ -207,9 +208,19 @@ public class HomepageContentServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("size")),
                 Boolean.parseBoolean(request.getParameter("importantOnly")),
                 request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
-                request.getParameter("revision")));
+                request.getParameter("revision"), option(request, "showMoreNews"),
+                option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("savePublications".equals(action)) {
+      store.savePublicationsWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")),
+              Boolean.parseBoolean(request.getParameter("enabled"))),
+          new HomepageContentStore.PublicationsConfiguration(request.getParameter("spaceId"),
+              Integer.parseInt(request.getParameter("size")), option(request, "showMore")),
+          request.getParameter("revision"));
+      publicationsResponse(request, response, page, widget, language, "");
     } else if ("upload".equals(action)) {
       String name = UUID.randomUUID() + ".png";
       store.saveAsset(page, widget, name, image(request));
@@ -238,7 +249,11 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("loadNews".equals(action)) {
+    if ("loadPublications".equals(action)) {
+      publicationsResponse(request, response, page, widget, language, csrf);
+    } else if ("publicationsEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/publicationsEditor.jsp").forward(request, response);
+    } else if ("loadNews".equals(action)) {
       if (widget != null && !widget.isBlank()) {
         newsWidgetResponse(request, response, page, widget, language, csrf);
       } else {
@@ -273,12 +288,31 @@ public class HomepageContentServlet extends HttpServlet {
               request.getSession(false).getAttribute("Silverpeas_LookHelper")));
       request.setAttribute("newWidgetId", "html-" + UUID.randomUUID());
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
+      request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
       request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp").forward(request, response);
     } else if ("editor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/contentEditor.jsp").forward(request, response);
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private boolean option(HttpServletRequest request, String name) {
+    return request.getParameter(name) == null || Boolean.parseBoolean(request.getParameter(name));
+  }
+
+  private void publicationsResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf) throws IOException {
+    var model = HomepageWidgets.publicationsWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"));
+    var configuration = model.publicationsConfiguration();
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o.put("configured", !content.revision().isEmpty())
+        .put("title", content.title()).put("zone", content.layout().zone())
+        .put("order", content.layout().order()).put("enabled", content.layout().enabled())
+        .put("spaceId", configuration.spaceId()).put("size", configuration.size())
+        .put("showMore", configuration.showMore()).put("revision", content.revision()).put("csrf", csrf)));
   }
 
   private void newsWidgetResponse(HttpServletRequest request, HttpServletResponse response,
@@ -292,6 +326,7 @@ public class HomepageContentServlet extends HttpServlet {
         .put("title", content.title()).put("zone", content.layout().zone())
         .put("order", content.layout().order()).put("enabled", content.layout().enabled())
         .put("source", news.source()).put("size", news.size()).put("importantOnly", news.importantOnly())
+        .put("showMoreNews", news.showMoreNews()).put("showAllNews", news.showAllNews())
         .put("rendering", news.rendering()).put("revision", content.revision()).put("csrf", csrf)));
   }
 
@@ -304,6 +339,7 @@ public class HomepageContentServlet extends HttpServlet {
     json(response, JSONCodec.encodeObject(o -> o.put("configured", saved != null)
         .put("source", configuration.source()).put("size", configuration.size())
         .put("importantOnly", configuration.importantOnly()).put("rendering", configuration.rendering())
+        .put("showMoreNews", configuration.showMoreNews()).put("showAllNews", configuration.showAllNews())
         .put("enabled", configuration.enabled()).put("revision", configuration.revision())
         .put("csrf", csrf)));
   }

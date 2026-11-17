@@ -45,6 +45,13 @@
   <c:param name="widget" value="${newNewsWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addPublicationsUrl">
+  <c:param name="action" value="publicationsEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="widget" value="${newPublicationsWidgetId}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
 <view:sp-page>
   <view:sp-head-part>
     <title>Modifier la page d’accueil</title>
@@ -62,6 +69,7 @@
           <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
           <view:buttonPane>
             <view:button label="Ajouter des actualités" action="${addNewsUrl}"/>
+            <view:button label="Ajouter les dernières publications" action="${addPublicationsUrl}"/>
             <view:button label="Ajouter une zone libre" action="${addUrl}"/>
             <view:button label="Voir la page d’accueil" action="${homeUrl}" classes="homepage-secondary-action"/>
           </view:buttonPane>
@@ -83,7 +91,7 @@
                 <view:arrayColumn title="Affichage" sortable="false"/>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="${widget.type == 'news' ? 'newsEditor' : 'editor'}"/>
+                    <c:param name="action" value="${widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : 'editor')}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -93,7 +101,7 @@
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
-                    <view:arrayCellText text="${widget.type == 'news' ? 'Actualités' : 'Zone libre'}"/>
+                    <view:arrayCellText text="${widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : 'Zone libre')}"/>
                     <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
                     <view:arrayCellText text="${widget.order}"/>
                     <view:arrayCellText text="${displayStatus}"/>
@@ -102,7 +110,7 @@
               </view:arrayPane>
             </c:otherwise>
           </c:choose>
-          <p class="homepage-help">Les widgets partagent le même ordre dans chaque colonne, après les autres blocs existants. Les plus petits numéros s’affichent en premier. Les blocs d’actualités historiques peuvent être modifiés dans cette liste.</p>
+          <p class="homepage-help">Les widgets partagent le même ordre dans chaque colonne, après les autres blocs existants. Les plus petits numéros s’affichent en premier. Les blocs historiques d’actualités et de dernières publications peuvent être modifiés dans cette liste.</p>
         </main>
       </view:frame>
     </view:window>

@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer les actualités</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-widgets-v2"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-buttons-v3"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -85,6 +85,8 @@
                 <select id="news-rendering"><option value="CAROUSEL">Carrousel</option><option value="LIST">Liste</option></select>
               </div>
               <label><input id="news-important" type="checkbox"> Actualités importantes uniquement (hors actualités déléguées)</label>
+              <label><input id="news-show-more" type="checkbox"> Afficher « + d’actualités » (liens vers les applications et le plan de classement)</label>
+              <label><input id="news-show-all" type="checkbox"> Afficher « Voir les actualités »</label>
               <label><input id="news-enabled" type="checkbox"> Afficher ce bloc</label>
             </fieldset>
           </view:board>

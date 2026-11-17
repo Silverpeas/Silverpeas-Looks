@@ -31,17 +31,19 @@ const source = fs.readFileSync(path.resolve(__dirname,
 const jsp = fs.readFileSync(path.resolve(__dirname,
   '../../main/webapp/WEB-INF/homepage/newsEditor.jsp'), 'utf8');
 
-async function editor(status = 200, configured = false) {
+async function editor(status = 200, configured = false, publications = false) {
   const controls = {};
-  for (const match of jsp.matchAll(/id="([^"]+)"/g)) {
+  const markup = publications ? fs.readFileSync(path.resolve(__dirname,
+    '../../main/webapp/WEB-INF/homepage/publicationsEditor.jsp'), 'utf8') : jsp;
+  for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
-      type: ['news-important', 'news-enabled'].includes(match[1]) ? 'checkbox' : 'text',
+      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all'].includes(match[1]) ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
   const calls = [];
   let start;
   const data = {title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
-    enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
+    showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
     open(method, url) { this.method = method; this.url = url; }
@@ -55,7 +57,7 @@ async function editor(status = 200, configured = false) {
     }
   }
   vm.runInNewContext(source, {URL, URLSearchParams, XMLHttpRequest: XHR,
-    document: {getElementById(id) { assert.ok(controls[id], id); return controls[id]; }},
+    document: {getElementById(id) { return controls[id] || null; }},
     window: {location: {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth',
       search: '?action=newsEditor&kind=skins&owner=waves&widget=news-fourth'},
       addEventListener(event, callback) { start = callback; }}});
@@ -129,4 +131,34 @@ test('multiple carousels initialize once each after DOM readiness', () => {
   assert.equal(sliders[0].calls, 0);
   pending.forEach(callback => callback());
   assert.deepEqual(sliders.map(slider => slider.calls), [1, 1]);
+});
+
+test('news buttons are independent and persist explicit hidden values', async () => {
+  const {controls, calls, submit} = await editor();
+  assert.equal(controls['news-show-more'].checked, true);
+  assert.equal(controls['news-show-all'].checked, false);
+  controls['news-show-more'].checked = false;
+  controls['news-show-all'].checked = true;
+  await submit();
+  const body = new URLSearchParams(calls.at(-1).body);
+  assert.equal(body.get('showMoreNews'), 'false');
+  assert.equal(body.get('showAllNews'), 'true');
+});
+
+test('publications use the shared editor transport and placement with their own settings', async () => {
+  const {controls, calls, submit} = await editor(200, true, true);
+  assert.match(calls[0].url, /action=loadPublications/);
+  assert.equal(controls['news-space'].value, 'WA12');
+  assert.equal(controls['news-zone'].value, 'right');
+  controls['news-space'].value = '';
+  controls['news-size'].value = 8;
+  controls['news-show-more'].checked = false;
+  await submit();
+  assert.match(calls.at(-1).url, /action=savePublications/);
+  const body = new URLSearchParams(calls.at(-1).body);
+  assert.equal(body.get('spaceId'), '');
+  assert.equal(body.get('size'), '8');
+  assert.equal(body.get('showMore'), 'false');
+  assert.equal(body.get('zone'), 'right');
+  assert.equal(body.get('revision'), 'first');
 });

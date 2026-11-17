@@ -51,7 +51,7 @@ class HomepageJspCompatibilityTest {
     assertTrue(jsp.contains("request.setAttribute(\"homepageWidgets\", homepageWidgets)"));
     assertTrue(jsp.contains("request.setAttribute(\"homepageNews\", homepageNews)"));
     for (String zone : List.of("main", "right")) {
-      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" zone=\"" + zone + "\""));
+      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" publications=\"${homepagePublications}\" zone=\"" + zone + "\""));
     }
     assertTrue(jsp.contains("homepageNews.values().stream()"));
     assertTrue(!jsp.contains("<viewTags:displayNews listOfNews="));
@@ -110,7 +110,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {

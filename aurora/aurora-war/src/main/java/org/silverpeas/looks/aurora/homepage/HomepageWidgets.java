@@ -24,6 +24,7 @@
 package org.silverpeas.looks.aurora.homepage;
 
 import org.silverpeas.looks.aurora.LookAuroraHelper;
+import org.silverpeas.core.contribution.publication.model.PublicationDetail;
 import org.silverpeas.looks.aurora.NewsList;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +61,37 @@ public final class HomepageWidgets {
     return new HomepageContentStore.Widget(id, content, "news", news, index);
   }
 
+  public static HomepageContentStore.Widget publicationsWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"publications".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a publications widget");
+      }
+      return saved;
+    }
+    boolean legacy = "publications-legacy".equals(id);
+    var configuration = legacy ? helper.getDefaultPublicationsConfiguration()
+        : new HomepageContentStore.PublicationsConfiguration("", 3, true);
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Dernières publications", "", "",
+            new HomepageContentStore.Layout("main", 40, true)),
+        "publications", null, 0, configuration);
+  }
+
+  public static Map<String, List<PublicationDetail>>
+      publications(List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    Map<String, List<PublicationDetail>> result = new LinkedHashMap<>();
+    for (var widget : widgets) {
+      if ("publications".equals(widget.type()) && widget.isEnabled()) {
+        var configuration = widget.publicationsConfiguration();
+        result.put(widget.id(), helper.getLatestPublications(
+            configuration.spaceId().isEmpty() ? null : configuration.spaceId(), configuration.size()));
+      }
+    }
+    return result;
+  }
+
   public static List<HomepageContentStore.Widget> all(HomepageContentStore store,
       HomepagePage page, String language, LookAuroraHelper helper) throws IOException {
     var widgets = new ArrayList<>(store.widgets(page, language));
@@ -70,6 +102,10 @@ public final class HomepageWidgets {
           widgets.add(newsWidget(store, page, id, language, helper));
         }
       }
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("publications-legacy"))) {
+      widgets.add(publicationsWidget(store, page, "publications-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

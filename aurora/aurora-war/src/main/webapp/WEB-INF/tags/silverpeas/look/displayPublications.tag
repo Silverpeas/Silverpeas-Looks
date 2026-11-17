@@ -40,12 +40,16 @@
               required="true"
               type="java.util.List<org.silverpeas.core.contribution.publication.model.PublicationDetail>" %>
 
+<%@ attribute name="id" required="false" type="java.lang.String" %>
+<%@ attribute name="title" required="false" type="java.lang.String" %>
+<%@ attribute name="showMore" required="false" type="java.lang.Boolean" %>
+
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
 <fmt:message var="labelPublicationsMore" key="look.home.publications.more"/>
 
 <c:if test="${not empty publications}">
-<div id="last-publication-home" class="secteur-container">
-  <h4>${labelPublications}</h4>
+<div id="${empty id ? 'last-publication-home' : id}" class="secteur-container homepage-publications">
+  <h4><c:out value="${empty title ? labelPublications : title}"/></h4>
   <div id="last-publicationt-main-container">
     <ul class="last-publication-list">
       <c:forEach var="publication" items="${publications}">
@@ -66,10 +70,12 @@
         </li>
       </c:forEach>
     </ul>
+    <c:if test="${showMore != false}">
     <div id="morePublications-link-page">
       <a title="${labelPublicationsMore}" href="/silverpeas/look/jsp/listOfPublications.jsp"
          class="link-more sp-link"><span>${labelPublicationsMore}</span></a>
     </div>
+    </c:if>
   </div>
 </div>
 </c:if>

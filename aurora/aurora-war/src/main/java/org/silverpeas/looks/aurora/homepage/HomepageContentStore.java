@@ -68,10 +68,16 @@ public class HomepageContentStore {
   public record Content(String title, String html, String revision, Layout layout) { }
 
   public record Widget(String id, Content content, String type,
-      NewsConfiguration newsConfiguration, int legacyIndex) {
+      NewsConfiguration newsConfiguration, int legacyIndex,
+      PublicationsConfiguration publicationsConfiguration) {
+    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex) {
+      this(id, content, type, news, legacyIndex, null);
+    }
     public Widget(String id, Content content) {
       this(id, content, "html", null, 0);
     }
+    public NewsConfiguration getNewsConfiguration() { return newsConfiguration; }
+    public PublicationsConfiguration getPublicationsConfiguration() { return publicationsConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
@@ -104,9 +110,14 @@ public class HomepageContentStore {
             Integer.parseInt(settings.getProperty(prefix + ".size", "10")),
             Boolean.parseBoolean(settings.getProperty(prefix + ".importantOnly", "false")),
             settings.getProperty(prefix + ".rendering", "CAROUSEL"), content.layout().enabled(),
-            content.revision()) : null;
+            content.revision(), Boolean.parseBoolean(settings.getProperty(prefix + ".showMoreNews", "true")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".showAllNews", "true"))) : null;
     return new Widget(widget, content, type, news,
-        Integer.parseInt(settings.getProperty(prefix + ".legacyIndex", "0")));
+        Integer.parseInt(settings.getProperty(prefix + ".legacyIndex", "0")),
+        "publications".equals(type) ? new PublicationsConfiguration(
+            settings.getProperty(prefix + ".spaceId", ""),
+            Integer.parseInt(settings.getProperty(prefix + ".size", "3")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -119,12 +130,22 @@ public class HomepageContentStore {
     var layout = new Layout(properties.getProperty(prefix + ".zone", "main"),
         Integer.parseInt(properties.getProperty(prefix + ".order", "10")),
         Boolean.parseBoolean(properties.getProperty(prefix + ".enabled", "true")));
-    String newsVersion = java.util.List.of("source", "size", "importantOnly", "rendering", "legacyIndex")
+    String configurationVersion = java.util.List.of("source", "size", "importantOnly", "rendering", "legacyIndex")
         .stream().map(key -> properties.getProperty(prefix + "." + key, ""))
         .collect(Collectors.joining("\u0000"));
+    // Preserve revisions of news widgets saved before button settings were introduced.
+    if (properties.containsKey(prefix + ".showMoreNews")) {
+      configurationVersion += "\u0000" + properties.getProperty(prefix + ".showMoreNews")
+          + "\u0000" + properties.getProperty(prefix + ".showAllNews", "true");
+    }
+    if ("publications".equals(properties.getProperty(prefix + ".type"))) {
+      configurationVersion = java.util.List.of("spaceId", "size", "showMore").stream()
+          .map(key -> properties.getProperty(prefix + "." + key, ""))
+          .collect(Collectors.joining("\u0000"));
+    }
     String version = properties.containsKey(prefix + ".type")
-        ? revision("news".equals(properties.getProperty(prefix + ".type"))
-            ? title + layout + newsVersion : title + layout, html) : "";
+        ? revision(!"html".equals(properties.getProperty(prefix + ".type"))
+            ? title + layout + configurationVersion : title + layout, html) : "";
     return new Content(title, html, version, layout);
   }
 
@@ -136,7 +157,7 @@ public class HomepageContentStore {
 
   public synchronized void saveConfigured(HomepagePage page, String widget, String language,
       String title, String html, String expectedRevision, Layout layout) throws IOException {
-    if (HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
+    if ("publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }
     Content previous = read(page, widget, language);
@@ -180,7 +201,7 @@ public class HomepageContentStore {
 
   public synchronized void saveNewsWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, NewsConfiguration news, int legacyIndex) throws IOException {
-    if (legacyIndex < 0 || legacyIndex > 3) {
+    if ("publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
       throw new IllegalArgumentException("Invalid legacy news reference");
     }
     var properties = properties(page);
@@ -199,11 +220,19 @@ public class HomepageContentStore {
     properties.setProperty(prefix + ".importantOnly", String.valueOf(news.importantOnly()));
     properties.setProperty(prefix + ".rendering", news.rendering());
     properties.setProperty(prefix + ".legacyIndex", String.valueOf(legacyIndex));
+    properties.setProperty(prefix + ".showMoreNews", String.valueOf(news.showMoreNews()));
+    properties.setProperty(prefix + ".showAllNews", String.valueOf(news.showAllNews()));
     saveProperties(page, properties);
   }
 
   public record NewsConfiguration(String source, int size, boolean importantOnly,
-      String rendering, boolean enabled, String revision) {
+      String rendering, boolean enabled, String revision, boolean showMoreNews, boolean showAllNews) {
+    public NewsConfiguration(String source, int size, boolean importantOnly, String rendering,
+        boolean enabled, String revision) {
+      this(source, size, importantOnly, rendering, enabled, revision, true, true);
+    }
+    public boolean isShowMoreNews() { return showMoreNews; }
+    public boolean isShowAllNews() { return showAllNews; }
     public NewsConfiguration {
       if (source == null || !source.matches("(?:|\\*|delegated|taxonomy|quickinfo[0-9]+(?: quickinfo[0-9]+)*)")
           || (size != -1 && (size < 1 || size > 100)) || !("LIST".equals(rendering) || "CAROUSEL".equals(rendering))) {
@@ -225,7 +254,9 @@ public class HomepageContentStore {
         Integer.parseInt(settings.getProperty("size")),
         Boolean.parseBoolean(settings.getProperty("importantOnly")),
         settings.getProperty("rendering"), Boolean.parseBoolean(settings.getProperty("enabled")),
-        revision("news", Files.readString(file, StandardCharsets.UTF_8)));
+        revision("news", Files.readString(file, StandardCharsets.UTF_8)),
+        Boolean.parseBoolean(settings.getProperty("showMoreNews", "true")),
+        Boolean.parseBoolean(settings.getProperty("showAllNews", "true")));
   }
 
   public synchronized void saveNews(HomepagePage page, int index, NewsConfiguration configuration)
@@ -240,9 +271,41 @@ public class HomepageContentStore {
     settings.setProperty("importantOnly", String.valueOf(configuration.importantOnly()));
     settings.setProperty("rendering", configuration.rendering());
     settings.setProperty("enabled", String.valueOf(configuration.enabled()));
+    settings.setProperty("showMoreNews", String.valueOf(configuration.showMoreNews()));
+    settings.setProperty("showAllNews", String.valueOf(configuration.showAllNews()));
     StringWriter writer = new StringWriter();
     settings.store(writer, "Aurora homepage news");
     atomicWrite(newsPath(page, index), writer.toString().getBytes(StandardCharsets.UTF_8));
+  }
+
+  public record PublicationsConfiguration(String spaceId, int size, boolean showMore) {
+    public PublicationsConfiguration {
+      if (spaceId == null || !spaceId.matches("(?:|(?:WA)?[0-9]+)") || size < 1 || size > 100) {
+        throw new IllegalArgumentException("Invalid publications configuration");
+      }
+    }
+    public boolean isShowMore() { return showMore; }
+  }
+
+  public synchronized void savePublicationsWidget(HomepagePage page, String widget,
+      String language, String title, Layout layout, PublicationsConfiguration configuration,
+      String expectedRevision) throws IOException {
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if (HomepageWidgets.legacyIndex(widget) != 0 ||
+        !"publications".equals(properties.getProperty(prefix + ".type", "publications"))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "publications");
+    properties.setProperty(prefix + ".spaceId", configuration.spaceId());
+    properties.setProperty(prefix + ".size", String.valueOf(configuration.size()));
+    properties.setProperty(prefix + ".showMore", String.valueOf(configuration.showMore()));
+    saveProperties(page, properties);
   }
 
   private Path newsPath(HomepagePage page, int index) throws IOException {

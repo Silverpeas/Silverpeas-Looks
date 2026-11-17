@@ -23,6 +23,7 @@
  --%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
+<%@ attribute name="publications" required="true" type="java.util.Map" %>
 <%@ attribute name="news" required="true" type="java.util.Map" %>
 <%@ attribute name="widgets" required="true" type="java.util.List" %>
 <%@ attribute name="zone" required="true" type="java.lang.String" %>
@@ -30,7 +31,12 @@
   <c:if test="${widget.enabled and widget.zone == zone}">
     <c:choose>
       <c:when test="${widget.type == 'news'}">
-        <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}"/>
+        <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}" showMoreNews="${widget.newsConfiguration.showMoreNews}" showAllNews="${widget.newsConfiguration.showAllNews}"/>
+      </c:when>
+      <c:when test="${widget.type == 'publications'}">
+        <viewTags:displayPublications lookHelper="${sessionScope['Silverpeas_LookHelper']}"
+            publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
+            title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
       <c:otherwise>
         <section id="homepage-widget-${widget.id}" class="secteur-container">
