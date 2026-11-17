@@ -91,9 +91,14 @@ class HomepageContentServletTest {
     when(request.getParameter("owner")).thenReturn("waves");
     when(request.getParameter("widget")).thenReturn("welcome");
     when(request.getParameter("language")).thenReturn("fr");
+    var helper = mock(org.silverpeas.looks.aurora.LookAuroraHelper.class);
+    when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
+        new HomepageContentStore.NewsConfiguration("", -1, false, "LIST", false, ""));
+    when(session.getAttribute("Silverpeas_LookHelper")).thenReturn(helper);
   }
 
   private void prepareNewsSave() {
+    when(request.getParameter("widget")).thenReturn(null);
     when(user.isAccessAdmin()).thenReturn(true);
     when(request.getParameter("action")).thenReturn("saveNews");
     when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
@@ -104,6 +109,27 @@ class HomepageContentServletTest {
     when(request.getParameter("enabled")).thenReturn("true");
     when(request.getParameter("importantOnly")).thenReturn("true");
     when(request.getParameter("revision")).thenReturn("");
+  }
+
+  @Test
+  void dynamicNewsUsesTheSharedPlacementAndRevision() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("widget")).thenReturn("news-fourth");
+    when(request.getParameter("title")).thenReturn("Vie des équipes");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("7");
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var widget = store.readWidget(new HomepagePage("skins", "waves"), "news-fourth", "fr");
+    assertEquals("news", widget.type());
+    assertEquals("Vie des équipes", widget.getTitle());
+    assertEquals("right", widget.getZone());
+    assertEquals(7, widget.getOrder());
+    assertTrue(widget.isEnabled());
+    assertEquals("quickinfo12", widget.newsConfiguration().source());
+    assertTrue(output.toString().contains("\"zone\":\"right\""));
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
   }
 
   @Test
@@ -143,6 +169,7 @@ class HomepageContentServletTest {
   void newsLoadUsesThemeConfigurationUntilSaved() throws Exception {
     when(user.isAccessAdmin()).thenReturn(true);
     when(request.getParameter("action")).thenReturn("loadNews");
+    when(request.getParameter("widget")).thenReturn(null);
     when(request.getParameter("index")).thenReturn("2");
     var helper = mock(org.silverpeas.looks.aurora.LookAuroraHelper.class);
     when(session.getAttribute("Silverpeas_LookHelper")).thenReturn(helper);
@@ -320,7 +347,9 @@ class HomepageContentServletTest {
     var dispatcher = mock(jakarta.servlet.RequestDispatcher.class);
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
-    verify(request).setAttribute("homepageWidgets", java.util.List.of());
+    verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
+        value instanceof java.util.List<?> widgets && widgets.size() == 3));
+    verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");
     verify(dispatcher).forward(request, response);

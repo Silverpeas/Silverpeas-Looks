@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer les actualités</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/look/jsp/js/homepage-news.js"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-widgets-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -46,6 +46,20 @@
           <view:board>
             <fieldset class="homepage-settings">
               <legend>Contenu et affichage</legend>
+              <div class="homepage-field">
+                <label for="news-title">Titre</label>
+                <input id="news-title" type="text" maxlength="200">
+              </div>
+              <div class="homepage-placement-fields">
+                <div class="homepage-field">
+                  <label for="news-zone">Colonne</label>
+                  <select id="news-zone"><option value="main">Principale</option><option value="right">Droite</option></select>
+                </div>
+                <div class="homepage-field">
+                  <label for="news-order">Ordre</label>
+                  <input id="news-order" type="number" min="0" max="10000" required>
+                </div>
+              </div>
               <div class="homepage-field">
                 <label for="news-source">Source</label>
                 <select id="news-source">

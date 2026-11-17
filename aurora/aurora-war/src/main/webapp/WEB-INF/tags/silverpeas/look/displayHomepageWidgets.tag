@@ -22,13 +22,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  --%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
+<%@ attribute name="news" required="true" type="java.util.Map" %>
 <%@ attribute name="widgets" required="true" type="java.util.List" %>
 <%@ attribute name="zone" required="true" type="java.lang.String" %>
 <c:forEach items="${widgets}" var="widget">
   <c:if test="${widget.enabled and widget.zone == zone}">
-    <section id="homepage-widget-${widget.id}" class="secteur-container">
-      <c:if test="${not empty widget.title}"><h4><c:out value="${widget.title}"/></h4></c:if>
-      <div class="rich-content">${widget.html}</div>
-    </section>
+    <c:choose>
+      <c:when test="${widget.type == 'news'}">
+        <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}"/>
+      </c:when>
+      <c:otherwise>
+        <section id="homepage-widget-${widget.id}" class="secteur-container">
+          <c:if test="${not empty widget.title}"><h4><c:out value="${widget.title}"/></h4></c:if>
+          <div class="rich-content">${widget.html}</div>
+        </section>
+      </c:otherwise>
+    </c:choose>
   </c:if>
 </c:forEach>

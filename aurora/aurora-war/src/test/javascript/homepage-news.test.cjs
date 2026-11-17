@@ -40,7 +40,7 @@ async function editor(status = 200, configured = false) {
   }
   const calls = [];
   let start;
-  const data = {source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -56,30 +56,33 @@ async function editor(status = 200, configured = false) {
   }
   vm.runInNewContext(source, {URL, URLSearchParams, XMLHttpRequest: XHR,
     document: {getElementById(id) { assert.ok(controls[id], id); return controls[id]; }},
-    window: {location: {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&index=2',
-      search: '?action=newsEditor&kind=skins&owner=waves&index=2'},
+    window: {location: {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth',
+      search: '?action=newsEditor&kind=skins&owner=waves&widget=news-fourth'},
       addEventListener(event, callback) { start = callback; }}});
   await start();
   return {controls, calls, submit: () => controls['news-form'].handlers.submit({preventDefault() {}})};
 }
 
-test('loads theme settings and saves application choices through session XHR with CSRF and revision', async () => {
+test('loads shared widget settings and saves application choices through session XHR with CSRF and revision', async () => {
   const {controls, calls, submit} = await editor();
   assert.equal(controls['news-source'].value, 'applications');
   assert.equal(controls['news-applications'].value, 'quickinfo12');
   assert.equal(controls['news-important'].checked, true);
   assert.equal(controls['news-applications-field'].hidden, false);
-  assert.match(controls['news-status'].textContent, /réglages du thème/);
+  assert.match(controls['news-status'].textContent, /après enregistrement/);
   controls['news-applications'].value = 'quickinfo12  quickinfo34';
   await submit();
   const saved = calls.at(-1);
   assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
   assert.ok(saved.url.startsWith('/silverpeas/'));
-  assert.match(saved.url, /index=2/);
+  assert.match(saved.url, /widget=news-fourth/);
   const body = new URLSearchParams(saved.body);
   assert.equal(body.get('source'), 'quickinfo12 quickinfo34');
   assert.equal(body.get('revision'), 'first');
   assert.equal(body.get('rendering'), 'LIST');
+  assert.equal(body.get('title'), 'Infos');
+  assert.equal(body.get('zone'), 'right');
+  assert.equal(body.get('order'), '7');
   await submit();
   assert.equal(new URLSearchParams(calls.at(-1).body).get('revision'), 'second');
 });
@@ -104,4 +107,26 @@ test('reports conflict and keeps original revision', async () => {
   assert.equal(controls['news-save'].disabled, false);
   await submit();
   assert.equal(new URLSearchParams(calls.at(-1).body).get('revision'), 'first');
+});
+
+
+test('multiple carousels initialize once each after DOM readiness', () => {
+  const source = fs.readFileSync(path.resolve(__dirname,
+    '../../main/webapp/look/jsp/js/homepage-news-display.js'), 'utf8');
+  const sliders = [0, 1].map(() => ({values: {}, calls: 0,
+    data(key, value) { if (value !== undefined) this.values[key] = value; return this.values[key]; },
+    responsiveSlides(options) { assert.equal(options.pager, true); this.calls++; }}));
+  const pending = [];
+  const jquery = target => {
+    if (typeof target === 'function') { pending.push(target); return; }
+    if (typeof target !== 'string') return target;
+    assert.equal(target, '.homepage-news-carousel .rslides');
+    return {each(callback) { sliders.forEach(slider => callback.call(slider)); }};
+  };
+  const context = {whenSilverpeasReady: callback => callback(), $: jquery};
+  vm.runInNewContext(source, context);
+  vm.runInNewContext(source, context);
+  assert.equal(sliders[0].calls, 0);
+  pending.forEach(callback => callback());
+  assert.deepEqual(sliders.map(slider => slider.calls), [1, 1]);
 });

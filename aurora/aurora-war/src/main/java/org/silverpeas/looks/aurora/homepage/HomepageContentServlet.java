@@ -190,13 +190,26 @@ public class HomepageContentServlet extends HttpServlet {
   private void write(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action) throws IOException, ServletException {
     if ("saveNews".equals(action)) {
-      store.saveNews(page, Integer.parseInt(request.getParameter("index")),
-          new HomepageContentStore.NewsConfiguration(request.getParameter("source"),
-              Integer.parseInt(request.getParameter("size")),
-              Boolean.parseBoolean(request.getParameter("importantOnly")),
-              request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
-              request.getParameter("revision")));
-      newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
+      if (widget != null && !widget.isBlank()) {
+        store.saveNewsWidget(page, widget, language, request.getParameter("title"),
+            new HomepageContentStore.Layout(request.getParameter("zone"),
+                Integer.parseInt(request.getParameter("order")),
+                Boolean.parseBoolean(request.getParameter("enabled"))),
+            new HomepageContentStore.NewsConfiguration(request.getParameter("source"),
+                Integer.parseInt(request.getParameter("size")),
+                Boolean.parseBoolean(request.getParameter("importantOnly")),
+                request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
+                request.getParameter("revision")), HomepageWidgets.legacyIndex(widget));
+        newsWidgetResponse(request, response, page, widget, language, "");
+      } else {
+        store.saveNews(page, Integer.parseInt(request.getParameter("index")),
+            new HomepageContentStore.NewsConfiguration(request.getParameter("source"),
+                Integer.parseInt(request.getParameter("size")),
+                Boolean.parseBoolean(request.getParameter("importantOnly")),
+                request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
+                request.getParameter("revision")));
+        newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
+      }
     } else if ("upload".equals(action)) {
       String name = UUID.randomUUID() + ".png";
       store.saveAsset(page, widget, name, image(request));
@@ -226,9 +239,23 @@ public class HomepageContentServlet extends HttpServlet {
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
     if ("loadNews".equals(action)) {
-      newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), csrf);
+      if (widget != null && !widget.isBlank()) {
+        newsWidgetResponse(request, response, page, widget, language, csrf);
+      } else {
+        newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), csrf);
+      }
     } else if ("newsEditor".equals(action)) {
-      request.getRequestDispatcher("/WEB-INF/homepage/newsEditor.jsp").forward(request, response);
+      if (widget == null || widget.isBlank()) {
+        int index = Integer.parseInt(request.getParameter("index"));
+        if (index < 1 || index > 3) {
+          throw new IllegalArgumentException("Invalid legacy news reference");
+        }
+        response.sendRedirect(request.getContextPath() + "/AuroraHomepageContent?action=newsEditor"
+            + "&kind=" + page.kind() + "&owner=" + page.owner() + "&widget=news-legacy-" + index
+            + "&language=" + encode(language));
+      } else {
+        request.getRequestDispatcher("/WEB-INF/homepage/newsEditor.jsp").forward(request, response);
+      }
     } else if ("asset".equals(action)) {
       byte[] bytes = store.readAsset(page, widget, request.getParameter("name"));
       response.setContentType("image/png");
@@ -241,14 +268,31 @@ public class HomepageContentServlet extends HttpServlet {
     } else if ("load".equals(action)) {
       contentResponse(response, store.read(page, widget, language), csrf);
     } else if ("manage".equals(action)) {
-      request.setAttribute("homepageWidgets", store.widgets(page, language));
+      request.setAttribute("homepageWidgets", HomepageWidgets.all(store, page, language,
+          (org.silverpeas.looks.aurora.LookAuroraHelper)
+              request.getSession(false).getAttribute("Silverpeas_LookHelper")));
       request.setAttribute("newWidgetId", "html-" + UUID.randomUUID());
+      request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp").forward(request, response);
     } else if ("editor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/contentEditor.jsp").forward(request, response);
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void newsWidgetResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf) throws IOException {
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
+        request.getSession(false).getAttribute("Silverpeas_LookHelper");
+    var model = HomepageWidgets.newsWidget(store, page, widget, language, helper);
+    var news = model.newsConfiguration();
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o.put("configured", !content.revision().isEmpty())
+        .put("title", content.title()).put("zone", content.layout().zone())
+        .put("order", content.layout().order()).put("enabled", content.layout().enabled())
+        .put("source", news.source()).put("size", news.size()).put("importantOnly", news.importantOnly())
+        .put("rendering", news.rendering()).put("revision", content.revision()).put("csrf", csrf)));
   }
 
   private void newsResponse(HttpServletRequest request, HttpServletResponse response, HomepagePage page, int index, String csrf)

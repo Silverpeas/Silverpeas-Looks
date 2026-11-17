@@ -22,12 +22,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 window.addEventListener('DOMContentLoaded', async () => {
-  const query = new URLSearchParams(window.location.search);
-  const index = query.get('index');
   const status = document.getElementById('news-status');
   const save = document.getElementById('news-save');
   const fields = {source: 'source', size: 'size', rendering: 'rendering',
-    importantOnly: 'important', enabled: 'enabled'};
+    importantOnly: 'important', enabled: 'enabled', title: 'title', zone: 'zone', order: 'order'};
   const control = key => document.getElementById('news-' + fields[key]);
   const endpoint = action => {
     const url = new URL(window.location.href);
@@ -65,7 +63,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   control('source').addEventListener('change', refreshSource);
   let revision;
   let csrf;
-  document.getElementById('news-context').textContent = 'Bloc d’actualités ' + index;
+  document.getElementById('news-context').textContent = 'Choisissez le contenu et l’emplacement de ce widget.';
   try {
     const data = await request('loadNews');
     revision = data.revision;
@@ -81,7 +79,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     refreshSource();
     status.textContent = data.configured ? ''
-      : 'Ce bloc utilise encore les réglages du thème. Enregistrer appliquera les valeurs ci-dessus.';
+      : 'Les modifications seront appliquées après enregistrement.';
     save.disabled = false;
   } catch (error) { status.textContent = error.message; }
   document.getElementById('news-form').addEventListener('submit', async event => {

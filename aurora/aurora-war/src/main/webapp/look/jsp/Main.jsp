@@ -39,6 +39,7 @@
 <%@ page import="org.silverpeas.looks.aurora.homepage.HomepageContentStore" %>
 <%@ page import="org.silverpeas.looks.aurora.homepage.HomepageContentServlet" %>
 <%@ page import="org.silverpeas.looks.aurora.homepage.HomepagePage" %>
+<%@ page import="org.silverpeas.looks.aurora.homepage.HomepageWidgets" %>
 <%@ page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
 <%@ page import="org.silverpeas.core.web.mvc.controller.MainSessionController" %>
 <%
@@ -46,9 +47,17 @@
   GraphicElementFactory homepageFactory = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
   request.setAttribute("homepageAdmin", homepageController.getCurrentUserDetail().isAccessAdmin());
   request.setAttribute("homepageLanguage", homepageController.getFavoriteLanguage());
-  request.setAttribute("homepageWidgets", HomepageContentStore.forInstallation().widgets(
-      new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)),
-      homepageController.getFavoriteLanguage()));
+  HomepagePage homepagePage = new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory));
+  LookAuroraHelper homepageHelper = (LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+  java.util.List<HomepageContentStore.Widget> homepageWidgets = HomepageWidgets.all(
+      HomepageContentStore.forInstallation(), homepagePage,
+      homepageController.getFavoriteLanguage(), homepageHelper);
+  java.util.Map<String, NewsList> homepageNews = HomepageWidgets.news(
+      HomepageContentStore.forInstallation(), homepagePage, homepageWidgets, homepageHelper);
+  request.setAttribute("homepageWidgets", homepageWidgets);
+  request.setAttribute("homepageNews", homepageNews);
+  request.setAttribute("isAtLeastOneCarousel", homepageNews.values().stream()
+      .filter(news -> !news.isEmpty()).anyMatch(news -> news.getRenderingType().isCarousel()));
 %>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 
@@ -65,25 +74,6 @@
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
 <c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
-<%
-  request.setAttribute("listOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
-      .getConfiguredNews(1, HomepageContentStore.forInstallation().readNews(
-          new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 1)));
-%>
-<jsp:useBean id="listOfNews" scope="request" type="org.silverpeas.looks.aurora.NewsList"/>
-<%
-  request.setAttribute("secondaryListOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
-      .getConfiguredNews(2, HomepageContentStore.forInstallation().readNews(
-          new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 2)));
-%>
-<jsp:useBean id="secondaryListOfNews" scope="request" type="org.silverpeas.looks.aurora.NewsList"/>
-<%
-  request.setAttribute("thirdListOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
-      .getConfiguredNews(3, HomepageContentStore.forInstallation().readNews(
-          new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 3)));
-%>
-<jsp:useBean id="thirdListOfNews" scope="request" type="org.silverpeas.looks.aurora.NewsList"/>
-
 <c:if test="${showLastSubscribedNews}">
   <c:set var="subscribedListOfNews" value="${lookHelper.lastNewsSubscribed}"/>
   <jsp:useBean id="subscribedListOfNews" type="java.util.List<org.silverpeas.looks.aurora.AuroraNews>"/>
@@ -95,11 +85,6 @@
 
 <c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
-
-<c:set var="isAtLeastOneCarousel" value="<%=Stream.of(listOfNews, secondaryListOfNews, thirdListOfNews)
-      .filter(Predicate.not(NewsList::isEmpty))
-      .map(NewsList::getRenderingType)
-      .anyMatch(NewsList.RenderingType::isCarousel)%>"/>
 
 <view:sp-page>
 <view:sp-head-part>
@@ -155,18 +140,12 @@
       <viewTags:displayFormSearch searchForm="${searchForm}" extraFieldPeriod="${settings.extraSearchFieldPeriodUsed}" extraFieldSpace="${settings.extraSearchFieldSpaceUsed}"/>
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
-      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" zone="right"/>
+      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" zone="right"/>
     </div>
 
     <div class="principal-main-container">
 
       <viewTags:displayShortcuts shortcuts="${shortcuts}"/>
-
-      <viewTags:displayNews listOfNews="${listOfNews}"/>
-
-      <viewTags:displayNews listOfNews="${secondaryListOfNews}" id="secondaryNews"/>
-
-      <viewTags:displayNews listOfNews="${thirdListOfNews}" id="thirdNews"/>
 
       <viewTags:displayNewsSubscribed enabled="${showLastSubscribedNews}" listOfNews="${subscribedListOfNews}"/>
 
@@ -178,7 +157,7 @@
 
       <viewTags:displayFreeZone freeZone="${lookHelper.freeZone}" freeZoneId="freeZone"/>
 
-      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" zone="main"/>
+      <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" zone="main"/>
 
     </div>
   </div>

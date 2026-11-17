@@ -46,14 +46,15 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
-  void configuredNewsBeansUseTheRequestScopePopulatedByTheController() throws Exception {
+  void homepageUsesOneWidgetModelForBothColumnsAndNewsResources() throws Exception {
     String jsp = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
-    for (String name : List.of("listOfNews", "secondaryListOfNews", "thirdListOfNews")) {
-      assertTrue(jsp.contains("request.setAttribute(\"" + name + "\""));
-      assertTrue(Pattern.compile("<jsp:useBean\\s+id=\"" + name +
-          "\"\\s+scope=\"request\"").matcher(jsp).find(),
-          "News bean must resolve the request attribute: " + name);
+    assertTrue(jsp.contains("request.setAttribute(\"homepageWidgets\", homepageWidgets)"));
+    assertTrue(jsp.contains("request.setAttribute(\"homepageNews\", homepageNews)"));
+    for (String zone : List.of("main", "right")) {
+      assertTrue(jsp.contains("widgets=\"${homepageWidgets}\" news=\"${homepageNews}\" zone=\"" + zone + "\""));
     }
+    assertTrue(jsp.contains("homepageNews.values().stream()"));
+    assertTrue(!jsp.contains("<viewTags:displayNews listOfNews="));
   }
 
   @Test

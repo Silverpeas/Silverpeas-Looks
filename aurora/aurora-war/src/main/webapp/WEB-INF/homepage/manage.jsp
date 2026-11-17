@@ -38,6 +38,13 @@
   <c:param name="widget" value="${newWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addNewsUrl">
+  <c:param name="action" value="newsEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="widget" value="${newNewsWidgetId}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
 <view:sp-page>
   <view:sp-head-part>
     <title>Modifier la page d’accueil</title>
@@ -46,28 +53,15 @@
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
       <view:browseBarElt label="Page d’accueil" link="${homeUrl}"/>
-      <view:browseBarElt label="Zones libres"/>
+      <view:browseBarElt label="Widgets"/>
     </view:browseBar>
     <view:window>
       <view:frame>
         <main class="homepage-content-editor homepage-content-management">
           <h1>Modifier la page d’accueil</h1>
-          <h2>Actualités</h2>
-          <p>Configurez les trois blocs existants. Sans enregistrement, leurs réglages actuels sont conservés.</p>
+          <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
           <view:buttonPane>
-            <c:forEach begin="1" end="3" var="newsIndex">
-              <c:url value="/AuroraHomepageContent" var="newsUrl">
-                <c:param name="action" value="newsEditor"/>
-                <c:param name="kind" value="${param.kind}"/>
-                <c:param name="owner" value="${param.owner}"/>
-                <c:param name="index" value="${newsIndex}"/>
-              </c:url>
-              <view:button label="Actualités ${newsIndex}" action="${newsUrl}"/>
-            </c:forEach>
-          </view:buttonPane>
-          <h2>Zones libres</h2>
-          <p class="homepage-introduction">Ajoutez vos textes et images, puis choisissez où les afficher sur la page d’accueil.</p>
-          <view:buttonPane>
+            <view:button label="Ajouter des actualités" action="${addNewsUrl}"/>
             <view:button label="Ajouter une zone libre" action="${addUrl}"/>
             <view:button label="Voir la page d’accueil" action="${homeUrl}" classes="homepage-secondary-action"/>
           </view:buttonPane>
@@ -75,20 +69,21 @@
             <c:when test="${empty homepageWidgets}">
               <view:board>
                 <div class="homepage-empty-state">
-                  <h2>Aucune zone libre pour le moment</h2>
+                  <h2>Aucun widget pour le moment</h2>
                   <p>Utilisez « Ajouter une zone libre » pour créer votre premier contenu.</p>
                 </div>
               </view:board>
             </c:when>
             <c:otherwise>
               <view:arrayPane var="homepageContentZones" routingAddress="${manageUrl}" numberLinesPerPage="20">
-                <view:arrayColumn title="Zone libre" sortable="false"/>
+                <view:arrayColumn title="Widget" sortable="false"/>
+                <view:arrayColumn title="Type" sortable="false"/>
                 <view:arrayColumn title="Colonne" sortable="false"/>
                 <view:arrayColumn title="Ordre" sortable="false"/>
                 <view:arrayColumn title="Affichage" sortable="false"/>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="editor"/>
+                    <c:param name="action" value="${widget.type == 'news' ? 'newsEditor' : 'editor'}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -98,6 +93,7 @@
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
+                    <view:arrayCellText text="${widget.type == 'news' ? 'Actualités' : 'Zone libre'}"/>
                     <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
                     <view:arrayCellText text="${widget.order}"/>
                     <view:arrayCellText text="${displayStatus}"/>
@@ -106,7 +102,7 @@
               </view:arrayPane>
             </c:otherwise>
           </c:choose>
-          <p class="homepage-help">Les zones libres apparaissent après les blocs existants de chaque colonne. Les plus petits numéros d’ordre s’affichent en premier.</p>
+          <p class="homepage-help">Les widgets partagent le même ordre dans chaque colonne, après les autres blocs existants. Les plus petits numéros s’affichent en premier. Les blocs d’actualités historiques peuvent être modifiés dans cette liste.</p>
         </main>
       </view:frame>
     </view:window>

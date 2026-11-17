@@ -124,23 +124,38 @@ masquées et prévoit un état vide. Les titres sont échappés avant insertion 
 les cellules du tableau. L’éditeur regroupe les réglages d’affichage, le contenu,
 l’insertion d’image et les actions ; l’aperçu enregistré est repliable.
 
-### Actualités de la home générale
+### Base commune des widgets de la home générale
 
-La gestion propose les trois blocs d’actualités existants. Chaque bloc conserve
-les réglages du thème tant qu’aucune configuration n’est enregistrée. L’éditeur
-charge ces valeurs avant la première sauvegarde. Les réglages persistés par skin
-sont placés dans `homepages/skins/<bundle>/news-<1..3>.properties`, indépendamment
-des widgets HTML et de la langue. Ils portent sur la source, la limite (1 à 100
-ou -1 sans limite), les actualités importantes, la présentation et la visibilité.
-La sauvegarde exige les droits administrateur, les protections CSRF et la révision
-chargée ; un conflit renvoie HTTP 409.
+Zones libres et actualités sont des instances identifiées, ajoutables sans limite
+fixée à trois. Elles partagent `Widget`, `Content` et `Layout` : type, titre,
+colonne `main`/`right`, ordre et visibilité. Le registre `widgets` de
+`page.properties` contient les deux types. Les réglages propres aux actualités
+(source, limite, importantes uniquement, liste/carrousel) utilisent le même
+préfixe `widget.<id>`. La révision couvre ensemble le placement, le titre et ces
+réglages. Les actualités sont communes aux langues ; le HTML reste multilingue.
 
-Les sources proposées sont toutes les applications autorisées, les actualités
-déléguées, la position du plan de classement déjà configurée dans le thème ou une
-liste d’identifiants quickinfo. Le filtrage des droits du lecteur reste effectué
-par le helper existant ; le filtre « importantes » ne concerne pas les actualités
-déléguées. La source « toutes » d’un bloc configuré couvre toutes les applications
-autorisées, sans exclusion automatique des sources des autres blocs. Les dimensions
-des images et les boutons du plan de classement restent ceux du thème.
-Les trois blocs conservent leur emplacement actuel dans la colonne principale.
-Les actualités issues des abonnements restent indépendantes.
+`HomepageWidgets` assemble la liste commune triée par ordre puis identifiant et
+prépare les actualités visibles avec le helper existant, qui filtre les droits
+du lecteur. Le tag `displayHomepageWidgets` distribue les deux types dans chaque
+colonne. L’ordre est partagé entre types, dans le groupe de widgets placé après
+les autres blocs existants de chaque colonne. Les carrousels sont initialisés
+indépendamment, une seule fois chacun, après construction du DOM.
+
+La gestion propose « Ajouter des actualités » et « Ajouter une zone libre »,
+puis un tableau commun. Les trois anciens blocs d’actualités y sont exposés comme
+instances `news-legacy-1..3`. Sans sauvegarde, leur contenu conserve les réglages
+historiques du thème ou les anciennes configurations `news-<index>.properties`.
+Aucun fichier n’est écrit à la simple consultation. Une modification explicite
+enregistre le bloc dans le registre commun sans duplication ; les anciennes
+données restent conservées. Les anciens endpoints par index restent compatibles,
+et les anciens liens d’édition redirigent vers les instances correspondantes.
+
+Les sources proposées restent toutes les applications autorisées, les actualités
+déléguées, la position du plan de classement du thème ou une liste d’identifiants
+quickinfo. La source toutes d’une instance configurée couvre toutes les applications
+autorisées, sans exclusion automatique des autres instances. Le filtre importantes
+ne concerne pas les actualités déléguées. La limite est de 1 à 100 ou -1 sans limite.
+Dimensions des images et boutons du plan de classement restent hérités du thème
+(bloc principal pour une nouvelle instance). Les abonnements restent indépendants.
+Sauvegarde réservée aux administrateurs avec protections CSRF et révision (HTTP 409
+en cas de conflit). Le type d’une instance existante ne peut pas être changé.

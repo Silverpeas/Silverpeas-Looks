@@ -67,7 +67,12 @@ public class HomepageContentStore {
 
   public record Content(String title, String html, String revision, Layout layout) { }
 
-  public record Widget(String id, Content content) {
+  public record Widget(String id, Content content, String type,
+      NewsConfiguration newsConfiguration, int legacyIndex) {
+    public Widget(String id, Content content) {
+      this(id, content, "html", null, 0);
+    }
+    public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
     public String getHtml() { return content.html(); }
@@ -82,10 +87,26 @@ public class HomepageContentStore {
         .filter(id -> !id.isBlank()).distinct().toList();
     var result = new java.util.ArrayList<Widget>();
     for (String id : ids) {
-      result.add(new Widget(id, read(page, id, language)));
+      result.add(readWidget(page, id, language));
     }
     result.sort(java.util.Comparator.comparingInt(Widget::getOrder).thenComparing(Widget::getId));
     return java.util.List.copyOf(result);
+  }
+
+  public synchronized Widget readWidget(HomepagePage page, String widget, String language)
+      throws IOException {
+    var settings = properties(page);
+    String prefix = "widget." + widget;
+    String type = settings.getProperty(prefix + ".type", "html");
+    var content = read(page, widget, language);
+    NewsConfiguration news = "news".equals(type)
+        ? new NewsConfiguration(settings.getProperty(prefix + ".source", "*"),
+            Integer.parseInt(settings.getProperty(prefix + ".size", "10")),
+            Boolean.parseBoolean(settings.getProperty(prefix + ".importantOnly", "false")),
+            settings.getProperty(prefix + ".rendering", "CAROUSEL"), content.layout().enabled(),
+            content.revision()) : null;
+    return new Widget(widget, content, type, news,
+        Integer.parseInt(settings.getProperty(prefix + ".legacyIndex", "0")));
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -98,8 +119,12 @@ public class HomepageContentStore {
     var layout = new Layout(properties.getProperty(prefix + ".zone", "main"),
         Integer.parseInt(properties.getProperty(prefix + ".order", "10")),
         Boolean.parseBoolean(properties.getProperty(prefix + ".enabled", "true")));
+    String newsVersion = java.util.List.of("source", "size", "importantOnly", "rendering", "legacyIndex")
+        .stream().map(key -> properties.getProperty(prefix + "." + key, ""))
+        .collect(Collectors.joining("\u0000"));
     String version = properties.containsKey(prefix + ".type")
-        ? revision(title + layout, html) : "";
+        ? revision("news".equals(properties.getProperty(prefix + ".type"))
+            ? title + layout + newsVersion : title + layout, html) : "";
     return new Content(title, html, version, layout);
   }
 
@@ -111,28 +136,70 @@ public class HomepageContentStore {
 
   public synchronized void saveConfigured(HomepagePage page, String widget, String language,
       String title, String html, String expectedRevision, Layout layout) throws IOException {
+    if (HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
     Content previous = read(page, widget, language);
     if (!previous.revision().equals(expectedRevision)) {
       throw new ConcurrentModificationException("Content changed since it was loaded");
     }
     Properties properties = properties(page);
     String prefix = "widget." + widget;
+    registerWidget(properties, widget);
+    properties.setProperty(prefix + ".type", "html");
+    configureLayout(properties, prefix, title, layout);
+    atomicWrite(contentPath(page, widget, language), html.getBytes(StandardCharsets.UTF_8));
+    saveProperties(page, properties);
+  }
+
+  private void registerWidget(Properties properties, String widget) {
     properties.setProperty("page.configuration.version", "1");
     String widgets = properties.getProperty("widgets", "");
     var ids = Arrays.stream(widgets.split(",")).filter(s -> !s.isBlank())
         .collect(Collectors.toCollection(java.util.LinkedHashSet::new));
     ids.add(widget);
     properties.setProperty("widgets", String.join(",", ids));
-    properties.setProperty(prefix + ".type", "html");
+  }
+
+  private void configureLayout(Properties properties, String prefix, String title, Layout layout) {
+    if (title == null || title.length() > 200) {
+      throw new IllegalArgumentException("Invalid title");
+    }
     properties.setProperty(prefix + ".title", title);
     properties.setProperty(prefix + ".zone", layout.zone());
     properties.setProperty(prefix + ".enabled", String.valueOf(layout.enabled()));
     properties.setProperty(prefix + ".order", String.valueOf(layout.order()));
-    atomicWrite(contentPath(page, widget, language), html.getBytes(StandardCharsets.UTF_8));
+  }
+
+  private void saveProperties(HomepagePage page, Properties properties) throws IOException {
     StringWriter writer = new StringWriter();
-    properties.store(writer, "Aurora homepage prototype");
+    properties.store(writer, "Aurora homepage");
     atomicWrite(path(page.kind(), page.owner(), "page.properties"),
         writer.toString().getBytes(StandardCharsets.UTF_8));
+  }
+
+  public synchronized void saveNewsWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, NewsConfiguration news, int legacyIndex) throws IOException {
+    if (legacyIndex < 0 || legacyIndex > 3) {
+      throw new IllegalArgumentException("Invalid legacy news reference");
+    }
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if (!"news".equals(properties.getProperty(prefix + ".type", "news"))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
+    if (!read(page, widget, language).revision().equals(news.revision())) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "news");
+    properties.setProperty(prefix + ".source", news.source());
+    properties.setProperty(prefix + ".size", String.valueOf(news.size()));
+    properties.setProperty(prefix + ".importantOnly", String.valueOf(news.importantOnly()));
+    properties.setProperty(prefix + ".rendering", news.rendering());
+    properties.setProperty(prefix + ".legacyIndex", String.valueOf(legacyIndex));
+    saveProperties(page, properties);
   }
 
   public record NewsConfiguration(String source, int size, boolean importantOnly,

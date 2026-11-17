@@ -42,6 +42,9 @@
               required="false"
               type="java.lang.String" %>
 
+<%@ attribute name="title" required="false" type="java.lang.String" %>
+<view:script src="/look/jsp/js/homepage-news-display.js"/>
+
 <c:set var="imageSize" value="${listOfNews.imageSize}"/>
 <c:set var="carousel" value="${listOfNews.renderingType.carousel}"/>
 
@@ -59,8 +62,8 @@
 </c:if>
 
 <c:if test="${not empty listOfNews.news}">
-  <div class="secteur-container" id="${id}">
-    <h4>${labelNews}</h4>
+  <div class="secteur-container ${carousel ? 'homepage-news-carousel' : ''}" id="${id}">
+    <h4><c:out value="${empty title ? labelNews : title}"/></h4>
     <ul class="${newsClass}" id="slider">
       <c:forEach var="news" items="${listOfNews.news}">
         <c:set var="tpCSS" value="${news.taxonomyPositionAsString}"/>
@@ -117,19 +120,5 @@
       </c:otherwise>
     </c:choose>
   </div>
-  <script type="text/javascript">
-    whenSilverpeasReady(function() {
-      <c:if test="${carousel}">
-      $("#${id} .rslides#slider").responsiveSlides({
-        auto: true,
-        pager: true,
-        nav: true,
-        speed: 500,
-        pause: true,
-        timeout: 6000,
-        namespace: "centered-btns"
-      });
-      </c:if>
-    });
-  </script>
+
 </c:if>
