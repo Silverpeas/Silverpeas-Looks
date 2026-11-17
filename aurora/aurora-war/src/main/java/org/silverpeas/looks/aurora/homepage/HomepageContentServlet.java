@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -212,6 +212,12 @@ public class HomepageContentServlet extends HttpServlet {
                 option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("saveEphemeris".equals(action)) {
+      store.saveEphemerisWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")),
+              Boolean.parseBoolean(request.getParameter("enabled"))), request.getParameter("revision"));
+      ephemerisResponse(request, response, page, widget, language, "");
     } else if ("savePublications".equals(action)) {
       store.savePublicationsWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
@@ -249,7 +255,11 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("loadPublications".equals(action)) {
+    if ("loadEphemeris".equals(action)) {
+      ephemerisResponse(request, response, page, widget, language, csrf);
+    } else if ("ephemerisEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/ephemerisEditor.jsp").forward(request, response);
+    } else if ("loadPublications".equals(action)) {
       publicationsResponse(request, response, page, widget, language, csrf);
     } else if ("publicationsEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/publicationsEditor.jsp").forward(request, response);
@@ -289,12 +299,25 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newWidgetId", "html-" + UUID.randomUUID());
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
+      request.setAttribute("newEphemerisWidgetId", "ephemeris-" + UUID.randomUUID());
       request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp").forward(request, response);
     } else if ("editor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/contentEditor.jsp").forward(request, response);
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void ephemerisResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf) throws IOException {
+    var model = HomepageWidgets.ephemerisWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"));
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o.put("configured", !content.revision().isEmpty())
+        .put("title", content.title()).put("zone", content.layout().zone())
+        .put("order", content.layout().order()).put("enabled", content.layout().enabled())
+        .put("revision", content.revision()).put("csrf", csrf)));
   }
 
   private boolean option(HttpServletRequest request, String name) {

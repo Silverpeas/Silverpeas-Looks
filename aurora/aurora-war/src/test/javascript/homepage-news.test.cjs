@@ -31,12 +31,14 @@ const source = fs.readFileSync(path.resolve(__dirname,
 const jsp = fs.readFileSync(path.resolve(__dirname,
   '../../main/webapp/WEB-INF/homepage/newsEditor.jsp'), 'utf8');
 
-async function editor(status = 200, configured = false, publications = false) {
+async function editor(status = 200, configured = false, publications = false, ephemeris = false) {
   const controls = {};
-  const markup = publications ? fs.readFileSync(path.resolve(__dirname,
+  const markup = ephemeris ? fs.readFileSync(path.resolve(__dirname,
+    '../../main/webapp/WEB-INF/homepage/ephemerisEditor.jsp'), 'utf8') : publications ? fs.readFileSync(path.resolve(__dirname,
     '../../main/webapp/WEB-INF/homepage/publicationsEditor.jsp'), 'utf8') : jsp;
   for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
+      dataset: {widgetType: ephemeris ? 'ephemeris' : ''},
       type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all'].includes(match[1]) ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
@@ -161,4 +163,24 @@ test('publications use the shared editor transport and placement with their own 
   assert.equal(body.get('showMore'), 'false');
   assert.equal(body.get('zone'), 'right');
   assert.equal(body.get('revision'), 'first');
+});
+
+test('ephemeris editor saves common placement and visibility through protected transport', async () => {
+  const {controls, calls, submit} = await editor(200, false, false, true);
+  assert.match(calls[0].url, /action=loadEphemeris/);
+  controls['news-title'].value = 'Aujourd’hui';
+  controls['news-zone'].value = 'main';
+  controls['news-order'].value = 18;
+  controls['news-enabled'].checked = false;
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /action=saveEphemeris/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  const body = new URLSearchParams(saved.body);
+  assert.equal(body.get('title'), 'Aujourd’hui');
+  assert.equal(body.get('zone'), 'main');
+  assert.equal(body.get('order'), '18');
+  assert.equal(body.get('enabled'), 'false');
+  assert.equal(body.get('revision'), 'first');
+  assert.equal(body.has('source'), false);
 });

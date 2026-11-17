@@ -92,6 +92,9 @@ class HomepageContentServletTest {
     when(request.getParameter("widget")).thenReturn("welcome");
     when(request.getParameter("language")).thenReturn("fr");
     var helper = mock(org.silverpeas.looks.aurora.LookAuroraHelper.class);
+    var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
+    when(settings.isDisplayEphemeris()).thenReturn(true);
+    when(helper.getLookSettings()).thenReturn(settings);
     when(helper.getDefaultPublicationsConfiguration()).thenReturn(
         new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
@@ -111,6 +114,34 @@ class HomepageContentServletTest {
     when(request.getParameter("enabled")).thenReturn("true");
     when(request.getParameter("importantOnly")).thenReturn("true");
     when(request.getParameter("revision")).thenReturn("");
+  }
+
+  @Test
+  void ephemerisEnforcesRightsCsrfAndRevisionAndReturnsSavedPlacement() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("saveEphemeris");
+    when(request.getParameter("widget")).thenReturn("ephemeris-test");
+    when(request.getParameter("title")).thenReturn("Aujourd’hui");
+    when(request.getParameter("zone")).thenReturn("main");
+    when(request.getParameter("order")).thenReturn("8");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var saved = store.readWidget(new HomepagePage("skins", "waves"), "ephemeris-test", "fr");
+    assertEquals("ephemeris", saved.type());
+    assertEquals("main", saved.getZone());
+    assertTrue(output.toString().contains("\"order\":8"));
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
   }
 
   @Test
@@ -384,7 +415,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 4));
+        value instanceof java.util.List<?> widgets && widgets.size() == 5));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
     verify(request).setAttribute("homepageLanguage", "fr");

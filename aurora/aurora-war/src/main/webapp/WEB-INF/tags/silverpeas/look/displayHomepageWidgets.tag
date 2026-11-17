@@ -38,6 +38,9 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'ephemeris'}">
+        <viewTags:displayEphemeris id="homepage-widget-${widget.id}" title="${widget.title}"/>
+      </c:when>
       <c:otherwise>
         <section id="homepage-widget-${widget.id}" class="secteur-container">
           <c:if test="${not empty widget.title}"><h4><c:out value="${widget.title}"/></h4></c:if>

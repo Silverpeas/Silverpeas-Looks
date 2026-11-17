@@ -157,7 +157,7 @@ public class HomepageContentStore {
 
   public synchronized void saveConfigured(HomepagePage page, String widget, String language,
       String title, String html, String expectedRevision, Layout layout) throws IOException {
-    if ("publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
+    if ("ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 || !"html".equals(properties(page).getProperty("widget." + widget + ".type", "html"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }
     Content previous = read(page, widget, language);
@@ -201,7 +201,7 @@ public class HomepageContentStore {
 
   public synchronized void saveNewsWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, NewsConfiguration news, int legacyIndex) throws IOException {
-    if ("publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
+    if ("ephemeris-legacy".equals(widget) || "publications-legacy".equals(widget) || legacyIndex < 0 || legacyIndex > 3) {
       throw new IllegalArgumentException("Invalid legacy news reference");
     }
     var properties = properties(page);
@@ -278,6 +278,23 @@ public class HomepageContentStore {
     atomicWrite(newsPath(page, index), writer.toString().getBytes(StandardCharsets.UTF_8));
   }
 
+  public synchronized void saveEphemerisWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, String expectedRevision) throws IOException {
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if ("publications-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
+        !"ephemeris".equals(properties.getProperty(prefix + ".type", "ephemeris"))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "ephemeris");
+    saveProperties(page, properties);
+  }
+
   public record PublicationsConfiguration(String spaceId, int size, boolean showMore) {
     public PublicationsConfiguration {
       if (spaceId == null || !spaceId.matches("(?:|(?:WA)?[0-9]+)") || size < 1 || size > 100) {
@@ -292,7 +309,7 @@ public class HomepageContentStore {
       String expectedRevision) throws IOException {
     var properties = properties(page);
     String prefix = "widget." + widget;
-    if (HomepageWidgets.legacyIndex(widget) != 0 ||
+    if ("ephemeris-legacy".equals(widget) || HomepageWidgets.legacyIndex(widget) != 0 ||
         !"publications".equals(properties.getProperty(prefix + ".type", "publications"))) {
       throw new IllegalArgumentException("Widget type cannot be changed");
     }

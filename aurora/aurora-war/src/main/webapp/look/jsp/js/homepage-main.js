@@ -28,6 +28,11 @@ function changeBody(url) {
 }
 
 whenSilverpeasReady(function() {
+  $(function() {
+    document.querySelectorAll('.homepage-ephemeris-name').forEach(element => {
+      element.textContent = ephemeris.getTodayEphemerisName();
+    });
+  });
   sp.ajaxRequest('parts/MainNextEventsPart.jsp').loadTarget('#next-event-part');
   sp.ajaxRequest('parts/MainRSSPart.jsp').loadTarget('#rss-part');
 });

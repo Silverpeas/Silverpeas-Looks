@@ -64,7 +64,6 @@
 
 <c:set var="weatherCities" value="${lookHelper.weatherCities}"/>
 <c:set var="showWeather" value="${not empty weatherCities}"/>
-<c:set var="showEphemeris" value="${settings.displayEphemeris}"/>
 <c:set var="showLastSubscribedNews" value="${settings.displayLastSubscribedNews}"/>
 
 <c:set var="shortcuts" value="${lookHelper.mainShortcuts}"/>
@@ -133,7 +132,7 @@
 
       <viewTags:displayFAQ questions="${questions}"/>
 
-      <viewTags:displayWeather showEphemeris="${showEphemeris}" showWeather="${showWeather}" cities="${weatherCities}"/>
+      <viewTags:displayWeather weatherOnly="${true}" showEphemeris="${false}" showWeather="${showWeather and settings.displayEphemeris}" cities="${weatherCities}"/>
 
       <viewTags:displayTaxonomy enabled="${settings.displaySearchOnHome}" labelsInsideSelect="${labelInsideSelectOnTaxonomy}" />
 

@@ -178,3 +178,15 @@ l’ordre 40 par défaut et n’est plus rendu séparément. Aucune écriture au
 l’enregistrement remplace cette instance sans doublon. Plusieurs nouvelles instances
 peuvent être ajoutées. Paramètres communs aux langues, mêmes droits admin/CSRF et
 contrôle de révision que les autres widgets.
+
+
+Les éphémérides utilisent le type `ephemeris` et les mêmes titre, colonne, ordre,
+visibilité et contrôle de révision. Leur contenu reste la date (format du thème)
+et le nom du saint du jour issu du calendrier JavaScript existant. Plusieurs
+instances peuvent être ajoutées ; chacune est initialisée après le DOM, sans
+identifiant HTML partagé. L’instance virtuelle `ephemeris-legacy` reprend
+`home.ephemeris`, colonne droite, ordre 0, sans écriture. L’enregistrement la
+remplace dans le registre commun, sans doublon. L’ancien affichage des éphémérides
+est retiré du bloc météo sur la home générale ; la météo reste à sa place avec
+ses réglages et sa condition historique d’affichage. Les autres usages du tag
+météo gardent leur comportement. Aucun service externe supplémentaire.

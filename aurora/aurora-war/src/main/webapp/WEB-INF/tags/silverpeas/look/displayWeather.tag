@@ -38,6 +38,8 @@
               required="true"
               type="java.lang.Boolean" %>
 
+<%@ attribute name="weatherOnly" required="false" type="java.lang.Boolean" %>
+
 <%@ attribute name="cities"
               required="false"
               type="java.util.List" %>
@@ -49,10 +51,10 @@
 <fmt:message var="labelWeatherTomorrow" key="look.home.weather.tomorrow"/>
 <fmt:message var="unvailableWeather" key="look.message.weatherUnvailable"/>
 
-<c:if test="${showEphemeris}">
+<c:if test="${showEphemeris or (weatherOnly and showWeather)}">
   <div class="secteur-container weather" id="weather-home">
     <h4><span class="title">${labelWeather}</span><span class="date-today"> <fmt:formatDate value="${now}" pattern="${settings.dateFormat}"/></span></h4>
-    <div id="ephemeride"></div>
+    <c:if test="${showEphemeris}"><div id="ephemeride"></div></c:if>
     <c:if test="${showWeather}">
       <div id="localisation-weather">
         <c:set var="firstCity" value="true"/>
@@ -121,7 +123,9 @@
     }
 
     whenSilverpeasReady(function() {
+      <c:if test="${showEphemeris}">
       $("#ephemeride").html(ephemeris.getTodayEphemerisName());
+      </c:if>
 
       <c:if test="${showWeather}">
       // init weather

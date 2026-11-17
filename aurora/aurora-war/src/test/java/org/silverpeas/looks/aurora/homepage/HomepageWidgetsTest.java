@@ -40,6 +40,9 @@ class HomepageWidgetsTest {
 
   private LookAuroraHelper helper() {
     var helper = mock(LookAuroraHelper.class);
+    var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
+    when(settings.isDisplayEphemeris()).thenReturn(true);
+    when(helper.getLookSettings()).thenReturn(settings);
     when(helper.getDefaultPublicationsConfiguration()).thenReturn(
         new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
@@ -90,7 +93,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(4, initial.size());
+    assertEquals(5, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -98,9 +101,9 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(4, changed.size());
-    assertEquals("news-legacy-2", changed.getFirst().id());
-    assertFalse(changed.getFirst().isEnabled());
+    assertEquals(5, changed.size());
+    var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
+    assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
     assertThrows(IllegalArgumentException.class, () -> store.save(page, "news-legacy-1", "fr", "", "", ""));
   }
@@ -209,6 +212,41 @@ class HomepageWidgetsTest {
         new HomepageContentStore.NewsConfiguration("*", 5, false, "LIST", true,
             previousRevision, false, false), 0);
     assertFalse(store.readWidget(page, widget.id(), "fr").newsConfiguration().showAllNews());
+  }
+
+  @Test
+  void ephemerisKeepsThemeDefaultAndSharesPlacementWithoutDuplicateOrTypeConversion() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    when(helper.getLookSettings().isDisplayEphemeris()).thenReturn(false);
+    var legacy = HomepageWidgets.ephemerisWidget(store, page, "ephemeris-legacy", "fr", helper);
+    assertFalse(legacy.isEnabled());
+    assertEquals("right", legacy.getZone());
+    assertFalse(Files.exists(root.resolve("skins")));
+    var layout = new HomepageContentStore.Layout("main", 15, true);
+    store.saveEphemerisWidget(page, legacy.id(), "fr", "Aujourd’hui", layout, "");
+    var saved = new HomepageContentStore(root).readWidget(page, legacy.id(), "fr");
+    assertEquals("ephemeris", saved.type());
+    assertEquals(layout, saved.content().layout());
+    assertEquals("Aujourd’hui", saved.getTitle());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream()
+        .filter(widget -> "ephemeris".equals(widget.type())).count());
+    store.saveEphemerisWidget(page, "ephemeris-second", "fr", "Autre",
+        new HomepageContentStore.Layout("right", 1, false), "");
+    assertEquals(2, store.widgets(page, "fr").size());
+    store.saveEphemerisWidget(page, legacy.id(), "fr", "Aujourd’hui",
+        new HomepageContentStore.Layout("right", 2, false), saved.content().revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveEphemerisWidget(page,
+        legacy.id(), "fr", "Ancien", layout, saved.content().revision()));
+    assertThrows(IllegalArgumentException.class, () -> store.save(page, legacy.id(), "fr", "", "", ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page, legacy.id(), "fr", "", layout, news(""), 0));
+    assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page,
+        "publications-legacy", "fr", "", layout, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page,
+        "news-legacy-1", "fr", "", layout, ""));
+    store.saveConfigured(page, "html", "fr", "", "", "", layout);
+    assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page,
+        "html", "fr", "", layout, ""));
   }
 
 }

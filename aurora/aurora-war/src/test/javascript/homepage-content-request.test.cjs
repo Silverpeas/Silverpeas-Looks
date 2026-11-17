@@ -137,6 +137,7 @@ test('homepage keeps asynchronous legacy blocks and navigation', () => {
   const loads = [];
   let link;
   const context = {whenSilverpeasReady(callback) { callback(); },
+    $: callback => callback(), document: {querySelectorAll: () => []},
     sp: {ajaxRequest(url) { return {loadTarget(target) { loads.push([url, target]); }}; }},
     StringUtil: {isDefined: value => Boolean(value)},
     spWindow: {loadLink(url) { link = url; }}, webContext: '/silverpeas'};
@@ -147,4 +148,22 @@ test('homepage keeps asynchronous legacy blocks and navigation', () => {
     ['parts/MainRSSPart.jsp', '#rss-part']]);
   context.changeBody('/example');
   assert.equal(link, '/silverpeas/example');
+});
+
+test('all ephemeris widgets render after DOM readiness using the existing calendar', () => {
+  const widgets = [{textContent: ''}, {textContent: ''}];
+  let ready;
+  const context = {whenSilverpeasReady: callback => callback(),
+    $: callback => { ready = callback; },
+    document: {querySelectorAll(selector) {
+      assert.equal(selector, '.homepage-ephemeris-name');
+      return widgets;
+    }},
+    ephemeris: {getTodayEphemerisName: () => 'Élisabeth'},
+    sp: {ajaxRequest: () => ({loadTarget() {}})}};
+  vm.runInNewContext(fs.readFileSync(path.resolve(__dirname,
+    '../../main/webapp/look/jsp/js/homepage-main.js'), 'utf8'), context);
+  assert.equal(widgets[0].textContent, '');
+  ready();
+  assert.deepEqual(widgets.map(widget => widget.textContent), ['Élisabeth', 'Élisabeth']);
 });

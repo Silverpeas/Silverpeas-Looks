@@ -92,6 +92,21 @@ public final class HomepageWidgets {
     return result;
   }
 
+  public static HomepageContentStore.Widget ephemerisWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"ephemeris".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected an ephemeris widget");
+      }
+      return saved;
+    }
+    boolean enabled = !"ephemeris-legacy".equals(id) || helper.getLookSettings().isDisplayEphemeris();
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Éphémérides", "", "",
+            new HomepageContentStore.Layout("right", 0, enabled)), "ephemeris", null, 0);
+  }
+
   public static List<HomepageContentStore.Widget> all(HomepageContentStore store,
       HomepagePage page, String language, LookAuroraHelper helper) throws IOException {
     var widgets = new ArrayList<>(store.widgets(page, language));
@@ -106,6 +121,10 @@ public final class HomepageWidgets {
     if ("skins".equals(page.kind()) &&
         widgets.stream().noneMatch(widget -> widget.id().equals("publications-legacy"))) {
       widgets.add(publicationsWidget(store, page, "publications-legacy", language, helper));
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("ephemeris-legacy"))) {
+      widgets.add(ephemerisWidget(store, page, "ephemeris-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));
