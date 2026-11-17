@@ -60,12 +60,19 @@ window.addEventListener('DOMContentLoaded', async () => {
   endpoint.search = '';
   const context = new URLSearchParams();
   ['kind', 'owner', 'widget', 'language'].forEach(key => context.set(key, params.get(key) || ''));
+  if (!context.get('language')) {
+    context.set('language', document.querySelector('main').dataset.language);
+  }
   const url = action => {
     const target = new URL(endpoint);
     target.search = new URLSearchParams(context);
     target.searchParams.set('action', action);
     return target;
   };
+  document.getElementById('homepage-manage').href = url('manage');
+  const zone = document.getElementById('homepage-zone');
+  const order = document.getElementById('homepage-order');
+  const enabled = document.getElementById('homepage-enabled');
   const status = document.getElementById('homepage-status');
   const save = document.getElementById('homepage-save');
   const image = document.getElementById('homepage-image');
@@ -88,6 +95,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     revision = content.revision;
     csrf = content.csrf;
     title.value = content.title;
+    zone.value = content.zone;
+    order.value = content.order;
+    enabled.checked = content.enabled;
     document.getElementById('homepage-html').value = content.html;
     editor = CKEDITOR.replace('homepage-html', {
       customConfig: '',
@@ -116,7 +126,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     save.disabled = true;
     image.disabled = true;
     try {
-      const data = new URLSearchParams({html: editor.getData(), title: title.value, revision});
+      const data = new URLSearchParams({html: editor.getData(), title: title.value, revision,
+        zone: zone.value, order: order.value, enabled: String(enabled.checked)});
       const content = await request(url('save'), {
         method: 'POST', headers: {'X-Aurora-CSRF': csrf}, body: data
       });

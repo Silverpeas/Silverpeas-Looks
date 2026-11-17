@@ -82,3 +82,64 @@ test('an expired session returning HTML is reported as an invalid response', asy
   await assert.rejects(api.send(new URL('http://localhost/silverpeas/AuroraHomepageContent')),
       /Vérifiez votre session/);
 });
+
+test('editor loads placement and submits it with the content revision', async () => {
+  const elements = new Map();
+  function element(id) {
+    if (!elements.has(id)) elements.set(id, {value: '', disabled: false,
+      dataset: {language: 'fr'}, handlers: {}, addEventListener(name, callback) {
+        this.handlers[name] = callback;
+      }});
+    return elements.get(id);
+  }
+  const requests = [];
+  let ready;
+  const editor = {on(name, callback) { callback(); }, getData() { return '<p>Modifié</p>'; },
+    setData() {}};
+  const context = {URL, URLSearchParams, document: {getElementById: element,
+    querySelector() { return element('main'); }},
+    CKEDITOR: {replace() { return editor; }},
+    window: {location: {search: '?kind=skins&owner=Aurora&widget=test',
+      href: 'http://localhost/silverpeas/AuroraHomepageContent?kind=skins&owner=Aurora&widget=test'},
+      addEventListener(name, callback) { ready = callback; }}};
+  vm.createContext(context);
+  vm.runInContext(source, context);
+  context.homepageContentRequest = async (url, options) => {
+    requests.push({url, options});
+    return {title: 'Titre', html: '<p>Original</p>', revision: 'revision-1', csrf: 'token',
+      zone: 'right', order: 25, enabled: false};
+  };
+  await ready();
+  assert.equal(element('homepage-zone').value, 'right');
+  assert.equal(element('homepage-order').value, 25);
+  assert.equal(element('homepage-enabled').checked, false);
+  assert.equal(element('homepage-manage').href.searchParams.get('action'), 'manage');
+  assert.equal(requests[0].url.searchParams.get('language'), 'fr');
+  element('homepage-zone').value = 'main';
+  element('homepage-order').value = '12';
+  element('homepage-enabled').checked = true;
+  await element('homepage-content-form').handlers.submit({preventDefault() {}});
+  const save = requests[1];
+  assert.equal(save.url.searchParams.get('action'), 'save');
+  assert.equal(save.options.body.get('zone'), 'main');
+  assert.equal(save.options.body.get('order'), '12');
+  assert.equal(save.options.body.get('enabled'), 'true');
+  assert.equal(save.options.body.get('revision'), 'revision-1');
+  assert.equal(save.options.body.get('html'), '<p>Modifié</p>');
+});
+
+test('homepage keeps asynchronous legacy blocks and navigation', () => {
+  const loads = [];
+  let link;
+  const context = {whenSilverpeasReady(callback) { callback(); },
+    sp: {ajaxRequest(url) { return {loadTarget(target) { loads.push([url, target]); }}; }},
+    StringUtil: {isDefined: value => Boolean(value)},
+    spWindow: {loadLink(url) { link = url; }}, webContext: '/silverpeas'};
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.resolve(__dirname,
+      '../../main/webapp/look/jsp/js/homepage-main.js'), 'utf8'), context);
+  assert.deepEqual(loads, [['parts/MainNextEventsPart.jsp', '#next-event-part'],
+    ['parts/MainRSSPart.jsp', '#rss-part']]);
+  context.changeBody('/example');
+  assert.equal(link, '/silverpeas/example');
+});

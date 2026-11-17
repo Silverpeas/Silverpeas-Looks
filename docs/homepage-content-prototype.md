@@ -96,3 +96,21 @@ pas plusieurs JVM ; ne pas activer l'édition sur plusieurs nœuds avant d'ajout
 distribuée. Ces points sont à résoudre avant une utilisation en production.
 
 Tests du transport JavaScript : `node --test aurora/aurora-war/src/test/javascript/homepage-content-request.test.cjs`.
+
+## Intégration à la home générale (#15592)
+
+La home générale affiche les widgets HTML du bundle du skin actif, après les blocs
+existants de chaque colonne. Le lien « Modifier la page d’accueil », visible pour
+les administrateurs de plateforme, ouvre `action=manage&kind=skins` sans imposer de
+propriétaire. Le servlet résout le bundle effectif avant d’afficher la gestion.
+
+La gestion liste aussi les zones désactivées et propose d’ajouter une instance avec
+un identifiant UUID stable. L’éditeur enregistre la colonne `main` ou `right`, un
+ordre de 0 à 10000 et l’activation. À ordre égal, les identifiants départagent les
+zones. Le titre, le placement et l’activation sont communs aux langues ; le HTML
+reste distinct par langue. Une langue sans contenu ne reprend pas automatiquement
+le contenu français. Les changements de placement participent au contrôle de
+révision et empêchent un ancien éditeur de les écraser.
+
+Les zones WebPages existantes sont conservées. L’ordre ne déplace pas les anciens
+blocs. La gestion des homes d’espace reste une étape ultérieure.

@@ -39,13 +39,54 @@ import java.util.stream.Collectors;
 
 /** File storage outside the deployed application. One instance serializes writes in one JVM. */
 public class HomepageContentStore {
+  private static HomepageContentStore installationStore;
   private final Path root;
+
+  public static synchronized HomepageContentStore forInstallation() {
+    if (installationStore == null) {
+      String dataHome = System.getProperty("SILVERPEAS_DATA_HOME");
+      if (dataHome == null || dataHome.isBlank()) {
+        throw new IllegalStateException("SILVERPEAS_DATA_HOME must be configured");
+      }
+      installationStore = new HomepageContentStore(Path.of(dataHome, "homepages"));
+    }
+    return installationStore;
+  }
 
   public HomepageContentStore(Path root) {
     this.root = root.toAbsolutePath().normalize();
   }
 
-  public record Content(String title, String html, String revision) { }
+  public record Layout(String zone, int order, boolean enabled) {
+    public Layout {
+      if ((!"main".equals(zone) && !"right".equals(zone)) || order < 0 || order > 10000) {
+        throw new IllegalArgumentException("Invalid widget placement");
+      }
+    }
+  }
+
+  public record Content(String title, String html, String revision, Layout layout) { }
+
+  public record Widget(String id, Content content) {
+    public String getId() { return id; }
+    public String getTitle() { return content.title(); }
+    public String getHtml() { return content.html(); }
+    public String getZone() { return content.layout().zone(); }
+    public int getOrder() { return content.layout().order(); }
+    public boolean isEnabled() { return content.layout().enabled(); }
+  }
+
+  public synchronized java.util.List<Widget> widgets(HomepagePage page, String language)
+      throws IOException {
+    var ids = Arrays.stream(properties(page).getProperty("widgets", "").split(","))
+        .filter(id -> !id.isBlank()).distinct().toList();
+    var result = new java.util.ArrayList<Widget>();
+    for (String id : ids) {
+      result.add(new Widget(id, read(page, id, language)));
+    }
+    result.sort(java.util.Comparator.comparingInt(Widget::getOrder).thenComparing(Widget::getId));
+    return java.util.List.copyOf(result);
+  }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
       throws IOException {
@@ -53,11 +94,23 @@ public class HomepageContentStore {
     Properties properties = properties(page);
     String title = properties.getProperty("widget." + widget + ".title", "");
     String html = Files.exists(file) ? Files.readString(file, StandardCharsets.UTF_8) : "";
-    return new Content(title, html, revision(title, html));
+    String prefix = "widget." + widget;
+    var layout = new Layout(properties.getProperty(prefix + ".zone", "main"),
+        Integer.parseInt(properties.getProperty(prefix + ".order", "10")),
+        Boolean.parseBoolean(properties.getProperty(prefix + ".enabled", "true")));
+    String version = properties.containsKey(prefix + ".type")
+        ? revision(title + layout, html) : "";
+    return new Content(title, html, version, layout);
   }
 
   public synchronized void save(HomepagePage page, String widget, String language,
       String title, String html, String expectedRevision) throws IOException {
+    saveConfigured(page, widget, language, title, html, expectedRevision,
+        read(page, widget, language).layout());
+  }
+
+  public synchronized void saveConfigured(HomepagePage page, String widget, String language,
+      String title, String html, String expectedRevision, Layout layout) throws IOException {
     Content previous = read(page, widget, language);
     if (!previous.revision().equals(expectedRevision)) {
       throw new ConcurrentModificationException("Content changed since it was loaded");
@@ -72,9 +125,9 @@ public class HomepageContentStore {
     properties.setProperty("widgets", String.join(",", ids));
     properties.setProperty(prefix + ".type", "html");
     properties.setProperty(prefix + ".title", title);
-    properties.putIfAbsent(prefix + ".zone", "main");
-    properties.putIfAbsent(prefix + ".enabled", "true");
-    properties.putIfAbsent(prefix + ".order", String.valueOf(ids.size() * 10));
+    properties.setProperty(prefix + ".zone", layout.zone());
+    properties.setProperty(prefix + ".enabled", String.valueOf(layout.enabled()));
+    properties.setProperty(prefix + ".order", String.valueOf(layout.order()));
     atomicWrite(contentPath(page, widget, language), html.getBytes(StandardCharsets.UTF_8));
     StringWriter writer = new StringWriter();
     properties.store(writer, "Aurora homepage prototype");

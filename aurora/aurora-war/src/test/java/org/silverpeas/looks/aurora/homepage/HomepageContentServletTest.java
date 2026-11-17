@@ -231,4 +231,54 @@ class HomepageContentServletTest {
     verify(response).sendRedirect("/silverpeas/AuroraHomepageContent?action=editor&kind=skins&owner=waves&widget=welcome&language=fr");
   }
 
+  @Test
+  void managementRedirectsToEffectiveSkin() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getContextPath()).thenReturn("/silverpeas");
+    when(request.getParameter("action")).thenReturn("manage");
+    when(request.getParameter("owner")).thenReturn(null);
+    servlet.doGet(request, response);
+    verify(response).sendRedirect("/silverpeas/AuroraHomepageContent?action=manage&kind=skins&owner=waves&widget=welcome&language=fr");
+  }
+
+  @Test
+  void managementListsWidgetsAndUsesFavoriteLanguageWhenMissing() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("action")).thenReturn("manage");
+    when(request.getParameter("language")).thenReturn(null);
+    when(controller.getFavoriteLanguage()).thenReturn("fr");
+    var dispatcher = mock(jakarta.servlet.RequestDispatcher.class);
+    when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
+    servlet.doGet(request, response);
+    verify(request).setAttribute("homepageWidgets", java.util.List.of());
+    verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
+    verify(request).setAttribute("homepageLanguage", "fr");
+    verify(dispatcher).forward(request, response);
+  }
+
+  @Test
+  void saveIncludesPlacement() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    when(request.getParameter("action")).thenReturn("save");
+    when(request.getParameter("revision")).thenReturn("");
+    when(request.getParameter("title")).thenReturn("Zone");
+    when(request.getParameter("html")).thenReturn("<p>Contenu</p>");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("24");
+    when(request.getParameter("enabled")).thenReturn("false");
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    assertEquals(new HomepageContentStore.Layout("right", 24, false),
+        store.read(new HomepagePage("skins", "waves"), "welcome", "fr").layout());
+  }
+
+  @Test
+  void regularUserCannotManageEvenWhenOwnerIsOmitted() throws Exception {
+    when(request.getParameter("action")).thenReturn("manage");
+    when(request.getParameter("owner")).thenReturn(null);
+    servlet.doGet(request, response);
+    verify(response).sendError(403);
+  }
+
 }

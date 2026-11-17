@@ -84,4 +84,51 @@ class HomepageContentStoreTest {
     Files.createSymbolicLink(root.resolve("skins/waves"), outside);
     assertThrows(java.io.IOException.class, () -> store.read(page, "welcome", "fr"));
   }
+  @Test
+  void placementSortingAndConflictsSurviveReopening() throws Exception {
+    var store = new HomepageContentStore(root);
+    var page = new HomepagePage("skins", "Aurora");
+    store.saveConfigured(page, "last", "fr", "Dernier", "trois", "",
+        new HomepageContentStore.Layout("right", 30, false));
+    store.saveConfigured(page, "second", "fr", "Second", "deux", "",
+        new HomepageContentStore.Layout("main", 10, true));
+    store.saveConfigured(page, "first", "fr", "Premier", "un", "",
+        new HomepageContentStore.Layout("right", 10, true));
+    var widgets = new HomepageContentStore(root).widgets(page, "fr");
+    assertEquals(java.util.List.of("first", "second", "last"),
+        widgets.stream().map(HomepageContentStore.Widget::getId).toList());
+    assertFalse(widgets.get(2).isEnabled());
+    assertEquals("right", widgets.get(0).getZone());
+    assertEquals("un", widgets.get(0).getHtml());
+    var old = store.read(page, "first", "fr");
+    var layout = new HomepageContentStore.Layout("main", 42, false);
+    store.saveConfigured(page, "first", "fr", old.title(), old.html(), old.revision(), layout);
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.save(page, "first", "fr", "ancien", "ancien", old.revision()));
+    var current = store.read(page, "first", "fr");
+    store.save(page, "first", "fr", "nouveau", "nouveau", current.revision());
+    assertEquals(layout, store.read(page, "first", "fr").layout());
+    assertEquals("deux", store.read(page, "second", "fr").html());
+  }
+
+  @Test
+  void emptyWidgetsAlsoHaveARevisionAndCannotBeCreatedTwice() throws Exception {
+    var store = new HomepageContentStore(root);
+    var page = new HomepagePage("skins", "Aurora");
+    store.save(page, "empty", "fr", "", "", "");
+    assertFalse(store.read(page, "empty", "fr").revision().isEmpty());
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.save(page, "empty", "fr", "", "", ""));
+  }
+
+  @Test
+  void rejectsInvalidPlacement() {
+    assertThrows(IllegalArgumentException.class,
+        () -> new HomepageContentStore.Layout("third", 10, true));
+    assertThrows(IllegalArgumentException.class,
+        () -> new HomepageContentStore.Layout("main", -1, true));
+    assertThrows(IllegalArgumentException.class,
+        () -> new HomepageContentStore.Layout("main", 10001, true));
+  }
+
 }

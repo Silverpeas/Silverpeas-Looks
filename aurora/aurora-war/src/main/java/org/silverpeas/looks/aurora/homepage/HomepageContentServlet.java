@@ -43,13 +43,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
-/** Opt-in prototype endpoint: no existing homepage is changed. */
+/** Management and protected delivery of homepage HTML widgets. */
 @WebServlet("/AuroraHomepageContent")
 @MultipartConfig(maxFileSize = 5242880, maxRequestSize = 6291456)
 public class HomepageContentServlet extends HttpServlet {
@@ -71,7 +70,7 @@ public class HomepageContentServlet extends HttpServlet {
     if (dataHome == null || dataHome.isBlank()) {
       throw new ServletException("SILVERPEAS_DATA_HOME must be configured");
     }
-    store = new HomepageContentStore(Path.of(dataHome, "homepages"));
+    store = HomepageContentStore.forInstallation();
   }
 
   @Override
@@ -105,12 +104,12 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if ("editor".equals(action) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
           }
-          response.sendRedirect(request.getContextPath() + "/AuroraHomepageContent?action=editor&kind=skins&owner="
+          response.sendRedirect(request.getContextPath() + "/AuroraHomepageContent?action=" + action + "&kind=skins&owner="
               + activeSkin + "&widget=" + encode(request.getParameter("widget"))
               + "&language=" + encode(request.getParameter("language")));
           return;
@@ -129,6 +128,14 @@ public class HomepageContentServlet extends HttpServlet {
       }
       String widget = request.getParameter("widget");
       String language = request.getParameter("language");
+      if (language == null || language.isBlank()) {
+        language = controller.getFavoriteLanguage();
+      }
+      if (!"asset".equals(action) &&
+          (language == null || !language.matches("[a-z]{2,3}(-[A-Za-z]{2,8})?"))) {
+        throw new IllegalArgumentException("Invalid language");
+      }
+      request.setAttribute("homepageLanguage", language);
       if (write) {
         write(request, response, page, widget, language, action);
       } else {
@@ -168,7 +175,7 @@ public class HomepageContentServlet extends HttpServlet {
     return organization.isSpaceAvailable(page.owner(), user.getId());
   }
 
-  static String skinId(GraphicElementFactory factory) {
+  public static String skinId(GraphicElementFactory factory) {
     String bundle = factory.getFavoriteLookSettings().getBaseBundleName();
     String id = bundle.substring(bundle.lastIndexOf('.') + 1);
     HomepagePage.validateIdentifier(id);
@@ -194,7 +201,13 @@ public class HomepageContentServlet extends HttpServlet {
         throw new IllegalArgumentException("Content too large or missing");
       }
       String sanitized = WysiwygContentTransformer.on(html).applySanitizeDirective().transform();
-      store.save(page, widget, language, title, sanitized, request.getParameter("revision"));
+      var previous = store.read(page, widget, language);
+      var layout = request.getParameter("zone") == null ? previous.layout()
+          : new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")),
+              Boolean.parseBoolean(request.getParameter("enabled")));
+      store.saveConfigured(page, widget, language, title, sanitized,
+          request.getParameter("revision"), layout);
       contentResponse(response, store.read(page, widget, language), "");
     } else {
       throw new IllegalArgumentException("Unknown action");
@@ -214,6 +227,10 @@ public class HomepageContentServlet extends HttpServlet {
       response.getWriter().write(store.read(page, widget, language).html());
     } else if ("load".equals(action)) {
       contentResponse(response, store.read(page, widget, language), csrf);
+    } else if ("manage".equals(action)) {
+      request.setAttribute("homepageWidgets", store.widgets(page, language));
+      request.setAttribute("newWidgetId", "html-" + UUID.randomUUID());
+      request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp").forward(request, response);
     } else if ("editor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/contentEditor.jsp").forward(request, response);
     } else {
@@ -268,7 +285,9 @@ public class HomepageContentServlet extends HttpServlet {
   private void contentResponse(HttpServletResponse response, HomepageContentStore.Content content,
       String csrf) throws IOException {
     json(response, JSONCodec.encodeObject(o -> o.put("title", content.title())
-        .put("html", content.html()).put("revision", content.revision()).put("csrf", csrf)));
+        .put("html", content.html()).put("revision", content.revision()).put("csrf", csrf)
+        .put("zone", content.layout().zone()).put("order", content.layout().order())
+        .put("enabled", content.layout().enabled())));
   }
 
   private void json(HttpServletResponse response, String json) throws IOException {
