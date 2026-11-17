@@ -98,7 +98,7 @@ class HomepageContentServletTest {
     when(helper.getDefaultEventsConfiguration()).thenReturn(
         new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
     when(helper.getDefaultRssConfiguration()).thenReturn(
-        new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
+        new HomepageContentStore.RssConfiguration("rssAgregator12", "tabs"));
     when(helper.getDefaultPublicationsConfiguration()).thenReturn(
         new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
@@ -460,7 +460,7 @@ class HomepageContentServletTest {
       when(request.getParameter("title")).thenReturn("Titre");
       when(request.getParameter("zone")).thenReturn("main");
       when(request.getParameter("order")).thenReturn("2");
-      when(request.getParameter("source")).thenReturn(type.equals("Events") ? "almanach12" : "rssaggregator12");
+      when(request.getParameter("source")).thenReturn(type.equals("Events") ? "almanach12" : "rssAgregator12");
       when(request.getParameter("maxDays")).thenReturn("4");
       when(request.getParameter("rendering")).thenReturn("tabs");
       when(request.getParameter("includeToday")).thenReturn("false");
@@ -521,7 +521,7 @@ class HomepageContentServletTest {
     verify(dispatcher).forward(request, response);
     when(request.getParameter("widget")).thenReturn("rss-legacy");
     servlet.doGet(request, response);
-    verify(helper).getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
+    verify(helper).getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssAgregator12", "tabs"));
     when(helper.getConfiguredRSSFeeds(any())).thenReturn(null);
     clearInvocations(response, dispatcher);
     servlet.doGet(request, response);

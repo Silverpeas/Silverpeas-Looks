@@ -64,15 +64,15 @@ class HomepageFeedRenderingTest {
     var service = mock(RSSService.class);
     try (var provider = mockStatic(RSSServiceProvider.class)) {
       provider.when(RSSServiceProvider::getRSSService).thenReturn(service);
-      assertNull(helper.getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssaggregator34", "tabs")));
+      assertNull(helper.getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssAgregator34", "tabs")));
       provider.verifyNoInteractions();
-      when(organization.isComponentAvailableToUser("rssaggregator12", "42")).thenReturn(true);
-      when(service.getApplicationItems("rssaggregator12", true)).thenReturn(List.of());
-      when(service.getAllChannels("rssaggregator12")).thenReturn(List.of());
-      var feeds = helper.getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
+      when(organization.isComponentAvailableToUser("rssAgregator12", "42")).thenReturn(true);
+      when(service.getApplicationItems("rssAgregator12", true)).thenReturn(List.of());
+      when(service.getAllChannels("rssAgregator12")).thenReturn(List.of());
+      var feeds = helper.getConfiguredRSSFeeds(new HomepageContentStore.RssConfiguration("rssAgregator12", "tabs"));
       assertTrue(feeds.isTabs());
-      verify(service).getApplicationItems("rssaggregator12", true);
-      verify(service).getAllChannels("rssaggregator12");
+      verify(service).getApplicationItems("rssAgregator12", true);
+      verify(service).getAllChannels("rssAgregator12");
       verifyNoMoreInteractions(service);
     }
   }

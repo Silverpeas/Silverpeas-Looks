@@ -46,7 +46,7 @@ class HomepageWidgetsTest {
     when(helper.getDefaultEventsConfiguration()).thenReturn(
         new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
     when(helper.getDefaultRssConfiguration()).thenReturn(
-        new HomepageContentStore.RssConfiguration("rssaggregator12", "tabs"));
+        new HomepageContentStore.RssConfiguration("rssAgregator12", "tabs"));
     when(helper.getDefaultPublicationsConfiguration()).thenReturn(
         new HomepageContentStore.PublicationsConfiguration("WA12", 3, true));
     when(helper.getDefaultNewsConfiguration(anyInt())).thenReturn(
@@ -279,7 +279,7 @@ class HomepageWidgetsTest {
     assertThrows(IllegalArgumentException.class, () -> store.saveFeedWidget(page, null, "fr", "", layout,
         "events", configuration, null, ""));
     for (String mode : List.of("aggregate", "tabs", "carrousel")) {
-      var rssConfiguration = new HomepageContentStore.RssConfiguration("rssaggregator12", mode);
+      var rssConfiguration = new HomepageContentStore.RssConfiguration("rssAgregator12", mode);
       store.saveFeedWidget(page, "rss-" + mode, "fr", "Veille", layout, "rss", null, rssConfiguration, "");
       assertEquals(rssConfiguration, new HomepageContentStore(root).readWidget(page, "rss-" + mode, "fr").rssConfiguration());
     }
@@ -300,7 +300,7 @@ class HomepageWidgetsTest {
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.EventsConfiguration("quickinfo1", 2, true, false, false, true));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.EventsConfiguration("*", 0, true, false, false, true));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("https://feed.invalid", "tabs"));
-    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("rssaggregator12", "unknown"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.RssConfiguration("rssAgregator12", "unknown"));
   }
 
 }

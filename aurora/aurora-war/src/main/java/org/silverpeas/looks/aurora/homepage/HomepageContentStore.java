@@ -329,7 +329,7 @@ public class HomepageContentStore {
 
   public record RssConfiguration(String source, String rendering) {
     public RssConfiguration {
-      if (source == null || !source.matches("(?:|rssaggregator[0-9]+)") ||
+      if (source == null || !source.matches("(?:|rssAgregator[0-9]+)") ||
           !java.util.List.of("aggregate", "tabs", "carrousel").contains(rendering)) {
         throw new IllegalArgumentException("Invalid RSS configuration");
       }

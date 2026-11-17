@@ -62,7 +62,7 @@
               </div>
               <div class="homepage-field">
                 <label for="news-source">Application RSS source</label>
-                <input id="news-source" type="text" maxlength="200" placeholder="rssaggregator12">
+                <input id="news-source" type="text" maxlength="200" placeholder="rssAgregator12">
                 <p>Indiquez l’identifiant de l’application RSS. Vide : aucun flux.</p>
               </div>
               <div class="homepage-field">

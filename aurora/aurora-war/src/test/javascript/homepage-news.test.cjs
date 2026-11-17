@@ -190,7 +190,7 @@ for (const type of ['events', 'rss']) {
   test(type + ' editor saves source, placement and specific settings with CSRF and revision', async () => {
     const {controls, calls, submit} = await editor(200, true, false, false, type);
     assert.equal(controls['news-save'].disabled, false);
-    controls['news-source'].value = type === 'events' ? ' almanach12   almanach34 ' : ' rssaggregator12 ';
+    controls['news-source'].value = type === 'events' ? ' almanach12   almanach34 ' : ' rssAgregator12 ';
     controls['news-zone'].value = 'main';
     controls['news-enabled'].checked = false;
     if (type === 'events') {
@@ -206,7 +206,7 @@ for (const type of ['events', 'rss']) {
     assert.equal(body.get('revision'), 'first');
     assert.equal(body.get('zone'), 'main');
     assert.equal(body.get('enabled'), 'false');
-    assert.equal(body.get('source'), type === 'events' ? 'almanach12 almanach34' : 'rssaggregator12');
+    assert.equal(body.get('source'), type === 'events' ? 'almanach12 almanach34' : 'rssAgregator12');
     if (type === 'events') {
       assert.equal(body.get('maxDays'), '5');
       assert.equal(body.get('personal'), 'true');
