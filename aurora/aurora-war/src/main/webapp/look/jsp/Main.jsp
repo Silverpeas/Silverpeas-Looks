@@ -70,19 +70,19 @@
       .getConfiguredNews(1, HomepageContentStore.forInstallation().readNews(
           new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 1)));
 %>
-<jsp:useBean id="listOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
+<jsp:useBean id="listOfNews" scope="request" type="org.silverpeas.looks.aurora.NewsList"/>
 <%
   request.setAttribute("secondaryListOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
       .getConfiguredNews(2, HomepageContentStore.forInstallation().readNews(
           new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 2)));
 %>
-<jsp:useBean id="secondaryListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
+<jsp:useBean id="secondaryListOfNews" scope="request" type="org.silverpeas.looks.aurora.NewsList"/>
 <%
   request.setAttribute("thirdListOfNews", ((LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper"))
       .getConfiguredNews(3, HomepageContentStore.forInstallation().readNews(
           new HomepagePage("skins", HomepageContentServlet.skinId(homepageFactory)), 3)));
 %>
-<jsp:useBean id="thirdListOfNews" type="org.silverpeas.looks.aurora.NewsList"/>
+<jsp:useBean id="thirdListOfNews" scope="request" type="org.silverpeas.looks.aurora.NewsList"/>
 
 <c:if test="${showLastSubscribedNews}">
   <c:set var="subscribedListOfNews" value="${lookHelper.lastNewsSubscribed}"/>

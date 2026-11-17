@@ -46,6 +46,17 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void configuredNewsBeansUseTheRequestScopePopulatedByTheController() throws Exception {
+    String jsp = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    for (String name : List.of("listOfNews", "secondaryListOfNews", "thirdListOfNews")) {
+      assertTrue(jsp.contains("request.setAttribute(\"" + name + "\""));
+      assertTrue(Pattern.compile("<jsp:useBean\\s+id=\"" + name +
+          "\"\\s+scope=\"request\"").matcher(jsp).find(),
+          "News bean must resolve the request attribute: " + name);
+    }
+  }
+
+  @Test
   void homepageScriptletCompilesWithTheLegacyJspSourceLevel() throws Exception {
     String jsp = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
     String imports = Pattern.compile("<%@ page import=\"([^\"]+)\" %>")
