@@ -28,6 +28,9 @@ window.addEventListener('DOMContentLoaded', function() {
       try {
         const body = frame.contentDocument.body;
         if (!body) { return; }
+        if (frame.classList.contains('homepage-bookmarks-frame')) {
+          frame.parentElement.hidden = !!frame.contentDocument.getElementById('homepage-bookmarks-hidden');
+        }
         frame.height = Math.max(80, Math.ceil(body.getBoundingClientRect().height)) + 16;
       } catch (error) {
         if (observer) { observer.disconnect(); }

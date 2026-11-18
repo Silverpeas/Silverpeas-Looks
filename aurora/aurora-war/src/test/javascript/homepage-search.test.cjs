@@ -56,7 +56,7 @@ test('advanced forms do not initialize taxonomy', () => {
 });
 
 test('each search frame follows its own content height and reconnects on reload', () => {
-  const frames = [100, 250].map(height => ({contentDocument: {readyState: 'complete', body: {getBoundingClientRect: () => ({height})}},
+  const frames = [100, 250].map(height => ({classList: {contains: () => false}, contentDocument: {readyState: 'complete', body: {getBoundingClientRect: () => ({height})}},
     addEventListener(name, callback) { this.loaded = callback; }}));
   const observers = [];
   class Observer {
@@ -74,4 +74,19 @@ test('each search frame follows its own content height and reconnects on reload'
   assert.notEqual(observers[0].body, observers[1].body);
   frames[0].loaded();
   assert.equal(observers[0].disconnected, true);
+});
+
+test('hides an empty bookmarks frame without affecting another instance', () => {
+  const frames = [true, false].map(hidden => ({
+    classList: {contains: name => name === 'homepage-bookmarks-frame'}, parentElement: {},
+    contentDocument: {readyState: 'complete', getElementById: () => hidden ? {} : null,
+      body: {getBoundingClientRect: () => ({height: 120})}}, addEventListener() {}
+  }));
+  vm.runInNewContext(source('homepage-search.js'), {
+    window: {addEventListener: (name, callback) => callback()},
+    document: {querySelectorAll: () => frames},
+    ResizeObserver: class { observe() {} disconnect() {} }
+  });
+  assert.equal(frames[0].parentElement.hidden, true);
+  assert.equal(frames[1].parentElement.hidden, false);
 });

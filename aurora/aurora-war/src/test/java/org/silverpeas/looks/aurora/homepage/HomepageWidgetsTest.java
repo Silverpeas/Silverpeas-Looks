@@ -43,6 +43,7 @@ class HomepageWidgetsTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(settings.getNoBookmarksFragmentURL()).thenReturn("");
     when(helper.getDefaultSearchConfiguration()).thenReturn(
         new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false));
     when(helper.getDefaultSubscriptionsConfiguration()).thenReturn(
@@ -106,7 +107,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(12, initial.size());
+    assertEquals(13, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -114,7 +115,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(12, changed.size());
+    assertEquals(13, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -534,6 +535,59 @@ class HomepageWidgetsTest {
     }
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SearchConfiguration("advanced", "", false, false, false));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SearchConfiguration("other", "", false, false, false));
+  }
+
+  @Test
+  void bookmarksMigrateWithoutWritingAndKeepIndependentEmptyStateOptions() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    when(helper.getLookSettings().isDisplayBookmarksAreaWhenEmpty()).thenReturn(true);
+    when(helper.getLookSettings().getNoBookmarksFragmentURL()).thenReturn("/silverpeas/empty.html");
+    var legacy = HomepageWidgets.bookmarksWidget(store, page, "bookmarks-legacy", "fr", helper);
+    assertEquals(new HomepageContentStore.BookmarksConfiguration(true, "/silverpeas/empty.html"), legacy.bookmarksConfiguration());
+    assertEquals("right", legacy.getZone());
+    assertTrue(legacy.isEnabled());
+    assertFalse(Files.exists(root.resolve("skins")));
+    verify(helper, never()).getBookmarks();
+    var layout = new HomepageContentStore.Layout("main", 5, true);
+    var config = new HomepageContentStore.BookmarksConfiguration(false, "");
+    store.saveBookmarksWidget(page, legacy.id(), "fr", "Mes favoris", layout, config, "");
+    store.saveBookmarksWidget(page, "bookmarks-other", "fr", "Autres favoris", layout, legacy.bookmarksConfiguration(), "");
+    var reopened = new HomepageContentStore(root);
+    var saved = reopened.readWidget(page, legacy.id(), "fr");
+    assertEquals(config, saved.bookmarksConfiguration());
+    assertEquals(layout, saved.content().layout());
+    assertEquals(1, HomepageWidgets.all(reopened, page, "fr", helper).stream().filter(w -> legacy.id().equals(w.id())).count());
+    reopened.saveBookmarksWidget(page, legacy.id(), "fr", "Mes favoris", layout,
+        new HomepageContentStore.BookmarksConfiguration(true, ""), saved.content().revision());
+    var revision = reopened.read(page, legacy.id(), "fr").revision();
+    assertNotEquals(saved.content().revision(), revision);
+    reopened.saveBookmarksWidget(page, legacy.id(), "fr", "Mes favoris", layout,
+        new HomepageContentStore.BookmarksConfiguration(true, "/new.html"), revision);
+    assertNotEquals(revision, reopened.read(page, legacy.id(), "fr").revision());
+    assertThrows(ConcurrentModificationException.class, () -> reopened.saveBookmarksWidget(page, legacy.id(), "fr", "", layout, config, revision));
+    assertEquals(legacy.bookmarksConfiguration(), reopened.readWidget(page, "bookmarks-other", "fr").bookmarksConfiguration());
+  }
+
+  @Test
+  void bookmarksRejectTypeChangesAndExecutableFragmentUrls() throws Exception {
+    var store = new HomepageContentStore(root);
+    var layout = new HomepageContentStore.Layout("right", 40, true);
+    var config = new HomepageContentStore.BookmarksConfiguration(false, "");
+    assertThrows(IllegalArgumentException.class, () -> store.save(page, "bookmarks-legacy", "fr", "", "", ""));
+    store.saveBookmarksWidget(page, "bookmarks-legacy", "fr", "", layout, config, "");
+    assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page, "bookmarks-legacy", "fr", "", layout, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveNewsWidget(page, "bookmarks-legacy", "fr", "", layout, news(""), 0));
+    assertThrows(IllegalArgumentException.class, () -> store.saveSearchWidget(page, "bookmarks-legacy", "fr", "", layout,
+        new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false), ""));
+    for (String id : List.of("search-legacy", "shortcuts-legacy", "subscriptions-legacy", "faq-legacy", "users-legacy", "events-legacy", "rss-legacy", "ephemeris-legacy", "publications-legacy", "news-legacy-1")) {
+      assertThrows(IllegalArgumentException.class, () -> store.saveBookmarksWidget(page, id, "fr", "", layout, config, ""));
+    }
+    store.save(page, "html-test", "fr", "", "", "");
+    assertThrows(IllegalArgumentException.class, () -> store.saveBookmarksWidget(page, "html-test", "fr", "", layout, config, ""));
+    for (String url : List.of("javascript:alert(1)", "data:text/html,hello", "mailto:a@example.org", "https://example.org/\n")) {
+      assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.BookmarksConfiguration(true, url));
+    }
   }
 
 }

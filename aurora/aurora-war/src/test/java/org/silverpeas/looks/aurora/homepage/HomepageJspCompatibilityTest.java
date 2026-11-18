@@ -126,7 +126,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp", "searchEditor.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp", "searchEditor.jsp", "bookmarksEditor.jsp", "bookmarksWidget.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {
@@ -207,6 +207,23 @@ class HomepageJspCompatibilityTest {
     assertTrue(search.contains("name=\"xmlSearchSelectedForm\""));
     assertFalse(search.contains("javascript:"));
     assertFalse(search.contains("<script>"));
+  }
+
+  @Test
+  void personalBookmarksUseManagedPlacementAndIsolateCoreWidgetIds() throws Exception {
+    String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    String bookmarks = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/bookmarksWidget.jsp"));
+    assertFalse(main.contains("<viewTags:displayUserBookmarks"));
+    assertFalse(main.contains("lookHelper.bookmarks"));
+    assertTrue(widgets.contains("value=\"renderBookmarks\""));
+    assertTrue(widgets.contains("homepage-bookmarks-frame"));
+    assertTrue(bookmarks.contains("data-links=\"<c:out"));
+    assertTrue(bookmarks.contains("data-fragment=\"<c:out"));
+    assertTrue(bookmarks.contains("target=\"_parent\""));
+    assertFalse(bookmarks.contains("<script>"));
+    assertFalse(bookmarks.contains("javascript:"));
+    assertFalse(bookmarks.contains("style=\""));
   }
 
 }

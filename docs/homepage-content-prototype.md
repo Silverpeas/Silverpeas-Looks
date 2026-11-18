@@ -293,3 +293,26 @@ Les champs générés par Core ayant des identifiants fixes, chaque instance pos
 document iframe de même origine, redimensionné automatiquement. La soumission cible
 la page parente : les résultats ne restent pas enfermés dans le widget. Les anciens
 tags utilisés par les homes d’espace restent inchangés.
+
+
+### Favoris personnels
+
+Le type `bookmarks` propose titre, colonne, ordre, visibilité, affichage même si la
+liste est vide et URL facultative du fragment affiché à la place de la liste vide.
+Les URL relatives et HTTP/HTTPS sont autorisées, les schémas exécutables/data et les
+caractères de contrôle sont rejetés. Tous ces paramètres font partie de la révision.
+La sauvegarde reste réservée aux administrateurs, avec CSRF et contrôle de conflit.
+
+`bookmarks-legacy` (droite, ordre 40) reprend `home.bookmarks.empty.show` et
+`home.bookmarks.empty.fragment`, sans écriture au chargement. Son enregistrement
+remplace le bloc historique ; les nouvelles instances ont leurs propres paramètres.
+Chaque lecteur retrouve ses favoris visibles via `LookAuroraHelper.getBookmarks()` :
+aucun lien personnel n’est copié dans la configuration partagée. Les widgets masqués
+ne récupèrent aucun lien. Les visiteurs anonymes ne voient pas de bloc vide.
+
+Le composant Core conserve catégories et bouton « voir plus ». Ses identifiants et
+sélecteurs globaux sont isolés par instance dans un document iframe de même origine,
+redimensionné automatiquement. Le bloc vide masqué ne laisse pas de cadre visible.
+Le lien de gestion cible la page parente, les liens internes utilisent la navigation
+Core et les liens externes conservent leur comportement existant. L’ancien tag et
+les favoris de la barre supérieure restent inchangés.

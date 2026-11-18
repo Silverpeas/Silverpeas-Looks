@@ -40,12 +40,12 @@ async function editor(status = 200, configured = false, publications = false, ep
   for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
       dataset: {widgetType: feedType || (ephemeris ? 'ephemeris' : '')},
-      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar', 'news-labels-inside', 'news-period'].includes(match[1]) || (feedType === 'search' && match[1] === 'news-space') ? 'checkbox' : 'text',
+      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar', 'news-labels-inside', 'news-period', 'news-show-when-empty'].includes(match[1]) || (feedType === 'search' && match[1] === 'news-space') ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
   const calls = [];
   let start;
-  const data = {mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -315,5 +315,20 @@ test('one search editor switches modes and saves all options with CSRF and revis
   assert.equal(body.get('template'), 'documents.xml');
   assert.equal(body.get('period'), 'true');
   assert.equal(body.get('labelsInside'), 'true');
+  assert.equal(body.get('revision'), 'first');
+});
+
+test('personal bookmarks load and save empty-state options with CSRF and fresh revision', async () => {
+  const {controls, calls, submit} = await editor(200, false, false, false, 'bookmarks');
+  assert.match(calls[0].url, /action=loadBookmarks/);
+  assert.equal(controls['news-show-when-empty'].checked, true);
+  controls['news-show-when-empty'].checked = false;
+  controls['news-empty-fragment'].value = '  /silverpeas/empty.html  ';
+  await submit();
+  assert.match(calls.at(-1).url, /action=saveBookmarks/);
+  assert.equal(calls.at(-1).headers['X-Aurora-CSRF'], 'token');
+  const body = new URLSearchParams(calls.at(-1).body);
+  assert.equal(body.get('showWhenEmpty'), 'false');
+  assert.equal(body.get('emptyFragment'), '/silverpeas/empty.html');
   assert.equal(body.get('revision'), 'first');
 });

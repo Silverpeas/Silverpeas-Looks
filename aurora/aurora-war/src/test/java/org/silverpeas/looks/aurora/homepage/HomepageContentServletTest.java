@@ -95,6 +95,7 @@ class HomepageContentServletTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(settings.getNoBookmarksFragmentURL()).thenReturn("");
     when(helper.getDefaultSearchConfiguration()).thenReturn(
         new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false));
     when(helper.getDefaultSubscriptionsConfiguration()).thenReturn(
@@ -428,7 +429,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 12));
+        value instanceof java.util.List<?> widgets && widgets.size() == 13));
     verify(request).setAttribute(eq("newShortcutsWidgetId"), argThat(v -> v.toString().startsWith("shortcuts-")));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
@@ -735,6 +736,102 @@ class HomepageContentServletTest {
     when(request.getParameter("widget")).thenReturn("search-missing");
     servlet.doGet(request, response);
     verify(response).setStatus(204);
+  }
+
+  @Test
+  void bookmarksSaveRequiresAdminCsrfAndRevisionAndReturnsEmptyStateOptions() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("saveBookmarks");
+    when(request.getParameter("widget")).thenReturn("bookmarks-test");
+    when(request.getParameter("title")).thenReturn("Mes favoris");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("40");
+    when(request.getParameter("showWhenEmpty")).thenReturn("true");
+    when(request.getParameter("emptyFragment")).thenReturn("/silverpeas/empty.html");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var page = new HomepagePage("skins", "waves");
+    var saved = store.readWidget(page, "bookmarks-test", "fr");
+    assertEquals(new HomepageContentStore.BookmarksConfiguration(true, "/silverpeas/empty.html"), saved.bookmarksConfiguration());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    when(request.getParameter("action")).thenReturn("loadBookmarks");
+    servlet.doGet(request, response);
+    assertTrue(output.toString().contains("\"showWhenEmpty\":true"));
+    assertTrue(output.toString().contains("\"emptyFragment\":\"/silverpeas/empty.html\""));
+    when(request.getParameter("action")).thenReturn("saveBookmarks");
+    when(request.getParameter("emptyFragment")).thenReturn("javascript:alert(1)");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(400);
+    assertEquals(saved.content().revision(), store.read(page, "bookmarks-test", "fr").revision());
+  }
+
+  @Test
+  void bookmarksRenderUsesTheReadersPersonalLinksAndRespectsVisibilityAndSkin() throws Exception {
+    var page = new HomepagePage("skins", "waves");
+    var config = new HomepageContentStore.BookmarksConfiguration(false, "");
+    store.saveBookmarksWidget(page, "bookmarks-test", "fr", "Mes favoris",
+        new HomepageContentStore.Layout("right", 40, true), config, "");
+    when(user.isAccessAdmin()).thenReturn(false);
+    when(request.getParameter("action")).thenReturn("renderBookmarks");
+    when(request.getParameter("widget")).thenReturn("bookmarks-test");
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+    var links = java.util.List.<org.silverpeas.core.mylinks.model.LinkDetail>of();
+    when(helper.getBookmarks()).thenReturn(links);
+    var dispatcher = mock(jakarta.servlet.RequestDispatcher.class);
+    when(request.getRequestDispatcher("/WEB-INF/homepage/bookmarksWidget.jsp")).thenReturn(dispatcher);
+    servlet.doGet(request, response);
+    verify(dispatcher).forward(request, response);
+    verify(request).setAttribute("bookmarks", links);
+    verify(request).setAttribute("showBookmarks", false);
+    verify(response, never()).sendError(anyInt());
+    var revision = store.read(page, "bookmarks-test", "fr").revision();
+    store.saveBookmarksWidget(page, "bookmarks-test", "fr", "Mes favoris",
+        new HomepageContentStore.Layout("right", 40, true), new HomepageContentStore.BookmarksConfiguration(true, ""), revision);
+    clearInvocations(request);
+    servlet.doGet(request, response);
+    verify(request).setAttribute("showBookmarks", true);
+    when(user.isAnonymous()).thenReturn(true);
+    clearInvocations(request);
+    servlet.doGet(request, response);
+    verify(request).setAttribute("showBookmarks", false);
+    var personalLink = new org.silverpeas.core.mylinks.model.LinkDetail(
+        "My private link", "Description", "/Component/kmelia12", true, false);
+    when(helper.getBookmarks()).thenReturn(java.util.List.of(personalLink));
+    clearInvocations(request);
+    servlet.doGet(request, response);
+    verify(request).setAttribute("showBookmarks", true);
+    verify(request).setAttribute(eq("bookmarksJson"), argThat(json ->
+        json.toString().contains("My private link")));
+    assertFalse(Files.readString(root.resolve("skins/waves/page.properties")).contains("My private link"));
+    when(request.getParameter("owner")).thenReturn("other");
+    clearInvocations(helper);
+    servlet.doGet(request, response);
+    verify(response).sendError(403);
+    verify(helper, never()).getBookmarks();
+    when(request.getParameter("owner")).thenReturn("waves");
+    when(request.getParameter("widget")).thenReturn("bookmarks-missing");
+    servlet.doGet(request, response);
+    verify(response).setStatus(204);
+    verify(helper, never()).getBookmarks();
+    when(request.getParameter("widget")).thenReturn("bookmarks-test");
+    revision = store.read(page, "bookmarks-test", "fr").revision();
+    store.saveBookmarksWidget(page, "bookmarks-test", "fr", "Mes favoris",
+        new HomepageContentStore.Layout("right", 40, false), config, revision);
+    servlet.doGet(request, response);
+    verify(helper, never()).getBookmarks();
+
   }
 
 }

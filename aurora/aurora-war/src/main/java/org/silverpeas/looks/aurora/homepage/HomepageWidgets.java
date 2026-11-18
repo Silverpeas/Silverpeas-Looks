@@ -170,6 +170,26 @@ public final class HomepageWidgets {
     return result;
   }
 
+  public static HomepageContentStore.Widget bookmarksWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"bookmarks".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a bookmarks widget");
+      }
+      return saved;
+    }
+    var configuration = "bookmarks-legacy".equals(id)
+        ? new HomepageContentStore.BookmarksConfiguration(
+            helper.getLookSettings().isDisplayBookmarksAreaWhenEmpty(),
+            helper.getLookSettings().getNoBookmarksFragmentURL())
+        : new HomepageContentStore.BookmarksConfiguration(true, "");
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Favoris personnels", "", "",
+            new HomepageContentStore.Layout("right", 40, true)),
+        "bookmarks", null, 0, null, null, null, null, null, null, null, null, configuration);
+  }
+
   public static HomepageContentStore.Widget searchWidget(HomepageContentStore store,
       HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
     var saved = store.readWidget(page, id, language);
@@ -281,6 +301,10 @@ public final class HomepageWidgets {
     if ("skins".equals(page.kind()) &&
         widgets.stream().noneMatch(widget -> widget.id().equals("search-legacy"))) {
       widgets.add(searchWidget(store, page, "search-legacy", language, helper));
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("bookmarks-legacy"))) {
+      widgets.add(bookmarksWidget(store, page, "bookmarks-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

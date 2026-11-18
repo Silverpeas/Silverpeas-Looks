@@ -87,6 +87,13 @@
   <c:param name="widget" value="${newUsersWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addBookmarksUrl">
+  <c:param name="action" value="bookmarksEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="widget" value="${newBookmarksWidgetId}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
 <c:url value="/AuroraHomepageContent" var="addSearchUrl">
   <c:param name="action" value="searchEditor"/>
   <c:param name="kind" value="${param.kind}"/>
@@ -124,6 +131,7 @@
           <h1>Modifier la page d’accueil</h1>
           <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
           <view:buttonPane>
+            <view:button label="Ajouter les favoris personnels" action="${addBookmarksUrl}"/>
             <view:button label="Ajouter une recherche" action="${addSearchUrl}"/>
             <view:button label="Ajouter des actualités" action="${addNewsUrl}"/>
             <view:button label="Ajouter les dernières publications" action="${addPublicationsUrl}"/>
@@ -155,7 +163,7 @@
                 <view:arrayColumn title="Affichage" sortable="false"/>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="${widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
+                    <c:param name="action" value="${widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -165,7 +173,7 @@
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
-                    <view:arrayCellText text="${widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis (home)' : 'Zone libre'))))))))}"/>
+                    <view:arrayCellText text="${widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis (home)' : 'Zone libre'))))))))}"/>
                     <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
                     <view:arrayCellText text="${widget.order}"/>
                     <view:arrayCellText text="${displayStatus}"/>

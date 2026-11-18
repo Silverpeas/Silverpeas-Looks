@@ -41,6 +41,19 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'bookmarks'}">
+        <c:url value="/AuroraHomepageContent" var="bookmarksUrl">
+          <c:param name="action" value="renderBookmarks"/>
+          <c:param name="kind" value="skins"/>
+          <c:param name="owner" value="${homepageOwner}"/>
+          <c:param name="widget" value="${widget.id}"/>
+          <c:param name="language" value="${homepageLanguage}"/>
+        </c:url>
+        <div id="homepage-content-${widget.id}" class="homepage-bookmarks">
+          <iframe class="homepage-search-frame homepage-bookmarks-frame" title="<c:out value='${empty widget.title ? "Favoris personnels" : widget.title}'/>"
+              src="<c:out value='${bookmarksUrl}'/>"></iframe>
+        </div>
+      </c:when>
       <c:when test="${widget.type == 'search'}">
         <c:url value="/AuroraHomepageContent" var="searchUrl">
           <c:param name="action" value="renderSearch"/>

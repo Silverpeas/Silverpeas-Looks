@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -117,7 +117,7 @@ public class HomepageContentServlet extends HttpServlet {
         }
       }
       HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
-      boolean edit = write || !"asset".equals(action) && !"view".equals(action) && !"renderFeed".equals(action) && !"renderSearch".equals(action);
+      boolean edit = write || !"asset".equals(action) && !"view".equals(action) && !"renderFeed".equals(action) && !"renderSearch".equals(action) && !"renderBookmarks".equals(action);
       if (!isAllowed(controller, page, edit, activeSkin)) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
         return;
@@ -212,6 +212,13 @@ public class HomepageContentServlet extends HttpServlet {
                 option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("saveBookmarks".equals(action)) {
+      store.saveBookmarksWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")), option(request, "enabled")),
+          new HomepageContentStore.BookmarksConfiguration(option(request, "showWhenEmpty"),
+              request.getParameter("emptyFragment")), request.getParameter("revision"));
+      bookmarksResponse(request, response, page, widget, language, "");
     } else if ("saveSearch".equals(action)) {
       store.saveSearchWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
@@ -314,7 +321,26 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("renderSearch".equals(action)) {
+    if ("renderBookmarks".equals(action)) {
+      var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
+          request.getSession(false).getAttribute("Silverpeas_LookHelper");
+      var model = HomepageWidgets.all(store, page, language, helper).stream()
+          .filter(candidate -> candidate.id().equals(widget) && "bookmarks".equals(candidate.type()) &&
+              candidate.isEnabled()).findFirst().orElse(null);
+      if (model == null) {
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        return;
+      }
+      var bookmarks = helper.getBookmarks();
+      request.setAttribute("bookmarksWidget", model);
+      request.setAttribute("bookmarks", bookmarks);
+      request.setAttribute("bookmarksJson", JSONCodec.encode(bookmarks.stream()
+          .map(link -> org.silverpeas.core.webapi.mylinks.MyLinkEntity.fromLinkDetail(link, null)).toList()));
+      request.setAttribute("showBookmarks", !bookmarks.isEmpty() ||
+          model.bookmarksConfiguration().showWhenEmpty() &&
+              !MainSessionController.getInstance(request.getSession(false)).getCurrentUserDetail().isAnonymous());
+      request.getRequestDispatcher("/WEB-INF/homepage/bookmarksWidget.jsp").forward(request, response);
+    } else if ("renderSearch".equals(action)) {
       var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
           request.getSession(false).getAttribute("Silverpeas_LookHelper");
       var model = HomepageWidgets.all(store, page, language, helper).stream()
@@ -356,6 +382,10 @@ public class HomepageContentServlet extends HttpServlet {
         request.setAttribute("feedRss", feeds);
       }
       request.getRequestDispatcher("/WEB-INF/homepage/feedWidget.jsp").forward(request, response);
+    } else if ("loadBookmarks".equals(action)) {
+      bookmarksResponse(request, response, page, widget, language, csrf);
+    } else if ("bookmarksEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/bookmarksEditor.jsp").forward(request, response);
     } else if ("loadSearch".equals(action)) {
       searchResponse(request, response, page, widget, language, csrf);
     } else if ("searchEditor".equals(action)) {
@@ -424,6 +454,7 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
       request.setAttribute("newEventsWidgetId", "events-" + UUID.randomUUID());
+      request.setAttribute("newBookmarksWidgetId", "bookmarks-" + UUID.randomUUID());
       request.setAttribute("newSearchWidgetId", "search-" + UUID.randomUUID());
       request.setAttribute("newShortcutsWidgetId", "shortcuts-" + UUID.randomUUID());
       request.setAttribute("newSubscriptionsWidgetId", "subscriptions-" + UUID.randomUUID());
@@ -437,6 +468,20 @@ public class HomepageContentServlet extends HttpServlet {
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void bookmarksResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf) throws IOException {
+    var model = HomepageWidgets.bookmarksWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"));
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o
+        .put("configured", !content.revision().isEmpty()).put("title", content.title())
+        .put("zone", content.layout().zone()).put("order", content.layout().order())
+        .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf)
+        .put("showWhenEmpty", model.bookmarksConfiguration().showWhenEmpty())
+        .put("emptyFragment", model.bookmarksConfiguration().emptyFragment())));
   }
 
   private void searchResponse(HttpServletRequest request, HttpServletResponse response,
