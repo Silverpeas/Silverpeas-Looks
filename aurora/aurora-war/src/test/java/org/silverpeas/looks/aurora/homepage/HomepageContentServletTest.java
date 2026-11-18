@@ -739,7 +739,7 @@ class HomepageContentServletTest {
   }
 
   @Test
-  void weatherSaveRequiresAdminCsrfAndRevisionAndValidatesCities() throws Exception {
+  void weatherSaveRequiresAdminCsrfAndRevisionAndIgnoresSubmittedCities() throws Exception {
     prepareNewsSave();
     when(request.getParameter("action")).thenReturn("saveWeather");
     when(request.getParameter("widget")).thenReturn("weather-test");
@@ -761,14 +761,13 @@ class HomepageContentServletTest {
     verify(response, never()).sendError(anyInt());
     var page = new HomepagePage("skins", "waves");
     var saved = store.readWidget(page, "weather-test", "fr");
-    assertEquals(new HomepageContentStore.WeatherConfiguration("2988507|Paris"), saved.weatherConfiguration());
+    assertEquals("weather", saved.type());
     servlet.doPost(request, response);
     verify(response).sendError(409);
     when(request.getParameter("action")).thenReturn("loadWeather");
     servlet.doGet(request, response);
-    assertTrue(output.toString().contains("\"cities\":\"2988507|Paris\""));
     when(request.getParameter("action")).thenReturn("saveWeather");
-    when(request.getParameter("cities")).thenReturn("javascript:alert(1)");
+    when(request.getParameter("zone")).thenReturn("invalid");
     clearInvocations(response);
     servlet.doPost(request, response);
     verify(response).sendError(400);

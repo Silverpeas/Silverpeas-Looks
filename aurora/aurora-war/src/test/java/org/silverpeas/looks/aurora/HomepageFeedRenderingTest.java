@@ -207,4 +207,19 @@ class HomepageFeedRenderingTest {
     }
   }
 
+  @Test
+  void managedWeatherReadsTheCurrentWeatherSettingsWithoutTheLegacyVisibilityFlag() throws Exception {
+    var helper = mock(LookAuroraHelper.class);
+    var settings = mock(org.silverpeas.looks.aurora.service.weather.WeatherSettings.class);
+    var field = LookAuroraHelper.class.getDeclaredField("weatherSettings");
+    field.setAccessible(true);
+    field.set(helper, settings);
+    when(helper.getConfiguredWeatherCities()).thenCallRealMethod();
+    var paris = new org.silverpeas.looks.aurora.service.weather.City("2988507", "Paris");
+    var lyon = new org.silverpeas.looks.aurora.service.weather.City("2996944", "Lyon");
+    when(settings.getCities()).thenReturn(List.of(paris), List.of(lyon));
+    assertEquals(List.of(paris), helper.getConfiguredWeatherCities());
+    assertEquals(List.of(lyon), helper.getConfiguredWeatherCities());
+    verify(helper, never()).getSettings(eq("home.weather"), anyBoolean());
+  }
 }

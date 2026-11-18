@@ -255,6 +255,10 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return shortcuts;
   }
 
+  public List<City> getConfiguredWeatherCities() {
+    return weatherSettings.getCities();
+  }
+
   public List<City> getWeatherCities() {
     if (!getSettings("home.weather", false)) {
       return Collections.emptyList();

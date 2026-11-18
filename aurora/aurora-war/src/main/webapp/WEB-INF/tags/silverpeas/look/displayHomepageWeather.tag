@@ -27,12 +27,13 @@
 <fmt:message var="weatherToday" key="look.home.weather.today"/>
 <fmt:message var="weatherTomorrow" key="look.home.weather.tomorrow"/>
 <fmt:message var="weatherUnavailable" key="look.message.weatherUnvailable"/>
-<c:if test="${not empty widget.weatherConfiguration.entries}">
+<c:set var="configuredWeatherCities" value="${sessionScope['Silverpeas_LookHelper'].configuredWeatherCities}"/>
+<c:if test="${not empty configuredWeatherCities}">
   <div id="homepage-widget-${widget.id}" class="secteur-container weather homepage-weather"
       data-widget-id="<c:out value='${widget.id}'/>" data-unavailable="<c:out value='${weatherUnavailable}'/>">
     <c:if test="${not empty widget.title}"><h4><c:out value="${widget.title}"/></h4></c:if>
     <div class="homepage-weather-cities">
-      <c:forEach items="${widget.weatherConfiguration.entries}" var="city">
+      <c:forEach items="${configuredWeatherCities}" var="city">
         <button type="button" data-city="<c:out value='${city.id}'/>" aria-pressed="false"><c:out value="${city.name}"/></button>
       </c:forEach>
     </div>

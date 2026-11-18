@@ -178,15 +178,11 @@ public final class HomepageWidgets {
       return saved;
     }
     boolean legacy = "weather-legacy".equals(id);
-    String cities = helper.getWeatherCities().stream()
-        .map(city -> city.getId() + "|" + city.getName())
-        .collect(java.util.stream.Collectors.joining("\n"));
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Météo", "", "",
             new HomepageContentStore.Layout("right", 5,
-                !legacy || !cities.isEmpty() && helper.getLookSettings().isDisplayEphemeris())),
-        "weather", null, 0, null, null, null, null, null, null, null, null, null,
-        new HomepageContentStore.WeatherConfiguration(cities));
+                !legacy || !helper.getWeatherCities().isEmpty() && helper.getLookSettings().isDisplayEphemeris())),
+        "weather", null, 0);
   }
 
   public static HomepageContentStore.Widget bookmarksWidget(HomepageContentStore store,

@@ -216,7 +216,6 @@ public class HomepageContentServlet extends HttpServlet {
       store.saveWeatherWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
               Integer.parseInt(request.getParameter("order")), option(request, "enabled")),
-          new HomepageContentStore.WeatherConfiguration(request.getParameter("cities")),
           request.getParameter("revision"));
       weatherResponse(request, response, page, widget, language, "");
     } else if ("saveBookmarks".equals(action)) {
@@ -491,8 +490,7 @@ public class HomepageContentServlet extends HttpServlet {
     json(response, JSONCodec.encodeObject(o -> o
         .put("configured", !content.revision().isEmpty()).put("title", content.title())
         .put("zone", content.layout().zone()).put("order", content.layout().order())
-        .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf)
-        .put("cities", model.weatherConfiguration().cities())));
+        .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf)));
   }
 
   private void bookmarksResponse(HttpServletRequest request, HttpServletResponse response,

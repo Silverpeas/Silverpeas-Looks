@@ -72,13 +72,7 @@ public class HomepageContentStore {
       PublicationsConfiguration publicationsConfiguration,
       EventsConfiguration eventsConfiguration, RssConfiguration rssConfiguration,
       FaqConfiguration faqConfiguration, UsersConfiguration usersConfiguration,
-      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration, WeatherConfiguration weatherConfiguration) {
-    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
-        PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
-        FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
-        ShortcutsConfiguration shortcuts, SearchConfiguration search, BookmarksConfiguration bookmarks) {
-      this(id, content, type, news, legacyIndex, publications, events, rss, faq, users, subscriptions, shortcuts, search, bookmarks, null);
-    }
+      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration) {
     public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
         PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
         FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
@@ -125,7 +119,6 @@ public class HomepageContentStore {
     public ShortcutsConfiguration getShortcutsConfiguration() { return shortcutsConfiguration; }
     public BookmarksConfiguration getBookmarksConfiguration() { return bookmarksConfiguration; }
     public SearchConfiguration getSearchConfiguration() { return searchConfiguration; }
-    public WeatherConfiguration getWeatherConfiguration() { return weatherConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
@@ -186,8 +179,7 @@ public class HomepageContentStore {
             Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null,
         "shortcuts".equals(type) ? readShortcuts(settings, prefix) : null,
         "search".equals(type) ? readSearch(settings, prefix) : null,
-        "bookmarks".equals(type) ? readBookmarks(settings, prefix) : null,
-        "weather".equals(type) ? new WeatherConfiguration(settings.getProperty(prefix + ".cities", "")) : null);
+        "bookmarks".equals(type) ? readBookmarks(settings, prefix) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -238,9 +230,6 @@ public class HomepageContentStore {
     }
     if ("bookmarks".equals(properties.getProperty(prefix + ".type"))) {
       configurationVersion = readBookmarks(properties, prefix).toString();
-    }
-    if ("weather".equals(properties.getProperty(prefix + ".type"))) {
-      configurationVersion = properties.getProperty(prefix + ".cities", "");
     }
     String version = properties.containsKey(prefix + ".type")
         ? revision(!"html".equals(properties.getProperty(prefix + ".type"))
@@ -530,42 +519,13 @@ public class HomepageContentStore {
     saveProperties(page, properties);
   }
 
-  public record WeatherConfiguration(String cities) {
-    public WeatherConfiguration {
-      if (cities == null || cities.length() > 6000) {
-        throw new IllegalArgumentException("Invalid weather cities");
-      }
-      cities = cities.strip().replace("\r\n", "\n");
-      var ids = new java.util.HashSet<String>();
-      if (!cities.isEmpty()) {
-        var lines = cities.split("\n", -1);
-        if (lines.length > 20) { throw new IllegalArgumentException("Too many weather cities"); }
-        for (String line : lines) {
-          var parts = line.split("\\|", -1);
-          if (parts.length != 2 || !parts[0].matches("[A-Za-z0-9_-]{1,100}") ||
-              parts[1].isBlank() || parts[1].length() > 200 ||
-              parts[1].chars().anyMatch(Character::isISOControl) || !ids.add(parts[0])) {
-            throw new IllegalArgumentException("Invalid weather city");
-          }
-        }
-      }
-    }
-    public String getCities() { return cities; }
-    public java.util.List<org.silverpeas.looks.aurora.service.weather.City> getEntries() {
-      return cities.isEmpty() ? java.util.List.of() : cities.lines().map(line -> {
-        var parts = line.split("\\|", -1);
-        return new org.silverpeas.looks.aurora.service.weather.City(parts[0], parts[1]);
-      }).toList();
-    }
-  }
-
   public synchronized void saveWeatherWidget(HomepagePage page, String widget, String language,
-      String title, Layout layout, WeatherConfiguration configuration, String expectedRevision)
+      String title, Layout layout, String expectedRevision)
       throws IOException {
     HomepagePage.validateIdentifier(widget);
     var properties = properties(page);
     String prefix = "widget." + widget;
-    if (configuration == null || (widget.endsWith("-legacy") && !"weather-legacy".equals(widget)) ||
+    if ((widget.endsWith("-legacy") && !"weather-legacy".equals(widget)) ||
         HomepageWidgets.legacyIndex(widget) != 0 ||
         !"weather".equals(properties.getProperty(prefix + ".type", "weather"))) {
       throw new IllegalArgumentException("Invalid weather widget");
@@ -576,7 +536,7 @@ public class HomepageContentStore {
     registerWidget(properties, widget);
     configureLayout(properties, prefix, title, layout);
     properties.setProperty(prefix + ".type", "weather");
-    properties.setProperty(prefix + ".cities", configuration.cities());
+    properties.remove(prefix + ".cities");
     saveProperties(page, properties);
   }
 

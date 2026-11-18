@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer la météo</title>
     <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-weather-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -60,12 +60,8 @@
                   <input id="news-order" type="number" min="0" max="10000" required>
                 </div>
               </div>
-              <p>Les prévisions utilisent le fournisseur météo configuré sur cette instance.</p>
-              <div class="homepage-field">
-                <label for="news-cities">Villes (20 maximum, une par ligne : identifiant|nom)</label>
-                <textarea id="news-cities" rows="6" maxlength="6000"></textarea>
-                <p>Utilisez les identifiants de villes du fournisseur configuré. Une liste vide masque le contenu météo.</p>
-              </div>
+              <p>Les villes, le fournisseur et les paramètres météo sont définis dans le fichier
+                <code>weather.properties</code> de l’instance.</p>
               <label><input id="news-enabled" type="checkbox"> Afficher ce bloc</label>
             </fieldset>
           </view:board>

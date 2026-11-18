@@ -319,17 +319,15 @@ les favoris de la barre supérieure restent inchangés.
 
 ### Météo
 
-Le type `weather` propose les réglages communs (titre, colonne, ordre, visibilité) et une
-liste de vingt villes au maximum, une par ligne au format `identifiant|nom`.
-Les identifiants sont ceux du fournisseur météo déjà configuré sur l’instance ; la clé API
-et le fournisseur restent dans la configuration serveur et ne sont pas exposés dans l’éditeur.
-Les identifiants dupliqués et les lignes invalides sont refusés. Une liste vide n’affiche aucun bloc.
+Le type `weather` propose les réglages communs (titre, colonne, ordre, visibilité).
+Les villes, le fournisseur et les clés restent exclusivement dans `weather.properties`
+(ou le bundle météo personnalisé déjà sélectionné par l’instance).
+Aucune ville n’est copiée dans les paramètres des widgets. Les anciennes valeurs locales
+éventuellement enregistrées sont ignorées et supprimées au prochain enregistrement.
+Une liste de villes vide dans le fichier n’affiche aucun bloc.
 
-L’instance virtuelle `weather-legacy` reprend les villes historiques et leur visibilité
-(`home.weather`, villes configurées et ancien réglage `home.ephemeris`), sans écriture.
-Une fois enregistrée, sa visibilité devient indépendante des éphémérides. Chaque instance
-retient séparément la dernière ville du lecteur dans un cookie et ne partage aucun sélecteur DOM.
-Le cookie historique est repris pour `weather-legacy`. Les prévisions présentent aujourd’hui
-et demain ; les données absentes ou les erreurs du fournisseur affichent un message local.
-Le service serveur et son cache existants sont réutilisés, ainsi que les traducteurs des fournisseurs.
-L’ancien tag météo reste disponible pour les autres pages.
+L’instance virtuelle `weather-legacy` reprend la visibilité historique sans écriture.
+Une fois enregistrée, sa visibilité devient indépendante des éphémérides et de `home.weather`.
+Chaque instance retient séparément la dernière ville du lecteur dans un cookie ; le cookie
+historique est repris pour `weather-legacy`. RWeatherService, son cache et les traducteurs
+existants sont réutilisés. L’ancien tag météo reste disponible pour les autres pages.

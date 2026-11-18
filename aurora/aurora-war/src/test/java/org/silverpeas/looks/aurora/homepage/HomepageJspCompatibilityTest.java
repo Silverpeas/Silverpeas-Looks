@@ -231,9 +231,13 @@ class HomepageJspCompatibilityTest {
     String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
     String weather = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWeather.tag"));
     assertFalse(main.contains("<viewTags:displayWeather "));
+    assertTrue(weather.contains("configuredWeatherCities"));
+    assertFalse(weather.contains("widget.weatherConfiguration"));
     assertTrue(weather.contains("data-city=\"<c:out"));
     assertTrue(weather.contains("<c:out value=\"${city.name}\""));
     assertTrue(weather.contains("homepage-widget-${widget.id}"));
+    assertTrue(weather.contains("configuredWeatherCities"));
+    assertFalse(weather.contains("widget.weatherConfiguration"));
     assertFalse(weather.contains("onclick="));
     assertFalse(weather.contains("<script"));
   }

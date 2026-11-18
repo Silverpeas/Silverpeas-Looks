@@ -333,13 +333,13 @@ test('personal bookmarks load and save empty-state options with CSRF and fresh r
   assert.equal(body.get('revision'), 'first');
 });
 
-test('weather editor loads and saves cities with shared CSRF and revision', async () => {
+test('weather editor saves placement only and leaves cities in server properties', async () => {
   const {controls, calls, submit} = await editor(200, true, false, false, 'weather');
   assert.match(calls[0].url, /action=loadWeather/);
-  controls['news-cities'].value = '2988507|Paris\n2995469|Marseille';
+  assert.equal(controls['news-cities'], undefined);
   await submit();
   const saved = calls.at(-1);
   assert.match(saved.url, /action=saveWeather/);
   assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
-  assert.equal(new URLSearchParams(saved.body).get('cities'), '2988507|Paris\n2995469|Marseille');
+  assert.equal(new URLSearchParams(saved.body).has('cities'), false);
 });

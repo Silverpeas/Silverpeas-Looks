@@ -89,29 +89,29 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v2"/>
   </jsp:attribute>
   <jsp:body>
     <view:script src="/look/jsp/js/silverpeas-weather.js"/>
     <view:script src="/look/jsp/js/silverpeas-weather-yahoo.js"/>
     <view:script src="/look/jsp/js/silverpeas-weather-openweathermap.js"/>
     <view:script src="/look/jsp/js/silverpeas-weather-accuweather.js"/>
-    <view:script src="/look/jsp/js/homepage-weather.js?version=15592-weather-v1"/>
-    <view:link href="/look/jsp/css/homepage-weather.css?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-weather.js?version=15592-weather-v2"/>
+    <view:link href="/look/jsp/css/homepage-weather.css?version=15592-weather-v2"/>
 
-    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v2"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css?version=15592-weather-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-weather-v2"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
-    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-weather-v2"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
-    <view:script src="/look/jsp/js/homepage-search.js?version=15592-weather-v1"/>
-    <view:script src="/look/jsp/js/homepage-main.js?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-search.js?version=15592-weather-v2"/>
+    <view:script src="/look/jsp/js/homepage-main.js?version=15592-weather-v2"/>
   </jsp:body>
 </view:sp-head-part>
 <view:sp-body-part cssClass="main-home-page">
