@@ -107,7 +107,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(13, initial.size());
+    assertEquals(14, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -115,7 +115,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(13, changed.size());
+    assertEquals(14, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -590,4 +590,36 @@ class HomepageWidgetsTest {
     }
   }
 
+  @Test
+  void weatherIsVirtualThenSavedWithoutDuplicationAndProtectsItsTypeAndRevision() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    when(helper.getWeatherCities()).thenReturn(List.of(
+        new org.silverpeas.looks.aurora.service.weather.City("2988507", "Paris")));
+    var legacy = HomepageWidgets.weatherWidget(store, page, "weather-legacy", "fr", helper);
+    assertEquals("2988507|Paris", legacy.weatherConfiguration().cities());
+    assertTrue(legacy.isEnabled());
+    assertFalse(Files.exists(root.resolve("skins")));
+    var layout = new HomepageContentStore.Layout("main", 12, true);
+    store.saveWeatherWidget(page, legacy.id(), "fr", "Météo", layout, legacy.weatherConfiguration(), "");
+    var saved = new HomepageContentStore(root).readWidget(page, legacy.id(), "fr");
+    assertEquals("Paris", saved.weatherConfiguration().getEntries().getFirst().getName());
+    assertEquals(1, HomepageWidgets.all(store, page, "fr", helper).stream()
+        .filter(widget -> widget.id().equals(legacy.id())).count());
+    var second = new HomepageContentStore.WeatherConfiguration("2995469|Marseille");
+    store.saveWeatherWidget(page, "weather-second", "fr", "Sud", layout, second, "");
+    store.saveWeatherWidget(page, legacy.id(), "fr", "Météo", layout, second, saved.content().revision());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveWeatherWidget(page,
+        legacy.id(), "fr", "Météo", layout, second, saved.content().revision()));
+    assertThrows(IllegalArgumentException.class, () -> store.saveConfigured(page,
+        legacy.id(), "fr", "", "", "", layout));
+    assertThrows(IllegalArgumentException.class, () -> store.saveEphemerisWidget(page,
+        "weather-legacy", "fr", "", layout, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveWeatherWidget(page,
+        "bookmarks-legacy", "fr", "", layout, second, ""));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.WeatherConfiguration("1|Paris\n1|Lyon"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.WeatherConfiguration("../x|Paris"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.WeatherConfiguration("1|"));
+    assertTrue(new HomepageContentStore.WeatherConfiguration("").getEntries().isEmpty());
+  }
 }

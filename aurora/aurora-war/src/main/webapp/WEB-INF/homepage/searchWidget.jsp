@@ -38,8 +38,8 @@
 <view:sp-page>
   <view:sp-head-part>
     <view:includePlugin name="pdc"/>
-    <view:link href="/look/jsp/css/homepage-search.css?version=15592-bookmarks-v1"/>
-    <view:script src="/look/jsp/js/homepage-search-frame.js?version=15592-bookmarks-v1"/>
+    <view:link href="/look/jsp/css/homepage-search.css?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-search-frame.js?version=15592-weather-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-search-document">
     <c:choose>

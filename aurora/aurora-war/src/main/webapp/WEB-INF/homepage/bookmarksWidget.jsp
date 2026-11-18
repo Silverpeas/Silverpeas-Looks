@@ -33,10 +33,10 @@
   <view:sp-head-part>
     <view:script src="/util/javaScript/silverpeas-mylinks.js"/>
     <view:script src="/myLinksPeas/jsp/javaScript/vuejs/mylinkspeas.js"/>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-bookmarks-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v1"/>
     <view:link href="/myLinksPeas/jsp/styleSheets/myLinksPeas.css"/>
-    <view:link href="/look/jsp/css/homepage-bookmarks.css?version=15592-bookmarks-v1"/>
-    <view:script src="/look/jsp/js/homepage-bookmarks.js?version=15592-bookmarks-v1"/>
+    <view:link href="/look/jsp/css/homepage-bookmarks.css?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-bookmarks.js?version=15592-weather-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="main-home-page homepage-bookmarks-document">
     <c:choose>

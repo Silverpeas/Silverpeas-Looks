@@ -41,6 +41,9 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'weather'}">
+        <viewTags:displayHomepageWeather widget="${widget}"/>
+      </c:when>
       <c:when test="${widget.type == 'bookmarks'}">
         <c:url value="/AuroraHomepageContent" var="bookmarksUrl">
           <c:param name="action" value="renderBookmarks"/>

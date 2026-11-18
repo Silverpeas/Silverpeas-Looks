@@ -429,7 +429,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 13));
+        value instanceof java.util.List<?> widgets && widgets.size() == 14));
     verify(request).setAttribute(eq("newShortcutsWidgetId"), argThat(v -> v.toString().startsWith("shortcuts-")));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
@@ -736,6 +736,43 @@ class HomepageContentServletTest {
     when(request.getParameter("widget")).thenReturn("search-missing");
     servlet.doGet(request, response);
     verify(response).setStatus(204);
+  }
+
+  @Test
+  void weatherSaveRequiresAdminCsrfAndRevisionAndValidatesCities() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("saveWeather");
+    when(request.getParameter("widget")).thenReturn("weather-test");
+    when(request.getParameter("title")).thenReturn("Mes favoris");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("40");
+    when(request.getParameter("cities")).thenReturn("2988507|Paris");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var page = new HomepagePage("skins", "waves");
+    var saved = store.readWidget(page, "weather-test", "fr");
+    assertEquals(new HomepageContentStore.WeatherConfiguration("2988507|Paris"), saved.weatherConfiguration());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    when(request.getParameter("action")).thenReturn("loadWeather");
+    servlet.doGet(request, response);
+    assertTrue(output.toString().contains("\"cities\":\"2988507|Paris\""));
+    when(request.getParameter("action")).thenReturn("saveWeather");
+    when(request.getParameter("cities")).thenReturn("javascript:alert(1)");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(400);
+    assertEquals(saved.content().revision(), store.read(page, "weather-test", "fr").revision());
   }
 
   @Test

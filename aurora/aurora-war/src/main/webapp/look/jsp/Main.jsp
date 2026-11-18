@@ -68,8 +68,6 @@
 %>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
 
-<c:set var="weatherCities" value="${lookHelper.weatherCities}"/>
-<c:set var="showWeather" value="${not empty weatherCities}"/>
 
 
 
@@ -85,27 +83,35 @@
 
 <view:sp-page>
 <view:sp-head-part>
+
   <jsp:attribute name="atTop">
     <c:if test="${isAtLeastOneCarousel}">
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-bookmarks-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v1"/>
   </jsp:attribute>
   <jsp:body>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-bookmarks-v1"/>
+    <view:script src="/look/jsp/js/silverpeas-weather.js"/>
+    <view:script src="/look/jsp/js/silverpeas-weather-yahoo.js"/>
+    <view:script src="/look/jsp/js/silverpeas-weather-openweathermap.js"/>
+    <view:script src="/look/jsp/js/silverpeas-weather-accuweather.js"/>
+    <view:script src="/look/jsp/js/homepage-weather.js?version=15592-weather-v1"/>
+    <view:link href="/look/jsp/css/homepage-weather.css?version=15592-weather-v1"/>
+
+    <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v1"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css?version=15592-bookmarks-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-weather-v1"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
-    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-bookmarks-v1"/>
+    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-weather-v1"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
-    <view:script src="/look/jsp/js/homepage-search.js?version=15592-bookmarks-v1"/>
-    <view:script src="/look/jsp/js/homepage-main.js?version=15592-bookmarks-v1"/>
+    <view:script src="/look/jsp/js/homepage-search.js?version=15592-weather-v1"/>
+    <view:script src="/look/jsp/js/homepage-main.js?version=15592-weather-v1"/>
   </jsp:body>
 </view:sp-head-part>
 <view:sp-body-part cssClass="main-home-page">
@@ -131,7 +137,6 @@
 
 
 
-      <viewTags:displayWeather weatherOnly="${true}" showEphemeris="${false}" showWeather="${showWeather and settings.displayEphemeris}" cities="${weatherCities}"/>
 
 
 

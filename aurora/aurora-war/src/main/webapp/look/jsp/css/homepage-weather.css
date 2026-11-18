@@ -1,0 +1,61 @@
+/*
+ * Copyright (C) 2000 - 2026 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "https://www.silverpeas.org/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+.homepage-weather {
+  position: relative;
+  width: auto;
+}
+.homepage-weather-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5em;
+}
+.homepage-weather-cities button {
+  cursor: pointer;
+  font: inherit;
+}
+.homepage-weather-cities button[aria-pressed="true"] {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.homepage-weather-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+.homepage-weather-day img {
+  width: 48px;
+  height: 48px;
+}
+.homepage-weather-day[hidden] {
+  display: none;
+}
+.homepage-weather .min {
+  color: #1c94d4;
+}
+.homepage-weather .max {
+  color: #ec8601;
+}
+.homepage-weather .label {
+  font-size: .9em;
+}

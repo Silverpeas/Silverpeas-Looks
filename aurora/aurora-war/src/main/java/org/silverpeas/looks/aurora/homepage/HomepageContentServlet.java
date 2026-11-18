@@ -104,7 +104,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -212,6 +212,13 @@ public class HomepageContentServlet extends HttpServlet {
                 option(request, "showAllNews")));
         newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
       }
+    } else if ("saveWeather".equals(action)) {
+      store.saveWeatherWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")), option(request, "enabled")),
+          new HomepageContentStore.WeatherConfiguration(request.getParameter("cities")),
+          request.getParameter("revision"));
+      weatherResponse(request, response, page, widget, language, "");
     } else if ("saveBookmarks".equals(action)) {
       store.saveBookmarksWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
@@ -382,6 +389,10 @@ public class HomepageContentServlet extends HttpServlet {
         request.setAttribute("feedRss", feeds);
       }
       request.getRequestDispatcher("/WEB-INF/homepage/feedWidget.jsp").forward(request, response);
+    } else if ("loadWeather".equals(action)) {
+      weatherResponse(request, response, page, widget, language, csrf);
+    } else if ("weatherEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/weatherEditor.jsp").forward(request, response);
     } else if ("loadBookmarks".equals(action)) {
       bookmarksResponse(request, response, page, widget, language, csrf);
     } else if ("bookmarksEditor".equals(action)) {
@@ -454,6 +465,7 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
       request.setAttribute("newEventsWidgetId", "events-" + UUID.randomUUID());
+      request.setAttribute("newWeatherWidgetId", "weather-" + UUID.randomUUID());
       request.setAttribute("newBookmarksWidgetId", "bookmarks-" + UUID.randomUUID());
       request.setAttribute("newSearchWidgetId", "search-" + UUID.randomUUID());
       request.setAttribute("newShortcutsWidgetId", "shortcuts-" + UUID.randomUUID());
@@ -468,6 +480,19 @@ public class HomepageContentServlet extends HttpServlet {
     } else {
       throw new IllegalArgumentException("Unknown action");
     }
+  }
+
+  private void weatherResponse(HttpServletRequest request, HttpServletResponse response,
+      HomepagePage page, String widget, String language, String csrf) throws IOException {
+    var model = HomepageWidgets.weatherWidget(store, page, widget, language,
+        (org.silverpeas.looks.aurora.LookAuroraHelper)
+            request.getSession(false).getAttribute("Silverpeas_LookHelper"));
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o
+        .put("configured", !content.revision().isEmpty()).put("title", content.title())
+        .put("zone", content.layout().zone()).put("order", content.layout().order())
+        .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf)
+        .put("cities", model.weatherConfiguration().cities())));
   }
 
   private void bookmarksResponse(HttpServletRequest request, HttpServletResponse response,

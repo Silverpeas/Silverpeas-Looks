@@ -170,6 +170,25 @@ public final class HomepageWidgets {
     return result;
   }
 
+  public static HomepageContentStore.Widget weatherWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"weather".equals(saved.type())) { throw new IllegalArgumentException("Expected a weather widget"); }
+      return saved;
+    }
+    boolean legacy = "weather-legacy".equals(id);
+    String cities = helper.getWeatherCities().stream()
+        .map(city -> city.getId() + "|" + city.getName())
+        .collect(java.util.stream.Collectors.joining("\n"));
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Météo", "", "",
+            new HomepageContentStore.Layout("right", 5,
+                !legacy || !cities.isEmpty() && helper.getLookSettings().isDisplayEphemeris())),
+        "weather", null, 0, null, null, null, null, null, null, null, null, null,
+        new HomepageContentStore.WeatherConfiguration(cities));
+  }
+
   public static HomepageContentStore.Widget bookmarksWidget(HomepageContentStore store,
       HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
     var saved = store.readWidget(page, id, language);
@@ -305,6 +324,10 @@ public final class HomepageWidgets {
     if ("skins".equals(page.kind()) &&
         widgets.stream().noneMatch(widget -> widget.id().equals("bookmarks-legacy"))) {
       widgets.add(bookmarksWidget(store, page, "bookmarks-legacy", language, helper));
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("weather-legacy"))) {
+      widgets.add(weatherWidget(store, page, "weather-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

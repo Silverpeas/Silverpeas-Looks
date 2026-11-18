@@ -45,7 +45,7 @@ async function editor(status = 200, configured = false, publications = false, ep
   }
   const calls = [];
   let start;
-  const data = {showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {cities: "2988507|Paris", showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -331,4 +331,15 @@ test('personal bookmarks load and save empty-state options with CSRF and fresh r
   assert.equal(body.get('showWhenEmpty'), 'false');
   assert.equal(body.get('emptyFragment'), '/silverpeas/empty.html');
   assert.equal(body.get('revision'), 'first');
+});
+
+test('weather editor loads and saves cities with shared CSRF and revision', async () => {
+  const {controls, calls, submit} = await editor(200, true, false, false, 'weather');
+  assert.match(calls[0].url, /action=loadWeather/);
+  controls['news-cities'].value = '2988507|Paris\n2995469|Marseille';
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /action=saveWeather/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  assert.equal(new URLSearchParams(saved.body).get('cities'), '2988507|Paris\n2995469|Marseille');
 });
