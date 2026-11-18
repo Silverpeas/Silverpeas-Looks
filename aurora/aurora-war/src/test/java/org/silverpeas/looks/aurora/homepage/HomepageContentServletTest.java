@@ -95,6 +95,8 @@ class HomepageContentServletTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultSearchConfiguration()).thenReturn(
+        new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false));
     when(helper.getDefaultSubscriptionsConfiguration()).thenReturn(
         new HomepageContentStore.SubscriptionsConfiguration(4, true));
     when(settings.isDisplayLastSubscribedNews()).thenReturn(true);
@@ -426,7 +428,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 11));
+        value instanceof java.util.List<?> widgets && widgets.size() == 12));
     verify(request).setAttribute(eq("newShortcutsWidgetId"), argThat(v -> v.toString().startsWith("shortcuts-")));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
@@ -671,4 +673,68 @@ class HomepageContentServletTest {
     servlet.doPost(request, response);
     verify(response).sendError(400);
   }
+  @Test
+  void searchSaveRequiresAdminCsrfAndFreshRevisionAndRejectsInvalidTemplates() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("action")).thenReturn("saveSearch");
+    when(request.getParameter("widget")).thenReturn("search-test");
+    when(request.getParameter("title")).thenReturn("Recherche");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("30");
+    when(request.getParameter("mode")).thenReturn("advanced");
+    when(request.getParameter("template")).thenReturn("documents.xml");
+    when(request.getParameter("labelsInside")).thenReturn("true");
+    when(request.getParameter("period")).thenReturn("true");
+    when(request.getParameter("space")).thenReturn("false");
+    when(user.isAccessAdmin()).thenReturn(false);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var page = new HomepagePage("skins", "waves");
+    var saved = store.readWidget(page, "search-test", "fr");
+    assertEquals(new HomepageContentStore.SearchConfiguration("advanced", "documents.xml", true, true, false), saved.searchConfiguration());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    when(request.getParameter("action")).thenReturn("loadSearch");
+    servlet.doGet(request, response);
+    assertTrue(output.toString().contains("\"mode\":\"advanced\""));
+    when(request.getParameter("action")).thenReturn("saveSearch");
+    when(request.getParameter("template")).thenReturn("../secret.xml");
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response).sendError(400);
+    assertEquals(saved.content().revision(), store.read(page, "search-test", "fr").revision());
+  }
+
+  @Test
+  void ordinaryReaderCanRenderOnlyVisibleSearchFromTheirActiveSkin() throws Exception {
+    var page = new HomepagePage("skins", "waves");
+    store.saveSearchWidget(page, "search-test", "fr", "Recherche",
+        new HomepageContentStore.Layout("right", 30, true),
+        new HomepageContentStore.SearchConfiguration("taxonomy", "", true, false, false), "");
+    when(user.isAccessAdmin()).thenReturn(false);
+    when(request.getParameter("action")).thenReturn("renderSearch");
+    when(request.getParameter("widget")).thenReturn("search-test");
+    var dispatcher = mock(jakarta.servlet.RequestDispatcher.class);
+    when(request.getRequestDispatcher("/WEB-INF/homepage/searchWidget.jsp")).thenReturn(dispatcher);
+    servlet.doGet(request, response);
+    verify(dispatcher).forward(request, response);
+    verify(response, never()).sendError(anyInt());
+    when(request.getParameter("owner")).thenReturn("other");
+    servlet.doGet(request, response);
+    verify(response).sendError(403);
+    when(request.getParameter("owner")).thenReturn("waves");
+    when(request.getParameter("widget")).thenReturn("search-missing");
+    servlet.doGet(request, response);
+    verify(response).setStatus(204);
+  }
+
 }

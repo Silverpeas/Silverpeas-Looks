@@ -170,6 +170,25 @@ public final class HomepageWidgets {
     return result;
   }
 
+  public static HomepageContentStore.Widget searchWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"search".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a search widget");
+      }
+      return saved;
+    }
+    boolean legacy = "search-legacy".equals(id);
+    var configuration = legacy ? helper.getDefaultSearchConfiguration()
+        : new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false);
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Recherche", "", "",
+            new HomepageContentStore.Layout("right", 30, !legacy ||
+                "advanced".equals(configuration.mode()) || helper.getLookSettings().isDisplaySearchOnHome())),
+        "search", null, 0, null, null, null, null, null, null, null, configuration);
+  }
+
   public static HomepageContentStore.Widget shortcutsWidget(HomepageContentStore store,
       HomepagePage page, String id, String language, LookAuroraHelper helper) throws IOException {
     var saved = store.readWidget(page, id, language);
@@ -258,6 +277,10 @@ public final class HomepageWidgets {
     if ("skins".equals(page.kind()) &&
         widgets.stream().noneMatch(widget -> widget.id().equals("shortcuts-legacy"))) {
       widgets.add(shortcutsWidget(store, page, "shortcuts-legacy", language, helper));
+    }
+    if ("skins".equals(page.kind()) &&
+        widgets.stream().noneMatch(widget -> widget.id().equals("search-legacy"))) {
+      widgets.add(searchWidget(store, page, "search-legacy", language, helper));
     }
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));

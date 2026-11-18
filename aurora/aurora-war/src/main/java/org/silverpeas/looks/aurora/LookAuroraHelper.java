@@ -920,6 +920,33 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getSpaceAdmins(spaceId).contains(getUserDetail());
   }
 
+  public org.silverpeas.looks.aurora.homepage.HomepageContentStore.SearchConfiguration
+      getDefaultSearchConfiguration() {
+    String template = getSettings("home.search.template", "").trim();
+    return new org.silverpeas.looks.aurora.homepage.HomepageContentStore.SearchConfiguration(
+        template.isEmpty() ? "taxonomy" : "advanced", template,
+        getLookSettings().isLabelsInsideSelectOnTaxonomy(),
+        getLookSettings().isExtraSearchFieldPeriodUsed(), getLookSettings().isExtraSearchFieldSpaceUsed());
+  }
+
+  public Form getConfiguredSearchForm(String templateFilename) {
+    try {
+      var template = (PublicationTemplateImpl) PublicationTemplateManager.getInstance()
+          .loadPublicationTemplate(templateFilename);
+      if (template == null) {
+        return null;
+      }
+      var form = template.getSearchForm();
+      if (form != null) {
+        form.setData(template.getSearchTemplate().getEmptyRecord());
+      }
+      return form;
+    } catch (Exception e) {
+      SilverLogger.getLogger(this).error(e);
+      return null;
+    }
+  }
+
   public Form getMainSearchForm() {
     PublicationTemplateImpl template = (PublicationTemplateImpl) getMainSearchTemplate();
     if (template != null) {

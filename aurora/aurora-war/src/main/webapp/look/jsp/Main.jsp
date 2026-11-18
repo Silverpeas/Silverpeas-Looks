@@ -77,7 +77,6 @@
 <c:set var="bookmarks" value="${lookHelper.bookmarks}"/>
 <c:set var="showBookmarksAreaWhenEmpty" value="${settings.displayBookmarksAreaWhenEmpty}"/>
 <c:set var="noBookmarksFragment" value="${settings.noBookmarksFragmentURL}"/>
-<c:set var="labelInsideSelectOnTaxonomy" value="${settings.labelsInsideSelectOnTaxonomy}"/>
 
 
 
@@ -85,7 +84,6 @@
 
 <c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
 
-<c:set var="searchForm" value="${lookHelper.mainSearchForm}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 
 <view:sp-page>
@@ -95,21 +93,22 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     </c:if>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-shortcuts-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-search-v1"/>
   </jsp:attribute>
   <jsp:body>
-    <view:link href="/look/jsp/css/aurora.css?version=15592-shortcuts-v1"/>
+    <view:link href="/look/jsp/css/aurora.css?version=15592-search-v1"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
-    <view:link href="/look/jsp/css/homepage-main.css?version=15592-shortcuts-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-search-v1"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
-    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-shortcuts-v1"/>
+    <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-search-v1"/>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
     <script type="text/javascript" src="js/ephemeris.min.js"></script>
     <c:if test="${not empty extraJavascript}">
       <script type="text/javascript" src="${extraJavascript}"></script>
     </c:if>
-    <view:script src="/look/jsp/js/homepage-main.js?version=15592-shortcuts-v1"/>
+    <view:script src="/look/jsp/js/homepage-search.js?version=15592-search-v1"/>
+    <view:script src="/look/jsp/js/homepage-main.js?version=15592-search-v1"/>
   </jsp:body>
 </view:sp-head-part>
 <view:sp-body-part cssClass="main-home-page">
@@ -137,9 +136,7 @@
 
       <viewTags:displayWeather weatherOnly="${true}" showEphemeris="${false}" showWeather="${showWeather and settings.displayEphemeris}" cities="${weatherCities}"/>
 
-      <viewTags:displayTaxonomy enabled="${settings.displaySearchOnHome}" labelsInsideSelect="${labelInsideSelectOnTaxonomy}" />
 
-      <viewTags:displayFormSearch searchForm="${searchForm}" extraFieldPeriod="${settings.extraSearchFieldPeriodUsed}" extraFieldSpace="${settings.extraSearchFieldSpaceUsed}"/>
 
       <viewTags:displayUserBookmarks bookmarks="${bookmarks}" showWhenEmpty="${showBookmarksAreaWhenEmpty}" noBookmarksFragment="${noBookmarksFragment}"/>
       <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" questions="${homepageQuestions}" users="${homepageUsers}" subscriptions="${homepageSubscriptions}" zone="right"/>

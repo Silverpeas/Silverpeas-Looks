@@ -274,3 +274,22 @@ Les widgets vides et masqués ne sont pas affichés. Les classes et identifiants
 rendu administré sont propres à chaque instance : placement dans le flux des deux
 colonnes, sans les positions absolues du bloc historique. Les révisions incluent
 l’ordre et tous les champs des liens ; contrôle admin, CSRF et conflits 409.
+
+
+### Recherche
+
+Un seul type `search`, avec modes `taxonomy` (plan de classement) ou `advanced`
+(formulaire XML). Éditeur unique : titre, colonne, ordre, visibilité, libellés dans les
+sélecteurs du plan de classement, fichier de modèle XML, critères période/espace.
+Le modèle est un nom de fichier local `.xml` sans chemin ; il doit exister et définir
+un formulaire de recherche. S’il est indisponible, le lecteur voit un message explicite.
+Les résultats et leurs droits restent traités par les routes Core AdvancedSearch/XMLSearch.
+
+L’instance virtuelle `search-legacy` reprend `home.search.*`, sans écriture. Si un modèle
+est configuré, elle choisit le mode avancé ; sinon le plan de classement suit `home.search`.
+Cela remplace les deux rendus historiques potentiellement simultanés par un seul widget.
+Sa sauvegarde le remplace sans doublon. Les nouvelles instances sont indépendantes.
+Les champs générés par Core ayant des identifiants fixes, chaque instance possède un
+document iframe de même origine, redimensionné automatiquement. La soumission cible
+la page parente : les résultats ne restent pas enfermés dans le widget. Les anciens
+tags utilisés par les homes d’espace restent inchangés.

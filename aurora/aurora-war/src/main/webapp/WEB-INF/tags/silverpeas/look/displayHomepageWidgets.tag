@@ -41,6 +41,20 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'search'}">
+        <c:url value="/AuroraHomepageContent" var="searchUrl">
+          <c:param name="action" value="renderSearch"/>
+          <c:param name="kind" value="skins"/>
+          <c:param name="owner" value="${homepageOwner}"/>
+          <c:param name="widget" value="${widget.id}"/>
+          <c:param name="language" value="${homepageLanguage}"/>
+        </c:url>
+        <section id="homepage-content-${widget.id}" class="secteur-container homepage-search">
+          <c:if test="${not empty widget.title}"><h4><c:out value="${widget.title}"/></h4></c:if>
+          <iframe class="homepage-search-frame" title="<c:out value='${empty widget.title ? "Recherche" : widget.title}'/>"
+              src="<c:out value='${searchUrl}'/>"></iframe>
+        </section>
+      </c:when>
       <c:when test="${widget.type == 'shortcuts'}">
         <viewTags:displayShortcuts shortcuts="${widget.shortcutsConfiguration.entries}"
             id="homepage-content-${widget.id}" title="${widget.title}"/>

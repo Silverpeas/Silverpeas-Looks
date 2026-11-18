@@ -43,6 +43,8 @@ class HomepageWidgetsTest {
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);
     when(settings.isDisplayEphemeris()).thenReturn(true);
     when(helper.getLookSettings()).thenReturn(settings);
+    when(helper.getDefaultSearchConfiguration()).thenReturn(
+        new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false));
     when(helper.getDefaultSubscriptionsConfiguration()).thenReturn(
         new HomepageContentStore.SubscriptionsConfiguration(4, true));
     when(settings.isDisplayLastSubscribedNews()).thenReturn(true);
@@ -104,7 +106,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(11, initial.size());
+    assertEquals(12, initial.size());
     assertFalse(Files.exists(root.resolve("skins")));
     store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
     var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
@@ -112,7 +114,7 @@ class HomepageWidgetsTest {
     store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
         new HomepageContentStore.Layout("right", 1, false), news(""), 2);
     var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(11, changed.size());
+    assertEquals(12, changed.size());
     var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
     assertFalse(changedNews.isEnabled());
     assertEquals("delegated", store.readNews(page, 2).source());
@@ -495,4 +497,43 @@ class HomepageWidgetsTest {
       assertDoesNotThrow(() -> new HomepageContentStore.HomeShortcut("", url, "", "bottomFrame"));
     }
   }
+  @Test
+  void searchIsOneTypeWithTwoModesAndOneVirtualLegacyInstance() throws Exception {
+    var store = new HomepageContentStore(root);
+    var helper = helper();
+    var configuration = new HomepageContentStore.SearchConfiguration("advanced", "document.xml", true, true, false);
+    when(helper.getDefaultSearchConfiguration()).thenReturn(configuration);
+    var initial = HomepageWidgets.all(store, page, "fr", helper);
+    assertEquals(1, initial.stream().filter(w -> "search".equals(w.type())).count());
+    var legacy = initial.stream().filter(w -> "search".equals(w.type())).findFirst().orElseThrow();
+    assertTrue(legacy.isEnabled());
+    assertEquals(configuration, legacy.searchConfiguration());
+    assertFalse(Files.exists(root.resolve("skins/waves/page.properties")));
+    var layout = new HomepageContentStore.Layout("main", 4, false);
+    store.saveSearchWidget(page, legacy.id(), "fr", "Recherche", layout, configuration, "");
+    var reopened = new HomepageContentStore(root);
+    var saved = reopened.readWidget(page, legacy.id(), "fr");
+    assertEquals(configuration, saved.searchConfiguration());
+    var taxonomy = new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, true);
+    reopened.saveSearchWidget(page, legacy.id(), "fr", "Recherche", layout, taxonomy, saved.content().revision());
+    assertNotEquals(saved.content().revision(), reopened.read(page, legacy.id(), "fr").revision());
+    assertThrows(ConcurrentModificationException.class, () -> reopened.saveSearchWidget(page,
+        legacy.id(), "fr", "", layout, configuration, saved.content().revision()));
+    reopened.saveSearchWidget(page, "search-extra", "fr", "Autre recherche", layout, configuration, "");
+    assertEquals(2, HomepageWidgets.all(reopened, page, "fr", helper).stream()
+        .filter(w -> "search".equals(w.type())).count());
+    assertEquals(taxonomy, reopened.readWidget(page, legacy.id(), "fr").searchConfiguration());
+    assertThrows(IllegalArgumentException.class, () -> reopened.save(page, legacy.id(), "fr", "", "", ""));
+    assertThrows(IllegalArgumentException.class, () -> reopened.saveSearchWidget(page, "faq-legacy", "fr", "", layout, taxonomy, ""));
+    store.save(page, "html-test", "fr", "", "", "");
+    assertThrows(IllegalArgumentException.class, () -> store.saveSearchWidget(page, "html-test", "fr", "", layout, taxonomy, ""));
+    assertThrows(IllegalArgumentException.class, () -> store.saveShortcutsWidget(page, "search-legacy", "fr", "", layout,
+        new HomepageContentStore.ShortcutsConfiguration(List.of()), ""));
+    for (String template : List.of("../secret.xml", "/secret.xml", "https://test/form.xml", "bad.xml/other", "x..xml")) {
+      assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SearchConfiguration("advanced", template, false, false, false));
+    }
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SearchConfiguration("advanced", "", false, false, false));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.SearchConfiguration("other", "", false, false, false));
+  }
+
 }

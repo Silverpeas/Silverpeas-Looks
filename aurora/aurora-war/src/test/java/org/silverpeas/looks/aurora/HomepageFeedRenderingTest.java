@@ -39,7 +39,7 @@ class HomepageFeedRenderingTest {
         case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
             "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers",
             "getDefaultFaqConfiguration", "getDefaultUsersConfiguration", "getConfiguredSubscriptions",
-            "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
+            "getConfiguredSearchForm", "getDefaultSearchConfiguration", "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
         case "getOrganisationController" -> { return organization; }
         case "getUserId" -> { return "42"; }
         case "getSettings" -> { return invocation.getArgument(1); }
@@ -175,6 +175,35 @@ class HomepageFeedRenderingTest {
       when(service.getByUserSubscriber("42")).thenReturn(new org.silverpeas.core.subscription.util.SubscriptionList());
       assertTrue(helper.getLastNewsSubscribed().isEmpty());
       verifyNoMoreInteractions(quickinfo);
+    }
+  }
+
+  @Test
+  void searchDefaultsPreferTheConfiguredTemplateAndLoadAnIndependentEmptyForm() throws Exception {
+    var helper = helper(mock(OrganizationController.class));
+    var settings = mock(LookSettings.class);
+    when(helper.getLookSettings()).thenReturn(settings);
+    when(settings.isExtraSearchFieldPeriodUsed()).thenReturn(true);
+    assertEquals("taxonomy", helper.getDefaultSearchConfiguration().mode());
+    doReturn("document.xml").when(helper).getSettings("home.search.template", "");
+    assertEquals(new HomepageContentStore.SearchConfiguration("advanced", "document.xml", false, true, false),
+        helper.getDefaultSearchConfiguration());
+    var manager = mock(org.silverpeas.core.contribution.template.publication.PublicationTemplateManager.class);
+    var template = mock(org.silverpeas.core.contribution.template.publication.PublicationTemplateImpl.class);
+    var form = mock(org.silverpeas.core.contribution.content.form.Form.class);
+    var recordTemplate = mock(org.silverpeas.core.contribution.content.form.RecordTemplate.class);
+    var record = mock(org.silverpeas.core.contribution.content.form.DataRecord.class);
+    when(manager.loadPublicationTemplate("document.xml")).thenReturn(template);
+    when(template.getSearchForm()).thenReturn(form);
+    when(template.getSearchTemplate()).thenReturn(recordTemplate);
+    when(recordTemplate.getEmptyRecord()).thenReturn(record);
+    try (var provider = mockStatic(org.silverpeas.core.contribution.template.publication.PublicationTemplateManager.class)) {
+      provider.when(org.silverpeas.core.contribution.template.publication.PublicationTemplateManager::getInstance).thenReturn(manager);
+      assertSame(form, helper.getConfiguredSearchForm("document.xml"));
+      verify(form).setData(record);
+      assertNull(helper.getConfiguredSearchForm("missing.xml"));
+      when(template.getSearchForm()).thenReturn(null);
+      assertNull(helper.getConfiguredSearchForm("document.xml"));
     }
   }
 

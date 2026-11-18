@@ -40,12 +40,12 @@ async function editor(status = 200, configured = false, publications = false, ep
   for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
       dataset: {widgetType: feedType || (ephemeris ? 'ephemeris' : '')},
-      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar'].includes(match[1]) ? 'checkbox' : 'text',
+      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar', 'news-labels-inside', 'news-period'].includes(match[1]) || (feedType === 'search' && match[1] === 'news-space') ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
   const calls = [];
   let start;
-  const data = {entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -293,4 +293,27 @@ test('home shortcuts editor loads ordered entries and sends them with protected 
   assert.equal(body.get('zone'), 'right');
   assert.equal(body.get('revision'), 'first');
   assert.equal(body.has('source'), false);
+});
+
+
+test('one search editor switches modes and saves all options with CSRF and revision', async () => {
+  const {controls, calls, submit} = await editor(200, true, false, false, 'search');
+  assert.match(calls[0].url, /action=loadSearch/);
+  assert.equal(controls['search-advanced-settings'].hidden, true);
+  controls['news-mode'].value = 'advanced';
+  controls['news-mode'].handlers.change();
+  assert.equal(controls['news-template'].required, true);
+  assert.equal(controls['search-taxonomy-settings'].hidden, true);
+  controls['news-template'].value = ' documents.xml ';
+  controls['news-period'].checked = true;
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /action=saveSearch/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  const body = new URLSearchParams(saved.body);
+  assert.equal(body.get('mode'), 'advanced');
+  assert.equal(body.get('template'), 'documents.xml');
+  assert.equal(body.get('period'), 'true');
+  assert.equal(body.get('labelsInside'), 'true');
+  assert.equal(body.get('revision'), 'first');
 });

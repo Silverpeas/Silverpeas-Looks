@@ -25,13 +25,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const status = document.getElementById('news-status');
   const save = document.getElementById('news-save');
   const widgetType = document.getElementById('news-form').dataset.widgetType;
-  const community = ['faq', 'users', 'subscriptions', 'shortcuts'].includes(widgetType);
+  const community = ['faq', 'users', 'subscriptions', 'shortcuts', 'search'].includes(widgetType);
   const configurationAction = prefix => prefix + widgetType[0].toUpperCase() + widgetType.slice(1);
   const feed = ['events', 'rss'].includes(widgetType);
   const ephemeris = widgetType === 'ephemeris';
   const commonFields = {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'};
   const publications = document.getElementById('news-space');
-  const fields = widgetType === 'shortcuts' ? commonFields : widgetType === 'subscriptions' ? {...commonFields, size: 'size', showMore: 'show-more'} : community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
+  const fields = widgetType === 'search' ? {...commonFields, mode: 'mode', template: 'template', labelsInside: 'labels-inside', period: 'period', space: 'space'} : widgetType === 'shortcuts' ? commonFields : widgetType === 'subscriptions' ? {...commonFields, size: 'size', showMore: 'show-more'} : community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
     ? {source: 'source', selection: 'selection'} : {group: 'group', avatar: 'avatar', fields: 'fields'})} : feed ? {...commonFields, source: 'source', ...(widgetType === 'events'
     ? {maxDays: 'max-days', includeToday: 'include-today', personal: 'personal', importantOnly: 'important', showMore: 'show-more'}
     : {rendering: 'rendering'})} : ephemeris ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'} : publications ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled',
@@ -66,6 +66,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     xhr.send(body ? body.toString() : null);
   });
   const applications = document.getElementById('news-applications');
+  const refreshSearch = () => {
+    if (widgetType !== 'search') { return; }
+    const advanced = control('mode').value === 'advanced';
+    document.getElementById('search-advanced-settings').hidden = !advanced;
+    document.getElementById('search-taxonomy-settings').hidden = advanced;
+    control('template').required = advanced;
+  };
+  if (widgetType === 'search') { control('mode').addEventListener('change', refreshSearch); }
   const refreshSource = () => {
     if (community || feed || ephemeris || publications) { return; }
     const selected = control('source').value === 'applications';
@@ -91,6 +99,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       applications.value = data.source;
     }
     refreshSource();
+    refreshSearch();
     status.textContent = data.configured ? ''
       : 'Les modifications seront appliquées après enregistrement.';
     save.disabled = false;
@@ -108,6 +117,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       body.set('source', applications.value.trim().replace(/\s+/g, ' '));
     }
     if (widgetType === 'shortcuts') { window.AuroraHomeShortcuts.serialize(body); }
+    if (widgetType === 'search') { body.set('template', control('template').value.trim()); }
     if (community) {
       ['source', 'group', 'fields'].filter(key => fields[key]).forEach(key =>
         body.set(key, control(key).value.trim().replace(/\s+/g, ' ')));

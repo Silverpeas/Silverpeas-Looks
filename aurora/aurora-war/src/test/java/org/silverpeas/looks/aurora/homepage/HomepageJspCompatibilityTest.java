@@ -73,29 +73,31 @@ class HomepageJspCompatibilityTest {
 
   @Test
   void homepageScriptletCompilesWithTheLegacyJspSourceLevel() throws Exception {
-    String jsp = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
-    String imports = Pattern.compile("<%@ page import=\"([^\"]+)\" %>")
-        .matcher(jsp).results().map(match -> "import " + match.group(1) + ";")
-        .collect(Collectors.joining("\n"));
-    String scriptlets = Pattern.compile("<%(?![@!=-])([\\s\\S]*?)%>")
-        .matcher(jsp).results().map(match -> match.group(1))
-        .collect(Collectors.joining("\n"));
-    Path source = temporary.resolve("HomepageScriptlet.java");
-    Files.writeString(source, imports + "\nclass HomepageScriptlet {\n" +
-        "void render(jakarta.servlet.http.HttpSession session, " +
-        "jakarta.servlet.http.HttpServletRequest request) throws Exception {\n" +
-        scriptlets + "\n}\n}");
-    var compiler = ToolProvider.getSystemJavaCompiler();
-    var diagnostics = new DiagnosticCollector<JavaFileObject>();
-    try (var files = compiler.getStandardFileManager(diagnostics, null, null)) {
-      // Keep JDK APIs available, but enforce the source syntax used by the JSP compiler.
-      var options = List.of("-source", "8", "-target", "8", "-proc:none",
-          "-classpath", System.getProperty("java.class.path"), "-d", temporary.toString());
-      boolean compiled = compiler.getTask(null, files, diagnostics, options, null,
-          files.getJavaFileObjects(source)).call();
-      assertTrue(compiled, () -> diagnostics.getDiagnostics().toString());
+    for (String page : List.of("look/jsp/Main.jsp", "WEB-INF/homepage/searchWidget.jsp")) {
+      String jsp = Files.readString(Path.of("src/main/webapp", page));
+      String imports = Pattern.compile("<%@ page import=\"([^\"]+)\" %>")
+          .matcher(jsp).results().map(match -> "import " + match.group(1) + ";")
+          .collect(Collectors.joining("\n"));
+      String scriptlets = Pattern.compile("<%(?![@!=-])([\\s\\S]*?)%>")
+          .matcher(jsp).results().map(match -> match.group(1))
+          .collect(Collectors.joining("\n"));
+      Path source = temporary.resolve("HomepageScriptlet.java");
+      Files.writeString(source, imports + "\nclass HomepageScriptlet {\n" +
+          "void render(jakarta.servlet.http.HttpSession session, " +
+          "jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.jsp.JspWriter out) throws Exception {\n" +
+          scriptlets + "\n}\n}");
+      var compiler = ToolProvider.getSystemJavaCompiler();
+      var diagnostics = new DiagnosticCollector<JavaFileObject>();
+      try (var files = compiler.getStandardFileManager(diagnostics, null, null)) {
+        var options = List.of("-source", "8", "-target", "8", "-proc:none",
+            "-classpath", System.getProperty("java.class.path"), "-d", temporary.toString());
+        boolean compiled = compiler.getTask(null, files, diagnostics, options, null,
+            files.getJavaFileObjects(source)).call();
+        assertTrue(compiled, () -> page + diagnostics.getDiagnostics().toString());
+      }
     }
   }
+
   @Test
   void managementViewsUseSupportedSilverpeasTagsAndAttributes() throws Exception {
     var factory = DocumentBuilderFactory.newInstance();
@@ -124,7 +126,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp", "searchEditor.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {
@@ -189,4 +191,22 @@ class HomepageJspCompatibilityTest {
     assertTrue(tag.contains("rel=\"${shortcut.target == '_blank' ? 'noopener noreferrer' : ''}\""));
     assertTrue(tag.contains("<c:if test=\"${not empty shortcuts}\">"));
   }
+  @Test
+  void searchUsesOneManagedTypeAndIsolatesCoreGeneratedFieldIds() throws Exception {
+    String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    String search = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/searchWidget.jsp"));
+    assertFalse(main.contains("<viewTags:displayTaxonomy"));
+    assertFalse(main.contains("<viewTags:displayFormSearch"));
+    assertFalse(main.contains("lookHelper.mainSearchForm"));
+    assertTrue(widgets.contains("widget.type == 'search'"));
+    assertTrue(widgets.contains("value=\"renderSearch\""));
+    assertTrue(widgets.contains("class=\"homepage-search-frame\""));
+    assertTrue(search.contains("target=\"_parent\""));
+    assertTrue(search.contains("name=\"AxisValueCouples\""));
+    assertTrue(search.contains("name=\"xmlSearchSelectedForm\""));
+    assertFalse(search.contains("javascript:"));
+    assertFalse(search.contains("<script>"));
+  }
+
 }
