@@ -37,9 +37,18 @@ function setup(responseStatus = 200) {
     open: false, showModal() { this.open = true; }, close() { this.open = false; },
     addEventListener: (name, callback) => { escape = callback; }
   };
+  const filters = ['all', 'content', 'community', 'services'].map(category => ({
+    dataset: {catalogFilter: category},
+    setAttribute(name, value) { this[name] = value; },
+    addEventListener(name, callback) { this.click = callback; }
+  }));
+  const tiles = ['content', 'community', 'services'].map(category => ({
+    dataset: {category}, hidden: false
+  }));
   const management = {
     dataset: {endpoint: '/sp/AuroraHomepageContent', csrf: 'token'},
     contains: () => true,
+    querySelectorAll: selector => selector === '[data-catalog-filter]' ? filters : tiles,
     addEventListener: (name, callback) => { click = callback; },
     querySelector: selector => selector === '.homepage-delete-dialog' ? dialog : status
   };
@@ -79,7 +88,7 @@ function setup(responseStatus = 200) {
   };
   const event = target => ({target: {closest: () => target}, preventDefault() {}});
   return {
-    state, status, dialog, button,
+    state, status, dialog, button, filters, tiles,
     open: () => click(event(button)),
     action: selector => click(event({matches: other => other === selector})),
     escape: () => { escape(); dialog.close(); }
@@ -120,3 +129,19 @@ for (const failure of [409, 403, 'network', 'timeout']) {
     assert.equal(ui.button.disabled, false);
   });
 }
+
+
+test('category filters hide unrelated tiles and Tous restores the catalogue', () => {
+  const ui = setup();
+  for (const filter of ui.filters) {
+    filter.click();
+    for (const tile of ui.tiles) {
+      assert.equal(tile.hidden, filter.dataset.catalogFilter !== 'all'
+          && tile.dataset.category !== filter.dataset.catalogFilter);
+    }
+    assert.equal(ui.filters.filter(item => item['aria-pressed'] === 'true').length, 1);
+    assert.equal(filter['aria-pressed'], 'true');
+  }
+  ui.filters[0].click();
+  assert.ok(ui.tiles.every(tile => !tile.hidden));
+});

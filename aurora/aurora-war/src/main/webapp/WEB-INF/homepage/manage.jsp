@@ -124,9 +124,9 @@
 </c:url>
 <view:sp-page>
   <view:sp-head-part>
-    <view:script src="/look/jsp/js/homepage-management.js?version=15592-delete-v3"/>
+    <view:script src="/look/jsp/js/homepage-management.js?version=15592-catalog-v1"/>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-delete-v3"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-catalog-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -147,28 +147,17 @@
           </dialog>
           <h1>Modifier la page d’accueil</h1>
           <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
-          <view:buttonPane>
-            <view:button label="Ajouter la météo" action="${addWeatherUrl}"/>
-            <view:button label="Ajouter les favoris personnels" action="${addBookmarksUrl}"/>
-            <view:button label="Ajouter une recherche" action="${addSearchUrl}"/>
-            <view:button label="Ajouter des actualités" action="${addNewsUrl}"/>
-            <view:button label="Ajouter les dernières publications" action="${addPublicationsUrl}"/>
-            <view:button label="Ajouter les éphémérides" action="${addEphemerisUrl}"/>
-            <view:button label="Ajouter les prochains événements" action="${addEventsUrl}"/>
-            <view:button label="Ajouter les flux RSS" action="${addRssUrl}"/>
-            <view:button label="Ajouter une FAQ" action="${addFaqUrl}"/>
-            <view:button label="Ajouter les nouveaux utilisateurs" action="${addUsersUrl}"/>
-            <view:button label="Ajouter les actualités des abonnements" action="${addSubscriptionsUrl}"/>
-            <view:button label="Ajouter des raccourcis" action="${addShortcutsUrl}"/>
-            <view:button label="Ajouter une zone libre" action="${addUrl}"/>
-            <view:button label="Voir la page d’accueil" action="${homeUrl}" classes="homepage-secondary-action"/>
-          </view:buttonPane>
+          <p class="homepage-preview-link"><a href="<c:out value='${homeUrl}'/>">Voir la page d’accueil →</a></p>
+          <div class="homepage-management-layout">
+          <section class="homepage-installed" aria-labelledby="homepage-installed-title">
+          <h2 id="homepage-installed-title">Widgets installés</h2>
+          <p class="homepage-section-description">Organisez les widgets affichés sur votre page d’accueil.</p>
           <c:choose>
             <c:when test="${empty homepageWidgets}">
               <view:board>
                 <div class="homepage-empty-state">
                   <h2>Aucun widget pour le moment</h2>
-                  <p>Utilisez « Ajouter une zone libre » pour créer votre premier contenu.</p>
+                  <p>Choisissez un widget dans le catalogue pour commencer.</p>
                 </div>
               </view:board>
             </c:when>
@@ -203,7 +192,99 @@
               </view:arrayPane>
             </c:otherwise>
           </c:choose>
-          <p class="homepage-help">Les widgets partagent le même ordre dans chaque colonne, après les autres blocs existants. Les plus petits numéros s’affichent en premier. Les blocs historiques peuvent être modifiés dans cette liste.</p>
+          <p class="homepage-help">Les plus petits numéros s’affichent en premier dans chaque colonne.</p>
+          </section>
+          <aside class="homepage-catalog" aria-labelledby="homepage-catalog-title">
+            <h2 id="homepage-catalog-title">Ajouter un widget</h2>
+            <p class="homepage-section-description">Choisissez un widget pour le configurer et l’ajouter à la page.</p>
+            <div class="homepage-catalog-filters" role="group" aria-label="Catégories de widgets">
+              <button type="button" data-catalog-filter="all" aria-pressed="true">Tous</button>
+              <button type="button" data-catalog-filter="content" aria-pressed="false">Contenus</button>
+              <button type="button" data-catalog-filter="community" aria-pressed="false">Vie collective</button>
+              <button type="button" data-catalog-filter="services" aria-pressed="false">Pratique</button>
+            </div>
+            <div class="homepage-catalog-grid">
+              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h4"/></svg>
+                <span class="homepage-catalog-name">Zone libre</span>
+                <span class="homepage-catalog-description">Composez un contenu avec du texte, des images et des liens.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addNewsUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z M8 8h3v4H8z M14 8h3 M14 12h3 M8 16h9"/></svg>
+                <span class="homepage-catalog-name">Actualités</span>
+                <span class="homepage-catalog-description">Mettez en avant les nouvelles de votre organisation.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addPublicationsUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h8l4 4v14H6z M14 3v5h4 M9 12h6 M9 16h6"/></svg>
+                <span class="homepage-catalog-name">Dernières publications</span>
+                <span class="homepage-catalog-description">Retrouvez les documents récemment publiés.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addRssUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 5a14 14 0 0 1 14 14 M5 11a8 8 0 0 1 8 8 M5 18h1v1H5z"/></svg>
+                <span class="homepage-catalog-name">Flux RSS</span>
+                <span class="homepage-catalog-description">Suivez les nouveautés de vos sources externes.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addSubscriptionsUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 16V9a6 6 0 0 1 12 0v7l2 2H4z M10 21h4"/></svg>
+                <span class="homepage-catalog-name">Actualités des abonnements</span>
+                <span class="homepage-catalog-description">Regroupez les nouveautés suivies par chaque utilisateur.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addEventsUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v16H4z M8 3v4 M16 3v4 M4 10h16 M8 14h3 M8 17h6"/></svg>
+                <span class="homepage-catalog-name">Prochains événements</span>
+                <span class="homepage-catalog-description">Affichez les rendez-vous à venir.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M2 21v-2a6 6 0 0 1 12 0v2 M19 8v6 M16 11h6"/></svg>
+                <span class="homepage-catalog-name">Nouveaux utilisateurs</span>
+                <span class="homepage-catalog-description">Présentez les nouveaux membres de votre communauté.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addFaqUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v14H9l-6 4z M9 9a3 3 0 1 1 5 2l-2 1v1 M12 15v1"/></svg>
+                <span class="homepage-catalog-name">FAQ</span>
+                <span class="homepage-catalog-description">Donnez accès aux questions et réponses utiles.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addShortcutsUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 15l6-6 M8 17l-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0 M16 7l1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0"/></svg>
+                <span class="homepage-catalog-name">Raccourcis</span>
+                <span class="homepage-catalog-description">Proposez des liens utiles sur la page d’accueil.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addSearchUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14 M15 15l6 6"/></svg>
+                <span class="homepage-catalog-name">Recherche</span>
+                <span class="homepage-catalog-description">Recherchez par plan de classement ou avec un formulaire avancé.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addBookmarksUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                <span class="homepage-catalog-name">Favoris personnels</span>
+                <span class="homepage-catalog-description">Retrouvez les favoris propres à chaque utilisateur.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addEphemerisUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8"/></svg>
+                <span class="homepage-catalog-name">Éphémérides</span>
+                <span class="homepage-catalog-description">Affichez les informations et les fêtes du jour.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addWeatherUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 16a5 5 0 1 1 9-4h1a4 4 0 0 1 0 8H7a4 4 0 1 1 1-8 M5 3v2 M1 7l2 1 M10 3l-1 2"/></svg>
+                <span class="homepage-catalog-name">Météo</span>
+                <span class="homepage-catalog-description">Consultez les prévisions des villes configurées.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a>
+            </div>
+          </aside>
+          </div>
         </main>
       </view:frame>
     </view:window>

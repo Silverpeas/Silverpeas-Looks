@@ -24,6 +24,17 @@
 whenSilverpeasReady(function() {
   const management = document.querySelector('.homepage-content-management');
   if (!management) { return; }
+  const filters = management.querySelectorAll('[data-catalog-filter]');
+  const tiles = management.querySelectorAll('[data-category]');
+  filters.forEach(function(filter) {
+    filter.addEventListener('click', function() {
+      filters.forEach(item => item.setAttribute('aria-pressed', String(item === filter)));
+      tiles.forEach(function(tile) {
+        tile.hidden = filter.dataset.catalogFilter !== 'all'
+            && tile.dataset.category !== filter.dataset.catalogFilter;
+      });
+    });
+  });
   const dialog = management.querySelector('.homepage-delete-dialog');
   const status = management.querySelector('.homepage-delete-status');
   let pendingButton;

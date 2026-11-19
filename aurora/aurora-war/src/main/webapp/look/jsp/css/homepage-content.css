@@ -221,3 +221,123 @@
   background: #be123c;
   color: #fff;
 }
+
+.homepage-content-page .homepage-content-management {
+  max-width: 1600px;
+}
+.homepage-preview-link {
+  text-align: right;
+  margin-bottom: 1.5rem;
+}
+.homepage-management-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.homepage-installed,
+.homepage-catalog {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #dde3df;
+  border-radius: 12px;
+  background: #fff;
+}
+.homepage-installed {
+  overflow-x: auto;
+}
+.homepage-management-layout h2 {
+  margin: 0 0 8px;
+  font-size: 1.35em;
+}
+.homepage-section-description {
+  margin: 0 0 24px;
+  color: #58655f;
+  line-height: 1.5;
+}
+.homepage-catalog-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.homepage-catalog-filters button {
+  border: 0;
+  border-radius: 8px;
+  background: #f1f4f2;
+  color: #46554c;
+  padding: 9px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+.homepage-catalog-filters button[aria-pressed="true"] {
+  color: #fff;
+  background: #287342;
+}
+.homepage-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.homepage-content-management .homepage-catalog-tile {
+  display: grid;
+  position: relative;
+  align-content: start;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid #dde3df;
+  border-radius: 10px;
+  background: #fff;
+  color: #25372c;
+  text-decoration: none;
+}
+.homepage-content-management .homepage-catalog-tile[hidden] {
+  display: none;
+}
+.homepage-catalog-tile:hover {
+  border-color: #287342;
+  box-shadow: 0 3px 12px rgb(32 75 45 / 10%);
+}
+.homepage-catalog-tile:focus-visible,
+.homepage-catalog-filters button:focus-visible {
+  outline: 2px solid #287342;
+  outline-offset: 3px;
+}
+.homepage-catalog-tile svg {
+  color: #287342;
+  background: #edf5ef;
+  padding: 9px;
+  border-radius: 9px;
+  box-sizing: content-box;
+}
+.homepage-catalog-name {
+  font-weight: bold;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.homepage-catalog-description {
+  color: #58655f;
+  font-size: .92em;
+  line-height: 1.5;
+}
+.homepage-catalog-add {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  color: #287342;
+  font-size: 24px;
+}
+@media (max-width: 1100px) {
+  .homepage-management-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 500px) {
+  .homepage-installed,
+  .homepage-catalog {
+    padding: 16px;
+  }
+  .homepage-catalog-grid {
+    grid-template-columns: 1fr;
+  }
+}
