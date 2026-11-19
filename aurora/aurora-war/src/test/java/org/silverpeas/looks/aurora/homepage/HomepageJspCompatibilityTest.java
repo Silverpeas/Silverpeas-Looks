@@ -47,6 +47,32 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void skinsKeepToolsAndWeatherButDoNotConfigureHomepageWidgets() throws Exception {
+    Path settings = Path.of("../aurora-configuration/src/main/config/properties/org/silverpeas/util/viewGenerator/settings");
+    for (String skin : List.of("Aurora", "Sobre", "prima", "waves")) {
+      var properties = new java.util.Properties();
+      try (var reader = Files.newBufferedReader(settings.resolve(skin + ".properties"))) {
+        properties.load(reader);
+      }
+      assertTrue(properties.containsKey("Shortcut.tool.1.Url"), skin);
+      assertTrue(properties.containsKey("home.weather.settings"), skin);
+      assertTrue(properties.containsKey("space.homepage.news"), skin);
+      for (String key : properties.stringPropertyNames()) {
+        assertFalse(key.startsWith("Shortcut.home."), key);
+      }
+      for (String key : List.of("home.news", "home.events.appId", "home.weather", "home.ephemeris",
+          "home.freezone.appId", "home.freezone.thin.appId", "home.search", "home.faq.appId",
+          "home.users.nb", "home.rss.appId", "home.subscription.news")) {
+        assertFalse(properties.containsKey(key), skin + ": " + key);
+      }
+    }
+    String main = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
+    assertFalse(main.contains("<viewTags:displayFreeZone"));
+    String banner = Files.readString(Path.of("src/main/webapp/look/jsp/TopBar.jsp"));
+    assertTrue(banner.contains("lookHelper.toolsShortcuts"));
+  }
+
+  @Test
   void managementProvidesEscapedDeletionControlsAndExternalScript() throws Exception {
     String view = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
     assertTrue(view.indexOf("/look/jsp/js/homepage-management.js") >= 0);

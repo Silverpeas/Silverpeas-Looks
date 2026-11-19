@@ -69,6 +69,13 @@ class HomepageWidgetsTest {
   }
 
   @Test
+  void emptyHomepageRemainsAccessibleWithoutConsultingHistoricalNews() {
+    var helper = mock(LookAuroraHelper.class, CALLS_REAL_METHODS);
+    assertTrue(helper.isUserCanDisplayMainHomePage());
+    verify(helper, never()).getNews();
+  }
+
+  @Test
   void deletedHistoricalWidgetDoesNotReappear() throws Exception {
     var store = new HomepageContentStore(root);
     var page = new HomepagePage("skins", "waves");
@@ -117,27 +124,26 @@ class HomepageWidgetsTest {
   }
 
   @Test
-  void legacyNewsIsPresentedWithoutWritingOrDuplicatingIt() throws Exception {
+  void emptyHomepageDoesNotImportHistoricalNewsOrReadSkinDefaults() throws Exception {
     var store = new HomepageContentStore(root);
     var helper = helper();
-    var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(14, initial.size());
+    assertTrue(HomepageWidgets.all(store, page, "fr", helper).isEmpty());
     assertFalse(Files.exists(root.resolve("skins")));
-    store.saveNews(page, 2, new HomepageContentStore.NewsConfiguration("delegated", 4, false, "LIST", true, ""));
-    var legacy = HomepageWidgets.newsWidget(store, page, "news-legacy-2", "fr", helper);
-    assertEquals("delegated", legacy.newsConfiguration().source());
-    store.saveNewsWidget(page, legacy.id(), "fr", "Équipe",
-        new HomepageContentStore.Layout("right", 1, false), news(""), 2);
-    var changed = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(14, changed.size());
-    var changedNews = changed.stream().filter(widget -> widget.id().equals("news-legacy-2")).findFirst().orElseThrow();
-    assertFalse(changedNews.isEnabled());
-    assertEquals("delegated", store.readNews(page, 2).source());
-    assertThrows(IllegalArgumentException.class, () -> store.save(page, "news-legacy-1", "fr", "", "", ""));
+    Files.createDirectories(root.resolve("skins/waves"));
+    Files.writeString(root.resolve("skins/waves/news-2.properties"), "source=delegated\nsize=4\n");
+    assertTrue(HomepageWidgets.all(store, page, "fr", helper).isEmpty());
+    var fresh = HomepageWidgets.newsWidget(store, page, "news-new", "fr", helper);
+    assertEquals("*", fresh.newsConfiguration().source());
+    assertEquals(0, fresh.legacyIndex());
+    verify(helper, never()).getDefaultNewsConfiguration(anyInt());
+    store.saveNewsWidget(page, fresh.id(), "fr", "Équipe",
+        new HomepageContentStore.Layout("right", 1, false), news(""), 0);
+    assertEquals(List.of("news-new"), HomepageWidgets.all(store, page, "fr", helper).stream()
+        .map(HomepageContentStore.Widget::id).toList());
   }
 
   @Test
-  void rendererSkipsHiddenWidgetsAndKeepsLegacyFallbackForUnmodifiedBlocks() throws Exception {
+  void rendererSkipsHiddenWidgetsWithoutHistoricalFallback() throws Exception {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var empty = new NewsList(List.of(), null);
@@ -150,10 +156,8 @@ class HomepageWidgetsTest {
     var rendered = HomepageWidgets.news(store, page, widgets, helper);
     assertFalse(rendered.containsKey("news-hidden"));
     assertTrue(rendered.containsKey("news-visible"));
-    verify(helper).getConfiguredNews(1, null);
-    verify(helper).getConfiguredNews(2, null);
-    verify(helper).getConfiguredNews(3, null);
-    assertEquals(4, rendered.size());
+    verify(helper).getConfiguredNews(eq(1), notNull());
+    assertEquals(1, rendered.size());
   }
   @Test
   void buttonSettingsDefaultToVisibleAndParticipateInRevision() throws Exception {
@@ -179,7 +183,7 @@ class HomepageWidgetsTest {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var virtual = HomepageWidgets.publicationsWidget(store, page, "publications-legacy", "fr", helper);
-    assertEquals("WA12", virtual.publicationsConfiguration().spaceId());
+    assertEquals("", virtual.publicationsConfiguration().spaceId());
     assertFalse(Files.exists(root.resolve("skins")));
     var layout = new HomepageContentStore.Layout("right", 2, true);
     var configuration = new HomepageContentStore.PublicationsConfiguration("WA42", 8, false);
@@ -248,7 +252,7 @@ class HomepageWidgetsTest {
     var helper = helper();
     when(helper.getLookSettings().isDisplayEphemeris()).thenReturn(false);
     var legacy = HomepageWidgets.ephemerisWidget(store, page, "ephemeris-legacy", "fr", helper);
-    assertFalse(legacy.isEnabled());
+    assertTrue(legacy.isEnabled());
     assertEquals("right", legacy.getZone());
     assertFalse(Files.exists(root.resolve("skins")));
     var layout = new HomepageContentStore.Layout("main", 15, true);
@@ -283,8 +287,8 @@ class HomepageWidgetsTest {
     var helper = helper();
     var events = HomepageWidgets.feedWidget(store, page, "events-legacy", "fr", helper, "events");
     var rss = HomepageWidgets.feedWidget(store, page, "rss-legacy", "fr", helper, "rss");
-    assertEquals("almanach12", events.eventsConfiguration().source());
-    assertEquals("tabs", rss.rssConfiguration().rendering());
+    assertEquals("", events.eventsConfiguration().source());
+    assertEquals("aggregate", rss.rssConfiguration().rendering());
     assertFalse(Files.exists(root.resolve("skins")));
     var layout = new HomepageContentStore.Layout("right", 12, false);
     var configuration = new HomepageContentStore.EventsConfiguration("*", 5, false, true, false, false);
@@ -334,8 +338,8 @@ class HomepageWidgetsTest {
     var layout = new HomepageContentStore.Layout("main", 12, false);
     var faq = HomepageWidgets.communityWidget(store, page, "faq-legacy", "fr", helper, "faq");
     var users = HomepageWidgets.communityWidget(store, page, "users-legacy", "fr", helper, "users");
-    assertEquals(helper.getDefaultFaqConfiguration(), faq.faqConfiguration());
-    assertEquals(helper.getDefaultUsersConfiguration(), users.usersConfiguration());
+    assertEquals(new HomepageContentStore.FaqConfiguration("", 1, "random"), faq.faqConfiguration());
+    assertEquals(new HomepageContentStore.UsersConfiguration("", 5, true, "title phone fonction"), users.usersConfiguration());
     assertFalse(Files.exists(root.resolve("skins")));
     for (String id : List.of("faq-legacy", "faq-extra")) {
       store.saveCommunityWidget(page, id, "fr", "Questions", layout, "faq",
@@ -398,7 +402,7 @@ class HomepageWidgetsTest {
     assertEquals(helper.getDefaultSubscriptionsConfiguration(), legacy.subscriptionsConfiguration());
     assertTrue(legacy.isEnabled());
     when(helper.getLookSettings().isDisplayLastSubscribedNews()).thenReturn(false);
-    assertFalse(HomepageWidgets.subscriptionsWidget(store, page, legacy.id(), "fr", helper).isEnabled());
+    assertTrue(HomepageWidgets.subscriptionsWidget(store, page, legacy.id(), "fr", helper).isEnabled());
     assertFalse(Files.exists(root.resolve("skins")));
     var configuration = new HomepageContentStore.SubscriptionsConfiguration(7, false);
     var layout = new HomepageContentStore.Layout("right", 8, false);
@@ -441,11 +445,9 @@ class HomepageWidgetsTest {
   void homeShortcutsUseOnlyHomeDefaultsAndSaveIndependentOrderedInstances() throws Exception {
     var store = new HomepageContentStore(root);
     var helper = helper();
-    when(helper.getMainShortcuts()).thenReturn(List.of(
-        new org.silverpeas.core.web.look.Shortcut("/weblib/home.png", "bottomFrame", "/silverpeas/Component/kmelia1", "Documents")));
     var legacy = HomepageWidgets.shortcutsWidget(store, page, "shortcuts-legacy", "fr", helper);
-    assertEquals("Documents", legacy.shortcutsConfiguration().entries().getFirst().label());
-    assertEquals("bottomFrame", legacy.shortcutsConfiguration().entries().getFirst().target());
+    assertTrue(legacy.shortcutsConfiguration().entries().isEmpty());
+    verify(helper, never()).getShortcuts("home");
     assertEquals("main", legacy.getZone());
     assertEquals(0, legacy.getOrder());
     assertFalse(Files.exists(root.resolve("skins")));
@@ -513,16 +515,16 @@ class HomepageWidgetsTest {
     }
   }
   @Test
-  void searchIsOneTypeWithTwoModesAndOneVirtualLegacyInstance() throws Exception {
+  void searchIsOneManagedTypeWithTwoModes() throws Exception {
     var store = new HomepageContentStore(root);
     var helper = helper();
     var configuration = new HomepageContentStore.SearchConfiguration("advanced", "document.xml", true, true, false);
     when(helper.getDefaultSearchConfiguration()).thenReturn(configuration);
     var initial = HomepageWidgets.all(store, page, "fr", helper);
-    assertEquals(1, initial.stream().filter(w -> "search".equals(w.type())).count());
-    var legacy = initial.stream().filter(w -> "search".equals(w.type())).findFirst().orElseThrow();
+    assertTrue(initial.isEmpty());
+    var legacy = HomepageWidgets.searchWidget(store, page, "search-legacy", "fr", helper);
     assertTrue(legacy.isEnabled());
-    assertEquals(configuration, legacy.searchConfiguration());
+    assertEquals(new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false), legacy.searchConfiguration());
     assertFalse(Files.exists(root.resolve("skins/waves/page.properties")));
     var layout = new HomepageContentStore.Layout("main", 4, false);
     store.saveSearchWidget(page, legacy.id(), "fr", "Recherche", layout, configuration, "");
@@ -558,7 +560,7 @@ class HomepageWidgetsTest {
     when(helper.getLookSettings().isDisplayBookmarksAreaWhenEmpty()).thenReturn(true);
     when(helper.getLookSettings().getNoBookmarksFragmentURL()).thenReturn("/silverpeas/empty.html");
     var legacy = HomepageWidgets.bookmarksWidget(store, page, "bookmarks-legacy", "fr", helper);
-    assertEquals(new HomepageContentStore.BookmarksConfiguration(true, "/silverpeas/empty.html"), legacy.bookmarksConfiguration());
+    assertEquals(new HomepageContentStore.BookmarksConfiguration(true, ""), legacy.bookmarksConfiguration());
     assertEquals("right", legacy.getZone());
     assertTrue(legacy.isEnabled());
     assertFalse(Files.exists(root.resolve("skins")));

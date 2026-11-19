@@ -203,17 +203,10 @@ public class HomepageContentServlet extends HttpServlet {
                 Boolean.parseBoolean(request.getParameter("importantOnly")),
                 request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
                 request.getParameter("revision"), option(request, "showMoreNews"),
-                option(request, "showAllNews")), HomepageWidgets.legacyIndex(widget));
+                option(request, "showAllNews")), 0);
         newsWidgetResponse(request, response, page, widget, language, "");
       } else {
-        store.saveNews(page, Integer.parseInt(request.getParameter("index")),
-            new HomepageContentStore.NewsConfiguration(request.getParameter("source"),
-                Integer.parseInt(request.getParameter("size")),
-                Boolean.parseBoolean(request.getParameter("importantOnly")),
-                request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
-                request.getParameter("revision"), option(request, "showMoreNews"),
-                option(request, "showAllNews")));
-        newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), "");
+        throw new IllegalArgumentException("Missing news widget");
       }
     } else if ("saveWeather".equals(action)) {
       store.saveWeatherWidget(page, widget, language, request.getParameter("title"),
@@ -430,21 +423,12 @@ public class HomepageContentServlet extends HttpServlet {
       publicationsResponse(request, response, page, widget, language, csrf);
     } else if ("publicationsEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/publicationsEditor.jsp").forward(request, response);
-    } else if ("loadNews".equals(action)) {
-      if (widget != null && !widget.isBlank()) {
-        newsWidgetResponse(request, response, page, widget, language, csrf);
-      } else {
-        newsResponse(request, response, page, Integer.parseInt(request.getParameter("index")), csrf);
-      }
-    } else if ("newsEditor".equals(action)) {
+    } else if ("loadNews".equals(action) || "newsEditor".equals(action)) {
       if (widget == null || widget.isBlank()) {
-        int index = Integer.parseInt(request.getParameter("index"));
-        if (index < 1 || index > 3) {
-          throw new IllegalArgumentException("Invalid legacy news reference");
-        }
-        response.sendRedirect(request.getContextPath() + "/AuroraHomepageContent?action=newsEditor"
-            + "&kind=" + page.kind() + "&owner=" + page.owner() + "&widget=news-legacy-" + index
-            + "&language=" + encode(language));
+        throw new IllegalArgumentException("Missing news widget");
+      }
+      if ("loadNews".equals(action)) {
+        newsWidgetResponse(request, response, page, widget, language, csrf);
       } else {
         request.getRequestDispatcher("/WEB-INF/homepage/newsEditor.jsp").forward(request, response);
       }
@@ -647,20 +631,6 @@ public class HomepageContentServlet extends HttpServlet {
         .put("source", news.source()).put("size", news.size()).put("importantOnly", news.importantOnly())
         .put("showMoreNews", news.showMoreNews()).put("showAllNews", news.showAllNews())
         .put("rendering", news.rendering()).put("revision", content.revision()).put("csrf", csrf)));
-  }
-
-  private void newsResponse(HttpServletRequest request, HttpServletResponse response, HomepagePage page, int index, String csrf)
-      throws IOException {
-    var saved = store.readNews(page, index);
-    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
-        request.getSession(false).getAttribute("Silverpeas_LookHelper");
-    var configuration = saved != null ? saved : helper.getDefaultNewsConfiguration(index);
-    json(response, JSONCodec.encodeObject(o -> o.put("configured", saved != null)
-        .put("source", configuration.source()).put("size", configuration.size())
-        .put("importantOnly", configuration.importantOnly()).put("rendering", configuration.rendering())
-        .put("showMoreNews", configuration.showMoreNews()).put("showAllNews", configuration.showAllNews())
-        .put("enabled", configuration.enabled()).put("revision", configuration.revision())
-        .put("csrf", csrf)));
   }
 
   private byte[] image(HttpServletRequest request) throws IOException, ServletException {

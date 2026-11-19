@@ -352,43 +352,6 @@ public class HomepageContentStore {
     }
   }
 
-  public synchronized NewsConfiguration readNews(HomepagePage page, int index) throws IOException {
-    Properties settings = new Properties();
-    Path file = newsPath(page, index);
-    if (!Files.exists(file)) {
-      return null;
-    }
-    try (var reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-      settings.load(reader);
-    }
-    return new NewsConfiguration(settings.getProperty("source"),
-        Integer.parseInt(settings.getProperty("size")),
-        Boolean.parseBoolean(settings.getProperty("importantOnly")),
-        settings.getProperty("rendering"), Boolean.parseBoolean(settings.getProperty("enabled")),
-        revision("news", Files.readString(file, StandardCharsets.UTF_8)),
-        Boolean.parseBoolean(settings.getProperty("showMoreNews", "true")),
-        Boolean.parseBoolean(settings.getProperty("showAllNews", "true")));
-  }
-
-  public synchronized void saveNews(HomepagePage page, int index, NewsConfiguration configuration)
-      throws IOException {
-    var previous = readNews(page, index);
-    if (!(previous == null ? "" : previous.revision()).equals(configuration.revision())) {
-      throw new ConcurrentModificationException("News configuration changed");
-    }
-    Properties settings = new Properties();
-    settings.setProperty("source", configuration.source());
-    settings.setProperty("size", String.valueOf(configuration.size()));
-    settings.setProperty("importantOnly", String.valueOf(configuration.importantOnly()));
-    settings.setProperty("rendering", configuration.rendering());
-    settings.setProperty("enabled", String.valueOf(configuration.enabled()));
-    settings.setProperty("showMoreNews", String.valueOf(configuration.showMoreNews()));
-    settings.setProperty("showAllNews", String.valueOf(configuration.showAllNews()));
-    StringWriter writer = new StringWriter();
-    settings.store(writer, "Aurora homepage news");
-    atomicWrite(newsPath(page, index), writer.toString().getBytes(StandardCharsets.UTF_8));
-  }
-
   public synchronized void saveEphemerisWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, String expectedRevision) throws IOException {
     var properties = properties(page);
@@ -795,13 +758,6 @@ public class HomepageContentStore {
     properties.setProperty(prefix + ".size", String.valueOf(configuration.size()));
     properties.setProperty(prefix + ".showMore", String.valueOf(configuration.showMore()));
     saveProperties(page, properties);
-  }
-
-  private Path newsPath(HomepagePage page, int index) throws IOException {
-    if (!"skins".equals(page.kind()) || index < 1 || index > 3) {
-      throw new IllegalArgumentException("Invalid news block");
-    }
-    return path(page.kind(), page.owner(), "news-" + index + ".properties");
   }
 
   public synchronized void saveAsset(HomepagePage page, String widget, String name, byte[] bytes)

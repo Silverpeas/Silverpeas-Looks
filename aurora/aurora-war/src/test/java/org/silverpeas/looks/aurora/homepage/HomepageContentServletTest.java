@@ -117,7 +117,10 @@ class HomepageContentServletTest {
   }
 
   private void prepareNewsSave() {
-    when(request.getParameter("widget")).thenReturn(null);
+    when(request.getParameter("widget")).thenReturn("news-test");
+    when(request.getParameter("title")).thenReturn("Actualités");
+    when(request.getParameter("zone")).thenReturn("main");
+    when(request.getParameter("order")).thenReturn("10");
     when(user.isAccessAdmin()).thenReturn(true);
     when(request.getParameter("action")).thenReturn("saveNews");
     when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
@@ -243,7 +246,7 @@ class HomepageContentServletTest {
     when(user.isAccessAdmin()).thenReturn(false);
     servlet.doPost(request, response);
     verify(response).sendError(403);
-    assertNull(store.readNews(new HomepagePage("skins", "waves"), 1));
+    assertTrue(store.widgets(new HomepagePage("skins", "waves"), "fr").isEmpty());
     when(user.isAccessAdmin()).thenReturn(true);
     when(request.getHeader("X-Aurora-CSRF")).thenReturn(null);
     clearInvocations(response);
@@ -253,7 +256,7 @@ class HomepageContentServletTest {
     clearInvocations(response);
     servlet.doPost(request, response);
     verify(response, never()).sendError(anyInt());
-    assertEquals("quickinfo12", store.readNews(new HomepagePage("skins", "waves"), 1).source());
+    assertEquals("quickinfo12", store.readWidget(new HomepagePage("skins", "waves"), "news-test", "fr").newsConfiguration().source());
     assertTrue(output.toString().contains("revision"));
     servlet.doPost(request, response);
     verify(response).sendError(409);
@@ -271,19 +274,20 @@ class HomepageContentServletTest {
   }
 
   @Test
-  void newsLoadUsesThemeConfigurationUntilSaved() throws Exception {
-    when(user.isAccessAdmin()).thenReturn(true);
-    when(request.getParameter("action")).thenReturn("loadNews");
+  void indexedNewsEndpointsAreNoLongerAvailable() throws Exception {
+    prepareNewsSave();
     when(request.getParameter("widget")).thenReturn(null);
-    when(request.getParameter("index")).thenReturn("2");
-    var helper = mock(org.silverpeas.looks.aurora.LookAuroraHelper.class);
-    when(session.getAttribute("Silverpeas_LookHelper")).thenReturn(helper);
-    when(helper.getDefaultNewsConfiguration(2)).thenReturn(
-        new HomepageContentStore.NewsConfiguration("delegated", -1, false, "LIST", true, ""));
-    servlet.doGet(request, response);
-    assertTrue(output.toString().contains("delegated"));
-    assertTrue(output.toString().contains("\"configured\":false"));
-    verify(response, never()).sendError(anyInt());
+    for (String action : java.util.List.of("loadNews", "newsEditor", "saveNews")) {
+      clearInvocations(response);
+      when(request.getParameter("action")).thenReturn(action);
+      if ("saveNews".equals(action)) {
+        servlet.doPost(request, response);
+      } else {
+        servlet.doGet(request, response);
+      }
+      verify(response).sendError(400);
+    }
+    assertTrue(store.widgets(new HomepagePage("skins", "waves"), "fr").isEmpty());
   }
 
   @Test
@@ -292,7 +296,7 @@ class HomepageContentServletTest {
     when(request.getParameter("size")).thenReturn("0");
     servlet.doPost(request, response);
     verify(response).sendError(400);
-    assertNull(store.readNews(new HomepagePage("skins", "waves"), 1));
+    assertTrue(store.widgets(new HomepagePage("skins", "waves"), "fr").isEmpty());
   }
 
   @Test
@@ -453,7 +457,7 @@ class HomepageContentServletTest {
     when(request.getRequestDispatcher("/WEB-INF/homepage/manage.jsp")).thenReturn(dispatcher);
     servlet.doGet(request, response);
     verify(request).setAttribute(eq("homepageWidgets"), argThat(value ->
-        value instanceof java.util.List<?> widgets && widgets.size() == 14));
+        value instanceof java.util.List<?> widgets && widgets.isEmpty()));
     verify(request).setAttribute(eq("newShortcutsWidgetId"), argThat(v -> v.toString().startsWith("shortcuts-")));
     verify(request).setAttribute(eq("newNewsWidgetId"), argThat(v -> v.toString().startsWith("news-")));
     verify(request).setAttribute(eq("newWidgetId"), argThat(v -> v.toString().startsWith("html-")));
@@ -550,9 +554,14 @@ class HomepageContentServletTest {
     var visibleRss = new org.silverpeas.looks.aurora.RSSFeeds(java.util.List.of(),
         java.util.List.of(mock(org.silverpeas.components.rssaggregator.model.RSSItem.class)));
     when(helper.getConfiguredRSSFeeds(any())).thenReturn(visibleRss);
+    store.saveFeedWidget(page, "events-legacy", "fr", "Agenda",
+        new HomepageContentStore.Layout("main", 1, true), "events", events, null, "");
+    store.saveFeedWidget(page, "rss-legacy", "fr", "Veille",
+        new HomepageContentStore.Layout("main", 2, true), "rss", null,
+        new HomepageContentStore.RssConfiguration("rssAgregator12", "tabs"), "");
     when(request.getParameter("widget")).thenReturn("events-legacy");
     servlet.doGet(request, response);
-    verify(helper).getConfiguredNextEvents(new HomepageContentStore.EventsConfiguration("almanach12", 3, true, false, true, true));
+    verify(helper).getConfiguredNextEvents(events);
     verify(dispatcher).forward(request, response);
     when(request.getParameter("widget")).thenReturn("rss-legacy");
     servlet.doGet(request, response);

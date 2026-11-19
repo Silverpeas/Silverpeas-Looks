@@ -51,14 +51,10 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    int index = legacyIndex(id);
-    var legacy = index == 0 ? null : store.readNews(page, index);
-    var news = legacy != null ? legacy : index == 0
-        ? new HomepageContentStore.NewsConfiguration("*", 10, false, "CAROUSEL", true, "")
-        : helper.getDefaultNewsConfiguration(index);
-    var content = new HomepageContentStore.Content(index == 0 ? "Actualités" : "Actualités " + index,
-        "", "", new HomepageContentStore.Layout("main", index == 0 ? 10 : index * 10, news.enabled()));
-    return new HomepageContentStore.Widget(id, content, "news", news, index);
+    var news = new HomepageContentStore.NewsConfiguration("*", 10, false, "CAROUSEL", true, "");
+    var content = new HomepageContentStore.Content("Actualités", "", "",
+        new HomepageContentStore.Layout("main", 10, true));
+    return new HomepageContentStore.Widget(id, content, "news", news, 0);
   }
 
   public static HomepageContentStore.Widget publicationsWidget(HomepageContentStore store,
@@ -70,9 +66,7 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    boolean legacy = "publications-legacy".equals(id);
-    var configuration = legacy ? helper.getDefaultPublicationsConfiguration()
-        : new HomepageContentStore.PublicationsConfiguration("", 3, true);
+    var configuration = new HomepageContentStore.PublicationsConfiguration("", 3, true);
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Dernières publications", "", "",
             new HomepageContentStore.Layout("main", 40, true)),
@@ -101,10 +95,9 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    boolean enabled = !"ephemeris-legacy".equals(id) || helper.getLookSettings().isDisplayEphemeris();
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Éphémérides", "", "",
-            new HomepageContentStore.Layout("right", 0, enabled)), "ephemeris", null, 0);
+            new HomepageContentStore.Layout("right", 0, true)), "ephemeris", null, 0);
   }
 
   public static HomepageContentStore.Widget feedWidget(HomepageContentStore store,
@@ -124,8 +117,8 @@ public final class HomepageWidgets {
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content(events ? "Prochains événements" : "Flux RSS", "", "",
             new HomepageContentStore.Layout(events ? "right" : "main", events ? 10 : 50, true)),
-        type, null, 0, null, events ? helper.getDefaultEventsConfiguration() : null,
-        events ? null : helper.getDefaultRssConfiguration());
+        type, null, 0, null, events ? new HomepageContentStore.EventsConfiguration("", 2, true, false, true, true) : null,
+        events ? null : new HomepageContentStore.RssConfiguration("", "aggregate"));
   }
 
   public static HomepageContentStore.Widget communityWidget(HomepageContentStore store,
@@ -142,16 +135,13 @@ public final class HomepageWidgets {
       return saved;
     }
     boolean faq = "faq".equals(type);
-    boolean legacy = (type + "-legacy").equals(id);
-    var users = faq ? null : legacy ? helper.getDefaultUsersConfiguration()
-        : new HomepageContentStore.UsersConfiguration("", 5, true, "title phone fonction");
+    var users = faq ? null : new HomepageContentStore.UsersConfiguration("", 5, true, "title phone fonction");
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content(faq ? "FAQ" : "Nouveaux utilisateurs", "", "",
             new HomepageContentStore.Layout(faq ? "right" : "main", faq ? 20 : 60,
                 faq || users.size() > 0)),
         type, null, 0, null, null, null,
-        faq ? legacy ? helper.getDefaultFaqConfiguration()
-            : new HomepageContentStore.FaqConfiguration("", 1, "random") : null, users);
+        faq ? new HomepageContentStore.FaqConfiguration("", 1, "random") : null, users);
   }
 
   public static Map<String, org.silverpeas.looks.aurora.Questions> questions(
@@ -177,11 +167,9 @@ public final class HomepageWidgets {
       if (!"weather".equals(saved.type())) { throw new IllegalArgumentException("Expected a weather widget"); }
       return saved;
     }
-    boolean legacy = "weather-legacy".equals(id);
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Météo", "", "",
-            new HomepageContentStore.Layout("right", 5,
-                !legacy || !helper.getWeatherCities().isEmpty() && helper.getLookSettings().isDisplayEphemeris())),
+            new HomepageContentStore.Layout("right", 5, true)),
         "weather", null, 0);
   }
 
@@ -194,11 +182,7 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    var configuration = "bookmarks-legacy".equals(id)
-        ? new HomepageContentStore.BookmarksConfiguration(
-            helper.getLookSettings().isDisplayBookmarksAreaWhenEmpty(),
-            helper.getLookSettings().getNoBookmarksFragmentURL())
-        : new HomepageContentStore.BookmarksConfiguration(true, "");
+    var configuration = new HomepageContentStore.BookmarksConfiguration(true, "");
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Favoris personnels", "", "",
             new HomepageContentStore.Layout("right", 40, true)),
@@ -214,13 +198,10 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    boolean legacy = "search-legacy".equals(id);
-    var configuration = legacy ? helper.getDefaultSearchConfiguration()
-        : new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false);
+    var configuration = new HomepageContentStore.SearchConfiguration("taxonomy", "", false, false, false);
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Recherche", "", "",
-            new HomepageContentStore.Layout("right", 30, !legacy ||
-                "advanced".equals(configuration.mode()) || helper.getLookSettings().isDisplaySearchOnHome())),
+            new HomepageContentStore.Layout("right", 30, true)),
         "search", null, 0, null, null, null, null, null, null, null, configuration);
   }
 
@@ -233,9 +214,7 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    var entries = "shortcuts-legacy".equals(id) ? helper.getMainShortcuts().stream()
-        .map(link -> new HomepageContentStore.HomeShortcut(link.getAltText(), link.getUrl(),
-            link.getIconURL(), link.getTarget())).toList() : List.<HomepageContentStore.HomeShortcut>of();
+    var entries = List.<HomepageContentStore.HomeShortcut>of();
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Raccourcis", "", "",
             new HomepageContentStore.Layout("main", 0, true)),
@@ -252,14 +231,11 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    boolean legacy = "subscriptions-legacy".equals(id);
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Actualités des abonnements", "", "",
-            new HomepageContentStore.Layout("main", 70,
-                !legacy || helper.getLookSettings().isDisplayLastSubscribedNews())),
+            new HomepageContentStore.Layout("main", 70, true)),
         "subscriptions", null, 0, null, null, null, null, null,
-        legacy ? helper.getDefaultSubscriptionsConfiguration()
-            : new HomepageContentStore.SubscriptionsConfiguration(4, true));
+        new HomepageContentStore.SubscriptionsConfiguration(4, true));
   }
 
   public static Map<String, List<org.silverpeas.looks.aurora.AuroraNews>> subscriptions(
@@ -273,58 +249,6 @@ public final class HomepageWidgets {
   public static List<HomepageContentStore.Widget> all(HomepageContentStore store,
       HomepagePage page, String language, LookAuroraHelper helper) throws IOException {
     var widgets = new ArrayList<>(store.widgets(page, language));
-    if ("skins".equals(page.kind())) {
-      for (int index = 1; index <= 3; index++) {
-        String id = "news-legacy-" + index;
-        if (widgets.stream().noneMatch(widget -> widget.id().equals(id))) {
-          widgets.add(newsWidget(store, page, id, language, helper));
-        }
-      }
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("publications-legacy"))) {
-      widgets.add(publicationsWidget(store, page, "publications-legacy", language, helper));
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("ephemeris-legacy"))) {
-      widgets.add(ephemerisWidget(store, page, "ephemeris-legacy", language, helper));
-    }
-    if ("skins".equals(page.kind())) {
-      for (String type : List.of("events", "rss")) {
-        String id = type + "-legacy";
-        if (widgets.stream().noneMatch(widget -> widget.id().equals(id))) {
-          widgets.add(feedWidget(store, page, id, language, helper, type));
-        }
-      }
-    }
-    if ("skins".equals(page.kind())) {
-      for (String type : List.of("faq", "users")) {
-        String id = type + "-legacy";
-        if (widgets.stream().noneMatch(widget -> widget.id().equals(id))) {
-          widgets.add(communityWidget(store, page, id, language, helper, type));
-        }
-      }
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("subscriptions-legacy"))) {
-      widgets.add(subscriptionsWidget(store, page, "subscriptions-legacy", language, helper));
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("shortcuts-legacy"))) {
-      widgets.add(shortcutsWidget(store, page, "shortcuts-legacy", language, helper));
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("search-legacy"))) {
-      widgets.add(searchWidget(store, page, "search-legacy", language, helper));
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("bookmarks-legacy"))) {
-      widgets.add(bookmarksWidget(store, page, "bookmarks-legacy", language, helper));
-    }
-    if ("skins".equals(page.kind()) &&
-        widgets.stream().noneMatch(widget -> widget.id().equals("weather-legacy"))) {
-      widgets.add(weatherWidget(store, page, "weather-legacy", language, helper));
-    }
     var deleted = store.deletedWidgets(page);
     widgets.removeIf(widget -> deleted.contains(widget.id()));
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
@@ -337,10 +261,7 @@ public final class HomepageWidgets {
     Map<String, NewsList> news = new LinkedHashMap<>();
     for (var widget : widgets) {
       if ("news".equals(widget.type()) && widget.isEnabled()) {
-        int index = widget.legacyIndex() == 0 ? 1 : widget.legacyIndex();
-        var configuration = widget.legacyIndex() != 0 && widget.content().revision().isEmpty()
-            ? store.readNews(page, index) : widget.newsConfiguration();
-        news.put(widget.id(), helper.getConfiguredNews(index, configuration));
+        news.put(widget.id(), helper.getConfiguredNews(1, widget.newsConfiguration()));
       }
     }
     return news;

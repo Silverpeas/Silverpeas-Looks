@@ -230,10 +230,6 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return getShortcuts("tool");
   }
 
-  public List<Shortcut> getMainShortcuts() {
-    return getShortcuts("home");
-  }
-
   public List<Shortcut> getShortcuts(String id) {
     List<Shortcut> shortcuts = new ArrayList<>();
     boolean end = false;
@@ -764,11 +760,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
   }
 
   public boolean isUserCanDisplayMainHomePage() {
-    if (getSettings("home.displayedWhenNoNews", true) || getUserDetail().isAccessAdmin()) {
-      return true;
-    }
-    NewsList news = getNews();
-    return !news.isEmpty();
+    return true;
   }
 
   public List<Domain> getDirectoryDomains() {

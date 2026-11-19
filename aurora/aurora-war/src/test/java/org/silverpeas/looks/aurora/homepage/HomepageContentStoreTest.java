@@ -56,29 +56,24 @@ class HomepageContentStoreTest {
   }
 
   @Test
-  void newsConfigurationIsPersistentIsolatedAndDoesNotCreateHtmlWidgets() throws Exception {
+  void newsConfigurationIsPersistentAndIsolatedByOwnerAndWidget() throws Exception {
     var store = new HomepageContentStore(root);
     var page = new HomepagePage("skins", "waves");
-    assertNull(store.readNews(page, 1));
-    store.save(page, "welcome", "fr", "Bienvenue", "Bonjour", "");
+    var layout = new HomepageContentStore.Layout("main", 1, true);
     var configuration = new HomepageContentStore.NewsConfiguration("quickinfo12 quickinfo34",
-        5, true, "LIST", false, "");
-    store.saveNews(page, 1, configuration);
+        5, true, "LIST", true, "");
+    store.saveNewsWidget(page, "news", "fr", "Actualités", layout, configuration, 0);
     var reopened = new HomepageContentStore(root);
-    var saved = reopened.readNews(page, 1);
-    assertEquals("quickinfo12 quickinfo34", saved.source());
-    assertEquals(5, saved.size());
-    assertTrue(saved.importantOnly());
-    assertFalse(saved.enabled());
-    assertEquals("LIST", saved.rendering());
-    assertFalse(saved.revision().isBlank());
-    assertNull(reopened.readNews(page, 2));
-    assertNull(reopened.readNews(new HomepagePage("skins", "Aurora"), 1));
+    var saved = reopened.readWidget(page, "news", "fr");
+    assertEquals("quickinfo12 quickinfo34", saved.newsConfiguration().source());
+    assertEquals(5, saved.newsConfiguration().size());
+    assertTrue(saved.newsConfiguration().importantOnly());
+    assertEquals("LIST", saved.newsConfiguration().rendering());
+    assertFalse(saved.content().revision().isBlank());
+    assertTrue(reopened.widgets(new HomepagePage("skins", "Aurora"), "fr").isEmpty());
     assertEquals(1, reopened.widgets(page, "fr").size());
-    assertThrows(ConcurrentModificationException.class, () -> store.saveNews(page, 1, configuration));
-    store.saveNews(page, 1, new HomepageContentStore.NewsConfiguration("*", -1, false,
-        "CAROUSEL", true, saved.revision()));
-    assertEquals(-1, reopened.readNews(page, 1).size());
+    assertThrows(ConcurrentModificationException.class, () ->
+        store.saveNewsWidget(page, "news", "fr", "Actualités", layout, configuration, 0));
   }
 
   @Test
@@ -91,8 +86,6 @@ class HomepageContentStoreTest {
     }
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.NewsConfiguration(
         "*", 10, false, "invalid", true, ""));
-    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore(root)
-        .readNews(new HomepagePage("skins", "waves"), 4));
   }
 
   @Test

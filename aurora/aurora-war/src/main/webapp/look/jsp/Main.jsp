@@ -132,8 +132,6 @@
   <div class="main wrapper clearfix">
     <div class="right-main-container">
 
-      <viewTags:displayFreeZone freeZone="${lookHelper.thinFreeZone}" freeZoneId="thinFreeZone"/>
-
 
 
 
@@ -144,16 +142,6 @@
     </div>
 
     <div class="principal-main-container">
-
-
-
-
-
-
-
-
-
-      <viewTags:displayFreeZone freeZone="${lookHelper.freeZone}" freeZoneId="freeZone"/>
 
       <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" questions="${homepageQuestions}" users="${homepageUsers}" subscriptions="${homepageSubscriptions}" zone="main"/>
 
