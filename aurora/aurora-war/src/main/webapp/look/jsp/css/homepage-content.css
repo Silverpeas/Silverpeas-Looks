@@ -302,17 +302,17 @@
   display: none;
 }
 .homepage-catalog-tile:hover {
-  border-color: #287342;
-  box-shadow: 0 3px 12px rgb(32 75 45 / 10%);
+  border-color: var(--color-flashy-principale, #5f9d15);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--color-flashy-principale, #5f9d15) 15%, transparent);
 }
 .homepage-catalog-tile:focus-visible,
 .homepage-catalog-filters button:focus-visible {
-  outline: 2px solid #287342;
+  outline: 2px solid var(--color-flashy-principale, #5f9d15);
   outline-offset: 3px;
 }
 .homepage-catalog-tile svg {
-  color: #287342;
-  background: #edf5ef;
+  color: var(--color-flashy-principale, #5f9d15);
+  background: color-mix(in srgb, var(--color-flashy-principale, #5f9d15) 10%, white);
   padding: 9px;
   border-radius: 9px;
   box-sizing: content-box;
@@ -331,7 +331,7 @@
   position: absolute;
   right: 16px;
   top: 18px;
-  color: #287342;
+  color: var(--color-flashy-principale, #5f9d15);
   font-size: 24px;
 }
 @media (max-width: 1100px) {
