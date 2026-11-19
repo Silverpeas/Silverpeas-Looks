@@ -43,6 +43,7 @@ async function editor(status = 200, configured = false, publications = false, ep
       type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar', 'news-labels-inside', 'news-period', 'news-show-when-empty'].includes(match[1]) || (feedType === 'search' && match[1] === 'news-space') ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
+  const location = {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth&language=fr'};
   const calls = [];
   let start;
   const data = {cities: "2988507|Paris", showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
@@ -64,11 +65,10 @@ async function editor(status = 200, configured = false, publications = false, ep
     window: {AuroraHomeShortcuts: {
       load(entries) { controls.entries = entries; },
       serialize(body) { body.set('count', controls.entries.length); controls.entries.forEach((entry, index) => Object.keys(entry).forEach(key => body.set('entry.' + index + '.' + key, entry[key]))); }
-    }, location: {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth',
-      search: '?action=newsEditor&kind=skins&owner=waves&widget=news-fourth'},
+    }, location,
       addEventListener(event, callback) { start = callback; }}});
   await start();
-  return {controls, calls, submit: () => controls['news-form'].handlers.submit({preventDefault() {}})};
+  return {controls, calls, location, submit: () => controls['news-form'].handlers.submit({preventDefault() {}})};
 }
 
 test('loads shared widget settings and saves application choices through session XHR with CSRF and revision', async () => {
@@ -343,3 +343,20 @@ test('weather editor saves placement only and leaves cities in server properties
   assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
   assert.equal(new URLSearchParams(saved.body).has('cities'), false);
 });
+
+
+for (const status of [200, 400, 409, 403]) {
+  test('save status ' + status + ' returns to management only on success', async () => {
+    const ui = await editor(status, true, false, true);
+    await ui.submit();
+    const target = new URL(ui.location.href);
+    assert.equal(target.searchParams.get('action'), status === 200 ? 'manage' : 'newsEditor');
+    assert.equal(target.searchParams.get('kind'), 'skins');
+    assert.equal(target.searchParams.get('owner'), 'waves');
+    assert.equal(target.searchParams.get('language'), 'fr');
+    if (status !== 200) {
+      assert.ok(ui.controls['news-status'].textContent);
+      assert.equal(ui.controls['news-save'].disabled, false);
+    }
+  });
+}

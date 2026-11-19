@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const data = await request(community ? configurationAction('save') : feed ? (widgetType === 'events' ? 'saveEvents' : 'saveRss') : ephemeris ? 'saveEphemeris' : publications ? 'savePublications' : 'saveNews', body, csrf);
       revision = data.revision;
-      status.textContent = 'Configuration enregistrée. Rechargez la page d’accueil pour la voir.';
+      window.location.href = endpoint('manage').toString();
     } catch (error) { status.textContent = error.message; }
     finally { save.disabled = false; }
   });

@@ -141,8 +141,8 @@
   font-weight: bold;
 }
 .homepage-status-visible {
-  background: #e4f2e6;
-  color: #24582e;
+  background: var(--color-flashy-principale, #5f9d15);
+  color: #17240b;
 }
 .homepage-status-hidden {
   background: #eee;
@@ -347,4 +347,9 @@
   .homepage-catalog-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.homepage-content-page .homepage-actions button.sp_button {
+  background: var(--bgColor-bouton, var(--color-flashy-principale, #5f9d15));
+  color: var(--color-text-sur-bouton, #fff);
 }

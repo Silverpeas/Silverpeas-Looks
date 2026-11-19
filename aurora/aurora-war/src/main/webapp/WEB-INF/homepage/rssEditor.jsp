@@ -34,8 +34,8 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Configurer les flux RSS</title>
-    <view:link href="/look/jsp/css/homepage-content.css"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-weather-v2"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v2"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -74,7 +74,7 @@
           </view:board>
           <div class="homepage-actions">
             <button class="sp_button" id="news-save" type="submit" disabled>Enregistrer</button>
-            <a class="sp_button" href="<c:out value='${manageUrl}'/>">Retour à la gestion</a>
+            <a class="simple-button" href="<c:out value='${manageUrl}'/>">Retour</a>
           </div>
           <p id="news-status" role="status" aria-live="polite"></p>
         </form>

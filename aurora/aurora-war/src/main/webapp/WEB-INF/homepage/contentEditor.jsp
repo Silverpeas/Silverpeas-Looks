@@ -34,9 +34,9 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Modifier une zone libre</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-ui-v1"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v2"/>
     <view:includePlugin name="wysiwyg"/>
-    <view:script src="/look/jsp/js/homepage-content.js?version=15592-ui-v1"/>
+    <view:script src="/look/jsp/js/homepage-content.js?version=15592-editor-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -86,7 +86,7 @@
             </section>
             <div class="homepage-actions">
               <button id="homepage-save" class="sp_button" type="submit" disabled>Enregistrer</button>
-              <a id="homepage-manage" class="sp_button homepage-secondary-action" href="<c:out value='${manageUrl}'/>">Retour à la gestion</a>
+              <a id="homepage-manage" class="simple-button" href="<c:out value='${manageUrl}'/>">Retour</a>
             </div>
           </form>
           <p id="homepage-status" class="homepage-feedback" role="status" aria-live="polite"></p>

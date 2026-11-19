@@ -131,8 +131,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
       revision = content.revision;
       editor.setData(content.html);
-      status.textContent = 'Contenu enregistré.';
-      refreshPreview();
+      window.location.href = url('manage');
     } catch (error) {
       status.textContent = error.message;
     } finally {

@@ -131,6 +131,7 @@ test('editor loads placement and submits it with the content revision', async ()
   assert.equal(save.options.body.get('enabled'), 'true');
   assert.equal(save.options.body.get('revision'), 'revision-1');
   assert.equal(save.options.body.get('html'), '<p>Modifié</p>');
+  assert.equal(context.window.location.href.searchParams.get('action'), 'manage');
 });
 
 test('homepage loads configured asynchronous widgets independently and keeps navigation', () => {
