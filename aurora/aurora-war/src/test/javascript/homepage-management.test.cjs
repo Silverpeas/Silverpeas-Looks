@@ -28,45 +28,82 @@ const fs = require('node:fs');
 const source = fs.readFileSync(
     'aurora/aurora-war/src/main/webapp/look/jsp/js/homepage-management.js', 'utf8');
 
-for (const scenario of ['cancel', 'success', 'conflict', 'network']) {
-  test(scenario, async () => {
-    let click;
-    let calls = 0;
-    let reloads = 0;
-    const status = {textContent: ''};
-    const button = {
-      dataset: {widget: 'weather-legacy', revision: 'abc', kind: 'skins', owner: 'waves', language: 'fr'},
-      addEventListener: (name, callback) => { click = callback; }
-    };
-    const management = {
-      dataset: {endpoint: '/sp/AuroraHomepageContent', csrf: 'token'},
-      querySelectorAll: () => [button], querySelector: () => status
-    };
-    vm.runInNewContext(source, {
-      whenSilverpeasReady: callback => callback(),
-      document: {querySelector: () => management}, URLSearchParams,
-      window: {
-        confirm: () => scenario !== 'cancel', location: {reload: () => { reloads++; }}
-      },
-      fetch: async (url, options) => {
-        calls++;
-        assert.equal(url, management.dataset.endpoint);
-        assert.equal(options.method, 'POST');
-        assert.equal(options.headers['X-Aurora-CSRF'], 'token');
-        assert.equal(options.body.get('action'), 'deleteWidget');
-        for (const [key, value] of Object.entries(button.dataset)) {
-          assert.equal(options.body.get(key), value);
-        }
-        if (scenario === 'network') { throw Error('offline'); }
-        return {ok: scenario === 'success', status: 409};
-      }
-    });
-    await click();
-    assert.equal(calls, scenario === 'cancel' ? 0 : 1);
-    assert.equal(reloads, scenario === 'success' ? 1 : 0);
-    if (['conflict', 'network'].includes(scenario)) {
-      assert.ok(status.textContent);
-      assert.equal(button.disabled, false);
+function setup(responseStatus = 200) {
+  let click;
+  let escape;
+  const state = {calls: 0, reloads: 0};
+  const status = {textContent: ''};
+  const dialog = {
+    open: false, showModal() { this.open = true; }, close() { this.open = false; },
+    addEventListener: (name, callback) => { escape = callback; }
+  };
+  const management = {
+    dataset: {endpoint: '/sp/AuroraHomepageContent', csrf: 'token'},
+    contains: () => true,
+    addEventListener: (name, callback) => { click = callback; },
+    querySelector: selector => selector === '.homepage-delete-dialog' ? dialog : status
+  };
+  vm.runInNewContext(source, {
+    whenSilverpeasReady: callback => callback(),
+    document: {querySelector: () => management}, URLSearchParams,
+    window: {location: {reload: () => { state.reloads++; }}},
+    fetch: async (url, options) => {
+      state.calls++;
+      assert.equal(url, management.dataset.endpoint);
+      assert.equal(options.method, 'POST');
+      assert.equal(options.headers['X-Aurora-CSRF'], 'token');
+      assert.equal(options.body.get('action'), 'deleteWidget');
+      assert.equal(options.body.get('widget'), 'weather-legacy');
+      assert.equal(options.body.get('revision'), 'abc');
+      if (responseStatus === 'network') { throw Error('offline'); }
+      return {ok: responseStatus === 200, status: responseStatus};
     }
+  });
+  // Created after initialization, as with rows replaced by AJAX pagination.
+  const button = {
+    dataset: {widget: 'weather-legacy', revision: 'abc', kind: 'skins', owner: 'waves', language: 'fr'},
+    matches: selector => selector === '.homepage-delete-widget'
+  };
+  const event = target => ({target: {closest: () => target}, preventDefault() {}});
+  return {
+    state, status, dialog, button,
+    open: () => click(event(button)),
+    action: selector => click(event({matches: other => other === selector})),
+    escape: () => { escape(); dialog.close(); }
+  };
+}
+
+test('SVG click on a new row opens confirmation before sending the request', async () => {
+  const ui = setup();
+  await ui.open();
+  assert.equal(ui.dialog.open, true);
+  assert.equal(ui.state.calls, 0);
+  await ui.action('[data-delete-confirm]');
+  assert.equal(ui.dialog.open, false);
+  assert.equal(ui.state.calls, 1);
+  assert.equal(ui.state.reloads, 1);
+});
+
+for (const action of ['cancel', 'escape']) {
+  test(action + ' does not delete the widget', async () => {
+    const ui = setup();
+    await ui.open();
+    if (action === 'cancel') { await ui.action('[data-delete-cancel]'); }
+    else { ui.escape(); }
+    await ui.action('[data-delete-confirm]');
+    assert.equal(ui.state.calls, 0);
+    assert.equal(ui.dialog.open, false);
+  });
+}
+
+for (const failure of [409, 403, 'network']) {
+  test('failure ' + failure + ' displays an error and enables retry', async () => {
+    const ui = setup(failure);
+    await ui.open();
+    await ui.action('[data-delete-confirm]');
+    assert.equal(ui.state.calls, 1);
+    assert.equal(ui.state.reloads, 0);
+    assert.ok(ui.status.textContent);
+    assert.equal(ui.button.disabled, false);
   });
 }

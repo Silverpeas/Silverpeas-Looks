@@ -124,9 +124,9 @@
 </c:url>
 <view:sp-page>
   <view:sp-head-part>
-    <script src="<c:url value='/look/jsp/js/homepage-management.js'/>?version=15592-delete-v1" defer></script>
+    <view:script src="/look/jsp/js/homepage-management.js?version=15592-delete-v2"/>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-ui-v1"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-delete-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -137,6 +137,14 @@
       <view:frame>
         <main class="homepage-content-editor homepage-content-management" data-csrf="<c:out value='${homepageCsrf}'/>" data-endpoint="<c:url value='/AuroraHomepageContent'/>">
           <p role="status" class="homepage-delete-status"></p>
+          <dialog class="homepage-delete-dialog" aria-labelledby="homepage-delete-title">
+            <h2 id="homepage-delete-title">Supprimer ce widget ?</h2>
+            <p>Le widget sera retiré de la page d’accueil dans toutes les langues.</p>
+            <div class="homepage-delete-dialog-actions">
+              <button type="button" data-delete-cancel>Annuler</button>
+              <button type="button" data-delete-confirm>Supprimer</button>
+            </div>
+          </dialog>
           <h1>Modifier la page d’accueil</h1>
           <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
           <view:buttonPane>
@@ -182,7 +190,7 @@
                   </c:url>
                   <c:set var="editLink"><a href="<c:out value='${editUrl}'/>"><c:out value="${empty widget.title ? 'Zone sans titre' : widget.title}"/></a></c:set>
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
-                  <c:set var="deleteButton"><button type="button" class="homepage-delete-widget" data-widget="<c:out value='${widget.id}'/>" data-revision="<c:out value='${widget.revision}'/>" data-kind="<c:out value='${param.kind}'/>" data-owner="<c:out value='${param.owner}'/>" data-language="<c:out value='${homepageLanguage}'/>">Supprimer</button></c:set>
+                  <c:set var="deleteButton"><button type="button" class="homepage-delete-widget" aria-label="Supprimer le widget" title="Supprimer le widget" data-widget="<c:out value='${widget.id}'/>" data-revision="<c:out value='${widget.revision}'/>" data-kind="<c:out value='${param.kind}'/>" data-owner="<c:out value='${param.owner}'/>" data-language="<c:out value='${homepageLanguage}'/>"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg></button></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
                     <view:arrayCellText text="${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis (home)' : 'Zone libre'))))))))}"/>

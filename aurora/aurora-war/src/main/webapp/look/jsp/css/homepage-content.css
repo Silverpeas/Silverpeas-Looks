@@ -169,3 +169,55 @@
   flex-wrap: wrap;
   gap: 0.5em;
 }
+
+.homepage-content-management .homepage-delete-widget {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+}
+.homepage-content-management .homepage-delete-widget:hover {
+  background: #fff1f2;
+  color: #be123c;
+}
+.homepage-content-management .homepage-delete-widget:focus-visible {
+  outline: 2px solid #be123c;
+  outline-offset: 2px;
+}
+.homepage-content-management .homepage-delete-widget:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+.homepage-delete-dialog {
+  max-width: 420px;
+  padding: 24px;
+  border: 0;
+  border-radius: 12px;
+  color: #1e293b;
+}
+.homepage-delete-dialog::backdrop {
+  background: rgb(15 23 42 / 35%);
+}
+.homepage-delete-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+.homepage-delete-dialog-actions button {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.homepage-delete-dialog-actions [data-delete-confirm] {
+  background: #be123c;
+  color: #fff;
+}

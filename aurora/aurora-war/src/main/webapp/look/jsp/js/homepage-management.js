@@ -24,33 +24,54 @@
 whenSilverpeasReady(function() {
   const management = document.querySelector('.homepage-content-management');
   if (!management) { return; }
-  management.querySelectorAll('.homepage-delete-widget').forEach(function(button) {
-    button.addEventListener('click', async function() {
-      if (!window.confirm('Supprimer ce widget de la page d’accueil ?')) { return; }
-      button.disabled = true;
-      const status = management.querySelector('.homepage-delete-status');
-      status.textContent = '';
-      const parameters = new URLSearchParams({action: 'deleteWidget'});
-      ['widget', 'revision', 'kind', 'owner', 'language'].forEach(function(name) {
-        parameters.set(name, button.dataset[name]);
-      });
-      try {
-        const response = await fetch(management.dataset.endpoint, {
-          method: 'POST', credentials: 'same-origin',
-          headers: {'X-Aurora-CSRF': management.dataset.csrf}, body: parameters
-        });
-        if (!response.ok) {
-          status.textContent = response.status === 409
-              ? 'Ce widget a été modifié. Rechargez la page avant de réessayer.'
-              : 'La suppression a échoué. Rechargez la page avant de réessayer.';
-          return;
-        }
-        window.location.reload();
-      } catch (error) {
-        status.textContent = 'La suppression a échoué. Vérifiez votre connexion.';
-      } finally {
-        button.disabled = false;
-      }
+  const dialog = management.querySelector('.homepage-delete-dialog');
+  const status = management.querySelector('.homepage-delete-status');
+  let pendingButton;
+
+  async function removeWidget(button) {
+    button.disabled = true;
+    status.textContent = '';
+    const parameters = new URLSearchParams({action: 'deleteWidget'});
+    ['widget', 'revision', 'kind', 'owner', 'language'].forEach(function(name) {
+      parameters.set(name, button.dataset[name]);
     });
+    try {
+      const response = await fetch(management.dataset.endpoint, {
+        method: 'POST', credentials: 'same-origin',
+        headers: {'X-Aurora-CSRF': management.dataset.csrf}, body: parameters
+      });
+      if (!response.ok) {
+        status.textContent = response.status === 409
+            ? 'Ce widget a été modifié. Rechargez la page avant de réessayer.'
+            : 'La suppression a échoué. Rechargez la page avant de réessayer.';
+        return;
+      }
+      window.location.reload();
+    } catch (error) {
+      status.textContent = 'La suppression a échoué. Vérifiez votre connexion.';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  management.addEventListener('click', async function(event) {
+    const button = event.target.closest('button');
+    if (!button || !management.contains(button) || button.disabled) { return; }
+    if (button.matches('.homepage-delete-widget')) {
+      event.preventDefault();
+      pendingButton = button;
+      dialog.showModal();
+    } else if (button.matches('[data-delete-cancel]')) {
+      pendingButton = undefined;
+      dialog.close();
+    } else if (button.matches('[data-delete-confirm]') && pendingButton) {
+      const selected = pendingButton;
+      pendingButton = undefined;
+      dialog.close();
+      await removeWidget(selected);
+    }
+  });
+  dialog.addEventListener('cancel', function() {
+    pendingButton = undefined;
   });
 });

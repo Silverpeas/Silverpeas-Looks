@@ -53,6 +53,10 @@ class HomepageJspCompatibilityTest {
     assertTrue(view.indexOf("/look/jsp/js/homepage-management.js") ==
         view.lastIndexOf("/look/jsp/js/homepage-management.js"));
     assertTrue(view.contains("${deleteButton}"));
+    assertTrue(view.contains("<view:script src=\"/look/jsp/js/homepage-management.js"));
+    assertTrue(view.contains("<svg "));
+    assertTrue(view.contains("aria-label=\"Supprimer le widget\""));
+    assertTrue(view.contains("<dialog "));
     for (String attribute : List.of("widget.id", "widget.revision", "homepageCsrf")) {
       assertTrue(view.contains("<c:out value='${" + attribute + "}'/>"));
     }
