@@ -211,23 +211,35 @@
   gap: 12px;
   margin-top: 24px;
 }
-.homepage-delete-dialog-actions button {
-  padding: 8px 16px;
-  border: 0;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.homepage-delete-dialog-actions [data-delete-confirm] {
-  background: #be123c;
-  color: #fff;
-}
-
 .homepage-content-page .homepage-content-management {
   max-width: 1600px;
 }
-.homepage-preview-link {
-  text-align: right;
-  margin-bottom: 1.5rem;
+.homepage-content-page .homepage-content-management {
+  padding-top: 0;
+}
+.homepage-content-management .homepage-delete-status:empty {
+  display: none;
+}
+.homepage-content-page .hautFrame {
+  padding: 0;
+}
+.homepage-management-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 20px;
+}
+.homepage-management-header h1 {
+  margin-bottom: 6px;
+}
+.homepage-management-header .homepage-introduction {
+  margin: 0;
+}
+.homepage-management-header .homepage-return {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .homepage-management-layout {
   display: grid;
@@ -262,17 +274,12 @@
   margin-bottom: 20px;
 }
 .homepage-catalog-filters button {
-  border: 0;
-  border-radius: 8px;
-  background: #f1f4f2;
-  color: #46554c;
-  padding: 9px 12px;
-  font: inherit;
   cursor: pointer;
 }
 .homepage-catalog-filters button[aria-pressed="true"] {
-  color: #fff;
-  background: #287342;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .homepage-catalog-grid {
   display: grid;

@@ -124,9 +124,9 @@
 </c:url>
 <view:sp-page>
   <view:sp-head-part>
-    <view:script src="/look/jsp/js/homepage-management.js?version=15592-catalog-v1"/>
+    <view:script src="/look/jsp/js/homepage-management.js?version=15592-catalog-v2"/>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-catalog-v1"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-catalog-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -141,13 +141,17 @@
             <h2 id="homepage-delete-title">Supprimer ce widget ?</h2>
             <p>Le widget sera retiré de la page d’accueil dans toutes les langues.</p>
             <div class="homepage-delete-dialog-actions">
-              <button type="button" data-delete-cancel>Annuler</button>
-              <button type="button" data-delete-confirm>Supprimer</button>
+              <button type="button" class="simple-button" data-delete-cancel>Annuler</button>
+              <button type="button" class="sp_button" data-delete-confirm>Supprimer</button>
             </div>
           </dialog>
-          <h1>Modifier la page d’accueil</h1>
-          <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
-          <p class="homepage-preview-link"><a href="<c:out value='${homeUrl}'/>">Voir la page d’accueil →</a></p>
+          <header class="homepage-management-header">
+            <div>
+              <h1>Modifier la page d’accueil</h1>
+              <p class="homepage-introduction">Ajoutez des widgets et choisissez leur colonne, leur ordre et leur visibilité.</p>
+            </div>
+            <a class="simple-button homepage-return" href="<c:out value='${homeUrl}'/>">Retour à la page d’accueil</a>
+          </header>
           <div class="homepage-management-layout">
           <section class="homepage-installed" aria-labelledby="homepage-installed-title">
           <h2 id="homepage-installed-title">Widgets installés</h2>
@@ -179,7 +183,7 @@
                   </c:url>
                   <c:set var="editLink"><a href="<c:out value='${editUrl}'/>"><c:out value="${empty widget.title ? 'Zone sans titre' : widget.title}"/></a></c:set>
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
-                  <c:set var="deleteButton"><button type="button" class="homepage-delete-widget" aria-label="Supprimer le widget" title="Supprimer le widget" data-widget="<c:out value='${widget.id}'/>" data-revision="<c:out value='${widget.revision}'/>" data-kind="<c:out value='${param.kind}'/>" data-owner="<c:out value='${param.owner}'/>" data-language="<c:out value='${homepageLanguage}'/>"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg></button></c:set>
+                  <c:set var="deleteButton"><button type="button" class="homepage-delete-widget simple-button" aria-label="Supprimer le widget" title="Supprimer le widget" data-widget="<c:out value='${widget.id}'/>" data-revision="<c:out value='${widget.revision}'/>" data-kind="<c:out value='${param.kind}'/>" data-owner="<c:out value='${param.owner}'/>" data-language="<c:out value='${homepageLanguage}'/>"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg></button></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
                     <view:arrayCellText text="${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis (home)' : 'Zone libre'))))))))}"/>
@@ -198,10 +202,10 @@
             <h2 id="homepage-catalog-title">Ajouter un widget</h2>
             <p class="homepage-section-description">Choisissez un widget pour le configurer et l’ajouter à la page.</p>
             <div class="homepage-catalog-filters" role="group" aria-label="Catégories de widgets">
-              <button type="button" data-catalog-filter="all" aria-pressed="true">Tous</button>
-              <button type="button" data-catalog-filter="content" aria-pressed="false">Contenus</button>
-              <button type="button" data-catalog-filter="community" aria-pressed="false">Vie collective</button>
-              <button type="button" data-catalog-filter="services" aria-pressed="false">Pratique</button>
+              <button type="button" class="simple-button" data-catalog-filter="all" aria-pressed="true">Tous</button>
+              <button type="button" class="simple-button" data-catalog-filter="content" aria-pressed="false">Contenus</button>
+              <button type="button" class="simple-button" data-catalog-filter="community" aria-pressed="false">Vie collective</button>
+              <button type="button" class="simple-button" data-catalog-filter="services" aria-pressed="false">Pratique</button>
             </div>
             <div class="homepage-catalog-grid">
               <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addUrl}'/>">
