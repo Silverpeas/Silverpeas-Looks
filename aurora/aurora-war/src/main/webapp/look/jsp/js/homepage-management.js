@@ -28,6 +28,21 @@ whenSilverpeasReady(function() {
   const status = management.querySelector('.homepage-delete-status');
   let pendingButton;
 
+  function deleteRequest(parameters) {
+    // Silverpeas adds its session security token to XMLHttpRequest.send.
+    return new Promise(function(resolve, reject) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', management.dataset.endpoint);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+      xhr.setRequestHeader('X-Aurora-CSRF', management.dataset.csrf);
+      xhr.onload = () => resolve(xhr.status);
+      xhr.onerror = () => reject(new Error('Network error'));
+      xhr.ontimeout = () => reject(new Error('Request timeout'));
+      xhr.timeout = 60000;
+      xhr.send(parameters.toString());
+    });
+  }
+
   async function removeWidget(button) {
     button.disabled = true;
     status.textContent = '';
@@ -36,12 +51,9 @@ whenSilverpeasReady(function() {
       parameters.set(name, button.dataset[name]);
     });
     try {
-      const response = await fetch(management.dataset.endpoint, {
-        method: 'POST', credentials: 'same-origin',
-        headers: {'X-Aurora-CSRF': management.dataset.csrf}, body: parameters
-      });
-      if (!response.ok) {
-        status.textContent = response.status === 409
+      const responseStatus = await deleteRequest(parameters);
+      if (responseStatus !== 200) {
+        status.textContent = responseStatus === 409
             ? 'Ce widget a été modifié. Rechargez la page avant de réessayer.'
             : 'La suppression a échoué. Rechargez la page avant de réessayer.';
         return;

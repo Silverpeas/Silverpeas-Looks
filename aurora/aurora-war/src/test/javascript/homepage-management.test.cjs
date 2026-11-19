@@ -47,16 +47,29 @@ function setup(responseStatus = 200) {
     whenSilverpeasReady: callback => callback(),
     document: {querySelector: () => management}, URLSearchParams,
     window: {location: {reload: () => { state.reloads++; }}},
-    fetch: async (url, options) => {
-      state.calls++;
-      assert.equal(url, management.dataset.endpoint);
-      assert.equal(options.method, 'POST');
-      assert.equal(options.headers['X-Aurora-CSRF'], 'token');
-      assert.equal(options.body.get('action'), 'deleteWidget');
-      assert.equal(options.body.get('widget'), 'weather-legacy');
-      assert.equal(options.body.get('revision'), 'abc');
-      if (responseStatus === 'network') { throw Error('offline'); }
-      return {ok: responseStatus === 200, status: responseStatus};
+    XMLHttpRequest: class {
+      constructor() { this.headers = {}; }
+      open(method, url) {
+        assert.equal(method, 'POST');
+        assert.equal(url, management.dataset.endpoint);
+      }
+      setRequestHeader(name, value) { this.headers[name] = value; }
+      send(body) {
+        // Silverpeas enriches XMLHttpRequest.send to supply its session token.
+        this.setRequestHeader('X-Silverpeas-Session', 'platform-token');
+        state.calls++;
+        assert.equal(this.headers['X-Silverpeas-Session'], 'platform-token');
+        assert.equal(this.headers['X-Aurora-CSRF'], 'token');
+        assert.equal(this.headers['Content-Type'], 'application/x-www-form-urlencoded;charset=UTF-8');
+        const parameters = new URLSearchParams(body);
+        for (const [name, value] of Object.entries({action: 'deleteWidget',
+          widget: 'weather-legacy', revision: 'abc', kind: 'skins', owner: 'waves', language: 'fr'})) {
+          assert.equal(parameters.get(name), value);
+        }
+        if (responseStatus === 'network') { this.onerror(); }
+        else if (responseStatus === 'timeout') { this.ontimeout(); }
+        else { this.status = responseStatus; this.onload(); }
+      }
     }
   });
   // Created after initialization, as with rows replaced by AJAX pagination.
@@ -96,7 +109,7 @@ for (const action of ['cancel', 'escape']) {
   });
 }
 
-for (const failure of [409, 403, 'network']) {
+for (const failure of [409, 403, 'network', 'timeout']) {
   test('failure ' + failure + ' displays an error and enables retry', async () => {
     const ui = setup(failure);
     await ui.open();
