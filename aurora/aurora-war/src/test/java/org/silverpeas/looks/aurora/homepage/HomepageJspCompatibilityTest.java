@@ -57,6 +57,12 @@ class HomepageJspCompatibilityTest {
       assertTrue(properties.containsKey("Shortcut.tool.1.Url"), skin);
       assertTrue(properties.containsKey("home.weather.settings"), skin);
       assertTrue(properties.containsKey("space.homepage.news"), skin);
+      for (String key : List.of("FondManager", "JavaScript.kmelia",
+          "space.homepage.management.customtemplate.WAXX", "home.news.height",
+          "home.news.taxonomy.position", "home.news.taxonomy.display",
+          "home.publications.components.excluded", "home.publications.spaces.excluded")) {
+        assertFalse(properties.containsKey(key), skin + ": redundant setting " + key);
+      }
       for (String key : properties.stringPropertyNames()) {
         assertFalse(key.startsWith("Shortcut.home."), key);
       }
