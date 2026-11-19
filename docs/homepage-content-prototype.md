@@ -331,3 +331,13 @@ Une fois enregistrée, sa visibilité devient indépendante des éphémérides e
 Chaque instance retient séparément la dernière ville du lecteur dans un cookie ; le cookie
 historique est repris pour `weather-legacy`. RWeatherService, son cache et les traducteurs
 existants sont réutilisés. L’ancien tag météo reste disponible pour les autres pages.
+
+### Suppression des widgets
+
+L’écran « Modifier la page d’accueil » propose « Supprimer » sur chaque ligne, avec
+confirmation. La suppression concerne le widget dans toutes les langues de cette page.
+Un marqueur persistant empêche la réapparition des blocs historiques. Les contenus et
+réglages sont conservés sur disque ; les données personnelles et les applications
+sources ne sont pas supprimées. Une ancienne fenêtre d’édition ne peut pas rétablir
+le widget supprimé. L’action POST applique les mêmes droits et protections CSRF que
+l’enregistrement et vérifie la révision avant de retirer le widget.

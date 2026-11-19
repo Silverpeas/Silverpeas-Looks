@@ -325,6 +325,8 @@ public final class HomepageWidgets {
         widgets.stream().noneMatch(widget -> widget.id().equals("weather-legacy"))) {
       widgets.add(weatherWidget(store, page, "weather-legacy", language, helper));
     }
+    var deleted = store.deletedWidgets(page);
+    widgets.removeIf(widget -> deleted.contains(widget.id()));
     widgets.sort(Comparator.comparingInt(HomepageContentStore.Widget::getOrder)
         .thenComparing(HomepageContentStore.Widget::getId));
     return List.copyOf(widgets);

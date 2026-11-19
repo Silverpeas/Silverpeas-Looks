@@ -37,6 +37,25 @@ class HomepageContentStoreTest {
   Path root;
 
   @Test
+  void deletionIsPersistentIsolatedAndRejectsStaleEditors() throws Exception {
+    var store = new HomepageContentStore(root);
+    var page = new HomepagePage("skins", "waves");
+    store.save(page, "welcome", "fr", "Bienvenue", "Bonjour", "");
+    var revision = store.read(page, "welcome", "fr").revision();
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.deleteWidget(page, "welcome", "fr", ""));
+    assertTrue(store.deletedWidgets(page).isEmpty());
+    store.deleteWidget(page, "welcome", "fr", revision);
+    assertTrue(new HomepageContentStore(root).deletedWidgets(page).contains("welcome"));
+    assertTrue(store.deletedWidgets(new HomepagePage("skins", "Aurora")).isEmpty());
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.save(page, "welcome", "fr", "Replaced", "Other", revision));
+    assertEquals("Bonjour", store.read(page, "welcome", "fr").html());
+    store.deleteWidget(page, "weather-legacy", "fr", "");
+    assertTrue(store.deletedWidgets(page).contains("weather-legacy"));
+  }
+
+  @Test
   void newsConfigurationIsPersistentIsolatedAndDoesNotCreateHtmlWidgets() throws Exception {
     var store = new HomepageContentStore(root);
     var page = new HomepagePage("skins", "waves");

@@ -189,7 +189,10 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void write(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action) throws IOException, ServletException {
-    if ("saveNews".equals(action)) {
+    if ("deleteWidget".equals(action)) {
+      store.deleteWidget(page, widget, language, request.getParameter("revision"));
+      json(response, "{}");
+    } else if ("saveNews".equals(action)) {
       if (widget != null && !widget.isBlank()) {
         store.saveNewsWidget(page, widget, language, request.getParameter("title"),
             new HomepageContentStore.Layout(request.getParameter("zone"),
@@ -457,6 +460,7 @@ public class HomepageContentServlet extends HttpServlet {
     } else if ("load".equals(action)) {
       contentResponse(response, store.read(page, widget, language), csrf);
     } else if ("manage".equals(action)) {
+      request.setAttribute("homepageCsrf", csrf);
       request.setAttribute("homepageWidgets", HomepageWidgets.all(store, page, language,
           (org.silverpeas.looks.aurora.LookAuroraHelper)
               request.getSession(false).getAttribute("Silverpeas_LookHelper")));

@@ -69,6 +69,20 @@ class HomepageWidgetsTest {
   }
 
   @Test
+  void deletedHistoricalWidgetDoesNotReappear() throws Exception {
+    var store = new HomepageContentStore(root);
+    var page = new HomepagePage("skins", "waves");
+    store.deleteWidget(page, "weather-legacy", "fr", "");
+    store.save(page, "custom", "fr", "Title", "Body", "");
+    store.deleteWidget(page, "custom", "fr", store.read(page, "custom", "fr").revision());
+    var helper = helper();
+    for (String language : List.of("fr", "en")) {
+      assertTrue(HomepageWidgets.all(new HomepageContentStore(root), page, language, helper).stream()
+          .noneMatch(widget -> List.of("weather-legacy", "custom").contains(widget.id())));
+    }
+  }
+
+  @Test
   void newsAndHtmlSharePlacementAndSupportMoreThanThreeNewsInstances() throws Exception {
     var store = new HomepageContentStore(root);
     store.saveConfigured(page, "html-intro", "fr", "Introduction", "Bonjour", "",

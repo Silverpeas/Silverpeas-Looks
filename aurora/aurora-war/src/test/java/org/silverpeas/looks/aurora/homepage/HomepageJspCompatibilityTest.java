@@ -47,6 +47,19 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void managementProvidesEscapedDeletionControlsAndExternalScript() throws Exception {
+    String view = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
+    assertTrue(view.indexOf("/look/jsp/js/homepage-management.js") >= 0);
+    assertTrue(view.indexOf("/look/jsp/js/homepage-management.js") ==
+        view.lastIndexOf("/look/jsp/js/homepage-management.js"));
+    assertTrue(view.contains("${deleteButton}"));
+    for (String attribute : List.of("widget.id", "widget.revision", "homepageCsrf")) {
+      assertTrue(view.contains("<c:out value='${" + attribute + "}'/>"));
+    }
+    assertFalse(view.contains("onclick="));
+  }
+
+  @Test
   void homepageUsesOneWidgetModelForBothColumnsAndNewsResources() throws Exception {
     String jsp = Files.readString(Path.of("src/main/webapp/look/jsp/Main.jsp"));
     assertTrue(jsp.contains("request.setAttribute(\"homepageWidgets\", homepageWidgets)"));

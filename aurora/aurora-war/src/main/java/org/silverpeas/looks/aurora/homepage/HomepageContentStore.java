@@ -122,6 +122,7 @@ public class HomepageContentStore {
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
+    public String getRevision() { return content.revision(); }
     public String getHtml() { return content.html(); }
     public String getZone() { return content.layout().zone(); }
     public int getOrder() { return content.layout().order(); }
@@ -261,7 +262,29 @@ public class HomepageContentStore {
     saveProperties(page, properties);
   }
 
+  public synchronized void deleteWidget(HomepagePage page, String widget, String language,
+      String expectedRevision) throws IOException {
+    HomepagePage.validateIdentifier(widget);
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed");
+    }
+    var settings = properties(page);
+    settings.setProperty("widget." + widget + ".deleted", "true");
+    saveProperties(page, settings);
+  }
+
+  public synchronized java.util.Set<String> deletedWidgets(HomepagePage page) throws IOException {
+    var settings = properties(page);
+    return settings.stringPropertyNames().stream()
+        .filter(key -> key.startsWith("widget.") && key.endsWith(".deleted"))
+        .filter(key -> Boolean.parseBoolean(settings.getProperty(key)))
+        .map(key -> key.substring(7, key.length() - 8)).collect(Collectors.toSet());
+  }
+
   private void registerWidget(Properties properties, String widget) {
+    if (Boolean.parseBoolean(properties.getProperty("widget." + widget + ".deleted"))) {
+      throw new ConcurrentModificationException("Widget deleted");
+    }
     properties.setProperty("page.configuration.version", "1");
     String widgets = properties.getProperty("widgets", "");
     var ids = Arrays.stream(widgets.split(",")).filter(s -> !s.isBlank())

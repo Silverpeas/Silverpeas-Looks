@@ -131,6 +131,30 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void deleteWidgetRequiresAdminCsrfAndCurrentRevision() throws Exception {
+    store.save(new HomepagePage("skins", "waves"), "welcome", "fr", "Title", "Body", "");
+    when(request.getParameter("action")).thenReturn("deleteWidget");
+    when(request.getParameter("revision")).thenReturn("");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    reset(response);
+    when(user.isAccessAdmin()).thenReturn(true);
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    reset(response);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    reset(response);
+    when(response.getWriter()).thenReturn(new PrintWriter(output));
+    when(request.getParameter("revision")).thenReturn(
+        store.read(new HomepagePage("skins", "waves"), "welcome", "fr").revision());
+    servlet.doPost(request, response);
+    assertTrue(store.deletedWidgets(new HomepagePage("skins", "waves")).contains("welcome"));
+    verify(response, never()).sendError(anyInt());
+  }
+
+  @Test
   void ephemerisEnforcesRightsCsrfAndRevisionAndReturnsSavedPlacement() throws Exception {
     prepareNewsSave();
     when(request.getParameter("action")).thenReturn("saveEphemeris");
