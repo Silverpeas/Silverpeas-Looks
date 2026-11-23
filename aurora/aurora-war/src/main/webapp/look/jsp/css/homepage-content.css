@@ -141,7 +141,7 @@
   font-weight: bold;
 }
 .homepage-status-visible {
-  background: var(--color-flashy-principale, #5f9d15);
+  background: #5f9d15;
   color: #17240b;
 }
 .homepage-status-hidden {
@@ -352,4 +352,44 @@
 .homepage-content-page .homepage-actions button.sp_button {
   background: var(--bgColor-bouton, var(--color-flashy-principale, #5f9d15));
   color: var(--color-text-sur-bouton, #fff);
+}
+
+.homepage-content-page .homepage-actions > .sp_button,
+.homepage-content-page .homepage-actions > .simple-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 0.75rem;
+  margin: 0;
+  font-size: 1em;
+  line-height: 1;
+}
+.homepage-widget-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.homepage-content-management .homepage-edit-widget {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+}
+.homepage-content-management .homepage-edit-widget:hover {
+  background: #edf5e3;
+  color: #426e0f;
+}
+.homepage-edit-widget:focus-visible {
+  outline: 2px solid #5f9d15;
+  outline-offset: 2px;
 }

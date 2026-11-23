@@ -124,9 +124,9 @@
 </c:url>
 <view:sp-page>
   <view:sp-head-part>
-    <view:script src="/look/jsp/js/homepage-management.js?version=15592-editor-v2"/>
+    <view:script src="/look/jsp/js/homepage-management.js?version=15592-editor-v3"/>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v2"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -184,13 +184,14 @@
                   <c:set var="editLink"><a href="<c:out value='${editUrl}'/>"><c:out value="${empty widget.title ? 'Zone sans titre' : widget.title}"/></a></c:set>
                   <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
                   <c:set var="deleteButton"><button type="button" class="homepage-delete-widget simple-button" aria-label="Supprimer le widget" title="Supprimer le widget" data-widget="<c:out value='${widget.id}'/>" data-revision="<c:out value='${widget.revision}'/>" data-kind="<c:out value='${param.kind}'/>" data-owner="<c:out value='${param.owner}'/>" data-language="<c:out value='${homepageLanguage}'/>"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg></button></c:set>
+                  <c:set var="widgetActions"><span class="homepage-widget-actions"><a class="homepage-edit-widget simple-button" href="<c:out value='${editUrl}'/>" aria-label="Modifier le widget" title="Modifier le widget"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 3 5 5-12 12-6 1 1-6z M14 5l5 5"/></svg></a>${deleteButton}</span></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
                     <view:arrayCellText text="${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis (home)' : 'Zone libre'))))))))}"/>
                     <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
                     <view:arrayCellText text="${widget.order}"/>
                     <view:arrayCellText text="${displayStatus}"/>
-                    <view:arrayCellText text="${deleteButton}"/>
+                    <view:arrayCellText text="${widgetActions}"/>
                   </view:arrayLine>
                 </c:forEach>
               </view:arrayPane>

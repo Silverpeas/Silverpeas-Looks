@@ -34,8 +34,8 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Configurer les éphémérides</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v2"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v2"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v3"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>

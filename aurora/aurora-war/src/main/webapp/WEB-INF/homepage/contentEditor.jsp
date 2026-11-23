@@ -34,9 +34,9 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Modifier une zone libre</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v2"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
     <view:includePlugin name="wysiwyg"/>
-    <view:script src="/look/jsp/js/homepage-content.js?version=15592-editor-v2"/>
+    <view:script src="/look/jsp/js/homepage-content.js?version=15592-editor-v3"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
