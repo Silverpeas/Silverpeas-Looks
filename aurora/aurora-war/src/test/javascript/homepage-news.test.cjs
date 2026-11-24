@@ -60,10 +60,14 @@ async function editor(status = 200, configured = false, publications = false, ep
       this.onload();
     }
   }
-  vm.runInNewContext(source, {URL, URLSearchParams, XMLHttpRequest: XHR,
+  class Multipart {
+    constructor() { this.files = []; }
+    append(name, file) { this.files.push({name, file}); }
+  }
+  vm.runInNewContext(source, {URL, URLSearchParams, FormData: Multipart, XMLHttpRequest: XHR,
     document: {getElementById(id) { return controls[id] || null; }},
     window: {AuroraHomeShortcuts: {
-      load(entries) { controls.entries = entries; },
+      load(entries, upload) { controls.entries = entries; controls.upload = upload; },
       serialize(body) { body.set('count', controls.entries.length); controls.entries.forEach((entry, index) => Object.keys(entry).forEach(key => body.set('entry.' + index + '.' + key, entry[key]))); }
     }, location,
       addEventListener(event, callback) { start = callback; }}});
@@ -360,3 +364,19 @@ for (const status of [200, 400, 409, 403]) {
     }
   });
 }
+
+test('shortcut upload sends multipart with CSRF and preserves context without saving configuration', async () => {
+  const {controls, calls, location} = await editor(200, true, false, false, 'shortcuts');
+  await controls.upload({name: 'icon.png', size: 1024});
+  const uploaded = calls.at(-1);
+  assert.match(uploaded.url, /action=upload/);
+  assert.match(uploaded.url, /owner=waves/);
+  assert.equal(uploaded.headers['X-Aurora-CSRF'], 'token');
+  assert.equal(uploaded.headers['Content-Type'], undefined);
+  assert.equal(uploaded.body.files[0].name, 'image');
+  assert.equal(controls['news-save'].disabled, false);
+  assert.match(location.href, /action=newsEditor/);
+  const count = calls.length;
+  await assert.rejects(controls.upload({size: 5242881}), /5 Mo/);
+  assert.equal(calls.length, count);
+});

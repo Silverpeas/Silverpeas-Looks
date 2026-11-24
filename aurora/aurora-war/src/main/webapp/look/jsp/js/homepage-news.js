@@ -48,7 +48,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     const url = endpoint(action);
     xhr.open(body ? 'POST' : 'GET', url.pathname + url.search);
     if (body) {
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+      if (!((typeof FormData !== 'undefined' && body instanceof FormData))) {
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
+      }
       xhr.setRequestHeader('X-Aurora-CSRF', csrf);
     }
     xhr.onload = () => {
@@ -63,7 +65,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     xhr.onerror = () => reject(new Error('Impossible de joindre le serveur.'));
     xhr.ontimeout = () => reject(new Error('Le serveur ne répond pas.'));
     xhr.timeout = 60000;
-    xhr.send(body ? body.toString() : null);
+    xhr.send((typeof FormData !== 'undefined' && body instanceof FormData) ? body : body ? body.toString() : null);
   });
   const applications = document.getElementById('news-applications');
   const refreshSearch = () => {
@@ -86,7 +88,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('news-context').textContent = 'Choisissez le contenu et l’emplacement de ce widget.';
   try {
     const data = await request(community ? configurationAction('load') : feed ? (widgetType === 'events' ? 'loadEvents' : 'loadRss') : ephemeris ? 'loadEphemeris' : publications ? 'loadPublications' : 'loadNews');
-    if (widgetType === 'shortcuts') { window.AuroraHomeShortcuts.load(data.entries); }
+    if (widgetType === 'shortcuts') { window.AuroraHomeShortcuts.load(data.entries, async file => {
+      if (file.size > 5242880) { throw new Error('L’image ne doit pas dépasser 5 Mo.'); }
+      save.disabled = true;
+      try {
+        const body = new FormData();
+        body.append('image', file);
+        return (await request('upload', body, data.csrf)).url;
+      } finally { save.disabled = false; }
+    }); }
     revision = data.revision;
     csrf = data.csrf;
     Object.keys(fields).forEach(key => {

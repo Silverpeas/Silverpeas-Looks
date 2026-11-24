@@ -393,3 +393,12 @@
   outline: 2px solid #5f9d15;
   outline-offset: 2px;
 }
+
+.homepage-shortcut-preview {
+  display: block;
+  max-width: 120px;
+  max-height: 80px;
+  object-fit: contain;
+  margin: 8px 0;
+}
+.homepage-shortcut-preview[hidden] { display: none; }

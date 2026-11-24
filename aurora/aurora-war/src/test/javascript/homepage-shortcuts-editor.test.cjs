@@ -33,6 +33,7 @@ function editor() {
   const elements = {};
   class Element {
     constructor(tag) { this.tag = tag; this.children = []; this.handlers = {}; this.value = ''; }
+    setAttribute(name, value) { this[name] = value; }
     set id(value) { this._id = value; elements[value] = this; }
     get id() { return this._id; }
     append(...items) { this.children.push(...items); }
@@ -91,4 +92,24 @@ test('home editor handles empty lists and enforces the maximum of one hundred li
   add.click();
   assert.equal(container.children.length, 100);
   assert.equal(add.disabled, true);
+});
+
+ test('uploaded shortcut image is previewed and serialized, errors preserve the previous image', async () => {
+  const {api, elements} = editor();
+  let reject = false;
+  api.load([link('Image')], async file => {
+    assert.equal(file.name, 'icon.png');
+    if (reject) { throw new Error('Envoi impossible'); }
+    return '/silverpeas/AuroraHomepageContent?action=asset&name=image.png';
+  });
+  const image = elements['shortcut-0-image'];
+  image.files = [{name: 'icon.png'}];
+  await image.handlers.change();
+  let body = new URLSearchParams(); api.serialize(body);
+  assert.match(body.get('entry.0.iconUrl'), /action=asset/);
+  reject = true;
+  await image.handlers.change();
+  body = new URLSearchParams(); api.serialize(body);
+  assert.match(body.get('entry.0.iconUrl'), /action=asset/);
+  assert.equal(elements['shortcut-add'].disabled, false);
 });

@@ -26,7 +26,9 @@ window.AuroraHomeShortcuts = (() => {
   const keys = ['label', 'url', 'iconUrl', 'target'];
   let rows = [];
   const values = () => rows.map(row => Object.fromEntries(keys.map(key => [key, row.inputs[key].value.trim()])));
-  const load = entries => {
+  let uploadImage;
+  const load = (entries, upload = uploadImage) => {
+    uploadImage = upload;
     const container = document.getElementById('shortcut-entries');
     container.replaceChildren();
     rows = [];
@@ -56,6 +58,43 @@ window.AuroraHomeShortcuts = (() => {
         wrapper.append(label, input);
         fieldset.append(wrapper);
       });
+      const image = document.createElement('input');
+      image.type = 'file';
+      image.accept = 'image/png,image/jpeg,image/gif,image/webp';
+      image.id = 'shortcut-' + index + '-image';
+      const imageLabel = document.createElement('label');
+      imageLabel.htmlFor = image.id;
+      imageLabel.textContent = 'Importer une image (5 Mo maximum)';
+      const preview = document.createElement('img');
+      preview.className = 'homepage-shortcut-preview';
+      preview.alt = 'Aperçu de l’icône';
+      const refreshPreview = () => {
+        preview.hidden = !row.inputs.iconUrl.value;
+        preview.src = row.inputs.iconUrl.value;
+      };
+      row.inputs.iconUrl.addEventListener('input', refreshPreview);
+      refreshPreview();
+      const message = document.createElement('p');
+      message.setAttribute('role', 'status');
+      image.addEventListener('change', async () => {
+        if (!image.files.length) { return; }
+        const fieldsets = rows.map(item => item.fieldset);
+        fieldsets.forEach(item => { item.disabled = true; });
+        document.getElementById('shortcut-add').disabled = true;
+        message.textContent = 'Envoi de l’image…';
+        try {
+          row.inputs.iconUrl.value = await uploadImage(image.files[0]);
+          refreshPreview();
+          message.textContent = 'Image importée. Enregistrez le widget pour appliquer la modification.';
+        } catch (error) { message.textContent = error.message; }
+        finally {
+          image.value = '';
+          fieldsets.forEach(item => { item.disabled = false; });
+          document.getElementById('shortcut-add').disabled = rows.length >= 100;
+        }
+      });
+      row.fieldset = fieldset;
+      fieldset.append(imageLabel, image, preview, message);
       const actions = document.createElement('div');
       actions.className = 'homepage-shortcut-actions';
       const button = (text, disabled, action) => {
