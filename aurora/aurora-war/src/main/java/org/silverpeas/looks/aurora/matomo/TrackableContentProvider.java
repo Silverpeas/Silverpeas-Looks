@@ -1,10 +1,32 @@
+/*
+ * Copyright (C) 2000 - 2026 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception. You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "http://www.silverpeas.org/docs/core/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.silverpeas.looks.aurora.matomo;
 
 import org.silverpeas.components.blog.model.PostDetail;
 import org.silverpeas.components.blog.service.BlogService;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
-import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.annotation.Provider;
 import org.silverpeas.core.calendar.CalendarEvent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -104,8 +126,8 @@ class TrackableContentProvider {
       return;
     }
     String newsId = httpReq.getParameter("Id");
-    News news = quickInfoService.getNews(new ResourceReference(newsId, matcher.group(1)));
-    if (news != null) {
+    News news = quickInfoService.getNews(newsId);
+    if (news != null && matcher.group(1).equals(news.getComponentInstanceId())) {
       content.setContentType("News");
       content.setContent(true);
       content.setContentId(newsId);
