@@ -159,12 +159,13 @@
 }
 
 .homepage-shortcuts-table-wrapper {
-  overflow-x: auto;
+  width: 100%;
+  min-width: 0;
   margin: 1rem 0;
 }
 .homepage-shortcuts-table {
   width: 100%;
-  min-width: 760px;
+  min-width: 0;
   border-collapse: collapse;
   table-layout: fixed;
 }
@@ -175,22 +176,44 @@
 }
 .homepage-shortcuts-table th,
 .homepage-shortcuts-table td {
-  padding: 5px 6px;
+  box-sizing: border-box;
+  padding: 3px 4px;
   border-bottom: 1px solid #ccc;
   text-align: left;
   vertical-align: middle;
 }
-.homepage-shortcuts-table th:nth-child(1) { width: 30px; }
-.homepage-shortcuts-table th:nth-child(2) { width: 28%; }
-.homepage-shortcuts-table th:nth-child(3) { width: 34%; }
-.homepage-shortcuts-table th:nth-child(4) { width: 22%; }
-.homepage-shortcuts-table th:nth-child(5) { width: 76px; }
-.homepage-shortcuts-table th:nth-child(6) { width: 38px; }
+.homepage-shortcuts-table th:nth-child(1) { width: 36px; }
+.homepage-shortcuts-table th:nth-child(4) { width: 20%; }
+.homepage-shortcuts-table th:nth-child(5) { width: 72px; }
+.homepage-shortcuts-table th:nth-child(6) { width: 42px; }
+.homepage-shortcuts-table th { overflow-wrap: anywhere; }
+.homepage-content-editor .homepage-settings { min-width: 0; }
 .homepage-shortcuts-table input[type="text"],
 .homepage-shortcuts-table select {
+  display: block;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   min-width: 0;
+  height: 32px;
+  margin: 0;
+  padding: 5px 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  text-overflow: ellipsis;
+}
+.homepage-shortcuts-table input[type="text"]:hover,
+.homepage-shortcuts-table select:hover { border-color: #b4bfc4; }
+.homepage-shortcuts-table input[type="text"]:focus,
+.homepage-shortcuts-table select:focus {
+  border-color: #5f9d15;
+  outline: 1px solid #5f9d15;
+  background: #fff;
+  text-overflow: clip;
 }
 .homepage-shortcut-actions,
 .homepage-shortcut-image-controls {
