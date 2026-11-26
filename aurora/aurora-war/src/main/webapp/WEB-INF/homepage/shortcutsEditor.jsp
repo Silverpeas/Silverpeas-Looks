@@ -34,9 +34,9 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Configurer les raccourcis de la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-shortcut-table-v1"/>
-    <view:script src="/look/jsp/js/homepage-shortcuts-editor.js?version=15592-shortcut-table-v1"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-shortcut-table-v1"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-shortcut-drag-v1"/>
+    <view:script src="/look/jsp/js/homepage-shortcuts-editor.js?version=15592-shortcut-drag-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-shortcut-drag-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -62,12 +62,12 @@
                 </div>
               </div>
               <p>Ces raccourcis concernent la page d’accueil (home). Les raccourcis de la barre d’outils sont gérés séparément.</p>
-              <p>Ajoutez les liens dans l’ordre souhaité. L’icône est facultative. Les adresses peuvent être absolues (HTTP/HTTPS), relatives ou des liens de messagerie. Importez une image de 5 Mo maximum pour l’icône.</p>
+              <p>Glissez la poignée pour ordonner les liens, ou utilisez les flèches haut et bas au clavier sur la poignée. L’icône est facultative. Les adresses peuvent être absolues (HTTP/HTTPS), relatives ou des liens de messagerie. Importez une image de 5 Mo maximum pour l’icône.</p>
               <div class="homepage-shortcuts-table-wrapper">
                 <table class="homepage-shortcuts-table">
                   <caption>Raccourcis de la page d’accueil</caption>
                   <thead><tr>
-                    <th scope="col">Libellé</th><th scope="col">URL</th>
+                    <th scope="col" class="homepage-shortcut-order-heading"><span class="homepage-visually-hidden">Ordre</span></th><th scope="col">Libellé</th><th scope="col">URL</th>
                     <th scope="col">Cible</th><th scope="col">Icône</th><th scope="col">Actions</th>
                   </tr></thead>
                   <tbody id="shortcut-entries"></tbody>

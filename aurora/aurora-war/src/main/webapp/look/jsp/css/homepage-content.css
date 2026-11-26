@@ -164,7 +164,7 @@
 }
 .homepage-shortcuts-table {
   width: 100%;
-  min-width: 850px;
+  min-width: 760px;
   border-collapse: collapse;
   table-layout: fixed;
 }
@@ -175,35 +175,60 @@
 }
 .homepage-shortcuts-table th,
 .homepage-shortcuts-table td {
-  padding: 10px 8px;
+  padding: 5px 6px;
   border-bottom: 1px solid #ccc;
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
 }
-.homepage-shortcuts-table th:nth-child(1) { width: 22%; }
+.homepage-shortcuts-table th:nth-child(1) { width: 30px; }
 .homepage-shortcuts-table th:nth-child(2) { width: 28%; }
-.homepage-shortcuts-table th:nth-child(3) { width: 20%; }
-.homepage-shortcuts-table th:nth-child(4) { width: 16%; }
-.homepage-shortcuts-table th:nth-child(5) { width: 14%; }
+.homepage-shortcuts-table th:nth-child(3) { width: 34%; }
+.homepage-shortcuts-table th:nth-child(4) { width: 22%; }
+.homepage-shortcuts-table th:nth-child(5) { width: 76px; }
+.homepage-shortcuts-table th:nth-child(6) { width: 38px; }
 .homepage-shortcuts-table input[type="text"],
 .homepage-shortcuts-table select {
   width: 100%;
   box-sizing: border-box;
   min-width: 0;
 }
-.homepage-shortcut-actions {
+.homepage-shortcut-actions,
+.homepage-shortcut-image-controls {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
 }
-.homepage-shortcut-actions .simple-button {
+.homepage-shortcuts-table .homepage-shortcut-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  min-width: 0;
+  padding: 5px;
   margin: 0;
-  min-width: 28px;
-  padding: 6px;
+  border: 0;
+  background: transparent;
+  color: #5c6670;
+  box-shadow: none;
 }
-.homepage-shortcut-icon .simple-button { margin: 0; }
-.homepage-shortcut-icon p {
-  font-size: 0.85em;
-  margin: 4px 0 0;
+.homepage-shortcut-icon-button svg { width: 20px; height: 20px; }
+.homepage-shortcuts-table .homepage-shortcut-icon-button:hover { background: #edf5e3; color: #426e0f; }
+.homepage-shortcut-icon-button:focus-visible { outline: 2px solid #5f9d15; outline-offset: 1px; }
+.homepage-shortcuts-table .homepage-shortcut-remove:hover { background: #fff1f2; color: #be123c; }
+.homepage-shortcut-grip { cursor: grab; }
+.homepage-shortcut-grip:active { cursor: grabbing; }
+.homepage-shortcuts-table .is-dragging { opacity: 0.45; }
+.homepage-shortcuts-table .is-drop-target { box-shadow: inset 0 -3px #5f9d15; background: #edf5e3; }
+.homepage-shortcut-icon p { font-size: 0.85em; margin: 4px 0 0; }
+.homepage-shortcut-icon p:empty { display: none; }
+.homepage-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .homepage-content-management .homepage-delete-widget {
@@ -432,9 +457,9 @@
 
 .homepage-shortcut-preview {
   display: block;
-  max-width: 40px;
-  max-height: 40px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
-  margin: 8px 0;
+  margin: 0;
 }
 .homepage-shortcut-preview[hidden] { display: none; }

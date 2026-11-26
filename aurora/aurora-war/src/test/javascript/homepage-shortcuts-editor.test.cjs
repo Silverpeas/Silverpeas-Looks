@@ -32,7 +32,7 @@ const source = fs.readFileSync(path.resolve(__dirname,
 function editor() {
   const elements = {};
   class Element {
-    constructor(tag) { this.tag = tag; this.children = []; this.handlers = {}; this.value = ''; }
+    constructor(tag) { this.tag = tag; this.children = []; this.handlers = {}; this.value = ''; this.classList = {add() {}, remove() {}}; }
     setAttribute(name, value) { this[name] = value; }
     set id(value) { this._id = value; elements[value] = this; }
     get id() { return this._id; }
@@ -42,7 +42,7 @@ function editor() {
     focus() { this.focused = true; }
     click() { if (!this.disabled) { (this.handlers.click || this.onclick)(); } }
   }
-  const document = {createElement: tag => new Element(tag), getElementById: id => elements[id]};
+  const document = {createElementNS: (ns, tag) => new Element(tag), createElement: tag => new Element(tag), getElementById: id => elements[id]};
   const container = document.createElement('tbody'); container.id = 'shortcut-entries';
   const add = document.createElement('button'); add.id = 'shortcut-add';
   const window = {};
@@ -55,21 +55,19 @@ test('home editor adds, edits, moves and removes entries while preserving unsave
   const {api, elements, container, add} = editor();
   api.load([link('A'), link('B')]);
   assert.equal(container.children.length, 2);
-  assert.equal(container.children[0].children.at(-1).children[0].children[0].disabled, true);
-  assert.equal(container.children[1].children.at(-1).children[0].children[1].disabled, true);
   elements['shortcut-0-label'].value = ' A & <title> ';
-  container.children[0].children.at(-1).children[0].children[1].click();
+  container.children[0].children[0].children[0].handlers.keydown({key: 'ArrowDown', preventDefault() {}});
   assert.equal(elements['shortcut-0-label'].value, 'B');
   assert.equal(elements['shortcut-1-label'].value, 'A & <title>');
   assert.equal(elements['shortcut-1-target'].value, 'bottomFrame');
-  container.children[1].children.at(-1).children[0].children[0].click();
+  container.children[1].children[0].children[0].handlers.keydown({key: 'ArrowUp', preventDefault() {}});
   assert.equal(elements['shortcut-0-label'].value, 'A & <title>');
   add.click();
   assert.equal(container.children.length, 3);
   assert.equal(elements['shortcut-2-url'].required, true);
   elements['shortcut-2-label'].value = 'C';
   elements['shortcut-2-url'].value = ' https://example.org/?a=1&b=2 ';
-  container.children[1].children.at(-1).children[0].children[2].click();
+  container.children[1].children.at(-1).children[0].children[0].click();
   const body = new URLSearchParams(); api.serialize(body);
   assert.equal(body.get('count'), '2');
   assert.equal(body.get('entry.0.label'), 'A & <title>');
@@ -87,7 +85,7 @@ test('home editor handles empty lists and enforces the maximum of one hundred li
   assert.equal(add.disabled, true);
   add.click();
   assert.equal(container.children.length, 100);
-  container.children[0].children.at(-1).children[0].children[2].click();
+  container.children[0].children.at(-1).children[0].children[0].click();
   assert.equal(add.disabled, false);
   add.click();
   assert.equal(container.children.length, 100);
@@ -118,7 +116,7 @@ test('table uses target choices and keeps existing icons and named frames withou
   const {api, elements, container} = editor();
   api.load([{...link('Docs'), target: 'customFrame', iconUrl: '/weblib/docs.svg'}]);
   assert.equal(container.children[0].tag, 'tr');
-  assert.equal(container.children[0].children.length, 5);
+  assert.equal(container.children[0].children.length, 6);
   const target = elements['shortcut-0-target'];
   assert.equal(target.tag, 'select');
   assert.ok(target.children.some(option => option.value === '_blank'));
@@ -127,4 +125,22 @@ test('table uses target choices and keeps existing icons and named frames withou
   const body = new URLSearchParams(); api.serialize(body);
   assert.equal(body.get('entry.0.iconUrl'), '/weblib/docs.svg');
   assert.equal(body.get('entry.0.target'), 'customFrame');
+});
+
+test('drag handle reorders rows and preserves unsaved values and icon URLs', () => {
+  const {api, elements, container} = editor();
+  api.load([{...link('A'), iconUrl: '/a.png'}, link('B'), link('C')]);
+  elements['shortcut-0-label'].value = 'Edited A';
+  const transfer = {setData() {}, setDragImage() {}};
+  container.children[0].children[0].children[0].handlers.dragstart({dataTransfer: transfer});
+  let accepted = false;
+  container.children[2].handlers.dragover({dataTransfer: transfer, preventDefault() { accepted = true; }});
+  assert.equal(accepted, true);
+  container.children[2].handlers.drop({preventDefault() {}});
+  const body = new URLSearchParams(); api.serialize(body);
+  assert.equal(body.get('entry.0.label'), 'B');
+  assert.equal(body.get('entry.1.label'), 'C');
+  assert.equal(body.get('entry.2.label'), 'Edited A');
+  assert.equal(body.get('entry.2.iconUrl'), '/a.png');
+  assert.equal(container.children[2].children[0].children[0].focused, true);
 });

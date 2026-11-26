@@ -27,8 +27,34 @@ window.AuroraHomeShortcuts = (() => {
   let rows = [];
   const values = () => rows.map(row => Object.fromEntries(keys.map(key => [key, row.inputs[key].value.trim()])));
   let uploadImage;
+  let draggedIndex = null;
+  let uploading = false;
+  const icon = path => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.8');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    const shape = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    shape.setAttribute('d', path);
+    svg.append(shape);
+    return svg;
+  };
+  const iconButton = (label, path) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'simple-button homepage-shortcut-icon-button';
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    button.append(icon(path));
+    return button;
+  };
   const load = (entries, upload = uploadImage) => {
     uploadImage = upload;
+    draggedIndex = null;
     const container = document.getElementById('shortcut-entries');
     container.replaceChildren();
     rows = [];
@@ -39,7 +65,52 @@ window.AuroraHomeShortcuts = (() => {
         fieldset.append(element);
         return element;
       };
-      const row = {inputs: {}};
+      const handle = iconButton('Déplacer le raccourci ' + (index + 1) + ' (flèches haut et bas au clavier)',
+        'M9 5h.01M15 5h.01M9 12h.01M15 12h.01M9 19h.01M15 19h.01');
+      handle.className += ' homepage-shortcut-grip';
+      handle.draggable = true;
+      const reorder = destination => {
+        if (uploading || destination < 0 || destination >= rows.length || destination === index) { return; }
+        const entries = values();
+        entries.splice(destination, 0, entries.splice(index, 1)[0]);
+        load(entries);
+        rows[destination].handle.focus();
+      };
+      handle.addEventListener('keydown', event => {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          reorder(index + (event.key === 'ArrowUp' ? -1 : 1));
+        }
+      });
+      handle.addEventListener('dragstart', event => {
+        if (uploading) { event.preventDefault(); return; }
+        draggedIndex = index;
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(index));
+        event.dataTransfer.setDragImage(fieldset, 20, 20);
+        fieldset.classList.add('is-dragging');
+      });
+      const clearDrag = () => {
+        draggedIndex = null;
+        rows.forEach(item => item.element.classList.remove('is-dragging', 'is-drop-target'));
+      };
+      handle.addEventListener('dragend', clearDrag);
+      fieldset.addEventListener('dragover', event => {
+        if (draggedIndex === null || uploading || draggedIndex === index) { return; }
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        fieldset.classList.add('is-drop-target');
+      });
+      fieldset.addEventListener('dragleave', () => fieldset.classList.remove('is-drop-target'));
+      fieldset.addEventListener('drop', event => {
+        if (draggedIndex === null || uploading) { return; }
+        event.preventDefault();
+        const source = draggedIndex;
+        clearDrag();
+        rows[source].reorder(index);
+      });
+      cell().append(handle);
+      const row = {inputs: {}, element: fieldset, handle, reorder};
       rows.push(row);
       const labels = {label: 'Libellé', url: 'URL', target: 'Cible'};
       ['label', 'url', 'target'].forEach(key => {
@@ -78,11 +149,8 @@ window.AuroraHomeShortcuts = (() => {
       image.accept = 'image/png,image/jpeg,image/gif,image/webp';
       image.id = 'shortcut-' + index + '-image';
       image.hidden = true;
-      const imageLabel = document.createElement('button');
-      imageLabel.type = 'button';
-      imageLabel.className = 'simple-button';
-      imageLabel.textContent = 'Importer';
-      imageLabel.setAttribute('aria-label', 'Importer l’icône du raccourci ' + (index + 1));
+      const imageLabel = iconButton('Importer l’icône du raccourci ' + (index + 1),
+        'M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5');
       imageLabel.addEventListener('click', () => image.click());
       const preview = document.createElement('img');
       preview.className = 'homepage-shortcut-preview';
@@ -96,6 +164,7 @@ window.AuroraHomeShortcuts = (() => {
       message.setAttribute('role', 'status');
       image.addEventListener('change', async () => {
         if (!image.files.length) { return; }
+        uploading = true;
         const controls = rows.flatMap(item => item.controls);
         const disabled = controls.map(control => control.disabled);
         controls.forEach(control => { control.disabled = true; });
@@ -107,43 +176,31 @@ window.AuroraHomeShortcuts = (() => {
           message.textContent = 'Image importée. Enregistrez le widget pour appliquer la modification.';
         } catch (error) { message.textContent = error.message; }
         finally {
+          uploading = false;
           image.value = '';
           controls.forEach((control, index) => { control.disabled = disabled[index]; });
           document.getElementById('shortcut-add').disabled = rows.length >= 100;
         }
       });
       iconCell.className = 'homepage-shortcut-icon';
-      iconCell.append(preview, imageLabel, image, message);
+      const imageControls = document.createElement('div');
+      imageControls.className = 'homepage-shortcut-image-controls';
+      imageControls.append(preview, imageLabel, image);
+      iconCell.append(imageControls, message);
       const actions = document.createElement('div');
       actions.className = 'homepage-shortcut-actions';
-      const buttons = [imageLabel, image];
-      const button = (text, disabled, action, symbol) => {
-        const element = document.createElement('button');
-        element.type = 'button';
-        element.className = 'simple-button';
-        element.textContent = symbol;
-        element.title = text;
-        element.setAttribute('aria-label', text + ' le raccourci ' + (index + 1));
-        buttons.push(element);
-        element.disabled = disabled;
-        element.addEventListener('click', action);
-        actions.append(element);
-      };
-      const move = offset => {
-        const entries = values();
-        [entries[index], entries[index + offset]] = [entries[index + offset], entries[index]];
-        load(entries);
-        rows[index + offset].inputs.label.focus();
-      };
-      button('Monter', index === 0, () => move(-1), '↑');
-      button('Descendre', index === entries.length - 1, () => move(1), '↓');
-      button('Supprimer', false, () => {
+      const remove = iconButton('Supprimer le raccourci ' + (index + 1),
+        'M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7');
+      remove.className += ' homepage-shortcut-remove';
+      remove.addEventListener('click', () => {
         const entries = values();
         entries.splice(index, 1);
         load(entries);
         document.getElementById('shortcut-add').focus();
-      }, '×');
-      row.controls = [...Object.values(row.inputs).filter(input => input !== row.inputs.iconUrl), ...buttons];
+      });
+      actions.append(remove);
+      row.controls = [...Object.values(row.inputs).filter(input => input !== row.inputs.iconUrl),
+        handle, imageLabel, image, remove];
       cell().append(actions);
       container.append(fieldset);
     });
