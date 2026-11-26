@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       language: 'fr',
       height: 300,
       extraPlugins: 'image',
-      // The custom upload inserts images without CKEditor's Image toolbar command.
+      // Uploaded images are stored with this homepage widget.
       extraAllowedContent: 'img[!src,alt,width,height]{width,height}',
       removePlugins: 'imagebank,filebank,uploadimage,uploadfile,uploadwidget,uploadfiles,allmedias',
       toolbar: [
@@ -111,7 +111,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         ['Format', 'Source', 'Undo', 'Redo']
       ]
     });
-    editor.on('instanceReady', () => { save.disabled = false; });
+    editor.on('instanceReady', () => {
+      editor.addCommand('image', {
+        exec: () => { if (!busy) image.click(); }
+      });
+      save.disabled = false;
+    });
     refreshPreview();
   } catch (error) {
     status.textContent = error.message;

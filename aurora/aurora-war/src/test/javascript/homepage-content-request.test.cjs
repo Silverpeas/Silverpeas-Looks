@@ -92,14 +92,15 @@ test('editor loads placement and submits it with the content revision', async ()
   function element(id) {
     assert.ok(ids.has(id), `Missing editor control: ${id}`);
     if (!elements.has(id)) elements.set(id, {value: '', disabled: false,
-      dataset: {language: 'fr'}, handlers: {}, addEventListener(name, callback) {
+      dataset: {language: 'fr'}, handlers: {}, click() { this.clicked = true; }, addEventListener(name, callback) {
         this.handlers[name] = callback;
       }});
     return elements.get(id);
   }
   const requests = [];
   let ready;
-  const editor = {on(name, callback) { callback(); }, getData() { return '<p>Modifié</p>'; },
+  const commands = {};
+  const editor = {addCommand(name, command) { commands[name] = command; }, on(name, callback) { callback(); }, getData() { return '<p>Modifié</p>'; },
     setData() {}};
   const context = {URL, URLSearchParams, document: {getElementById: element,
     querySelector() { return element('main'); }},
@@ -115,6 +116,8 @@ test('editor loads placement and submits it with the content revision', async ()
       zone: 'right', order: 25, enabled: false};
   };
   await ready();
+  commands.image.exec();
+  assert.equal(element('homepage-image').clicked, true);
   assert.equal(element('homepage-zone').value, 'right');
   assert.equal(element('homepage-order').value, 25);
   assert.equal(element('homepage-enabled').checked, false);
