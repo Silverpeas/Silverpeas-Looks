@@ -322,7 +322,34 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("renderBookmarks".equals(action)) {
+    if ("sources".equals(action)) {
+      var organization = OrganizationController.get();
+      String userId = MainSessionController.getInstance(request.getSession(false)).getCurrentUserDetail().getId();
+      String type = request.getParameter("sourceType");
+      if (!Arrays.asList("quickinfo", "rssAgregator", "spaces").contains(type)) {
+        throw new IllegalArgumentException("Unknown source type");
+      }
+      String[] ids = "spaces".equals(type) ? organization.getAllSpaceIds(userId)
+          : organization.getComponentIdsForUser(userId, type);
+      json(response, JSONCodec.encodeObject(o -> o.putJSONArray("sources", array -> {
+        Arrays.stream(ids).forEach(id -> {
+          if ("spaces".equals(type)) {
+            var space = organization.getSpaceInstLightById(id);
+            if (space != null) {
+              array.addJSONObject(item -> item.put("id", id).put("label", space.getName()));
+            }
+          } else {
+            var app = organization.getComponentInstLight(id);
+            if (app != null && !app.isHidden()) {
+              var space = organization.getSpaceInstLightById(app.getSpaceId());
+              String label = app.getLabel() + (space == null ? "" : " — " + space.getName());
+              array.addJSONObject(item -> item.put("id", id).put("label", label));
+            }
+          }
+        });
+        return array;
+      })));
+    } else if ("renderBookmarks".equals(action)) {
       var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
           request.getSession(false).getAttribute("Silverpeas_LookHelper");
       var model = HomepageWidgets.all(store, page, language, helper).stream()

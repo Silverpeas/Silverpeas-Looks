@@ -34,8 +34,9 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Configurer les actualités</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v3"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-source-picker-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -71,9 +72,15 @@
                 </select>
               </div>
               <div id="news-applications-field" class="homepage-field" hidden>
-                <label for="news-applications">Applications d’actualités</label>
-                <input id="news-applications" maxlength="1000" pattern="quickinfo[0-9]+( quickinfo[0-9]+)*" aria-describedby="news-source-help">
-                <small id="news-source-help">Identifiants séparés par des espaces, par exemple quickinfo12 quickinfo34. Chaque lecteur ne voit que les actualités auxquelles il a accès.</small>
+                <label for="news-applications-search">Applications d’actualités</label>
+                <input id="news-applications" type="hidden">
+                <div class="homepage-source-picker" data-source-type="quickinfo" data-source-field="news-applications" data-source-multiple="true">
+                  <input id="news-applications-search" type="search" placeholder="Saisissez un nom…" autocomplete="off" aria-label="Rechercher une source" list="news-applications-suggestions">
+                  <datalist id="news-applications-suggestions"></datalist>
+                  <div class="homepage-source-selection"></div>
+                  <small role="status"></small>
+                </div>
+                <small>Recherchez puis sélectionnez une ou plusieurs applications.</small>
               </div>
               <div class="homepage-field">
                 <label for="news-size">Nombre maximal d’actualités</label>

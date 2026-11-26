@@ -34,8 +34,9 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Configurer les flux RSS</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v3"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-source-picker-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -61,9 +62,15 @@
                 </div>
               </div>
               <div class="homepage-field">
-                <label for="news-source">Application RSS source</label>
-                <input id="news-source" type="text" maxlength="200" placeholder="rssAgregator12">
-                <p>Indiquez l’identifiant de l’application RSS. Vide : aucun flux.</p>
+                <label for="news-source-search">Application RSS source</label>
+                <input id="news-source" type="hidden">
+                <div class="homepage-source-picker" data-source-type="rssAgregator" data-source-field="news-source" data-source-multiple="false">
+                  <input id="news-source-search" type="search" placeholder="Saisissez un nom…" autocomplete="off" aria-label="Rechercher une source" list="news-source-suggestions">
+                  <datalist id="news-source-suggestions"></datalist>
+                  <div class="homepage-source-selection"></div>
+                  <small role="status"></small>
+                </div>
+                <small>Recherchez puis sélectionnez une application RSS.</small>
               </div>
               <div class="homepage-field">
                 <label for="news-rendering">Présentation</label>

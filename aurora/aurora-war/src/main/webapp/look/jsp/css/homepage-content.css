@@ -491,3 +491,29 @@
   margin: 0;
 }
 .homepage-shortcut-preview[hidden] { display: none; }
+
+.homepage-source-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.homepage-source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f2f4f0;
+  border: 1px solid #ccd3c5;
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+.homepage-source-chip button {
+  border: 0;
+  background: transparent;
+  color: #444;
+  cursor: pointer;
+  font-size: 20px;
+}
+.homepage-source-chip button:hover {
+  color: #5f9d15;
+}

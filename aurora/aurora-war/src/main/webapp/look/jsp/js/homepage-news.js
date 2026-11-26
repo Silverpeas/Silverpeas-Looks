@@ -43,9 +43,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     url.searchParams.set('action', action);
     return url;
   };
-  const request = (action, body, csrf) => new Promise((resolve, reject) => {
+  const request = (action, body, csrf, parameters) => new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     const url = endpoint(action);
+    Object.entries(parameters || {}).forEach(([key, value]) => url.searchParams.set(key, value));
     xhr.open(body ? 'POST' : 'GET', url.pathname + url.search);
     if (body) {
       if (!((typeof FormData !== 'undefined' && body instanceof FormData))) {
@@ -81,6 +82,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     const selected = control('source').value === 'applications';
     document.getElementById('news-applications-field').hidden = !selected;
     applications.required = selected;
+    const search = document.getElementById('news-applications-search');
+    if (search) { search.disabled = !selected; }
   };
   if (!community && !feed && !ephemeris && !publications) { control('source').addEventListener('change', refreshSource); }
   let revision;
@@ -108,6 +111,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       control('source').value = 'applications';
       applications.value = data.source;
     }
+    if (window.AuroraHomepageSources) { await window.AuroraHomepageSources.initialize(request); }
     refreshSource();
     refreshSearch();
     status.textContent = data.configured ? ''

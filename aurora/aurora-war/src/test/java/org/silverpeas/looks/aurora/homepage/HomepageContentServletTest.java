@@ -116,6 +116,37 @@ class HomepageContentServletTest {
     when(session.getAttribute("Silverpeas_LookHelper")).thenReturn(helper);
   }
 
+  @Test
+  void sourceSuggestionsRequireManagementPermissionAndUseAccessibleApplications() throws Exception {
+    when(request.getParameter("action")).thenReturn("sources");
+    when(request.getParameter("sourceType")).thenReturn("quickinfo");
+    servlet.doGet(request, response);
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    var organization = mock(OrganizationController.class);
+    var app = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
+    var space = mock(org.silverpeas.core.admin.space.SpaceInstLight.class);
+    when(app.getLabel()).thenReturn("Actualités internes");
+    when(app.getSpaceId()).thenReturn("WA12");
+    when(space.getName()).thenReturn("Communication");
+    when(organization.getComponentIdsForUser("42", "quickinfo")).thenReturn(new String[]{"quickinfo12"});
+    when(organization.getComponentInstLight("quickinfo12")).thenReturn(app);
+    when(organization.getSpaceInstLightById("WA12")).thenReturn(space);
+    try (var mocked = mockStatic(OrganizationController.class)) {
+      mocked.when(OrganizationController::get).thenReturn(organization);
+      servlet.doGet(request, response);
+      assertTrue(output.toString().contains("quickinfo12"));
+      assertTrue(output.toString().contains("Actualités internes"));
+      assertTrue(output.toString().contains("Communication"));
+      when(request.getParameter("sourceType")).thenReturn("spaces");
+      when(organization.getAllSpaceIds("42")).thenReturn(new String[]{"WA12"});
+      output.getBuffer().setLength(0);
+      servlet.doGet(request, response);
+      assertTrue(output.toString().contains("WA12"));
+      assertFalse(output.toString().contains("quickinfo12"));
+    }
+  }
+
   private void prepareNewsSave() {
     when(request.getParameter("widget")).thenReturn("news-test");
     when(request.getParameter("title")).thenReturn("Actualités");

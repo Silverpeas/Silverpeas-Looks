@@ -34,8 +34,9 @@
 <view:sp-page>
   <view:sp-head-part>
     <title>Configurer les dernières publications</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v3"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-source-picker-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -61,9 +62,15 @@
                 </div>
               </div>
               <div class="homepage-field">
-                <label for="news-space">Espace source</label>
-                <input id="news-space" maxlength="30" pattern="(WA)?[0-9]+">
-                <small>Laissez vide pour tous les espaces accessibles. Sinon, indiquez l’identifiant de l’espace, par exemple WA12. Les droits du lecteur et les exclusions du thème restent appliqués.</small>
+                <label for="news-space-search">Espace source</label>
+                <input id="news-space" type="hidden">
+                <div class="homepage-source-picker" data-source-type="spaces" data-source-field="news-space" data-source-multiple="false">
+                  <input id="news-space-search" type="search" placeholder="Saisissez un nom…" autocomplete="off" aria-label="Rechercher une source" list="news-space-suggestions">
+                  <datalist id="news-space-suggestions"></datalist>
+                  <div class="homepage-source-selection"></div>
+                  <small role="status"></small>
+                </div>
+                <small>Sans sélection, tous les espaces accessibles sont utilisés.</small>
               </div>
               <div class="homepage-field">
                 <label for="news-size">Nombre maximal de publications</label>
