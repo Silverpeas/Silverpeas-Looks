@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.silverpeas.components.blog.service.BlogService;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.contribution.publication.service.PublicationService;
 import org.silverpeas.core.test.unit.extention.JEETestContext;
 import org.silverpeas.kernel.test.annotations.TestManagedMock;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.when;
 
 /**
  * Unit tests on the tracking of the news viewed in a QuickInfo instance: the news is looked for
- * by identifier and checked against the instance targeted by the request.
+ * in the instance targeted by the request.
  */
 @EnableSilverTestEnv(context = JEETestContext.class)
 class TrackableContentProviderTest {
@@ -62,10 +63,9 @@ class TrackableContentProviderTest {
   @Test
   void aNewsViewedInItsInstanceIsTracked() {
     News news = mock(News.class);
-    when(news.getComponentInstanceId()).thenReturn(QUICKINFO_ID);
     when(news.getTitle()).thenReturn("The news");
     when(news.getPermalink()).thenReturn("/silverpeas/Publication/128");
-    when(quickInfoService.getNews(NEWS_ID)).thenReturn(news);
+    when(quickInfoService.getNews(new ResourceReference(NEWS_ID, QUICKINFO_ID))).thenReturn(news);
 
     TrackableContent content = provider.get(aViewRequestOf(NEWS_ID, "/View"));
 
@@ -78,10 +78,6 @@ class TrackableContentProviderTest {
 
   @Test
   void aNewsNotInTheViewedInstanceIsNotTracked() {
-    News news = mock(News.class);
-    when(news.getComponentInstanceId()).thenReturn("quickinfo99");
-    when(quickInfoService.getNews("news_2")).thenReturn(news);
-
     TrackableContent content = provider.get(aViewRequestOf("news_2", "/View"));
 
     assertThat(content.isContent(), is(false));

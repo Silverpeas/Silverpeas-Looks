@@ -27,6 +27,7 @@ import org.silverpeas.components.blog.model.PostDetail;
 import org.silverpeas.components.blog.service.BlogService;
 import org.silverpeas.components.quickinfo.model.News;
 import org.silverpeas.components.quickinfo.model.QuickInfoService;
+import org.silverpeas.core.ResourceReference;
 import org.silverpeas.core.annotation.Provider;
 import org.silverpeas.core.calendar.CalendarEvent;
 import org.silverpeas.core.contribution.publication.model.PublicationDetail;
@@ -126,8 +127,8 @@ class TrackableContentProvider {
       return;
     }
     String newsId = httpReq.getParameter("Id");
-    News news = quickInfoService.getNews(newsId);
-    if (news != null && matcher.group(1).equals(news.getComponentInstanceId())) {
+    News news = quickInfoService.getNews(new ResourceReference(newsId, matcher.group(1)));
+    if (news != null) {
       content.setContentType("News");
       content.setContent(true);
       content.setContentId(newsId);
