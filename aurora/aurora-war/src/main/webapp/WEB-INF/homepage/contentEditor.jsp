@@ -36,7 +36,7 @@
     <title>Modifier une zone libre</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
     <view:includePlugin name="wysiwyg"/>
-    <view:script src="/look/jsp/js/homepage-content.js?version=15592-image-toolbar-v2"/>
+    <view:script src="/look/jsp/js/homepage-content.js?version=15592-no-preview-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -86,10 +86,6 @@
             </div>
           </form>
           <p id="homepage-status" class="homepage-feedback" role="status" aria-live="polite"></p>
-          <details class="homepage-preview-panel">
-            <summary>Aperçu de la dernière version enregistrée</summary>
-            <iframe id="homepage-preview" title="Aperçu du contenu enregistré" sandbox="allow-same-origin"></iframe>
-          </details>
         </main>
       </view:frame>
     </view:window>

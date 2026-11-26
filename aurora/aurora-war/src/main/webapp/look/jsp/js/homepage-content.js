@@ -77,17 +77,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   const save = document.getElementById('homepage-save');
   const image = document.getElementById('homepage-image');
   const title = document.getElementById('homepage-title');
-  const preview = document.getElementById('homepage-preview');
   let editor;
   let revision;
   let csrf;
   let busy = false;
   const request = homepageContentRequest;
-  const refreshPreview = () => {
-    const target = url('view');
-    target.searchParams.set('v', Date.now());
-    preview.src = target;
-  };
   try {
     const content = await request(url('load'));
     revision = content.revision;
@@ -117,7 +111,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
       save.disabled = false;
     });
-    refreshPreview();
   } catch (error) {
     status.textContent = error.message;
     image.disabled = true;
