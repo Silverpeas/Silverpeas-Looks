@@ -160,7 +160,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       element.setAttribute('src', result.url);
       element.setAttribute('alt', image.files[0].name);
       editor.insertElement(element);
-      status.textContent = 'Image insérée. Enregistrez le contenu pour conserver son emplacement.';
+      status.textContent = '';
     } catch (error) {
       status.textContent = error.message;
     } finally {

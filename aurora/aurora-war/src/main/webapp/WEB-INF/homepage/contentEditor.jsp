@@ -36,7 +36,7 @@
     <title>Modifier une zone libre</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
     <view:includePlugin name="wysiwyg"/>
-    <view:script src="/look/jsp/js/homepage-content.js?version=15592-image-toolbar-v1"/>
+    <view:script src="/look/jsp/js/homepage-content.js?version=15592-image-toolbar-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -79,7 +79,6 @@
               <h2 id="homepage-content-heading"><label for="homepage-html">Contenu de la zone</label></h2>
               <textarea id="homepage-html" rows="16"></textarea>
               <input id="homepage-image" type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
-              <small id="homepage-image-help">Utilisez le bouton image de la barre d’outils pour importer une image (5 Mo maximum).</small>
             </section>
             <div class="homepage-actions">
               <button id="homepage-save" class="sp_button" type="submit" disabled>Enregistrer</button>
