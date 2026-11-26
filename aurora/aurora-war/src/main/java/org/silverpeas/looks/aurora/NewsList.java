@@ -6,12 +6,15 @@ import org.silverpeas.core.pdc.pdc.model.ClassifyPosition;
 import org.silverpeas.core.pdc.pdc.model.ClassifyValue;
 import org.silverpeas.core.pdc.pdc.model.Value;
 import org.silverpeas.kernel.logging.SilverLogger;
+import org.silverpeas.kernel.util.StringUtil;
 import org.silverpeas.core.web.look.Shortcut;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.silverpeas.kernel.util.StringUtil.EMPTY;
 
 /**
  * Created by Nicolas on 19/07/2017.
@@ -100,14 +103,22 @@ public class NewsList extends ListOfContributions {
   }
 
   /**
-   * Sets the image size the image of news MUST be displayed.
-   * <p>
-   * Format MUST be "WxH" (W = width and H = height in pixels)
-   * </p>
-   * @param imageSize the image size (width x height) as string.
+   * Sets the size the image of news MUST be displayed. A dimension not defined, not positive (as
+   * the 0 of a setting) or not a number sets no constraint on it, so that the image keeps its
+   * ratio. Without any positive dimension, the image is displayed at its own size.
+   * @param width the width in pixels as string.
+   * @param height the height in pixels as string.
    */
-  public void setImageSize(final String imageSize) {
-    this.imageSize = imageSize;
+  public void setImageSize(final String width, final String height) {
+    final String imageWidth = dimension(width);
+    final String imageHeight = dimension(height);
+    this.imageSize = imageWidth.isEmpty() && imageHeight.isEmpty() ? EMPTY :
+        imageWidth + "x" + imageHeight;
+  }
+
+  private static String dimension(final String pixels) {
+    final String value = StringUtil.isDefined(pixels) ? pixels.trim() : EMPTY;
+    return StringUtil.isInteger(value) && Integer.parseInt(value) > 0 ? value : EMPTY;
   }
 
   /**

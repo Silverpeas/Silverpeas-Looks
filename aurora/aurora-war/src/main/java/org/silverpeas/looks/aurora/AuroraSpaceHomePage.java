@@ -126,7 +126,7 @@ public class AuroraSpaceHomePage {
           .map(String::toUpperCase)
           .map(NewsList.RenderingType::valueOf)
           .ifPresent(newsList::setRenderingType);
-      newsList.setImageSize(look.getSettings("space.homepage.news.image.width", "800") + "x" +
+      newsList.setImageSize(look.getSettings("space.homepage.news.image.width", "800"),
           look.getSettings("space.homepage.news.image.height", EMPTY));
     } else {
       newsList = new NewsList(Collections.emptyList(), null);
