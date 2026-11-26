@@ -95,13 +95,13 @@ window.addEventListener('DOMContentLoaded', async () => {
       customConfig: '',
       language: 'fr',
       height: 300,
-      extraPlugins: 'image',
+      extraPlugins: 'image,iframe',
       // Uploaded images are stored with this homepage widget.
-      extraAllowedContent: 'img[!src,alt,width,height]{width,height}',
+      extraAllowedContent: 'img[!src,alt,width,height]{width,height};iframe[!src,title,width,height,allowfullscreen,sandbox,loading,referrerpolicy]',
       removePlugins: 'imagebank,filebank,uploadimage,uploadfile,uploadwidget,uploadfiles,allmedias',
       toolbar: [
         ['Bold', 'Italic', 'Underline', 'RemoveFormat'],
-        ['NumberedList', 'BulletedList', 'Link', 'Unlink', 'Image', 'Table'],
+        ['NumberedList', 'BulletedList', 'Link', 'Unlink', 'Image', 'Iframe', 'Table'],
         ['Format', 'Source', 'Undo', 'Redo']
       ]
     });

@@ -31,7 +31,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.silverpeas.core.admin.service.OrganizationController;
-import org.silverpeas.core.contribution.content.wysiwyg.service.WysiwygContentTransformer;
 import org.silverpeas.core.util.JSONCodec;
 import org.silverpeas.core.web.mvc.controller.MainSessionController;
 import org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory;
@@ -307,7 +306,7 @@ public class HomepageContentServlet extends HttpServlet {
       if (html == null || html.length() > 500000 || title == null || title.length() > 200) {
         throw new IllegalArgumentException("Content too large or missing");
       }
-      String sanitized = WysiwygContentTransformer.on(html).applySanitizeDirective().transform();
+      String sanitized = HomepageContentSanitizer.sanitize(html);
       var previous = store.read(page, widget, language);
       var layout = request.getParameter("zone") == null ? previous.layout()
           : new HomepageContentStore.Layout(request.getParameter("zone"),

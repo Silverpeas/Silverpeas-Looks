@@ -353,12 +353,14 @@ class HomepageContentServletTest {
     when(request.getParameter("action")).thenReturn("save");
     when(request.getParameter("revision")).thenReturn("");
     when(request.getParameter("title")).thenReturn("Bienvenue");
-    when(request.getParameter("html")).thenReturn("<p>Bonjour</p><img src=\"/silverpeas/AuroraHomepageContent?action=asset&amp;name=image.png\"><script>alert(1)</script>");
+    when(request.getParameter("html")).thenReturn("<p>Bonjour</p><iframe src=\"https://example.org/embed\"></iframe><img src=\"/silverpeas/AuroraHomepageContent?action=asset&amp;name=image.png\"><script>alert(1)</script>");
     servlet.doPost(request, response);
     verify(response, never()).sendError(anyInt());
     var content = store.read(new HomepagePage("skins", "waves"), "welcome", "fr");
     assertTrue(content.html().contains("Bonjour"));
-    assertFalse(content.html().contains("script"));
+    assertTrue(content.html().contains("<iframe"));
+    assertTrue(content.html().contains("https://example.org/embed"));
+    assertFalse(content.html().contains("<script"));
     assertTrue(content.html().contains("/silverpeas/AuroraHomepageContent"));
     servlet.doPost(request, response);
     verify(response).sendError(409);
