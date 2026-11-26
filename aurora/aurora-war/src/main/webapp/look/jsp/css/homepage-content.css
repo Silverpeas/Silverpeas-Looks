@@ -166,9 +166,14 @@
 .homepage-shortcuts-table {
   width: 100%;
   min-width: 0;
+  border: 1px solid #cbd0d4;
   border-collapse: collapse;
+  border: 1px solid #c9ced2;
   table-layout: fixed;
 }
+.homepage-shortcuts-table thead { background: #e9ecef; }
+.homepage-shortcuts-table tbody tr:nth-child(odd) { background: #fff; }
+.homepage-shortcuts-table tbody tr:nth-child(even) { background: #f3f4f5; }
 .homepage-shortcuts-table caption {
   text-align: left;
   font-weight: bold;
@@ -185,7 +190,7 @@
 .homepage-shortcuts-table th:nth-child(1) { width: 36px; }
 .homepage-shortcuts-table th:nth-child(4) { width: 20%; }
 .homepage-shortcuts-table th:nth-child(5) { width: 72px; }
-.homepage-shortcuts-table th:nth-child(6) { width: 42px; }
+.homepage-shortcuts-table th:nth-child(6) { width: 60px; }
 .homepage-shortcuts-table th { overflow-wrap: anywhere; }
 .homepage-content-editor .homepage-settings { min-width: 0; }
 .homepage-shortcuts-table input[type="text"],
