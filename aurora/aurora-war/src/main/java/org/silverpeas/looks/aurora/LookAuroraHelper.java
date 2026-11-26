@@ -994,8 +994,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
             .map(String::toUpperCase)
             .map(NewsList.RenderingType::valueOf)
             .orElse(NewsList.RenderingType.CAROUSEL));
-    newsList.setImageSize(
-            getSettings(key + ".width", "800") + "x" + getSettings(key + ".height", ""));
+    newsList.setImageSize(getSettings(key + ".width", "800"), getSettings(key + ".height", ""));
     return newsList;
   }
 
