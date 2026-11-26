@@ -61,14 +61,13 @@
                   <input id="news-order" type="number" min="0" max="10000" required>
                 </div>
               </div>
-              <p>Ces raccourcis concernent la page d’accueil (home). Les raccourcis de la barre d’outils sont gérés séparément.</p>
-              <p>Glissez la poignée pour ordonner les liens, ou utilisez les flèches haut et bas au clavier sur la poignée. L’icône est facultative. Les adresses peuvent être absolues (HTTP/HTTPS), relatives ou des liens de messagerie. Importez une image de 5 Mo maximum pour l’icône.</p>
+              <p>Ajoutez vos liens et glissez la poignée pour les réordonner. Vous pouvez aussi utiliser les flèches du clavier sur la poignée. Icône facultative, 5 Mo maximum.</p>
               <div class="homepage-shortcuts-table-wrapper">
                 <table class="homepage-shortcuts-table">
                   <caption>Raccourcis de la page d’accueil</caption>
                   <thead><tr>
                     <th scope="col" class="homepage-shortcut-order-heading"><span class="homepage-visually-hidden">Ordre</span></th><th scope="col">Libellé</th><th scope="col">URL</th>
-                    <th scope="col">Cible</th><th scope="col">Icône</th><th scope="col">Actions</th>
+                    <th scope="col">Cible</th><th scope="col">Icône</th><th scope="col"><span class="homepage-visually-hidden">Actions</span></th>
                   </tr></thead>
                   <tbody id="shortcut-entries"></tbody>
                 </table>
