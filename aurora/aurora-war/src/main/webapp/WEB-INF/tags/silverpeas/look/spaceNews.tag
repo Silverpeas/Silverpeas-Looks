@@ -69,7 +69,7 @@
           <c:set var="tpCSS" value="${aNews.taxonomyPositionAsString}"/>
           <li class="slide ${tpCSS}" onclick="spWindow.loadPermalink('${aNews.permalink}')">
             <c:if test="${not empty aNews.thumbnailURL}">
-              <div class="thumbnail"><img src="${aNews.thumbnailURL}" alt=""/></div>
+              <div class="thumbnail"><view:image src="${aNews.thumbnailURL}" alt="" size="${listOfNews.imageSize}"/></div>
             </c:if>
             <div class="content-quickInfo caption">
               <h3 class="title-quickInfo">
