@@ -33,38 +33,57 @@ window.AuroraHomeShortcuts = (() => {
     container.replaceChildren();
     rows = [];
     entries.forEach((entry, index) => {
-      const fieldset = document.createElement('fieldset');
-      fieldset.className = 'homepage-shortcut-entry';
-      const legend = document.createElement('legend');
-      legend.textContent = 'Raccourci ' + (index + 1);
-      fieldset.append(legend);
+      const fieldset = document.createElement('tr');
+      const cell = () => {
+        const element = document.createElement('td');
+        fieldset.append(element);
+        return element;
+      };
       const row = {inputs: {}};
       rows.push(row);
-      const labels = {label: 'Libellé', url: 'Adresse du lien', iconUrl: 'Adresse de l’icône (facultative)',
-        target: 'Cible (vide, _self, _blank, _top, _parent ou nom de fenêtre)'};
-      keys.forEach(key => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'homepage-field';
-        const label = document.createElement('label');
-        const input = document.createElement('input');
+      const labels = {label: 'Libellé', url: 'URL', target: 'Cible'};
+      ['label', 'url', 'target'].forEach(key => {
+        const wrapper = cell();
+        const input = document.createElement(key === 'target' ? 'select' : 'input');
         input.id = 'shortcut-' + index + '-' + key;
-        label.htmlFor = input.id;
-        label.textContent = labels[key];
-        input.type = 'text';
-        input.maxLength = key === 'label' ? 200 : key === 'target' ? 64 : 2048;
-        input.required = key === 'url';
+        input.setAttribute('aria-label', labels[key] + ' du raccourci ' + (index + 1));
+        if (key === 'target') {
+          const options = new Map([
+            ['', 'Par défaut'], ['_self', 'Même cadre'], ['_blank', 'Nouvel onglet'],
+            ['bottomFrame', 'Zone de contenu Silverpeas'], ['_top', 'Fenêtre entière'],
+            ['_parent', 'Cadre parent']
+          ]);
+          // Preserve named frames already configured, even when they are custom.
+          if (entry.target && !options.has(entry.target)) { options.set(entry.target, entry.target); }
+          options.forEach((text, value) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = text;
+            input.append(option);
+          });
+        } else {
+          input.type = 'text';
+          input.maxLength = key === 'label' ? 200 : 2048;
+          input.required = key === 'url';
+        }
         input.value = entry[key] || '';
         row.inputs[key] = input;
-        wrapper.append(label, input);
-        fieldset.append(wrapper);
+        wrapper.append(input);
       });
+      // The stored URL is retained internally; only image import is exposed.
+      row.inputs.iconUrl = {value: entry.iconUrl || ''};
+      const iconCell = cell();
       const image = document.createElement('input');
       image.type = 'file';
       image.accept = 'image/png,image/jpeg,image/gif,image/webp';
       image.id = 'shortcut-' + index + '-image';
-      const imageLabel = document.createElement('label');
-      imageLabel.htmlFor = image.id;
-      imageLabel.textContent = 'Importer une image (5 Mo maximum)';
+      image.hidden = true;
+      const imageLabel = document.createElement('button');
+      imageLabel.type = 'button';
+      imageLabel.className = 'simple-button';
+      imageLabel.textContent = 'Importer';
+      imageLabel.setAttribute('aria-label', 'Importer l’icône du raccourci ' + (index + 1));
+      imageLabel.addEventListener('click', () => image.click());
       const preview = document.createElement('img');
       preview.className = 'homepage-shortcut-preview';
       preview.alt = 'Aperçu de l’icône';
@@ -72,14 +91,14 @@ window.AuroraHomeShortcuts = (() => {
         preview.hidden = !row.inputs.iconUrl.value;
         preview.src = row.inputs.iconUrl.value;
       };
-      row.inputs.iconUrl.addEventListener('input', refreshPreview);
       refreshPreview();
       const message = document.createElement('p');
       message.setAttribute('role', 'status');
       image.addEventListener('change', async () => {
         if (!image.files.length) { return; }
-        const fieldsets = rows.map(item => item.fieldset);
-        fieldsets.forEach(item => { item.disabled = true; });
+        const controls = rows.flatMap(item => item.controls);
+        const disabled = controls.map(control => control.disabled);
+        controls.forEach(control => { control.disabled = true; });
         document.getElementById('shortcut-add').disabled = true;
         message.textContent = 'Envoi de l’image…';
         try {
@@ -89,19 +108,23 @@ window.AuroraHomeShortcuts = (() => {
         } catch (error) { message.textContent = error.message; }
         finally {
           image.value = '';
-          fieldsets.forEach(item => { item.disabled = false; });
+          controls.forEach((control, index) => { control.disabled = disabled[index]; });
           document.getElementById('shortcut-add').disabled = rows.length >= 100;
         }
       });
-      row.fieldset = fieldset;
-      fieldset.append(imageLabel, image, preview, message);
+      iconCell.className = 'homepage-shortcut-icon';
+      iconCell.append(preview, imageLabel, image, message);
       const actions = document.createElement('div');
       actions.className = 'homepage-shortcut-actions';
-      const button = (text, disabled, action) => {
+      const buttons = [imageLabel, image];
+      const button = (text, disabled, action, symbol) => {
         const element = document.createElement('button');
         element.type = 'button';
-        element.className = 'sp_button';
-        element.textContent = text;
+        element.className = 'simple-button';
+        element.textContent = symbol;
+        element.title = text;
+        element.setAttribute('aria-label', text + ' le raccourci ' + (index + 1));
+        buttons.push(element);
         element.disabled = disabled;
         element.addEventListener('click', action);
         actions.append(element);
@@ -112,15 +135,16 @@ window.AuroraHomeShortcuts = (() => {
         load(entries);
         rows[index + offset].inputs.label.focus();
       };
-      button('Monter', index === 0, () => move(-1));
-      button('Descendre', index === entries.length - 1, () => move(1));
+      button('Monter', index === 0, () => move(-1), '↑');
+      button('Descendre', index === entries.length - 1, () => move(1), '↓');
       button('Supprimer', false, () => {
         const entries = values();
         entries.splice(index, 1);
         load(entries);
         document.getElementById('shortcut-add').focus();
-      });
-      fieldset.append(actions);
+      }, '×');
+      row.controls = [...Object.values(row.inputs).filter(input => input !== row.inputs.iconUrl), ...buttons];
+      cell().append(actions);
       container.append(fieldset);
     });
     const add = document.getElementById('shortcut-add');
