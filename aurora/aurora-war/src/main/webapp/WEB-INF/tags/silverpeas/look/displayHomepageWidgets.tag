@@ -35,19 +35,24 @@
   <c:if test="${widget.enabled and widget.zone == zone}">
     <c:choose>
       <c:when test="${widget.type == 'spaceAdmins' and homepageKind == 'spaces'}">
-        <c:if test="${not empty homepageSpaceAdmins}">
-          <div class="secteur-container homepage-space-admins" id="homepage-widget-${widget.id}">
-            <h4><c:out value="${widget.title}"/></h4>
-            <ul class="homepage-space-admins-list">
-              <c:forEach var="admin" items="${homepageSpaceAdmins}">
-                <li>
-                  <view:image css="avatar" src="${admin.avatar}" type="avatar"/>
-                  <view:username userId="${admin.id}"/>
-                </li>
-              </c:forEach>
-            </ul>
-          </div>
-        </c:if>
+        <div class="secteur-container homepage-space-admins" id="homepage-widget-${widget.id}">
+          <h4><c:out value="${widget.title}"/></h4>
+          <c:choose>
+            <c:when test="${empty requestScope.homepageSpaceAdmins}">
+              <p class="homepage-space-admins-empty">Aucun responsable n’est défini pour cet espace.</p>
+            </c:when>
+            <c:otherwise>
+              <ul class="homepage-space-admins-list">
+                <c:forEach var="admin" items="${requestScope.homepageSpaceAdmins}">
+                  <li>
+                    <view:image css="avatar" src="${admin.avatar}" type="avatar"/>
+                    <view:username userId="${admin.id}"/>
+                  </li>
+                </c:forEach>
+              </ul>
+            </c:otherwise>
+          </c:choose>
+        </div>
       </c:when>
       <c:when test="${widget.type == 'news'}">
         <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMoreNews="${widget.newsConfiguration.showMoreNews}" showAllNews="${widget.newsConfiguration.showAllNews}"/>
