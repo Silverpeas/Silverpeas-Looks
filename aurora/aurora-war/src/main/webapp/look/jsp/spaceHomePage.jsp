@@ -60,6 +60,7 @@
   request.setAttribute("homepageLanguage", controller.getFavoriteLanguage());
   request.setAttribute("homepageWidgets", widgets);
   request.setAttribute("homepageNews", HomepageWidgets.news(store, homepagePage, widgets, helper));
+  request.setAttribute("homepageNavigation", HomepageWidgets.navigation(homepagePage, widgets, helper));
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepagePage, widgets, helper));
   request.setAttribute("homepageAdmin", controller.getCurrentUserDetail().isAccessAdmin() ||
       java.util.Arrays.stream(organization.getUserManageableSpaceIds(controller.getUserId()))
@@ -80,13 +81,13 @@
     <view:link href="/look/jsp/css/aurora.css"/>
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
-    <view:link href="/look/jsp/css/homepage-space.css?version=15592-spaces-v1"/>
+    <view:link href="/look/jsp/css/homepage-space.css?version=15592-navigation-v1"/>
     <view:includePlugin name="pdc"/>
     <view:includePlugin name="lightslideshow"/>
     <view:script src="/look/jsp/js/responsiveslides.min.js"/>
     <view:script src="/look/jsp/js/homepage-feeds.js"/>
     <view:script src="/look/jsp/js/homepage-search.js"/>
-    <view:script src="/look/jsp/js/homepage-space.js?version=15592-spaces-v1"/>
+    <view:script src="/look/jsp/js/homepage-space.js?version=15592-navigation-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="spaceHome">
     <view:browseBar spaceId="${homepageOwner}"/>

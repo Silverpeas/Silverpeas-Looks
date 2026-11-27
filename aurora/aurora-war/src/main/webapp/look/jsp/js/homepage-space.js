@@ -22,6 +22,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 whenSilverpeasReady(function() {
+  document.addEventListener('click', event => {
+    const link = event.target.closest('[data-navigation-id]');
+    if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) { return; }
+    event.preventDefault();
+    if (link.dataset.navigationKind === 'space') { spWindow.loadSpace(link.dataset.navigationId); }
+    else { spWindow.loadComponent(link.dataset.navigationId); }
+  });
   document.querySelectorAll('.homepage-feed-part').forEach(element => {
     sp.ajaxRequest(element.dataset.feedUrl).loadTarget('#' + element.id);
   });

@@ -117,6 +117,36 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void navigationEndpointsRejectGeneralHomeAndSaveForSpaceWithCsrf() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    for (String action : java.util.List.of("navigationEditor", "loadNavigation", "saveNavigation")) {
+      when(request.getParameter("action")).thenReturn(action);
+      if (action.startsWith("save")) { servlet.doPost(request, response); }
+      else { servlet.doGet(request, response); }
+    }
+    verify(response, times(3)).sendError(400);
+    assertTrue(HomepageContentServlet.spaceAction("navigationEditor"));
+    when(request.getParameter("kind")).thenReturn("spaces");
+    when(request.getParameter("owner")).thenReturn("WA1");
+    when(request.getParameter("title")).thenReturn("Explorer");
+    when(request.getParameter("zone")).thenReturn("main");
+    when(request.getParameter("order")).thenReturn("5");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("apps")).thenReturn("true");
+    when(request.getParameter("subspaces")).thenReturn("false");
+    when(request.getParameter("revision")).thenReturn("");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    servlet.doPost(request, response);
+    var saved = store.readWidget(new HomepagePage("spaces", "WA1"), "welcome", "fr");
+    assertEquals("navigation", saved.type());
+    assertTrue(saved.navigationConfiguration().apps());
+    assertFalse(saved.navigationConfiguration().subspaces());
+    assertTrue(output.toString().contains("\"title\":\"Explorer\""));
+  }
+
+  @Test
   void spacePublicationsIgnoreSubmittedForeignSource() throws Exception {
     prepareNewsSave();
     when(request.getParameter("kind")).thenReturn("spaces");
@@ -172,7 +202,7 @@ class HomepageContentServletTest {
   }
 
   @Test
-  void spacesExposeOnlyTheSixAgreedWidgetTypes() throws Exception {
+  void spacesExposeOnlySupportedWidgetTypes() throws Exception {
     assertTrue(HomepageContentServlet.spaceAction("shortcutsEditor"));
     assertFalse(HomepageContentServlet.spaceAction("rssEditor"));
     assertFalse(HomepageContentServlet.spaceAction("sources"));

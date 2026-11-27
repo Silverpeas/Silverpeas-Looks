@@ -37,6 +37,58 @@ import java.util.Map;
 public final class HomepageWidgets {
   private HomepageWidgets() { }
 
+  public static HomepageContentStore.Widget navigationWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language) throws IOException {
+    if (!"spaces".equals(page.kind())) {
+      throw new IllegalArgumentException("Navigation is only available for spaces");
+    }
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"navigation".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a navigation widget");
+      }
+      return saved;
+    }
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Navigation", "", "",
+            new HomepageContentStore.Layout("main", 10, true)),
+        "navigation", null, 0, null, null, null, null, null, null, null, null, null,
+        new HomepageContentStore.NavigationConfiguration(true, true));
+  }
+
+  public record NavigationItem(String id, String label, String description, boolean space) {
+    public String getId() { return id; }
+    public String getLabel() { return label; }
+    public String getDescription() { return description; }
+    public boolean isSpace() { return space; }
+  }
+
+  public static Map<String, List<NavigationItem>> navigation(HomepagePage page,
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    Map<String, List<NavigationItem>> result = new LinkedHashMap<>();
+    if (!"spaces".equals(page.kind())) { return result; }
+    var organization = org.silverpeas.core.admin.service.OrganizationController.get();
+    for (var widget : widgets) {
+      if (!widget.isEnabled() || !"navigation".equals(widget.type())) { continue; }
+      var items = new ArrayList<NavigationItem>();
+      var configuration = widget.navigationConfiguration();
+      if (configuration.subspaces()) {
+        java.util.Arrays.stream(organization.getAllowedSubSpaceIds(helper.getUserId(), page.owner()))
+            .map(organization::getSpaceInstLightById).filter(java.util.Objects::nonNull)
+            .forEach(space -> items.add(new NavigationItem(space.getId(),
+                space.getName(helper.getLanguage()), space.getDescription(helper.getLanguage()), true)));
+      }
+      if (configuration.apps()) {
+        java.util.Arrays.stream(organization.getAvailCompoIdsAtRoot(page.owner(), helper.getUserId()))
+            .map(organization::getComponentInstLight).filter(java.util.Objects::nonNull)
+            .filter(app -> !app.isHidden()).forEach(app -> items.add(new NavigationItem(app.getId(),
+                app.getLabel(helper.getLanguage()), app.getDescription(helper.getLanguage()), false)));
+      }
+      result.put(widget.id(), List.copyOf(items));
+    }
+    return result;
+  }
+
   public static int legacyIndex(String id) {
     return id != null && id.matches("news-legacy-[1-3]")
         ? Integer.parseInt(id.substring(id.length() - 1)) : 0;

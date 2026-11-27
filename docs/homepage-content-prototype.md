@@ -341,3 +341,17 @@ réglages sont conservés sur disque ; les données personnelles et les applicat
 sources ne sont pas supprimées. Une ancienne fenêtre d’édition ne peut pas rétablir
 le widget supprimé. L’action POST applique les mêmes droits et protections CSRF que
 l’enregistrement et vérifie la révision avant de retirer le widget.
+
+### Navigation des espaces
+
+Le type `navigation` est réservé aux pages d’accueil d’espace, dans le catalogue et
+sur les actions serveur. Il propose deux options indépendantes : applications et
+sous-espaces. Les éléments proviennent exclusivement de l’espace courant, filtrés
+par les droits du lecteur ; les applications masquées sont exclues. Un bloc masqué
+ne charge aucune liste et une liste vide n’affiche aucun bloc. Les libellés et
+descriptions sont traduits dans la langue du lecteur et échappés au rendu.
+
+La configuration (titre, placement, visibilité, `apps`, `subspaces`) est enregistrée
+dans `homepages/spaces/WA<id>.properties`, avec contrôle de révision et protection
+CSRF. Aucune source d’un autre espace n’est sélectionnable. Les liens utilisent la
+navigation Silverpeas et conservent des permaliens pour l’ouverture dans un nouvel onglet.

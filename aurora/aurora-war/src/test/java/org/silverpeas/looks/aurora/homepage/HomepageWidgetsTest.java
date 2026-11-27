@@ -39,6 +39,76 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void navigationIsSpaceOnlyWithRevisionAndTypeProtection() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "WA1");
+    var widget = HomepageWidgets.navigationWidget(store, space, "navigation-test", "fr");
+    assertTrue(widget.navigationConfiguration().apps());
+    assertTrue(widget.navigationConfiguration().subspaces());
+    assertThrows(IllegalArgumentException.class,
+        () -> HomepageWidgets.navigationWidget(store, page, "navigation-test", "fr"));
+    assertThrows(IllegalArgumentException.class, () -> store.saveNavigationWidget(page,
+        widget.id(), "fr", "Navigation", widget.content().layout(), widget.navigationConfiguration(), ""));
+    store.saveNavigationWidget(space, widget.id(), "fr", "Explorer", widget.content().layout(),
+        new HomepageContentStore.NavigationConfiguration(false, true), "");
+    var saved = store.readWidget(space, widget.id(), "fr");
+    assertFalse(saved.navigationConfiguration().apps());
+    assertTrue(saved.navigationConfiguration().subspaces());
+    assertEquals("Explorer", saved.getTitle());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveNavigationWidget(space,
+        widget.id(), "fr", "Navigation", widget.content().layout(), widget.navigationConfiguration(), ""));
+    store.saveNavigationWidget(space, widget.id(), "fr", "Explorer", widget.content().layout(),
+        new HomepageContentStore.NavigationConfiguration(true, false), saved.getRevision());
+    assertNotEquals(saved.getRevision(), store.readWidget(space, widget.id(), "fr").getRevision());
+    store.save(space, "html-test", "fr", "Texte", "Contenu", "");
+    assertThrows(IllegalArgumentException.class, () -> store.saveNavigationWidget(space,
+        "html-test", "fr", "Navigation", widget.content().layout(), widget.navigationConfiguration(),
+        store.read(space, "html-test", "fr").revision()));
+  }
+
+  @Test
+  void navigationUsesOnlyAllowedVisibleChildrenAndHonoursOptionsAndVisibility() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "WA1");
+    var helper = helper();
+    when(helper.getUserId()).thenReturn("42");
+    when(helper.getLanguage()).thenReturn("fr");
+    var organization = mock(org.silverpeas.core.admin.service.OrganizationController.class);
+    var child = mock(org.silverpeas.core.admin.space.SpaceInstLight.class);
+    when(child.getId()).thenReturn("WA2");
+    when(child.getName("fr")).thenReturn("Documents");
+    var app = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
+    when(app.getId()).thenReturn("kmelia1");
+    when(app.getLabel("fr")).thenReturn("Fichiers");
+    var hidden = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
+    when(hidden.isHidden()).thenReturn(true);
+    when(organization.getAllowedSubSpaceIds("42", "WA1")).thenReturn(new String[]{"WA2"});
+    when(organization.getSpaceInstLightById("WA2")).thenReturn(child);
+    when(organization.getAvailCompoIdsAtRoot("WA1", "42"))
+        .thenReturn(new String[]{"kmelia1", "hidden1", "missing1"});
+    when(organization.getComponentInstLight("kmelia1")).thenReturn(app);
+    when(organization.getComponentInstLight("hidden1")).thenReturn(hidden);
+    try (var mocked = mockStatic(org.silverpeas.core.admin.service.OrganizationController.class)) {
+      mocked.when(org.silverpeas.core.admin.service.OrganizationController::get).thenReturn(organization);
+      var widget = HomepageWidgets.navigationWidget(store, space, "navigation-test", "fr");
+      var items = HomepageWidgets.navigation(space, List.of(widget), helper).get(widget.id());
+      assertEquals(List.of("WA2", "kmelia1"), items.stream().map(HomepageWidgets.NavigationItem::id).toList());
+      assertTrue(items.get(0).space());
+      assertFalse(items.get(1).space());
+      store.saveNavigationWidget(space, widget.id(), "fr", "Navigation", widget.content().layout(),
+          new HomepageContentStore.NavigationConfiguration(false, true), "");
+      var saved = store.readWidget(space, widget.id(), "fr");
+      assertEquals(1, HomepageWidgets.navigation(space, List.of(saved), helper).get(widget.id()).size());
+      store.saveNavigationWidget(space, widget.id(), "fr", "Navigation",
+          new HomepageContentStore.Layout("main", 1, false), saved.navigationConfiguration(), saved.getRevision());
+      clearInvocations(organization);
+      assertTrue(HomepageWidgets.navigation(space, List.of(store.readWidget(space, widget.id(), "fr")), helper).isEmpty());
+      assertTrue(HomepageWidgets.navigation(page, List.of(widget), helper).isEmpty());
+      verifyNoInteractions(organization);
+    }
+  }
+
+  @Test
   void listActionsPreserveContentAndRejectStaleOrIncompleteUpdatesAtomically() throws Exception {
     var store = new HomepageContentStore(root);
     store.saveConfigured(page, "first", "fr", "Premier", "Bonjour", "",

@@ -127,6 +127,13 @@
   <c:param name="widget" value="${newShortcutsWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addNavigationUrl">
+  <c:param name="action" value="navigationEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+  <c:param name="widget" value="${newNavigationWidgetId}"/>
+</c:url>
 <view:sp-page>
   <view:sp-head-part>
     <view:script src="/look/jsp/js/homepage-management.js?version=15592-layout-v1"/>
@@ -176,7 +183,7 @@
                 <tbody>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="${widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
+                    <c:param name="action" value="${widget.type == 'navigation' ? 'navigationEditor' : widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -189,7 +196,7 @@
                   <tr data-widget="${widget.id}" data-revision="${widget.revision}" data-enabled="${widget.enabled}" data-zone="${widget.zone}">
                     <td><button type="button" draggable="true" class="homepage-widget-grip" aria-label="Déplacer le widget" title="Glisser pour déplacer ; flèches haut et bas au clavier"><svg viewBox="0 0 16 24" width="16" height="20" fill="currentColor" aria-hidden="true"><circle cx="5" cy="6" r="1.5"/><circle cx="11" cy="6" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="18" r="1.5"/><circle cx="11" cy="18" r="1.5"/></svg></button></td>
                     <td>${editLink}</td>
-                    <td>${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
+                    <td>${widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
                     <td>${widget.zone == 'right' ? 'Droite' : 'Principale'}</td>
                     <td>${widget.order}</td>
                     <td>${displayStatus}</td>
@@ -211,6 +218,14 @@
               <button type="button" class="simple-button" data-catalog-filter="services" aria-pressed="false">Pratique</button>
             </div>
             <div class="homepage-catalog-grid">
+              <c:if test="${param.kind == 'spaces'}">
+                <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addNavigationUrl}'/>">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><path d="M9 3h6v5H9z M3 16h6v5H3z M15 16h6v5h-6z M12 8v4 M6 16v-4h12v4"/></svg>
+                  <span class="homepage-catalog-name">Navigation</span>
+                  <span class="homepage-catalog-description">Donnez accès aux applications et aux sous-espaces de cet espace.</span>
+                  <span class="homepage-catalog-add" aria-hidden="true">+</span>
+                </a>
+              </c:if>
               <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h4"/></svg>
                 <span class="homepage-catalog-name">Zone libre</span>

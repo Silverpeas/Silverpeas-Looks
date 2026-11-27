@@ -72,7 +72,13 @@ public class HomepageContentStore {
       PublicationsConfiguration publicationsConfiguration,
       EventsConfiguration eventsConfiguration, RssConfiguration rssConfiguration,
       FaqConfiguration faqConfiguration, UsersConfiguration usersConfiguration,
-      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration) {
+      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration, NavigationConfiguration navigationConfiguration) {
+    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
+        PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
+        FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
+        ShortcutsConfiguration shortcuts, SearchConfiguration search, BookmarksConfiguration bookmarks) {
+      this(id, content, type, news, legacyIndex, publications, events, rss, faq, users, subscriptions, shortcuts, search, bookmarks, null);
+    }
     public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
         PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
         FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
@@ -119,6 +125,7 @@ public class HomepageContentStore {
     public ShortcutsConfiguration getShortcutsConfiguration() { return shortcutsConfiguration; }
     public BookmarksConfiguration getBookmarksConfiguration() { return bookmarksConfiguration; }
     public SearchConfiguration getSearchConfiguration() { return searchConfiguration; }
+    public NavigationConfiguration getNavigationConfiguration() { return navigationConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
@@ -180,7 +187,8 @@ public class HomepageContentStore {
             Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null,
         "shortcuts".equals(type) ? readShortcuts(settings, prefix) : null,
         "search".equals(type) ? readSearch(settings, prefix) : null,
-        "bookmarks".equals(type) ? readBookmarks(settings, prefix) : null);
+        "bookmarks".equals(type) ? readBookmarks(settings, prefix) : null,
+        "navigation".equals(type) ? readNavigation(settings, prefix) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -231,6 +239,9 @@ public class HomepageContentStore {
     }
     if ("bookmarks".equals(properties.getProperty(prefix + ".type"))) {
       configurationVersion = readBookmarks(properties, prefix).toString();
+    }
+    if ("navigation".equals(properties.getProperty(prefix + ".type"))) {
+      configurationVersion = readNavigation(properties, prefix).toString();
     }
     String version = properties.containsKey(prefix + ".type")
         ? revision(!"html".equals(properties.getProperty(prefix + ".type"))
@@ -585,6 +596,40 @@ public class HomepageContentStore {
     properties.setProperty(prefix + ".type", "bookmarks");
     properties.setProperty(prefix + ".showWhenEmpty", String.valueOf(configuration.showWhenEmpty()));
     properties.setProperty(prefix + ".emptyFragment", configuration.emptyFragment());
+    saveProperties(page, properties);
+  }
+
+  public record NavigationConfiguration(boolean apps, boolean subspaces) {
+    public boolean isApps() { return apps; }
+    public boolean isSubspaces() { return subspaces; }
+  }
+
+  private NavigationConfiguration readNavigation(Properties properties, String prefix) {
+    return new NavigationConfiguration(
+        Boolean.parseBoolean(properties.getProperty(prefix + ".apps", "true")),
+        Boolean.parseBoolean(properties.getProperty(prefix + ".subspaces", "true")));
+  }
+
+  public synchronized void saveNavigationWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, NavigationConfiguration configuration, String expectedRevision)
+      throws IOException {
+    HomepagePage.validateIdentifier(widget);
+    if (!"spaces".equals(page.kind()) || configuration == null || widget.contains("legacy")) {
+      throw new IllegalArgumentException("Navigation is only available for spaces");
+    }
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if (!"navigation".equals(properties.getProperty(prefix + ".type", "navigation"))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "navigation");
+    properties.setProperty(prefix + ".apps", String.valueOf(configuration.apps()));
+    properties.setProperty(prefix + ".subspaces", String.valueOf(configuration.subspaces()));
     saveProperties(page, properties);
   }
 

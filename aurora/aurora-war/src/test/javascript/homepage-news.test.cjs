@@ -40,13 +40,13 @@ async function editor(status = 200, configured = false, publications = false, ep
   for (const match of markup.matchAll(/id="([^"]+)"/g)) {
     controls[match[1]] = {value: '', checked: false, disabled: false, handlers: {},
       dataset: {widgetType: feedType || (ephemeris ? 'ephemeris' : '')},
-      type: ['news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar', 'news-labels-inside', 'news-period', 'news-show-when-empty'].includes(match[1]) || (feedType === 'search' && match[1] === 'news-space') ? 'checkbox' : 'text',
+      type: ['news-apps', 'news-subspaces', 'news-important', 'news-enabled', 'news-show-more', 'news-show-all', 'news-personal', 'news-include-today', 'news-avatar', 'news-labels-inside', 'news-period', 'news-show-when-empty'].includes(match[1]) || (feedType === 'search' && match[1] === 'news-space') ? 'checkbox' : 'text',
       addEventListener(event, callback) { this.handlers[event] = callback; }};
   }
   const location = {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth&language=fr'};
   const calls = [];
   let start;
-  const data = {cities: "2988507|Paris", showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {apps: true, subspaces: false, cities: "2988507|Paris", showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -379,4 +379,19 @@ test('shortcut upload sends multipart with CSRF and preserves context without sa
   const count = calls.length;
   await assert.rejects(controls.upload({size: 5242881}), /5 Mo/);
   assert.equal(calls.length, count);
+});
+
+test('navigation editor saves independent application and subspace options', async () => {
+  const {controls, calls, submit} = await editor(200, true, false, false, 'navigation');
+  assert.match(calls[0].url, /action=loadNavigation/);
+  assert.equal(controls['news-apps'].checked, true);
+  assert.equal(controls['news-subspaces'].checked, false);
+  controls['news-apps'].checked = false;
+  controls['news-subspaces'].checked = true;
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /action=saveNavigation/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  assert.equal(new URLSearchParams(saved.body).get('apps'), 'false');
+  assert.equal(new URLSearchParams(saved.body).get('subspaces'), 'true');
 });

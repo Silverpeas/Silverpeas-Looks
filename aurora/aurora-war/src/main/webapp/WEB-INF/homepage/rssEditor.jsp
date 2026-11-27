@@ -36,7 +36,7 @@
     <title>Configurer les flux RSS</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
     <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-spaces-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-navigation-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>

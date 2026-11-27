@@ -41,6 +41,23 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'navigation' and homepageKind == 'spaces'}">
+        <c:if test="${not empty homepageNavigation[widget.id]}">
+          <section class="secteur-container homepage-navigation" id="homepage-widget-${widget.id}">
+            <h4><c:out value="${widget.title}"/></h4>
+            <ul>
+              <c:forEach var="item" items="${homepageNavigation[widget.id]}">
+                <li>
+                  <c:url value="/Space/${item.id}" var="navigationUrl"/>
+                  <c:if test="${not item.space}"><c:url value="/Component/${item.id}" var="navigationUrl"/></c:if>
+                  <a href="<c:out value='${navigationUrl}'/>" data-navigation-id="<c:out value='${item.id}'/>" data-navigation-kind="${item.space ? 'space' : 'component'}"><c:out value="${item.label}"/></a>
+                  <c:if test="${not empty item.description}"><p><c:out value="${item.description}"/></p></c:if>
+                </li>
+              </c:forEach>
+            </ul>
+          </section>
+        </c:if>
+      </c:when>
       <c:when test="${widget.type == 'weather'}">
         <viewTags:displayHomepageWeather widget="${widget}"/>
       </c:when>

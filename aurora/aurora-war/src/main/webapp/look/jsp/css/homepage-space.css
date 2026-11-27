@@ -39,3 +39,19 @@
   min-height: 80px;
   display: block;
 }
+
+.homepage-navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.homepage-navigation li + li {
+  border-top: 1px solid #ddd;
+}
+.homepage-navigation li {
+  padding: .65rem 0;
+}
+.homepage-navigation p {
+  margin: .25rem 0 0;
+  color: #666;
+}

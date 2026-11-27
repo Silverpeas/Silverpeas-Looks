@@ -47,6 +47,23 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void navigationCatalogueAndRenderingAreRestrictedToSpacesAndEscapeContent() throws Exception {
+    String manage = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
+    assertTrue(manage.contains("<c:if test=\"${param.kind == 'spaces'}\">"));
+    assertTrue(manage.contains("${addNavigationUrl}"));
+    String tag = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(tag.contains("widget.type == 'navigation' and homepageKind == 'spaces'"));
+    assertTrue(tag.contains("<c:out value=\"${item.label}\"/>"));
+    assertTrue(tag.contains("<c:out value=\"${item.description}\"/>"));
+    assertTrue(tag.contains("/Component/${item.id}"));
+    assertTrue(tag.contains("/Space/${item.id}"));
+    String editor = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/navigationEditor.jsp"));
+    assertFalse(editor.contains("<script>"));
+    assertTrue(editor.contains("id=\"news-apps\""));
+    assertTrue(editor.contains("id=\"news-subspaces\""));
+  }
+
+  @Test
   void spacesUseTheOperationMenuAndKeepWidgetRequestsAndMoreLinksScoped() throws Exception {
     String page = Files.readString(Path.of("src/main/webapp/look/jsp/spaceHomePage.jsp"));
     assertTrue(page.contains("<view:operation action=\"${manageHomepageUrl}\""));
