@@ -36,7 +36,7 @@ class HomepageFeedRenderingTest {
   private LookAuroraHelper helper(OrganizationController organization) {
     return mock(LookAuroraHelper.class, invocation -> {
       switch (invocation.getMethod().getName()) {
-        case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
+        case "getConfiguredMedias", "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
             "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers", "getConfiguredSpaceNewUsers", "getSelectableSpaceUsers", "getSelectableUsers", "getConfiguredSelectedUsers",
             "getDefaultFaqConfiguration", "getDefaultUsersConfiguration", "getConfiguredSubscriptions",
             "getConfiguredSearchForm", "getDefaultSearchConfiguration", "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
@@ -46,6 +46,47 @@ class HomepageFeedRenderingTest {
         default -> { return org.mockito.Answers.RETURNS_DEFAULTS.answer(invocation); }
       }
     });
+  }
+
+  @Test
+  void mediaSourcesRespectRightsVisibilityAndGlobalDateOrder() {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var user = mock(org.silverpeas.core.admin.user.model.UserDetail.class);
+    when(helper.getUserDetail()).thenReturn(user);
+    when(organization.getComponentIdsForUser("42", "gallery")).thenReturn(new String[]{"gallery1", "gallery2", "gallery4"});
+    when(organization.getAllComponentIdsRecur("WA1")).thenReturn(new String[]{"gallery1", "gallery2", "gallery3", "gallery4", "quickinfo1"});
+    for (String id : List.of("gallery1", "gallery2", "gallery4")) {
+      var app = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
+      when(app.getName()).thenReturn("gallery");
+      when(app.isHidden()).thenReturn("gallery4".equals(id));
+      when(organization.getComponentInstLight(id)).thenReturn(app);
+    }
+    var service = mock(org.silverpeas.components.gallery.service.GalleryService.class);
+    var old = mock(org.silverpeas.components.gallery.model.Media.class);
+    var recent = mock(org.silverpeas.components.gallery.model.Media.class);
+    var forbidden = mock(org.silverpeas.components.gallery.model.Media.class);
+    when(old.canBeAccessedBy(user)).thenReturn(true);
+    when(recent.canBeAccessedBy(user)).thenReturn(true);
+    when(old.getCreationDate()).thenReturn(new java.util.Date(1));
+    when(recent.getCreationDate()).thenReturn(new java.util.Date(2));
+    when(service.getLastRegisteredMedia("gallery1")).thenReturn(List.of(old, forbidden));
+    when(service.getLastRegisteredMedia("gallery2")).thenReturn(List.of(recent));
+    try (var organizationProvider = mockStatic(OrganizationController.class);
+         var provider = mockStatic(org.silverpeas.components.gallery.service.MediaServiceProvider.class)) {
+      organizationProvider.when(OrganizationController::get).thenReturn(organization);
+      provider.when(org.silverpeas.components.gallery.service.MediaServiceProvider::getMediaService).thenReturn(service);
+      assertEquals(List.of(recent, old), helper.getConfiguredMedias(
+          new HomepageContentStore.MediaConfiguration("spaces", "WA1", 6)));
+      assertEquals(List.of(recent), helper.getConfiguredMedias(
+          new HomepageContentStore.MediaConfiguration("spaces", "WA1", 1)));
+      assertEquals(List.of(old), helper.getConfiguredMedias(
+          new HomepageContentStore.MediaConfiguration("gallery", "gallery1", 6)));
+      clearInvocations(service);
+      assertTrue(helper.getConfiguredMedias(new HomepageContentStore.MediaConfiguration("gallery", "gallery3", 6)).isEmpty());
+      assertTrue(helper.getConfiguredMedias(new HomepageContentStore.MediaConfiguration("spaces", "", 6)).isEmpty());
+      verifyNoInteractions(service);
+    }
   }
 
   @Test

@@ -72,7 +72,15 @@ public class HomepageContentStore {
       PublicationsConfiguration publicationsConfiguration,
       EventsConfiguration eventsConfiguration, RssConfiguration rssConfiguration,
       FaqConfiguration faqConfiguration, UsersConfiguration usersConfiguration,
-      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration, NavigationConfiguration navigationConfiguration, ImageConfiguration imageConfiguration) {
+      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration, NavigationConfiguration navigationConfiguration, ImageConfiguration imageConfiguration, MediaConfiguration mediaConfiguration) {
+    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
+        PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
+        FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
+        ShortcutsConfiguration shortcuts, SearchConfiguration search, BookmarksConfiguration bookmarks,
+        NavigationConfiguration navigation, ImageConfiguration image) {
+      this(id, content, type, news, legacyIndex, publications, events, rss, faq, users,
+          subscriptions, shortcuts, search, bookmarks, navigation, image, null);
+    }
     public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
         PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
         FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
@@ -134,6 +142,7 @@ public class HomepageContentStore {
     public BookmarksConfiguration getBookmarksConfiguration() { return bookmarksConfiguration; }
     public SearchConfiguration getSearchConfiguration() { return searchConfiguration; }
     public NavigationConfiguration getNavigationConfiguration() { return navigationConfiguration; }
+    public MediaConfiguration getMediaConfiguration() { return mediaConfiguration; }
     public ImageConfiguration getImageConfiguration() { return imageConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
@@ -199,7 +208,10 @@ public class HomepageContentStore {
         "search".equals(type) ? readSearch(settings, prefix) : null,
         "bookmarks".equals(type) ? readBookmarks(settings, prefix) : null,
         "navigation".equals(type) ? readNavigation(settings, prefix) : null,
-        "image".equals(type) ? readImage(settings, prefix) : null);
+        "image".equals(type) ? readImage(settings, prefix) : null,
+        "medias".equals(type) ? new MediaConfiguration(settings.getProperty(prefix + ".sourceType", "spaces"),
+            settings.getProperty(prefix + ".source", ""),
+            Integer.parseInt(settings.getProperty(prefix + ".size", "6"))) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -219,6 +231,9 @@ public class HomepageContentStore {
     if (properties.containsKey(prefix + ".showMoreNews")) {
       configurationVersion += "\u0000" + properties.getProperty(prefix + ".showMoreNews")
           + "\u0000" + properties.getProperty(prefix + ".showAllNews", "true");
+    }
+    if ("medias".equals(properties.getProperty(prefix + ".type"))) {
+      configurationVersion += "\u0000" + properties.getProperty(prefix + ".sourceType", "spaces");
     }
     if ("publications".equals(properties.getProperty(prefix + ".type"))) {
       configurationVersion = java.util.List.of("spaceId", "size", "showMore").stream()
@@ -878,6 +893,37 @@ public class HomepageContentStore {
       properties.setProperty(prefix + ".source", rss.source());
       properties.setProperty(prefix + ".rendering", rss.rendering());
     }
+    saveProperties(page, properties);
+  }
+
+  public record MediaConfiguration(String sourceType, String source, int size) {
+    public MediaConfiguration {
+      if (sourceType == null || source == null || size < 1 || size > 100 ||
+          !("spaces".equals(sourceType) ? source.matches("(?:|(?:WA)?[0-9]+)")
+              : "gallery".equals(sourceType) && source.matches("(?:|gallery[0-9]+)"))) {
+        throw new IllegalArgumentException("Invalid media source");
+      }
+    }
+  }
+
+  public synchronized void saveMediaWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, MediaConfiguration configuration, String expectedRevision)
+      throws IOException {
+    HomepagePage.validateIdentifier(widget);
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if (!"medias".equals(properties.getProperty(prefix + ".type", "medias"))) {
+      throw new IllegalArgumentException("Widget type cannot be changed");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "medias");
+    properties.setProperty(prefix + ".sourceType", configuration.sourceType());
+    properties.setProperty(prefix + ".source", configuration.source());
+    properties.setProperty(prefix + ".size", String.valueOf(configuration.size()));
     saveProperties(page, properties);
   }
 

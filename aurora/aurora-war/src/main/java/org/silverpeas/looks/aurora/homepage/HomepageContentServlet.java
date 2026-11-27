@@ -103,7 +103,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "selectedUsersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action) || "imageEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("mediasEditor".equals(action) || "editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "selectedUsersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action) || "imageEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -168,7 +168,7 @@ public class HomepageContentServlet extends HttpServlet {
   }
 
   static boolean spaceAction(String action) {
-    return java.util.Set.of("selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers", "usersEditor", "loadUsers", "saveUsers", "manage", "editor", "load", "save", "upload", "asset", "view",
+    return java.util.Set.of("mediasEditor", "loadMedias", "saveMedias", "sources", "selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers", "usersEditor", "loadUsers", "saveUsers", "manage", "editor", "load", "save", "upload", "asset", "view",
         "updateLayouts", "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
         "loadPublications", "savePublications", "eventsEditor", "loadEvents", "saveEvents",
         "shortcutsEditor", "loadShortcuts", "saveShortcuts", "searchEditor", "loadSearch",
@@ -347,6 +347,25 @@ public class HomepageContentServlet extends HttpServlet {
               Integer.parseInt(request.getParameter("order")),
               Boolean.parseBoolean(request.getParameter("enabled"))), request.getParameter("revision"));
       ephemerisResponse(request, response, page, widget, language, "");
+    } else if ("saveMedias".equals(action)) {
+      var configuration = new HomepageContentStore.MediaConfiguration(request.getParameter("sourceType"),
+          request.getParameter("source"), Integer.parseInt(request.getParameter("size")));
+      if (configuration.source().isEmpty()) {
+        throw new IllegalArgumentException("Missing media source");
+      }
+      var organization = OrganizationController.get();
+      String userId = MainSessionController.getInstance(request.getSession(false)).getCurrentUserDetail().getId();
+      String[] available = "spaces".equals(configuration.sourceType())
+          ? organization.getAllSpaceIds(userId) : organization.getComponentIdsForUser(userId, "gallery");
+      if (!Arrays.asList(available).contains(configuration.source())) {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        return;
+      }
+      store.saveMediaWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")), Boolean.parseBoolean(request.getParameter("enabled"))),
+          configuration, request.getParameter("revision"));
+      mediaResponse(response, page, widget, language, "");
     } else if ("savePublications".equals(action)) {
       store.savePublicationsWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
@@ -406,7 +425,7 @@ public class HomepageContentServlet extends HttpServlet {
       var organization = OrganizationController.get();
       String userId = MainSessionController.getInstance(request.getSession(false)).getCurrentUserDetail().getId();
       String type = request.getParameter("sourceType");
-      if (!Arrays.asList("quickinfo", "rssAgregator", "spaces").contains(type)) {
+      if (!Arrays.asList("quickinfo", "rssAgregator", "spaces", "gallery").contains(type)) {
         throw new IllegalArgumentException("Unknown source type");
       }
       String[] ids = "spaces".equals(type) ? organization.getAllSpaceIds(userId)
@@ -538,6 +557,10 @@ public class HomepageContentServlet extends HttpServlet {
       ephemerisResponse(request, response, page, widget, language, csrf);
     } else if ("ephemerisEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/ephemerisEditor.jsp").forward(request, response);
+    } else if ("loadMedias".equals(action)) {
+      mediaResponse(response, page, widget, language, csrf);
+    } else if ("mediasEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/mediasEditor.jsp").forward(request, response);
     } else if ("loadPublications".equals(action)) {
       publicationsResponse(request, response, page, widget, language, csrf);
     } else if ("publicationsEditor".equals(action)) {
@@ -569,6 +592,7 @@ public class HomepageContentServlet extends HttpServlet {
               request.getSession(false).getAttribute("Silverpeas_LookHelper")));
       request.setAttribute("newWidgetId", "html-" + UUID.randomUUID());
       request.setAttribute("newNewsWidgetId", "news-" + UUID.randomUUID());
+      request.setAttribute("newMediasWidgetId", "medias-" + UUID.randomUUID());
       request.setAttribute("newPublicationsWidgetId", "publications-" + UUID.randomUUID());
       request.setAttribute("newEventsWidgetId", "events-" + UUID.randomUUID());
       request.setAttribute("newWeatherWidgetId", "weather-" + UUID.randomUUID());
@@ -770,6 +794,18 @@ public class HomepageContentServlet extends HttpServlet {
 
   private boolean option(HttpServletRequest request, String name) {
     return request.getParameter(name) == null || Boolean.parseBoolean(request.getParameter(name));
+  }
+
+  private void mediaResponse(HttpServletResponse response, HomepagePage page, String widget,
+      String language, String csrf) throws IOException {
+    var model = HomepageWidgets.mediaWidget(store, page, widget, language);
+    var configuration = model.mediaConfiguration();
+    var content = model.content();
+    json(response, JSONCodec.encodeObject(o -> o.put("configured", !content.revision().isEmpty())
+        .put("title", content.title()).put("zone", content.layout().zone())
+        .put("order", content.layout().order()).put("enabled", content.layout().enabled())
+        .put("sourceType", configuration.sourceType()).put("source", configuration.source())
+        .put("size", configuration.size()).put("revision", content.revision()).put("csrf", csrf)));
   }
 
   private void publicationsResponse(HttpServletRequest request, HttpServletResponse response,

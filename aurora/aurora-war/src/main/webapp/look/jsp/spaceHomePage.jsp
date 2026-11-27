@@ -63,6 +63,7 @@
   request.setAttribute("homepageUsers", HomepageWidgets.users(homepagePage, widgets, helper));
   request.setAttribute("homepageSpaceAdmins", HomepageWidgets.spaceAdmins(homepagePage, widgets, helper));
   request.setAttribute("homepageNavigation", HomepageWidgets.navigation(homepagePage, widgets, helper));
+  request.setAttribute("homepageMedias", HomepageWidgets.medias(widgets, helper));
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepagePage, widgets, helper));
   request.setAttribute("homepageAdmin", controller.getCurrentUserDetail().isAccessAdmin() ||
       java.util.Arrays.stream(organization.getUserManageableSpaceIds(controller.getUserId()))
@@ -85,6 +86,7 @@
     <view:link href="/look/jsp/css/themes.css"/>
     <view:link href="/look/jsp/css/homepage-main.css?version=15592-navigation-groups-v3"/>
     <view:link href="/look/jsp/css/homepage-space.css?version=15592-space-admins-v1"/>
+    <view:link href="/look/jsp/css/homepage-medias.css?version=15592-v1"/>
     <view:link href="/look/jsp/css/homepage-image.css?version=15592-image-v1"/>
     <view:includePlugin name="pdc"/>
     <view:includePlugin name="lightslideshow"/>

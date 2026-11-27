@@ -39,6 +39,39 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void mediaWidgetsPersistBothSourceKindsAndRejectStaleEdits() throws Exception {
+    var store = new HomepageContentStore(root);
+    for (var target : List.of(page, new HomepagePage("spaces", "WA1"))) {
+      var widget = HomepageWidgets.mediaWidget(store, target, "media-test", "fr");
+      assertEquals("Derniers médias des galeries", widget.getTitle());
+      var config = new HomepageContentStore.MediaConfiguration("spaces", "WA2", 6);
+      store.saveMediaWidget(target, widget.id(), "fr", widget.getTitle(), widget.content().layout(), config, "");
+      var saved = store.readWidget(target, widget.id(), "fr");
+      assertEquals(config, saved.mediaConfiguration());
+      var gallery = new HomepageContentStore.MediaConfiguration("gallery", "gallery12", 4);
+      store.saveMediaWidget(target, widget.id(), "fr", widget.getTitle(), widget.content().layout(), gallery, saved.getRevision());
+      assertEquals(gallery, store.readWidget(target, widget.id(), "fr").mediaConfiguration());
+      assertThrows(ConcurrentModificationException.class, () -> store.saveMediaWidget(target,
+          widget.id(), "fr", widget.getTitle(), widget.content().layout(), config, saved.getRevision()));
+      var helper = mock(LookAuroraHelper.class);
+      when(helper.getConfiguredMedias(gallery)).thenReturn(List.of());
+      HomepageWidgets.medias(store.widgets(target, "fr"), helper);
+      verify(helper).getConfiguredMedias(gallery);
+      store.saveMediaWidget(target, widget.id(), "fr", widget.getTitle(),
+          new HomepageContentStore.Layout("right", 1, false), gallery,
+          store.readWidget(target, widget.id(), "fr").getRevision());
+      clearInvocations(helper);
+      assertTrue(HomepageWidgets.medias(store.widgets(target, "fr"), helper).isEmpty());
+      verifyNoInteractions(helper);
+    }
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("rss", "gallery12", 4));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("gallery", "quickinfo12", 4));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("spaces", "../WA1", 4));
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("spaces", "WA1", 0));
+
+  }
+
+  @Test
   void selectedUsersPersistWithRevisionForGeneralAndSpaceHomepages() throws Exception {
     var store = new HomepageContentStore(root);
     var space = new HomepagePage("spaces", "WA1");

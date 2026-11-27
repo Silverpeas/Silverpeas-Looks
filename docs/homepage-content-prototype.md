@@ -384,3 +384,20 @@ Le widget `selectedUsers` permet de choisir jusqu’à 100 personnes par autocom
 Le titre, la colonne, l’ordre, la visibilité, les avatars et les champs de profil sont configurables. Les personnes s’affichent dans l’ordre de sélection. Les comptes bloqués, désactivés ou supprimés sont exclus à chaque affichage ; dans un espace, les personnes n’y ayant plus accès sont aussi exclues. Un message apparaît si la sélection affichable est vide.
 
 Les identifiants sont enregistrés dans `widget.<id>.userIds` dans `data/homepages/spaces/<SpaceId>.properties` pour les espaces ou `data/homepages/skins/<SkinId>.properties` pour l’accueil général, avec les autres réglages du widget. La sauvegarde utilise les protections communes (droits de gestion, CSRF, révision contre les modifications concurrentes). Les actions de configuration et de recherche nécessitent les droits de gestion de la page concernée.
+
+
+### Derniers médias des galeries
+
+Le type `medias` est disponible sur les accueils général et d’espace. Le formulaire propose
+une source par autocomplétion : un espace (ses galeries et celles de ses sous-espaces) ou une
+instance de galerie. La source peut différer de l’espace dont on modifie l’accueil.
+Les propriétés `sourceType` (`spaces` ou `gallery`), `source` et `size` sont stockées dans le
+fichier de la page, avec son titre, sa colonne, son ordre et sa visibilité. La source est obligatoire.
+
+Le rendu présente des vignettes et leur titre, avec un lien vers le média. Les médias sont triés
+par date de création décroissante et limités au maximum demandé (6 par défaut, de 1 à 100).
+Les candidats proviennent du service `getLastRegisteredMedia` de chaque galerie, dont la fenêtre
+est limitée par la configuration de pagination du composant. Seuls les applications accessibles,
+non masquées et les médias accessibles au visiteur sont affichés. Une liste vide affiche un message.
+Plusieurs widgets peuvent coexister sans identifiants de carrousel partagés.
+L’enregistrement conserve les protections CSRF et de révision et revient à la gestion.

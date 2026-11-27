@@ -55,6 +55,9 @@
           </c:choose>
         </div>
       </c:when>
+      <c:when test="${widget.type == 'medias'}">
+        <viewTags:displayHomepageMedias medias="${requestScope.homepageMedias[widget.id]}" title="${widget.title}" id="homepage-widget-${widget.id}"/>
+      </c:when>
       <c:when test="${widget.type == 'news'}">
         <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMoreNews="${widget.newsConfiguration.showMoreNews}" showAllNews="${widget.newsConfiguration.showAllNews}"/>
       </c:when>

@@ -78,6 +78,31 @@ import static org.silverpeas.looks.aurora.AuroraSpaceHomePage.TEMPLATE_NAME;
 
 @SuppressWarnings("unused")
 public class LookAuroraHelper extends LookSilverpeasV5Helper {
+  /** Latest accessible media from a gallery or the galleries of a space and its descendants. */
+  public List<org.silverpeas.components.gallery.model.Media> getConfiguredMedias(
+      org.silverpeas.looks.aurora.homepage.HomepageContentStore.MediaConfiguration configuration) {
+    if (configuration.source().isEmpty()) { return List.of(); }
+    var organization = org.silverpeas.core.admin.service.OrganizationController.get();
+    var allowed = new java.util.HashSet<>(java.util.Arrays.asList(
+        organization.getComponentIdsForUser(getUserId(), "gallery")));
+    java.util.stream.Stream<String> sources = "gallery".equals(configuration.sourceType())
+        ? java.util.stream.Stream.of(configuration.source())
+        : java.util.Arrays.stream(organization.getAllComponentIdsRecur(configuration.source()));
+    var galleries = sources.filter(allowed::contains).distinct().filter(id -> {
+      var app = organization.getComponentInstLight(id);
+      return app != null && !app.isHidden() && "gallery".equals(app.getName());
+    }).toList();
+    if (galleries.isEmpty()) { return List.of(); }
+    var service = org.silverpeas.components.gallery.service.MediaServiceProvider.getMediaService();
+    var user = getUserDetail();
+    return galleries.stream().flatMap(id -> service.getLastRegisteredMedia(id).stream())
+        .filter(media -> media.canBeAccessedBy(user))
+        .sorted(java.util.Comparator.comparing(org.silverpeas.components.gallery.model.Media::getCreationDate,
+            java.util.Comparator.nullsLast(java.util.Comparator.reverseOrder()))
+            .thenComparing(org.silverpeas.components.gallery.model.Media::getId))
+        .limit(configuration.size()).toList();
+  }
+
 
   private static final String DEFAULT_VALUE = "toBeDefined";
   private static final String BANNER_ALL_SPACES = "*";

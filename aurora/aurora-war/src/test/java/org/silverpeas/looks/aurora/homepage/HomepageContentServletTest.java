@@ -279,7 +279,8 @@ class HomepageContentServletTest {
     assertTrue(HomepageContentServlet.spaceAction("saveUsers"));
     assertTrue(HomepageContentServlet.spaceAction("shortcutsEditor"));
     assertFalse(HomepageContentServlet.spaceAction("rssEditor"));
-    assertFalse(HomepageContentServlet.spaceAction("sources"));
+    assertTrue(HomepageContentServlet.spaceAction("sources"));
+    assertTrue(HomepageContentServlet.spaceAction("mediasEditor"));
     when(user.isAccessAdmin()).thenReturn(true);
     when(request.getParameter("kind")).thenReturn("spaces");
     when(request.getParameter("owner")).thenReturn("WA1");
@@ -316,6 +317,45 @@ class HomepageContentServletTest {
       servlet.doGet(request, response);
       assertTrue(output.toString().contains("WA12"));
       assertFalse(output.toString().contains("quickinfo12"));
+    }
+  }
+
+  @Test
+  void mediasSaveRequiresCsrfAccessibleSourceAndFreshRevisionOnBothHomepages() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("action")).thenReturn("saveMedias");
+    when(request.getParameter("widget")).thenReturn("medias-test");
+    when(request.getParameter("title")).thenReturn("Galeries");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("3");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("size")).thenReturn("6");
+    when(request.getParameter("sourceType")).thenReturn("gallery");
+    when(request.getParameter("source")).thenReturn("gallery12");
+    when(request.getParameter("revision")).thenReturn("");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    assertTrue(store.widgets(new HomepagePage("skins", "waves"), "fr").isEmpty());
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    var organization = mock(OrganizationController.class);
+    when(organization.getComponentIdsForUser("42", "gallery")).thenReturn(new String[]{"gallery12"});
+    when(organization.getAllSpaceIds("42")).thenReturn(new String[]{"WA2"});
+    try (var provider = mockStatic(OrganizationController.class)) {
+      provider.when(OrganizationController::get).thenReturn(organization);
+      servlet.doPost(request, response);
+      assertEquals("gallery12", store.readWidget(new HomepagePage("skins", "waves"), "medias-test", "fr").mediaConfiguration().source());
+      servlet.doPost(request, response);
+      verify(response).sendError(409);
+      when(request.getParameter("kind")).thenReturn("spaces");
+      when(request.getParameter("owner")).thenReturn("WA1");
+      when(request.getParameter("sourceType")).thenReturn("spaces");
+      when(request.getParameter("source")).thenReturn("WA2");
+      servlet.doPost(request, response);
+      assertEquals("WA2", store.readWidget(new HomepagePage("spaces", "WA1"), "medias-test", "fr").mediaConfiguration().source());
+      when(request.getParameter("source")).thenReturn("WA99");
+      clearInvocations(response);
+      servlet.doPost(request, response);
+      verify(response).sendError(403);
     }
   }
 

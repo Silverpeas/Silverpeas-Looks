@@ -60,6 +60,7 @@
   request.setAttribute("homepageQuestions", HomepageWidgets.questions(homepageWidgets, homepageHelper));
   request.setAttribute("homepageSubscriptions", HomepageWidgets.subscriptions(homepageWidgets, homepageHelper));
   request.setAttribute("homepageUsers", HomepageWidgets.users(homepagePage, homepageWidgets, homepageHelper));
+  request.setAttribute("homepageMedias", HomepageWidgets.medias(homepageWidgets, homepageHelper));
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepageWidgets, homepageHelper));
   request.setAttribute("isAtLeastOneCarousel", homepageNews.values().stream()
       .filter(news -> !news.isEmpty()).anyMatch(news -> news.getRenderingType().isCarousel()) || homepageWidgets.stream()
@@ -102,6 +103,7 @@
     <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v2"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
+    <view:link href="/look/jsp/css/homepage-medias.css?version=15592-v1"/>
     <view:link href="/look/jsp/css/homepage-image.css?version=15592-image-v1"/>
     <view:link href="/look/jsp/css/homepage-main.css?version=15592-weather-v2"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>

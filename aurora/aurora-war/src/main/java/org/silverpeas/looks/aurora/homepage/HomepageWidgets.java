@@ -37,6 +37,28 @@ import java.util.Map;
 public final class HomepageWidgets {
   private HomepageWidgets() { }
 
+  public static HomepageContentStore.Widget mediaWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"medias".equals(saved.type())) { throw new IllegalArgumentException("Expected a media widget"); }
+      return saved;
+    }
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Derniers médias des galeries", "", "",
+            new HomepageContentStore.Layout("main", 50, true)), "medias", null, 0,
+        null, null, null, null, null, null, null, null, null, null, null,
+        new HomepageContentStore.MediaConfiguration("spaces", "spaces".equals(page.kind()) ? page.owner() : "", 6));
+  }
+
+  public static Map<String, List<org.silverpeas.components.gallery.model.Media>> medias(
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    Map<String, List<org.silverpeas.components.gallery.model.Media>> result = new LinkedHashMap<>();
+    widgets.stream().filter(widget -> widget.isEnabled() && "medias".equals(widget.type()))
+        .forEach(widget -> result.put(widget.id(), helper.getConfiguredMedias(widget.mediaConfiguration())));
+    return result;
+  }
+
   public static HomepageContentStore.Widget imageWidget(HomepageContentStore store,
       HomepagePage page, String id, String language) throws IOException {
     var saved = store.readWidget(page, id, language);
