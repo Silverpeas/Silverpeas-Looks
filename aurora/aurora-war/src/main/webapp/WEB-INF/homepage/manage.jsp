@@ -24,7 +24,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<c:url value="/look/jsp/Main.jsp" var="homeUrl"/>
+<c:choose>
+  <c:when test="${param.kind == 'spaces'}">
+    <c:url value="/look/jsp/spaceHomePage.jsp" var="homeUrl"><c:param name="SpaceId" value="${param.owner}"/></c:url>
+  </c:when>
+  <c:otherwise><c:url value="/look/jsp/Main.jsp" var="homeUrl"/></c:otherwise>
+</c:choose>
 <c:url value="/AuroraHomepageContent" var="manageUrl">
   <c:param name="action" value="manage"/>
   <c:param name="kind" value="${param.kind}"/>
@@ -187,7 +192,7 @@
                   <c:set var="widgetActions"><span class="homepage-widget-actions"><a class="homepage-edit-widget simple-button" href="<c:out value='${editUrl}'/>" aria-label="Modifier le widget" title="Modifier le widget"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 3 5 5-12 12-6 1 1-6z M14 5l5 5"/></svg></a>${deleteButton}</span></c:set>
                   <view:arrayLine id="${widget.id}">
                     <view:arrayCellText text="${editLink}"/>
-                    <view:arrayCellText text="${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis (home)' : 'Zone libre'))))))))}"/>
+                    <view:arrayCellText text="${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}"/>
                     <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
                     <view:arrayCellText text="${widget.order}"/>
                     <view:arrayCellText text="${displayStatus}"/>
@@ -227,36 +232,36 @@
                 <span class="homepage-catalog-description">Retrouvez les documents récemment publiés.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
               </a>
-              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addRssUrl}'/>">
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addRssUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 5a14 14 0 0 1 14 14 M5 11a8 8 0 0 1 8 8 M5 18h1v1H5z"/></svg>
                 <span class="homepage-catalog-name">Flux RSS</span>
                 <span class="homepage-catalog-description">Suivez les nouveautés de vos sources externes.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
-              <a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addSubscriptionsUrl}'/>">
+              </a></c:if>
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="content" href="<c:out value='${addSubscriptionsUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 16V9a6 6 0 0 1 12 0v7l2 2H4z M10 21h4"/></svg>
                 <span class="homepage-catalog-name">Actualités des abonnements</span>
                 <span class="homepage-catalog-description">Regroupez les nouveautés suivies par chaque utilisateur.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
+              </a></c:if>
               <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addEventsUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v16H4z M8 3v4 M16 3v4 M4 10h16 M8 14h3 M8 17h6"/></svg>
                 <span class="homepage-catalog-name">Prochains événements</span>
                 <span class="homepage-catalog-description">Affichez les rendez-vous à venir.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
               </a>
-              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M2 21v-2a6 6 0 0 1 12 0v2 M19 8v6 M16 11h6"/></svg>
                 <span class="homepage-catalog-name">Nouveaux utilisateurs</span>
                 <span class="homepage-catalog-description">Présentez les nouveaux membres de votre communauté.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
-              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addFaqUrl}'/>">
+              </a></c:if>
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addFaqUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v14H9l-6 4z M9 9a3 3 0 1 1 5 2l-2 1v1 M12 15v1"/></svg>
                 <span class="homepage-catalog-name">FAQ</span>
                 <span class="homepage-catalog-description">Donnez accès aux questions et réponses utiles.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
+              </a></c:if>
               <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addShortcutsUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 15l6-6 M8 17l-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0 M16 7l1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0"/></svg>
                 <span class="homepage-catalog-name">Raccourcis</span>
@@ -269,24 +274,24 @@
                 <span class="homepage-catalog-description">Recherchez par plan de classement ou avec un formulaire avancé.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
               </a>
-              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addBookmarksUrl}'/>">
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addBookmarksUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
                 <span class="homepage-catalog-name">Favoris personnels</span>
                 <span class="homepage-catalog-description">Retrouvez les favoris propres à chaque utilisateur.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
-              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addEphemerisUrl}'/>">
+              </a></c:if>
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addEphemerisUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8"/></svg>
                 <span class="homepage-catalog-name">Éphémérides</span>
                 <span class="homepage-catalog-description">Affichez les informations et les fêtes du jour.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
-              <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addWeatherUrl}'/>">
+              </a></c:if>
+              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addWeatherUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 16a5 5 0 1 1 9-4h1a4 4 0 0 1 0 8H7a4 4 0 1 1 1-8 M5 3v2 M1 7l2 1 M10 3l-1 2"/></svg>
                 <span class="homepage-catalog-name">Météo</span>
                 <span class="homepage-catalog-description">Consultez les prévisions des villes configurées.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
+              </a></c:if>
             </div>
           </aside>
           </div>

@@ -68,6 +68,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     xhr.timeout = 60000;
     xhr.send((typeof FormData !== 'undefined' && body instanceof FormData) ? body : body ? body.toString() : null);
   });
+  const spacePage = new URL(window.location.href).searchParams.get('kind') === 'spaces';
   const applications = document.getElementById('news-applications');
   const refreshSearch = () => {
     if (widgetType !== 'search') { return; }
@@ -78,7 +79,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
   if (widgetType === 'search') { control('mode').addEventListener('change', refreshSearch); }
   const refreshSource = () => {
-    if (community || feed || ephemeris || publications) { return; }
+    if (spacePage || community || feed || ephemeris || publications) { return; }
     const selected = control('source').value === 'applications';
     document.getElementById('news-applications-field').hidden = !selected;
     applications.required = selected;

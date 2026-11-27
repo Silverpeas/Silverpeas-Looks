@@ -90,3 +90,13 @@ test('hides an empty bookmarks frame without affecting another instance', () => 
   assert.equal(frames[0].parentElement.hidden, true);
   assert.equal(frames[1].parentElement.hidden, false);
 });
+
+ test('space taxonomy initializes with the current workspace', () => {
+  let options;
+  vm.runInNewContext(source('homepage-search-frame.js'), {
+    whenSilverpeasReady: callback => callback(),
+    document: {getElementById: () => ({dataset: {mode: 'taxonomy', spaceId: 'WA1'}, addEventListener() {}})},
+    $: () => ({pdc(action, value) { options = value; }})
+  });
+  assert.equal(options.workspace, 'WA1');
+});

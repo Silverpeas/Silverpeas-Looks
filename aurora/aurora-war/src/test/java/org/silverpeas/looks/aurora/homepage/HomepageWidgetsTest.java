@@ -69,6 +69,44 @@ class HomepageWidgetsTest {
   }
 
   @Test
+  void spaceStorageIsFlatAndIsolatedFromOtherSpacesAndSkins() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "1");
+    assertEquals("WA1", space.owner());
+    assertThrows(IllegalArgumentException.class, () -> new HomepagePage("spaces", "../WA1"));
+    assertThrows(IllegalArgumentException.class, () -> new HomepagePage("spaces", "waves"));
+    store.save(space, "intro", "fr", "Accueil", "Bonjour", "");
+    assertTrue(Files.exists(root.resolve("spaces/WA1.properties")));
+    assertTrue(Files.exists(root.resolve("spaces/WA1/widgets/intro/content-fr.html")));
+    assertFalse(Files.exists(root.resolve("spaces/WA1/page.properties")));
+    assertEquals("Bonjour", new HomepageContentStore(root).read(
+        new HomepagePage("spaces", "WA1"), "intro", "fr").html());
+    assertTrue(store.widgets(new HomepagePage("spaces", "WA2"), "fr").isEmpty());
+    assertTrue(store.widgets(page, "fr").isEmpty());
+  }
+
+  @Test
+  void spaceNewsAndPublicationsAlwaysUseTheirOwnSpace() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "WA1");
+    var helper = helper();
+    var layout = new HomepageContentStore.Layout("main", 0, true);
+    store.saveNewsWidget(space, "news-local", "fr", "Infos", layout, news(""), 0);
+    store.savePublicationsWidget(space, "pubs", "fr", "Documents", layout,
+        new HomepageContentStore.PublicationsConfiguration("WA999", 5, true), "");
+    var list = mock(NewsList.class);
+    when(helper.getNewsOfSpace("WA1", false, false, 5)).thenReturn(list);
+    var widgets = HomepageWidgets.all(store, space, "fr", helper);
+    assertEquals(list, HomepageWidgets.news(store, space, widgets, helper).get("news-local"));
+    HomepageWidgets.publications(space, widgets, helper);
+    verify(helper).getLatestPublications("WA1", 5);
+    verify(helper, never()).getConfiguredNews(anyInt(), any());
+    verify(helper, never()).getLatestPublications(eq("WA999"), anyInt());
+    assertEquals("WA1", HomepageWidgets.publicationsWidget(store, space, "new-publications", "fr", helper)
+        .publicationsConfiguration().spaceId());
+  }
+
+  @Test
   void emptyHomepageRemainsAccessibleWithoutConsultingHistoricalNews() {
     var helper = mock(LookAuroraHelper.class, CALLS_REAL_METHODS);
     assertTrue(helper.isUserCanDisplayMainHomePage());

@@ -121,6 +121,12 @@ public class HomepageContentServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
         return;
       }
+      if ("spaces".equals(page.kind()) && !spaceAction(action)) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        return;
+      }
+      request.setAttribute("homepageKind", page.kind());
+      request.setAttribute("homepageOwner", page.owner());
       String csrf = csrfToken(session);
       if (write && !validToken(csrf, request.getHeader("X-Aurora-CSRF"))) {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -157,6 +163,14 @@ public class HomepageContentServlet extends HttpServlet {
     }
   }
 
+  static boolean spaceAction(String action) {
+    return java.util.Set.of("manage", "editor", "load", "save", "upload", "asset", "view",
+        "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
+        "loadPublications", "savePublications", "eventsEditor", "loadEvents", "saveEvents",
+        "shortcutsEditor", "loadShortcuts", "saveShortcuts", "searchEditor", "loadSearch",
+        "saveSearch", "renderFeed", "renderSearch").contains(action == null ? "" : action);
+  }
+
   boolean isAllowed(MainSessionController controller, HomepagePage page, boolean edit, String activeSkin) {
     var user = controller.getCurrentUserDetail();
     if (user == null || !user.isActivatedState() && !user.isAnonymous()) {
@@ -170,7 +184,8 @@ public class HomepageContentServlet extends HttpServlet {
     }
     var organization = OrganizationController.get();
     if (edit) {
-      return Arrays.asList(organization.getUserManageableSpaceIds(user.getId())).contains(page.owner());
+      return Arrays.stream(organization.getUserManageableSpaceIds(user.getId()))
+          .map(id -> new HomepagePage("spaces", id).owner()).anyMatch(page.owner()::equals);
     }
     return organization.isSpaceAvailable(page.owner(), user.getId());
   }
@@ -197,7 +212,8 @@ public class HomepageContentServlet extends HttpServlet {
             new HomepageContentStore.Layout(request.getParameter("zone"),
                 Integer.parseInt(request.getParameter("order")),
                 Boolean.parseBoolean(request.getParameter("enabled"))),
-            new HomepageContentStore.NewsConfiguration(request.getParameter("source"),
+            new HomepageContentStore.NewsConfiguration(
+                "spaces".equals(page.kind()) ? "*" : request.getParameter("source"),
                 Integer.parseInt(request.getParameter("size")),
                 Boolean.parseBoolean(request.getParameter("importantOnly")),
                 request.getParameter("rendering"), Boolean.parseBoolean(request.getParameter("enabled")),
@@ -272,9 +288,10 @@ public class HomepageContentServlet extends HttpServlet {
           new HomepageContentStore.Layout(request.getParameter("zone"),
               Integer.parseInt(request.getParameter("order")),
               Boolean.parseBoolean(request.getParameter("enabled"))), events ? "events" : "rss",
-          events ? new HomepageContentStore.EventsConfiguration(request.getParameter("source"),
+          events ? new HomepageContentStore.EventsConfiguration(
+              "spaces".equals(page.kind()) ? "" : request.getParameter("source"),
               Integer.parseInt(request.getParameter("maxDays")), option(request, "includeToday"),
-              Boolean.parseBoolean(request.getParameter("personal")),
+              !"spaces".equals(page.kind()) && Boolean.parseBoolean(request.getParameter("personal")),
               Boolean.parseBoolean(request.getParameter("importantOnly")), option(request, "showMore")) : null,
           events ? null : new HomepageContentStore.RssConfiguration(request.getParameter("source"),
               request.getParameter("rendering")), request.getParameter("revision"));
@@ -290,7 +307,8 @@ public class HomepageContentServlet extends HttpServlet {
           new HomepageContentStore.Layout(request.getParameter("zone"),
               Integer.parseInt(request.getParameter("order")),
               Boolean.parseBoolean(request.getParameter("enabled"))),
-          new HomepageContentStore.PublicationsConfiguration(request.getParameter("spaceId"),
+          new HomepageContentStore.PublicationsConfiguration(
+              "spaces".equals(page.kind()) ? page.owner() : request.getParameter("spaceId"),
               Integer.parseInt(request.getParameter("size")), option(request, "showMore")),
           request.getParameter("revision"));
       publicationsResponse(request, response, page, widget, language, "");
@@ -379,6 +397,7 @@ public class HomepageContentServlet extends HttpServlet {
         return;
       }
       request.setAttribute("searchWidget", model);
+      request.setAttribute("searchSpaceId", "spaces".equals(page.kind()) ? page.owner() : "");
       if ("advanced".equals(model.searchConfiguration().mode())) {
         request.setAttribute("searchForm", helper.getConfiguredSearchForm(model.searchConfiguration().template()));
       }
@@ -395,7 +414,7 @@ public class HomepageContentServlet extends HttpServlet {
       }
       request.setAttribute("feedWidget", model);
       if ("events".equals(model.type())) {
-        var events = helper.getConfiguredNextEvents(model.eventsConfiguration());
+        var events = HomepageWidgets.events(page, model.eventsConfiguration(), helper);
         if (events == null || events.getNextEventsDates().isEmpty()) {
           response.setStatus(HttpServletResponse.SC_NO_CONTENT);
           return;

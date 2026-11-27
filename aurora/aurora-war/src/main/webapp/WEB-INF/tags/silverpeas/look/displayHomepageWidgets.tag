@@ -34,12 +34,12 @@
   <c:if test="${widget.enabled and widget.zone == zone}">
     <c:choose>
       <c:when test="${widget.type == 'news'}">
-        <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}" showMoreNews="${widget.newsConfiguration.showMoreNews}" showAllNews="${widget.newsConfiguration.showAllNews}"/>
+        <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMoreNews="${widget.newsConfiguration.showMoreNews}" showAllNews="${widget.newsConfiguration.showAllNews}"/>
       </c:when>
       <c:when test="${widget.type == 'publications'}">
         <viewTags:displayPublications lookHelper="${sessionScope['Silverpeas_LookHelper']}"
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
-            title="${widget.title}" showMore="${widget.publicationsConfiguration.showMore}"/>
+            title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
       <c:when test="${widget.type == 'weather'}">
         <viewTags:displayHomepageWeather widget="${widget}"/>
@@ -47,7 +47,7 @@
       <c:when test="${widget.type == 'bookmarks'}">
         <c:url value="/AuroraHomepageContent" var="bookmarksUrl">
           <c:param name="action" value="renderBookmarks"/>
-          <c:param name="kind" value="skins"/>
+          <c:param name="kind" value="${empty homepageKind ? 'skins' : homepageKind}"/>
           <c:param name="owner" value="${homepageOwner}"/>
           <c:param name="widget" value="${widget.id}"/>
           <c:param name="language" value="${homepageLanguage}"/>
@@ -60,7 +60,7 @@
       <c:when test="${widget.type == 'search'}">
         <c:url value="/AuroraHomepageContent" var="searchUrl">
           <c:param name="action" value="renderSearch"/>
-          <c:param name="kind" value="skins"/>
+          <c:param name="kind" value="${empty homepageKind ? 'skins' : homepageKind}"/>
           <c:param name="owner" value="${homepageOwner}"/>
           <c:param name="widget" value="${widget.id}"/>
           <c:param name="language" value="${homepageLanguage}"/>
@@ -89,7 +89,7 @@
       <c:when test="${widget.type == 'events' or widget.type == 'rss'}">
         <c:url value="/AuroraHomepageContent" var="feedUrl">
           <c:param name="action" value="renderFeed"/>
-          <c:param name="kind" value="skins"/>
+          <c:param name="kind" value="${empty homepageKind ? 'skins' : homepageKind}"/>
           <c:param name="owner" value="${homepageOwner}"/>
           <c:param name="widget" value="${widget.id}"/>
           <c:param name="language" value="${homepageLanguage}"/>

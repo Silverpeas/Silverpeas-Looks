@@ -418,8 +418,7 @@ public class AuroraSpaceHomePage {
   }
 
   public String getBackOfficeURL() {
-    boolean active = look.getSettings("space.homepage.management.active", false);
-    if (active && isAdmin()) {
+    if (isAdmin()) {
       return URLUtil.getApplicationURL() + "/AuroraSpaceHomepageBackoffice?SpaceId=" + getSpace().getId();
     }
     return null;

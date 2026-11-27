@@ -36,7 +36,7 @@
     <title>Configurer les raccourcis de la page d’accueil</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-shortcut-stripes-v1"/>
     <view:script src="/look/jsp/js/homepage-shortcuts-editor.js?version=15592-shortcut-stripes-v1"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-shortcut-stripes-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-spaces-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>

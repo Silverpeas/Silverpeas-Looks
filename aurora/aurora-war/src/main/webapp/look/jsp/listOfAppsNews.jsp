@@ -52,7 +52,15 @@
 <%
   List<AuroraNews> newsLists;
   LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
-  if (request.getParameter("delegated").equals("true")) {
+  String listingSpaceId = request.getParameter("SpaceId");
+  if (listingSpaceId != null && !listingSpaceId.isBlank()) {
+    if (!org.silverpeas.core.admin.service.OrganizationController.get()
+        .isSpaceAvailable(listingSpaceId, helper.getUserId())) {
+      response.sendError(403);
+      return;
+    }
+    newsLists = helper.getNewsOfSpace(listingSpaceId, false, false, -1).getNews();
+  } else if ("true".equals(request.getParameter("delegated"))) {
     newsLists = helper.getAllDelegatedNews();
   } else {
     // any other value means no delegated news, whatever they are

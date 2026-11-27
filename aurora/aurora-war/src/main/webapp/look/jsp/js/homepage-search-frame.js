@@ -26,7 +26,7 @@ whenSilverpeasReady(function() {
   if (!form) { return; }
   if (form.dataset.mode === 'taxonomy') {
     const taxonomy = $('#used_pdc');
-    taxonomy.pdc('used', {axisTypeDisplay: false, labelInsideSelect: form.dataset.labelsInside === 'true'});
+    taxonomy.pdc('used', {...(form.dataset.spaceId ? {workspace: form.dataset.spaceId} : {}), axisTypeDisplay: false, labelInsideSelect: form.dataset.labelsInside === 'true'});
     form.addEventListener('submit', function() {
       const values = taxonomy.pdc('selectedValues');
       form.elements.AxisValueCouples.value = values.length ? values.flatten() : '';

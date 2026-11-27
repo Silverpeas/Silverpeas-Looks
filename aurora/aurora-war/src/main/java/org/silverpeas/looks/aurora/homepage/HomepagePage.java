@@ -29,6 +29,12 @@ public record HomepagePage(String kind, String owner) {
     if (!"skins".equals(kind) && !"spaces".equals(kind)) {
       throw new IllegalArgumentException("Unknown homepage kind");
     }
+    if ("spaces".equals(kind)) {
+      if (owner == null || !owner.matches("(?:WA)?[0-9]+")) {
+        throw new IllegalArgumentException("Invalid space identifier");
+      }
+      owner = owner.startsWith("WA") ? owner : "WA" + owner;
+    }
     validateIdentifier(owner);
   }
 

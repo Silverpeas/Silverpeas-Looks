@@ -36,7 +36,7 @@
     <title>Configurer les dernières publications</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
     <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-spaces-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -61,16 +61,19 @@
                   <input id="news-order" type="number" min="0" max="10000" required>
                 </div>
               </div>
+              <c:if test="${param.kind == 'spaces'}"><p>Le contenu provient de cet espace.</p></c:if>
+              <div ${param.kind == 'spaces' ? 'hidden' : ''}>
               <div class="homepage-field">
                 <label for="news-space-search">Espace source</label>
                 <input id="news-space" type="hidden">
-                <div class="homepage-source-picker" data-source-type="spaces" data-source-field="news-space" data-source-multiple="false">
+                <div class="${param.kind == 'spaces' ? '' : 'homepage-source-picker'}" data-source-type="spaces" data-source-field="news-space" data-source-multiple="false">
                   <input id="news-space-search" type="search" placeholder="Saisissez un nom…" autocomplete="off" aria-label="Rechercher une source" list="news-space-suggestions">
                   <datalist id="news-space-suggestions"></datalist>
                   <div class="homepage-source-selection"></div>
                   <small role="status"></small>
                 </div>
                 <small>Sans sélection, tous les espaces accessibles sont utilisés.</small>
+              </div>
               </div>
               <div class="homepage-field">
                 <label for="news-size">Nombre maximal de publications</label>

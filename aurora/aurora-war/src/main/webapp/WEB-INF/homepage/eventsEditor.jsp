@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer les prochains événements</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v3"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-spaces-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -60,17 +60,20 @@
                   <input id="news-order" type="number" min="0" max="10000" required>
                 </div>
               </div>
+              <c:if test="${param.kind == 'spaces'}"><p>Le contenu provient de cet espace.</p></c:if>
+              <div ${param.kind == 'spaces' ? 'hidden' : ''}>
               <div class="homepage-field">
                 <label for="news-source">Agendas sources</label>
                 <input id="news-source" type="text" maxlength="2000" placeholder="* ou almanach12 almanach34">
                 <p>* : tous les agendas accessibles. Vide : aucun agenda d’application.</p>
+              </div>
               </div>
               <div class="homepage-field">
                 <label for="news-max-days">Nombre de jours comportant des événements</label>
                 <input id="news-max-days" type="number" min="1" max="100" required>
               </div>
               <label><input id="news-include-today" type="checkbox"> Inclure aujourd’hui</label>
-              <label><input id="news-personal" type="checkbox"> Inclure l’agenda personnel du lecteur</label>
+              <label ${param.kind == 'spaces' ? 'hidden' : ''}><input id="news-personal" type="checkbox"> Inclure l’agenda personnel du lecteur</label>
               <label><input id="news-important" type="checkbox"> Événements importants uniquement</label>
               <label><input id="news-show-more" type="checkbox"> Afficher les liens « Voir l’agenda »</label>
               <label><input id="news-enabled" type="checkbox"> Afficher ce bloc</label>

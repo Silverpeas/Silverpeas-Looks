@@ -36,7 +36,7 @@
     <title>Configurer les actualités</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
     <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-source-picker-v1"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-spaces-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -61,6 +61,8 @@
                   <input id="news-order" type="number" min="0" max="10000" required>
                 </div>
               </div>
+              <c:if test="${param.kind == 'spaces'}"><p>Le contenu provient de cet espace.</p></c:if>
+              <div ${param.kind == 'spaces' ? 'hidden' : ''}>
               <div class="homepage-field">
                 <label for="news-source">Source</label>
                 <select id="news-source">
@@ -74,13 +76,14 @@
               <div id="news-applications-field" class="homepage-field" hidden>
                 <label for="news-applications-search">Applications d’actualités</label>
                 <input id="news-applications" type="hidden">
-                <div class="homepage-source-picker" data-source-type="quickinfo" data-source-field="news-applications" data-source-multiple="true">
+                <div class="${param.kind == 'spaces' ? '' : 'homepage-source-picker'}" data-source-type="quickinfo" data-source-field="news-applications" data-source-multiple="true">
                   <input id="news-applications-search" type="search" placeholder="Saisissez un nom…" autocomplete="off" aria-label="Rechercher une source" list="news-applications-suggestions">
                   <datalist id="news-applications-suggestions"></datalist>
                   <div class="homepage-source-selection"></div>
                   <small role="status"></small>
                 </div>
                 <small>Recherchez puis sélectionnez une ou plusieurs applications.</small>
+              </div>
               </div>
               <div class="homepage-field">
                 <label for="news-size">Nombre maximal d’actualités</label>

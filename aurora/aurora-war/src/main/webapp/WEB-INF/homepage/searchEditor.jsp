@@ -35,7 +35,7 @@
   <view:sp-head-part>
     <title>Configurer la recherche</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
-    <view:script src="/look/jsp/js/homepage-news.js?version=15592-editor-v3"/>
+    <view:script src="/look/jsp/js/homepage-news.js?version=15592-spaces-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -74,7 +74,7 @@
                   <p>Nom du fichier d’un modèle installé disposant d’un formulaire de recherche.</p>
                 </div>
                 <label><input id="news-period" type="checkbox"> Ajouter le critère de période</label>
-                <label><input id="news-space" type="checkbox"> Ajouter le critère d’espace</label>
+                <label ${param.kind == 'spaces' ? 'hidden' : ''}><input id="news-space" type="checkbox"> Ajouter le critère d’espace</label>
               </div>
               <label><input id="news-enabled" type="checkbox"> Afficher ce bloc</label>
             </fieldset>

@@ -44,6 +44,11 @@
 <%@ attribute name="title" required="false" type="java.lang.String" %>
 <%@ attribute name="showMore" required="false" type="java.lang.Boolean" %>
 
+<%@ attribute name="spaceId" required="false" type="java.lang.String" %>
+<c:url var="homepageMoreUrl" value="/look/jsp/listOfPublications.jsp">
+  <c:if test="${not empty spaceId}"><c:param name="SpaceId" value="${spaceId}"/></c:if>
+</c:url>
+
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
 <fmt:message var="labelPublicationsMore" key="look.home.publications.more"/>
 
@@ -72,7 +77,7 @@
     </ul>
     <c:if test="${showMore != false}">
     <div id="morePublications-link-page">
-      <a title="${labelPublicationsMore}" href="/silverpeas/look/jsp/listOfPublications.jsp"
+      <a title="${labelPublicationsMore}" href="<c:out value='${homepageMoreUrl}'/>"
          class="link-more sp-link"><span>${labelPublicationsMore}</span></a>
     </div>
     </c:if>

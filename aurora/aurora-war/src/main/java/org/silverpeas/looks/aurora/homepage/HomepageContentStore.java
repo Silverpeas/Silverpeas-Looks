@@ -306,7 +306,7 @@ public class HomepageContentStore {
   private void saveProperties(HomepagePage page, Properties properties) throws IOException {
     StringWriter writer = new StringWriter();
     properties.store(writer, "Aurora homepage");
-    atomicWrite(path(page.kind(), page.owner(), "page.properties"),
+    atomicWrite(propertiesPath(page),
         writer.toString().getBytes(StandardCharsets.UTF_8));
   }
 
@@ -780,8 +780,13 @@ public class HomepageContentStore {
     }
   }
 
+  private Path propertiesPath(HomepagePage page) throws IOException {
+    return "spaces".equals(page.kind()) ? path("spaces", page.owner() + ".properties")
+        : path(page.kind(), page.owner(), "page.properties");
+  }
+
   private Properties properties(HomepagePage page) throws IOException {
-    Path file = path(page.kind(), page.owner(), "page.properties");
+    Path file = propertiesPath(page);
     Properties properties = new Properties();
     if (Files.exists(file)) {
       try (var reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {

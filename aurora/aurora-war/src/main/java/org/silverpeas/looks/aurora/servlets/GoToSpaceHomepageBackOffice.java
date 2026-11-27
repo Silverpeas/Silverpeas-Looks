@@ -1,110 +1,52 @@
+/*
+ * Copyright (C) 2000 - 2026 Silverpeas
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * As a special exception to the terms and conditions of version 3.0 of
+ * the GPL, you may redistribute this Program in connection with Free/Libre
+ * Open Source Software ("FLOSS") applications as described in Silverpeas's
+ * FLOSS exception.  You should have received a copy of the text describing
+ * the FLOSS exception, and it is also available here:
+ * "https://www.silverpeas.org/legal/floss_exception.html"
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.silverpeas.looks.aurora.servlets;
 
-import org.silverpeas.core.admin.component.model.ComponentInst;
-import org.silverpeas.core.admin.component.model.ComponentInstLight;
-import org.silverpeas.core.admin.component.model.Parameter;
-import org.silverpeas.core.admin.component.model.WAComponent;
-import org.silverpeas.core.admin.service.Administration;
-import org.silverpeas.kernel.util.StringUtil;
-import org.silverpeas.core.util.URLUtil;
-import org.silverpeas.kernel.logging.SilverLogger;
-import org.silverpeas.core.web.http.HttpRequest;
-import org.silverpeas.core.web.look.LookHelper;
-import org.silverpeas.looks.aurora.AuroraSpaceHomePage;
-import org.silverpeas.looks.aurora.LookAuroraHelper;
-
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.silverpeas.looks.aurora.homepage.HomepagePage;
+
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 
+/** Compatibility entry point; authorization is checked by the homepage controller. */
 public class GoToSpaceHomepageBackOffice extends HttpServlet {
-
   private static final long serialVersionUID = 1L;
 
   @Override
-  public void doGet(HttpServletRequest req, HttpServletResponse res) {
-    doPost(req, res);
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    try {
+      var page = new HomepagePage("spaces", request.getParameter("SpaceId"));
+      response.sendRedirect(request.getContextPath() +
+          "/AuroraHomepageContent?action=manage&kind=spaces&owner=" + page.owner());
+    } catch (IllegalArgumentException e) {
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
   }
 
   @Override
-  public void doPost(HttpServletRequest req, HttpServletResponse res) {
-    try {
-      HttpRequest request = HttpRequest.decorate(req);
-      String spaceId = request.getParameter("SpaceId");
-      LookAuroraHelper lookHelper =
-          (LookAuroraHelper) LookHelper.getLookHelper(req.getSession(false));
-
-      String destination = "admin/jsp/accessForbidden.jsp";
-      if (lookHelper.isSpaceAdmin(spaceId)) {
-        ComponentInstLight backOfficeApp = lookHelper.getConfigurationApp(spaceId);
-        if (backOfficeApp == null) {
-          createConfigurationApp(spaceId, lookHelper);
-          backOfficeApp = lookHelper.getConfigurationApp(spaceId);
-        }
-
-        if (backOfficeApp != null) {
-          // go to app
-          destination =
-              URLUtil.getApplicationURL() + URLUtil.getComponentInstanceURL(backOfficeApp.getId()) +
-                  "Edit";
-          res.sendRedirect(destination);
-        } else {
-          req.getRequestDispatcher("/admin/jsp/errorpageMain.jsp").forward(req, res);
-        }
-      } else {
-        req.getRequestDispatcher(destination).forward(req, res);
-      }
-    } catch (ServletException | IOException e) {
-      res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    }
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    doGet(request, response);
   }
-
-  private String createConfigurationApp(String spaceId, LookAuroraHelper lookHelper) {
-    String componentName = "webPages";
-    Optional<WAComponent> existingComponent = WAComponent.getByName(componentName);
-    if (existingComponent.isPresent()) {
-      List<Parameter> parameters = existingComponent.get().getAllParameters();
-
-      // set specific parameter values
-      ComponentInst component = new ComponentInst();
-      component.setCreatorUserId(lookHelper.getUserId());
-      component.setInheritanceBlocked(false);
-      component.setLabel("Page d'accueil");
-      component.setName(componentName);
-      component.setDomainFatherId(spaceId);
-      component.setHidden(true);
-      for (Parameter parameter : parameters) {
-        switch (parameter.getName()) {
-          case "useSubscription":
-            parameter.setValue("no");
-            break;
-          case "xmlTemplate":
-            parameter.setValue(AuroraSpaceHomePage.TEMPLATE_NAME);
-            break;
-          case "xmlTemplate2":
-            // check if a custom template is defined for this space or a parent
-            String template = lookHelper.getSpaceHomePageCustomTemplate(spaceId);
-            if (StringUtil.isDefined(template)) {
-              parameter.setValue(template);
-            }
-            break;
-          default:
-            break;
-        }
-      }
-      component.setParameters(parameters);
-
-      try {
-        return Administration.get().addComponentInst(lookHelper.getUserId(), component);
-      } catch (Exception e) {
-        SilverLogger.getLogger(this).error(e);
-      }
-    }
-    return null;
-  }
-
 }

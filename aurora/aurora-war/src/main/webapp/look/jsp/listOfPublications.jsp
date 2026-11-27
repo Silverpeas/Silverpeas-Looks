@@ -46,12 +46,20 @@
 
 <%
   LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
+  String listingSpaceId = request.getParameter("SpaceId");
+  if (listingSpaceId != null && !listingSpaceId.isBlank()) {
+    if (!OrganizationController.get().isSpaceAvailable(listingSpaceId, helper.getUserId())) {
+      response.sendError(403);
+      return;
+    }
+    request.setAttribute("spacePublications", helper.getLatestPublications(listingSpaceId, 100));
+  }
 %>
 
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
 <c:set var="settings" value="${lookHelper.lookSettings}"/>
-<c:set var="publications" value="${lookHelper.moreLatestPublications}"/>
+<c:set var="publications" value="${empty param.SpaceId ? lookHelper.moreLatestPublications : spacePublications}"/>
 
 <fmt:message var="labelPublications" key="look.home.publications.title"/>
 

@@ -39,7 +39,7 @@
   <view:sp-head-part>
     <view:includePlugin name="pdc"/>
     <view:link href="/look/jsp/css/homepage-search.css?version=15592-weather-v2"/>
-    <view:script src="/look/jsp/js/homepage-search-frame.js?version=15592-weather-v2"/>
+    <view:script src="/look/jsp/js/homepage-search-frame.js?version=15592-spaces-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-search-document">
     <c:choose>
@@ -50,11 +50,15 @@
         <form id="homepage-search-form" name="TemplateSearch" method="${advanced ? 'post' : 'get'}"
             action="<c:out value='${searchAction}'/>" target="_parent"
             data-mode="${searchWidget.searchConfiguration.mode}"
+            data-space-id="<c:out value='${searchSpaceId}'/>"
             data-labels-inside="${searchWidget.searchConfiguration.labelsInside}">
           <label for="query" class="accessibility">Recherche</label>
           <input type="text" id="query" name="${advanced ? 'TitleNotInXMLForm' : 'query'}"
               autocomplete="off" placeholder="<c:out value='${labelSearchInput}'/>"/>
           <input type="hidden" name="mode" value="clear"/>
+          <c:if test="${not empty searchSpaceId}">
+            <input type="hidden" name="${advanced ? 'extraSearchFieldSpace' : 'spaces'}" value="<c:out value='${searchSpaceId}'/>"/>
+          </c:if>
           <c:choose>
             <c:when test="${advanced}">
               <input type="hidden" name="xmlSearchSelectedForm" value="<c:out value='${searchForm.formName}'/>.xml"/>
@@ -66,7 +70,8 @@
                 formContext.setUserId(User.getCurrentRequester().getId());
                 formContext.setFormName("TemplateSearch");
                 formContext.setExtraSearchFieldPeriod(configuration.period());
-                formContext.setExtraSearchFieldSpace(configuration.space());
+                formContext.setExtraSearchFieldSpace(configuration.space() &&
+                    String.valueOf(request.getAttribute("searchSpaceId")).isEmpty());
                 form.display(out, formContext);
               %>
             </c:when>

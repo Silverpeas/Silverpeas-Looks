@@ -1135,7 +1135,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return null;
   }
 
-  NewsList getNewsOfSpace(final String spaceId, final boolean includeSubSpaces,
+  public NewsList getNewsOfSpace(final String spaceId, final boolean includeSubSpaces,
       final boolean importantOnly, final int limit) {
     final String localSpaceId = spaceId.replace(SPACE_KEY_PREFIX, EMPTY);
     final List<String> appIds;
@@ -1154,7 +1154,7 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
       throw new SilverpeasRuntimeException(e);
     }
     final List<News> someNews = getNewsByComponentIds(appIds, importantOnly);
-    if (someNews.size() > limit) {
+    if (limit >= 0 && someNews.size() > limit) {
       return new NewsList(someNews.subList(0, limit), null);
     }
     return new NewsList(someNews, null);

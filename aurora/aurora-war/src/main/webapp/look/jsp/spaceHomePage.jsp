@@ -23,160 +23,87 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 --%>
-<%@page import="org.silverpeas.core.web.util.viewgenerator.html.operationpanes.OperationPaneType" %>
-<%@page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
-<%@page import="org.silverpeas.core.admin.user.model.UserDetail" %>
-<%@page import="org.silverpeas.core.contribution.publication.model.PublicationDetail" %>
-<%@page import="java.util.List" %>
-<%@page import="org.silverpeas.core.web.look.LookHelper" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="org.silverpeas.core.web.look.LookHelper" %>
+<%@ page import="org.silverpeas.core.web.util.viewgenerator.html.GraphicElementFactory" %>
+<%@ page import="org.silverpeas.core.web.util.viewgenerator.html.operationpanes.OperationPaneType" %>
+<%@ page import="org.silverpeas.core.admin.service.OrganizationController" %>
+<%@ page import="org.silverpeas.core.web.mvc.controller.MainSessionController" %>
 <%@ page import="org.silverpeas.looks.aurora.LookAuroraHelper" %>
-<%@ page import="org.silverpeas.looks.aurora.AuroraSpaceHomePage" %>
-<%@ page import="org.silverpeas.looks.aurora.Space" %>
-<%@ page import="org.silverpeas.looks.aurora.App" %>
-<%@ page import="org.silverpeas.looks.aurora.NewsList" %>
-<%@ page import="org.silverpeas.core.web.look.proxy.SpaceHomepageProxyManager" %>
-<%@ page import="org.silverpeas.looks.aurora.NewUsersList" %>
-<%@ page import="org.silverpeas.looks.aurora.AuroraSpaceHomePageZone" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="org.silverpeas.looks.aurora.FreeZone" %>
-
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="org.silverpeas.looks.aurora.homepage.*" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
 <%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
-
-<%
-  response.setHeader("Cache-Control", "no-store"); //HTTP 1.1
-  response.setHeader("Pragma", "no-cache"); //HTTP 1.0
-  response.setDateHeader("Expires", -1); //prevents caching at the proxy server
-%>
-
 <view:timeout/>
-
 <%
+  response.setHeader("Cache-Control", "no-store");
+  MainSessionController controller = MainSessionController.getInstance(session);
   LookAuroraHelper helper = (LookAuroraHelper) LookHelper.getLookHelper(session);
-  AuroraSpaceHomePage homepage = helper.getHomePage(request.getParameter("SpaceId"));
-  List<PublicationDetail> publications = homepage.getPublications();
-  NewsList news = homepage.getNews();
-  Map<AuroraSpaceHomePageZone, FreeZone> freeZones = homepage.getFreeZones();
-  Space space = homepage.getSpace();
-  List<Space> subspaces = homepage.getSubSpaces();
-  List<App> apps = homepage.getApps();
-  List<UserDetail> admins = homepage.getAdmins();
-  String customFormContent = homepage.getCustomFormContent();
-  NewUsersList newUsersList = homepage.getNewUsers();
-
-  GraphicElementFactory gef = (GraphicElementFactory) session
-      .getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
-  gef.setSpaceIdForCurrentRequest(space.getId());
+  String pageOwner = request.getParameter("SpaceId");
+  OrganizationController organization = OrganizationController.get();
+  if (controller == null || pageOwner == null ||
+      !organization.isSpaceAvailable(pageOwner, controller.getUserId())) {
+    response.sendError(403);
+    return;
+  }
+  org.silverpeas.core.admin.space.SpaceInstLight space = organization.getSpaceInstLightById(pageOwner);
+  if (space == null) {
+    response.sendError(404);
+    return;
+  }
+  // Canonical Silverpeas identifier (WA...) also identifies the properties file.
+  HomepagePage homepagePage = new HomepagePage("spaces", space.getId());
+  HomepageContentStore store = HomepageContentStore.forInstallation();
+  java.util.List<HomepageContentStore.Widget> widgets = HomepageWidgets.all(store, homepagePage, controller.getFavoriteLanguage(), helper);
+  request.setAttribute("homepageKind", homepagePage.kind());
+  request.setAttribute("homepageOwner", homepagePage.owner());
+  request.setAttribute("homepageLanguage", controller.getFavoriteLanguage());
+  request.setAttribute("homepageWidgets", widgets);
+  request.setAttribute("homepageNews", HomepageWidgets.news(store, homepagePage, widgets, helper));
+  request.setAttribute("homepagePublications", HomepageWidgets.publications(homepagePage, widgets, helper));
+  request.setAttribute("homepageAdmin", controller.getCurrentUserDetail().isAccessAdmin() ||
+      java.util.Arrays.stream(organization.getUserManageableSpaceIds(controller.getUserId()))
+          .anyMatch(id -> new HomepagePage("spaces", id).owner().equals(homepagePage.owner())));
+  GraphicElementFactory factory = (GraphicElementFactory) session.getAttribute(GraphicElementFactory.GE_FACTORY_SESSION_ATT);
+  factory.setSpaceIdForCurrentRequest(homepagePage.owner());
 %>
-
-<c:set var="backOfficeURL" value="<%=homepage.getBackOfficeURL()%>"/>
-<c:set var="spaceId" value="<%=homepage.getSpace().getId()%>"/>
-<c:set var="spaceHomepageProxy" value="<%=SpaceHomepageProxyManager.get().getProxyBySpaceId(homepage.getSpace().getId())%>"/>
-
 <c:set var="lookHelper" value="${sessionScope['Silverpeas_LookHelper']}"/>
 <view:setBundle bundle="${lookHelper.localizedBundle}"/>
-<c:set var="settings" value="${lookHelper.lookSettings}"/>
-
-<c:set var="extraJavascript" value="${settings.extraJavascriptForHome}"/>
-
-<fmt:message var="actionUpdate" key="look.space.home.update"/>
-
-<view:sp-page angularJsAppName="silverpeas.spaceHomepage">
-<view:sp-head-part>
-  <jsp:attribute name="atTop">
-    <!-- CSS SpaceHome -->
-    <style type="text/css">
-      .spaceHome .portlet {
-        margin-bottom: 0.5em;
-      }
-    </style>
+<c:url value="/AuroraHomepageContent" var="manageHomepageUrl">
+  <c:param name="action" value="manage"/>
+  <c:param name="kind" value="spaces"/>
+  <c:param name="owner" value="${homepageOwner}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
+<view:sp-page>
+  <view:sp-head-part>
+    <view:link href="/look/jsp/css/aurora.css"/>
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
-    <viewTags:spaceNavigationCSS/>
-    <viewTags:spacePublicationsCSS/>
-    <view:link href="/look/jsp/css/aurora.css"/>
-  </jsp:attribute>
-  <jsp:body>
-    <view:includePlugin name="pdc" />
+    <view:link href="/look/jsp/css/homepage-space.css?version=15592-spaces-v1"/>
+    <view:includePlugin name="pdc"/>
     <view:includePlugin name="lightslideshow"/>
-    <view:includePlugin name="toggle"/>
     <view:script src="/look/jsp/js/responsiveslides.min.js"/>
-    <c:if test="${not empty extraJavascript}">
-      <script type="text/javascript" src="${extraJavascript}"></script>
-    </c:if>
-    <script type="text/javascript">
-      function goToSpaceItem(spaceId) {
-        spWindow.loadSpace(spaceId);
-      }
-      function goToComponentItem(spaceId) {
-        spWindow.loadComponent(spaceId);
-      }
-
-      whenSilverpeasReady(function() {
-        // if right column is empty
-        if ($.trim($(".rightContent").text()).length === 0) {
-          $(".rightContent").css("display", "none");
-          $(".principalContent").css("margin-right", "0");
-        }
-      });
-    </script>
-  </jsp:body>
-</view:sp-head-part>
-<view:sp-body-part cssClass="spaceHome ${spaceId}">
-<view:browseBar spaceId="${spaceId}"/>
-<view:operationPane type="<%=OperationPaneType.space %>">
-  <c:if test="${not empty backOfficeURL}">
-    <view:operation action="<%=homepage.getBackOfficeURL()%>" altText="${actionUpdate}"/>
-  </c:if>
-</view:operationPane>
-<view:window>
-  <div id="portletPages" class="rightContent">
-
-    <viewTags:displayWidget widget="${spaceHomepageProxy.thinWidget}" widgetId="topWidget"/>
-
-    <viewTags:displayFreeZone freeZone="<%=freeZones.get(AuroraSpaceHomePageZone.RIGHT)%>" freeZoneId="rightFreeZone"/>
-
-    <viewTags:spacePicture pictureURL="<%=homepage.getSecondPicture()%>" pictureLink="<%=homepage.getSecondPictureLink()%>"/>
-
-    <viewTags:spaceAdmins admins="<%=admins%>"/>
-
-    <viewTags:spaceUsers users="<%=homepage.getUsers()%>" label="<%=homepage.getUsersLabel()%>"/>
-
-    <c:if test="<%=news.getZone().isRight()%>">
-      <viewTags:spaceNews listOfNews="<%=news%>"/>
-    </c:if>
-
-    <viewTags:displayNextEvents nextEvents="<%=homepage.getNextEvents()%>" dateFormat="${settings.eventDateFormat}"/>
-
-    <viewTags:displayTaxonomy enabled="<%=homepage.isTaxonomyEnabled()%>" labelsInsideSelect="${true}" spaceId="${spaceId}" scope="<%=homepage.getTaxonomyMode()%>"/>
-
-    <viewTags:displayMedias medias="<%=homepage.getLatestMedias()%>"/>
-  </div>
-
-  <div class="principalContent">
-
-    <viewTags:spaceIntro space="<%=space%>"/>
-
-    <viewTags:displayFreeZone freeZone="<%=freeZones.get(AuroraSpaceHomePageZone.MAIN)%>" freeZoneId="mainFreeZone"/>
-
-    <c:if test="<%=news.getZone().isMain()%>">
-      <viewTags:spaceNews listOfNews="<%=news%>"/>
-    </c:if>
-
-    <viewTags:spaceNavigation apps="<%=apps%>" subspaces="<%=subspaces%>"/>
-
-    <viewTags:displayNewUsers newUsers="<%=newUsersList%>" />
-
-    <viewTags:displayShortcuts shortcuts="<%=homepage.getShortcuts()%>"/>
-
-    <viewTags:displayPublications lookHelper="${lookHelper}" publications="<%=publications%>"/>
-
-    <%= customFormContent %>
-  </div>
-</view:window>
-</view:sp-body-part>
+    <view:script src="/look/jsp/js/homepage-feeds.js"/>
+    <view:script src="/look/jsp/js/homepage-search.js"/>
+    <view:script src="/look/jsp/js/homepage-space.js?version=15592-spaces-v1"/>
+  </view:sp-head-part>
+  <view:sp-body-part cssClass="spaceHome">
+    <view:browseBar spaceId="${homepageOwner}"/>
+    <view:operationPane type="<%=OperationPaneType.space%>">
+      <c:if test="${homepageAdmin}">
+        <view:operation action="${manageHomepageUrl}" altText="Modifier la page d’accueil"/>
+      </c:if>
+    </view:operationPane>
+    <view:window>
+      <div class="homepage-space-columns">
+        <div class="homepage-space-main">
+          <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="main"/>
+        </div>
+        <div class="homepage-space-right">
+          <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="right"/>
+        </div>
+      </div>
+    </view:window>
+  </view:sp-body-part>
 </view:sp-page>

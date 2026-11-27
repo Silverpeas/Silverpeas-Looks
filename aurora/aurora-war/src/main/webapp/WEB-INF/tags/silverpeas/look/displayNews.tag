@@ -54,6 +54,12 @@
   <c:set var="id" value="carrousel-actualite"/>
 </c:if>
 
+<%@ attribute name="spaceId" required="false" type="java.lang.String" %>
+<c:url var="homepageMoreUrl" value="/look/jsp/listOfAppsNews.jsp">
+  <c:if test="${not empty spaceId}"><c:param name="SpaceId" value="${spaceId}"/></c:if>
+  <c:param name="delegated" value="${delegated}"/>
+</c:url>
+
 <fmt:message var="labelNews" key="look.home.news"/>
 <fmt:message var="labelNewsMore" key="look.home.news.more"/>
 <fmt:message var="labelDelegatedNewsMore" key="look.delegated.news.all"/>
@@ -97,7 +103,7 @@
     <c:if test="${not empty id and showAllNews != false}">
       <div id="moreNews-link-page">
         <a title="${labelDelegatedNewsMore}"
-           href="/silverpeas/look/jsp/listOfAppsNews.jsp?delegated=${delegated}"
+           href="<c:out value='${homepageMoreUrl}'/>"
            class="link-more"><span>${labelDelegatedNewsMore}</span></a>
       </div>
     </c:if>

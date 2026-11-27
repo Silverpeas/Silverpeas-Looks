@@ -117,6 +117,74 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void spacePublicationsIgnoreSubmittedForeignSource() throws Exception {
+    prepareNewsSave();
+    when(request.getParameter("kind")).thenReturn("spaces");
+    when(request.getParameter("owner")).thenReturn("WA1");
+    when(request.getParameter("action")).thenReturn("savePublications");
+    when(request.getParameter("spaceId")).thenReturn("WA999");
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    assertEquals("WA1", store.readWidget(new HomepagePage("spaces", "WA1"),
+        "news-test", "fr").publicationsConfiguration().spaceId());
+    assertTrue(store.widgets(new HomepagePage("spaces", "WA999"), "fr").isEmpty());
+  }
+
+  @Test
+  void spaceManagementRequiresRightsOnThatSpaceAndKeepsCsrfProtection() throws Exception {
+    var organization = mock(OrganizationController.class);
+    when(organization.getUserManageableSpaceIds("42")).thenReturn(new String[]{"1"});
+    when(organization.isSpaceAvailable("WA1", "42")).thenReturn(true);
+    try (var mocked = mockStatic(OrganizationController.class)) {
+      mocked.when(OrganizationController::get).thenReturn(organization);
+      assertTrue(servlet.isAllowed(controller, new HomepagePage("spaces", "WA1"), true, ""));
+      assertFalse(servlet.isAllowed(controller, new HomepagePage("spaces", "WA2"), true, ""));
+      assertTrue(servlet.isAllowed(controller, new HomepagePage("spaces", "WA1"), false, ""));
+      when(request.getParameter("kind")).thenReturn("spaces");
+      when(request.getParameter("owner")).thenReturn("WA1");
+      when(request.getParameter("action")).thenReturn("save");
+      servlet.doPost(request, response);
+      verify(response).sendError(403);
+      assertTrue(store.widgets(new HomepagePage("spaces", "WA1"), "fr").isEmpty());
+    }
+  }
+
+  @Test
+  void spaceEventsOnlyUseAccessibleCalendarsOfTheCurrentSpace() {
+    var organization = mock(OrganizationController.class);
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+    when(helper.getUserId()).thenReturn("42");
+    when(organization.getAvailCompoIdsAtRoot("WA1", "42"))
+        .thenReturn(new String[]{"almanach1", "quickinfo1"});
+    var calendar = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
+    var news = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
+    when(calendar.getName()).thenReturn("almanach");
+    when(news.getName()).thenReturn("quickinfo");
+    when(organization.getComponentInstLight("almanach1")).thenReturn(calendar);
+    when(organization.getComponentInstLight("quickinfo1")).thenReturn(news);
+    try (var mocked = mockStatic(OrganizationController.class)) {
+      mocked.when(OrganizationController::get).thenReturn(organization);
+      HomepageWidgets.events(new HomepagePage("spaces", "WA1"),
+          new HomepageContentStore.EventsConfiguration("*", 4, true, true, false, true), helper);
+      verify(helper).getConfiguredNextEvents(
+          new HomepageContentStore.EventsConfiguration("almanach1", 4, true, false, false, true));
+    }
+  }
+
+  @Test
+  void spacesExposeOnlyTheSixAgreedWidgetTypes() throws Exception {
+    assertTrue(HomepageContentServlet.spaceAction("shortcutsEditor"));
+    assertFalse(HomepageContentServlet.spaceAction("rssEditor"));
+    assertFalse(HomepageContentServlet.spaceAction("sources"));
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("kind")).thenReturn("spaces");
+    when(request.getParameter("owner")).thenReturn("WA1");
+    when(request.getParameter("action")).thenReturn("weatherEditor");
+    servlet.doGet(request, response);
+    verify(response).sendError(400);
+  }
+
+  @Test
   void sourceSuggestionsRequireManagementPermissionAndUseAccessibleApplications() throws Exception {
     when(request.getParameter("action")).thenReturn("sources");
     when(request.getParameter("sourceType")).thenReturn("quickinfo");

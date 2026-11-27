@@ -66,11 +66,41 @@ public final class HomepageWidgets {
       }
       return saved;
     }
-    var configuration = new HomepageContentStore.PublicationsConfiguration("", 3, true);
+    var configuration = new HomepageContentStore.PublicationsConfiguration(
+        "spaces".equals(page.kind()) ? page.owner() : "", 3, true);
     return new HomepageContentStore.Widget(id,
         new HomepageContentStore.Content("Dernières publications", "", "",
             new HomepageContentStore.Layout("main", 40, true)),
         "publications", null, 0, configuration);
+  }
+
+  public static Map<String, List<PublicationDetail>> publications(HomepagePage page,
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    if (!"spaces".equals(page.kind())) {
+      return publications(widgets, helper);
+    }
+    Map<String, List<PublicationDetail>> result = new LinkedHashMap<>();
+    widgets.stream().filter(w -> w.isEnabled() && "publications".equals(w.type()))
+        .forEach(w -> result.put(w.id(), helper.getLatestPublications(page.owner(),
+            w.publicationsConfiguration().size())));
+    return result;
+  }
+
+  public static org.silverpeas.looks.aurora.NextEvents events(HomepagePage page,
+      HomepageContentStore.EventsConfiguration configuration, LookAuroraHelper helper) {
+    if ("spaces".equals(page.kind())) {
+      var organization = org.silverpeas.core.admin.service.OrganizationController.get();
+      String sources = java.util.Arrays.stream(
+          organization.getAvailCompoIdsAtRoot(page.owner(), helper.getUserId()))
+          .filter(id -> {
+            var app = organization.getComponentInstLight(id);
+            return app != null && "almanach".equals(app.getName());
+          }).collect(java.util.stream.Collectors.joining(" "));
+      configuration = new HomepageContentStore.EventsConfiguration(sources,
+          configuration.maxDays(), configuration.includeToday(), false,
+          configuration.importantOnly(), configuration.showMore());
+    }
+    return helper.getConfiguredNextEvents(configuration);
   }
 
   public static Map<String, List<PublicationDetail>>
@@ -261,7 +291,15 @@ public final class HomepageWidgets {
     Map<String, NewsList> news = new LinkedHashMap<>();
     for (var widget : widgets) {
       if ("news".equals(widget.type()) && widget.isEnabled()) {
-        news.put(widget.id(), helper.getConfiguredNews(1, widget.newsConfiguration()));
+        var configuration = widget.newsConfiguration();
+        NewsList list;
+        if ("spaces".equals(page.kind())) {
+          list = helper.getNewsOfSpace(page.owner(), false, configuration.importantOnly(), configuration.size());
+          list.setRenderingType(NewsList.RenderingType.valueOf(configuration.rendering()));
+        } else {
+          list = helper.getConfiguredNews(1, configuration);
+        }
+        news.put(widget.id(), list);
       }
     }
     return news;

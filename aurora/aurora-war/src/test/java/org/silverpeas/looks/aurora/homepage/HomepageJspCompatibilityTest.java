@@ -47,6 +47,26 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void spacesUseTheOperationMenuAndKeepWidgetRequestsAndMoreLinksScoped() throws Exception {
+    String page = Files.readString(Path.of("src/main/webapp/look/jsp/spaceHomePage.jsp"));
+    assertTrue(page.contains("<view:operation action=\"${manageHomepageUrl}\""));
+    assertFalse(page.contains("homepage-edit-button"));
+    assertFalse(page.contains("spaceHomepageProxy"));
+    assertTrue(page.contains("zone=\"main\""));
+    assertTrue(page.contains("zone=\"right\""));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(widgets.contains("empty homepageKind ? 'skins' : homepageKind"));
+    assertTrue(widgets.contains("spaceId=\"${homepageKind == 'spaces' ? homepageOwner : ''}\""));
+    String search = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/searchWidget.jsp"));
+    assertTrue(search.contains("extraSearchFieldSpace"));
+    assertTrue(search.contains("data-space-id="));
+    for (String tag : List.of("displayNews", "displayPublications")) {
+      String view = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/" + tag + ".tag"));
+      assertTrue(view.contains("<c:param name=\"SpaceId\" value=\"${spaceId}\"/>"));
+    }
+  }
+
+  @Test
   void skinsKeepToolsAndWeatherButDoNotConfigureHomepageWidgets() throws Exception {
     Path settings = Path.of("../aurora-configuration/src/main/config/properties/org/silverpeas/util/viewGenerator/settings");
     for (String skin : List.of("Aurora", "Sobre", "prima", "waves")) {
@@ -122,7 +142,7 @@ class HomepageJspCompatibilityTest {
 
   @Test
   void homepageScriptletCompilesWithTheLegacyJspSourceLevel() throws Exception {
-    for (String page : List.of("look/jsp/Main.jsp", "WEB-INF/homepage/searchWidget.jsp")) {
+    for (String page : List.of("look/jsp/Main.jsp", "look/jsp/spaceHomePage.jsp", "WEB-INF/homepage/searchWidget.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp", page));
       String imports = Pattern.compile("<%@ page import=\"([^\"]+)\" %>")
           .matcher(jsp).results().map(match -> "import " + match.group(1) + ";")
@@ -133,7 +153,7 @@ class HomepageJspCompatibilityTest {
       Path source = temporary.resolve("HomepageScriptlet.java");
       Files.writeString(source, imports + "\nclass HomepageScriptlet {\n" +
           "void render(jakarta.servlet.http.HttpSession session, " +
-          "jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.jsp.JspWriter out) throws Exception {\n" +
+          "jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.jsp.JspWriter out) throws Exception {\n" +
           scriptlets + "\n}\n}");
       var compiler = ToolProvider.getSystemJavaCompiler();
       var diagnostics = new DiagnosticCollector<JavaFileObject>();
