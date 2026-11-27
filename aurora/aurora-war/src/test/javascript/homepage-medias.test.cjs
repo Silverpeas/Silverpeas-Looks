@@ -44,7 +44,7 @@ async function editor(kind = 'skins', fail = false) {
     send(body) {
       calls.push({method: this.method, url: this.url, headers: this.headers, body});
       this.status = body && fail ? 409 : 200;
-      this.responseText = JSON.stringify({sourceType: 'spaces', source: 'WA2', size: 6, title: 'Médias',
+      this.responseText = JSON.stringify({sourceType: 'spaces', source: 'WA2', size: 6, display: 'carousel', title: 'Médias',
         zone: 'right', order: 2, enabled: true, revision: 'v1', csrf: 'token'});
       this.onload();
     }
@@ -76,6 +76,7 @@ test('loads source and saves an explicitly selected gallery with CSRF on both ho
     assert.equal(body.get('source'), 'gallery12');
     assert.equal(body.get('sourceType'), 'gallery');
     assert.equal(body.get('revision'), 'v1');
+    assert.equal(body.get('display'), 'carousel');
     assert.match(location.href, /action=manage/);
   }
 });
@@ -90,4 +91,35 @@ test('requires a selection and keeps the form open on a revision conflict', asyn
   assert.match(controls['news-status'].textContent, /modifié ailleurs/);
   assert.match(location.href, /action=mediasEditor/);
   assert.equal(controls['news-save'].disabled, false);
+});
+
+test('carousel arrows follow the viewport, boundaries and reduced motion', () => {
+  const code = fs.readFileSync(path.resolve(__dirname, '../../main/webapp/look/jsp/js/homepage-medias-carousel.js'), 'utf8');
+  const buttons = [-1, 1].map(direction => ({dataset: {direction}, addEventListener(event, callback) { this.click = callback; }}));
+  const controls = {querySelectorAll: () => buttons};
+  const list = {scrollWidth: 700, clientWidth: 300, scrollLeft: 0,
+    addEventListener(event, callback) { this.scroll = callback; }, scrollBy(options) { this.movement = options; }};
+  let start, resize;
+  let reduced = false;
+  vm.runInNewContext(code, {window: {addEventListener(event, callback) { start = callback; },
+    matchMedia: () => ({matches: reduced})},
+    document: {querySelectorAll: () => [{querySelector: selector => selector.endsWith('-list') ? list : controls}]},
+    ResizeObserver: class {constructor(callback) { resize = callback; } observe() {}}});
+  start();
+  assert.equal(controls.hidden, false);
+  assert.equal(buttons[0].disabled, true);
+  assert.equal(buttons[1].disabled, false);
+  buttons[1].click();
+  assert.equal(list.movement.left, 255);
+  assert.equal(list.movement.behavior, 'smooth');
+  list.scrollLeft = 400;
+  list.scroll();
+  assert.equal(buttons[1].disabled, true);
+  reduced = true;
+  buttons[0].click();
+  assert.equal(list.movement.left, -255);
+  assert.equal(list.movement.behavior, 'instant');
+  list.scrollWidth = 300;
+  resize();
+  assert.equal(controls.hidden, true);
 });

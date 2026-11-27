@@ -26,14 +26,21 @@
 <%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view" %>
 <%@ attribute name="medias" required="true" type="java.util.List" %>
 <%@ attribute name="title" required="true" type="java.lang.String" %>
+<%@ attribute name="display" required="true" type="java.lang.String" %>
 <%@ attribute name="id" required="true" type="java.lang.String" %>
 <view:setConstant var="homepageMediaResolution" constant="org.silverpeas.components.gallery.constant.MediaResolution.PREVIEW"/>
-<section class="secteur-container homepage-medias" id="<c:out value='${id}'/>">
+<section class="secteur-container homepage-medias" data-display="${display}" id="<c:out value='${id}'/>">
   <h4><c:out value="${title}"/></h4>
   <c:choose>
     <c:when test="${empty medias}"><p>Aucun média à afficher.</p></c:when>
     <c:otherwise>
-      <ul class="homepage-medias-list">
+      <c:if test="${display == 'carousel'}">
+        <div class="homepage-medias-controls" hidden>
+          <button type="button" class="simple-button" data-direction="-1" aria-label="Médias précédents">&#8592;</button>
+          <button type="button" class="simple-button" data-direction="1" aria-label="Médias suivants">&#8594;</button>
+        </div>
+      </c:if>
+      <ul class="homepage-medias-list" tabindex="${display == 'carousel' ? '0' : '-1'}" aria-label="Derniers médias">
         <c:forEach var="media" items="${medias}">
           <li><a href="<c:out value='${media.permalink}'/>">
             <img src="<c:out value='${media.getApplicationThumbnailUrl(homepageMediaResolution)}'/>" alt="" loading="lazy">

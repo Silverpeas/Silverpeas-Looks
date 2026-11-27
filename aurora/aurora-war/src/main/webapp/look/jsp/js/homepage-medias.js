@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const data = await request('loadMedias');
     revision = data.revision;
     csrf = data.csrf;
-    ['title', 'zone', 'order', 'size'].forEach(key => { control('news-' + key).value = data[key]; });
+    ['title', 'zone', 'order', 'size', 'display'].forEach(key => { control('news-' + key).value = data[key]; });
     control('news-enabled').checked = data.enabled;
     sourceType.value = data.sourceType;
     control('media-' + data.sourceType).value = data.source;
@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     save.disabled = true;
     const body = new URLSearchParams({revision, sourceType: sourceType.value, source,
       enabled: control('news-enabled').checked});
-    ['title', 'zone', 'order', 'size'].forEach(key => body.set(key, control('news-' + key).value));
+    ['title', 'zone', 'order', 'size', 'display'].forEach(key => body.set(key, control('news-' + key).value));
     try {
       await request('saveMedias', body, csrf);
       window.location.href = endpoint('manage').toString();

@@ -211,7 +211,8 @@ public class HomepageContentStore {
         "image".equals(type) ? readImage(settings, prefix) : null,
         "medias".equals(type) ? new MediaConfiguration(settings.getProperty(prefix + ".sourceType", "spaces"),
             settings.getProperty(prefix + ".source", ""),
-            Integer.parseInt(settings.getProperty(prefix + ".size", "6"))) : null);
+            Integer.parseInt(settings.getProperty(prefix + ".size", "6")),
+            settings.getProperty(prefix + ".display", "grid")) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -233,7 +234,8 @@ public class HomepageContentStore {
           + "\u0000" + properties.getProperty(prefix + ".showAllNews", "true");
     }
     if ("medias".equals(properties.getProperty(prefix + ".type"))) {
-      configurationVersion += "\u0000" + properties.getProperty(prefix + ".sourceType", "spaces");
+      configurationVersion += "\u0000" + properties.getProperty(prefix + ".sourceType", "spaces")
+          + "\u0000" + properties.getProperty(prefix + ".display", "grid");
     }
     if ("publications".equals(properties.getProperty(prefix + ".type"))) {
       configurationVersion = java.util.List.of("spaceId", "size", "showMore").stream()
@@ -896,9 +898,15 @@ public class HomepageContentStore {
     saveProperties(page, properties);
   }
 
-  public record MediaConfiguration(String sourceType, String source, int size) {
+  public record MediaConfiguration(String sourceType, String source, int size, String display) {
+    public MediaConfiguration(String sourceType, String source, int size) {
+      this(sourceType, source, size, "grid");
+    }
+
+    public String getDisplay() { return display; }
     public MediaConfiguration {
-      if (sourceType == null || source == null || size < 1 || size > 100 ||
+      if (!java.util.Set.of("grid", "carousel").contains(display == null ? "" : display) ||
+          sourceType == null || source == null || size < 1 || size > 100 ||
           !("spaces".equals(sourceType) ? source.matches("(?:|(?:WA)?[0-9]+)")
               : "gallery".equals(sourceType) && source.matches("(?:|gallery[0-9]+)"))) {
         throw new IllegalArgumentException("Invalid media source");
@@ -921,6 +929,7 @@ public class HomepageContentStore {
     registerWidget(properties, widget);
     configureLayout(properties, prefix, title, layout);
     properties.setProperty(prefix + ".type", "medias");
+    properties.setProperty(prefix + ".display", configuration.display());
     properties.setProperty(prefix + ".sourceType", configuration.sourceType());
     properties.setProperty(prefix + ".source", configuration.source());
     properties.setProperty(prefix + ".size", String.valueOf(configuration.size()));

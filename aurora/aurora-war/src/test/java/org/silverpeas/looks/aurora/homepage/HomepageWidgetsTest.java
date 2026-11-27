@@ -39,6 +39,21 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void changingOnlyMediaDisplayInvalidatesPreviousRevision() throws Exception {
+    var store = new HomepageContentStore(root);
+    var layout = new HomepageContentStore.Layout("main", 0, true);
+    var grid = new HomepageContentStore.MediaConfiguration("gallery", "gallery12", 6);
+    store.saveMediaWidget(page, "medias-test", "fr", "Médias", layout, grid, "");
+    var revision = store.read(page, "medias-test", "fr").revision();
+    var carousel = new HomepageContentStore.MediaConfiguration("gallery", "gallery12", 6, "carousel");
+    store.saveMediaWidget(page, "medias-test", "fr", "Médias", layout, carousel, revision);
+    assertNotEquals(revision, store.read(page, "medias-test", "fr").revision());
+    assertEquals(carousel, new HomepageContentStore(root).readWidget(page, "medias-test", "fr").mediaConfiguration());
+    assertThrows(ConcurrentModificationException.class, () ->
+        store.saveMediaWidget(page, "medias-test", "fr", "Médias", layout, grid, revision));
+  }
+
+  @Test
   void mediaWidgetsPersistBothSourceKindsAndRejectStaleEdits() throws Exception {
     var store = new HomepageContentStore(root);
     for (var target : List.of(page, new HomepagePage("spaces", "WA1"))) {
@@ -48,7 +63,8 @@ class HomepageWidgetsTest {
       store.saveMediaWidget(target, widget.id(), "fr", widget.getTitle(), widget.content().layout(), config, "");
       var saved = store.readWidget(target, widget.id(), "fr");
       assertEquals(config, saved.mediaConfiguration());
-      var gallery = new HomepageContentStore.MediaConfiguration("gallery", "gallery12", 4);
+      assertEquals("grid", saved.mediaConfiguration().display());
+      var gallery = new HomepageContentStore.MediaConfiguration("gallery", "gallery12", 4, "carousel");
       store.saveMediaWidget(target, widget.id(), "fr", widget.getTitle(), widget.content().layout(), gallery, saved.getRevision());
       assertEquals(gallery, store.readWidget(target, widget.id(), "fr").mediaConfiguration());
       assertThrows(ConcurrentModificationException.class, () -> store.saveMediaWidget(target,
@@ -64,6 +80,7 @@ class HomepageWidgetsTest {
       assertTrue(HomepageWidgets.medias(store.widgets(target, "fr"), helper).isEmpty());
       verifyNoInteractions(helper);
     }
+    assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("gallery", "gallery12", 4, "invalid"));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("rss", "gallery12", 4));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("gallery", "quickinfo12", 4));
     assertThrows(IllegalArgumentException.class, () -> new HomepageContentStore.MediaConfiguration("spaces", "../WA1", 4));

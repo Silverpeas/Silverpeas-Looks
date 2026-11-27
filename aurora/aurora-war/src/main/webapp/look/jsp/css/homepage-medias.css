@@ -46,3 +46,20 @@
 .homepage-medias-list a:focus-visible { outline: 2px solid var(--color-flashy-principale, #5f9d15); }
 .homepage-medias-list img { width: 100%; height: 130px; object-fit: contain; }
 .homepage-medias-list span { overflow-wrap: anywhere; }
+
+.homepage-medias { min-width: 0; max-width: 100%; }
+.homepage-medias[data-display="carousel"] .homepage-medias-list {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  padding: 2px 2px 8px;
+}
+.homepage-medias[data-display="carousel"] .homepage-medias-list li {
+  flex: 0 0 min(220px, 85%);
+  scroll-snap-align: start;
+}
+.homepage-medias-controls { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; }
+.homepage-medias-controls[hidden] { display: none; }
+.homepage-medias-controls button { min-width: 36px; }
+.homepage-medias-controls button:disabled { opacity: .4; cursor: default; }

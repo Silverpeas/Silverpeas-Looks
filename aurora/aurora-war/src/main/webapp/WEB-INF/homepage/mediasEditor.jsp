@@ -36,7 +36,7 @@
     <title>Configurer les derniers médias des galeries</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-source-picker-v1"/>
     <view:script src="/look/jsp/js/homepage-source-picker.js?version=15592-source-picker-v1"/>
-    <view:script src="/look/jsp/js/homepage-medias.js?version=15592-v1"/>
+    <view:script src="/look/jsp/js/homepage-medias.js?version=15592-carousel-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
@@ -89,6 +89,10 @@
               <div class="homepage-field">
                 <label for="news-size">Nombre maximal de médias</label>
                 <input id="news-size" type="number" min="1" max="100" required>
+              </div>
+              <div class="homepage-field">
+                <label for="news-display">Présentation</label>
+                <select id="news-display"><option value="grid">Grille</option><option value="carousel">Carrousel</option></select>
               </div>
               <label><input id="news-enabled" type="checkbox"> Afficher ce bloc</label>
             </fieldset>

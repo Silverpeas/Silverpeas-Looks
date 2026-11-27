@@ -349,7 +349,8 @@ public class HomepageContentServlet extends HttpServlet {
       ephemerisResponse(request, response, page, widget, language, "");
     } else if ("saveMedias".equals(action)) {
       var configuration = new HomepageContentStore.MediaConfiguration(request.getParameter("sourceType"),
-          request.getParameter("source"), Integer.parseInt(request.getParameter("size")));
+          request.getParameter("source"), Integer.parseInt(request.getParameter("size")),
+          request.getParameter("display") == null ? "grid" : request.getParameter("display"));
       if (configuration.source().isEmpty()) {
         throw new IllegalArgumentException("Missing media source");
       }
@@ -804,6 +805,7 @@ public class HomepageContentServlet extends HttpServlet {
     json(response, JSONCodec.encodeObject(o -> o.put("configured", !content.revision().isEmpty())
         .put("title", content.title()).put("zone", content.layout().zone())
         .put("order", content.layout().order()).put("enabled", content.layout().enabled())
+        .put("display", configuration.display())
         .put("sourceType", configuration.sourceType()).put("source", configuration.source())
         .put("size", configuration.size()).put("revision", content.revision()).put("csrf", csrf)));
   }
