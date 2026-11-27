@@ -44,7 +44,7 @@
       <ul class="homepage-medias-list" tabindex="${display == 'carousel' ? '0' : '-1'}" aria-label="Derniers médias">
         <c:forEach var="media" items="${medias}">
           <li class="homepage-medias-slide"><a href="<c:out value='${media.permalink}'/>">
-            <img src="<c:out value='${media.getApplicationThumbnailUrl(homepageMediaResolution)}'/>" alt="" loading="lazy">
+            <div class="homepage-medias-visual"><img src="<c:out value='${media.getApplicationThumbnailUrl(homepageMediaResolution)}'/>" alt="" loading="lazy"></div>
             <span class="homepage-medias-caption"><c:out value="${media.title}"/></span>
           </a></li>
         </c:forEach>

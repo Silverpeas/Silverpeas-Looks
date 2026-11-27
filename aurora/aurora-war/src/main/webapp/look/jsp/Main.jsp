@@ -104,7 +104,7 @@
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
     <view:script src="/look/jsp/js/homepage-medias-carousel.js?version=15592-v2"/>
-    <view:link href="/look/jsp/css/homepage-medias.css?version=15592-carousel-v2"/>
+    <view:link href="/look/jsp/css/homepage-medias.css?version=15592-carousel-v3"/>
     <view:link href="/look/jsp/css/homepage-image.css?version=15592-image-v1"/>
     <view:link href="/look/jsp/css/homepage-main.css?version=15592-weather-v2"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
