@@ -76,10 +76,26 @@
   box-shadow: 0 0 0 1px var(--color-flashy-principale, #5f9d15);
 }
 .homepage-space-columns .homepage-navigation a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
   font-weight: 600;
 }
 .homepage-space-columns .homepage-navigation p {
   margin: .5rem 0 0;
   color: var(--color-text-clair, #666);
+}
+
+.homepage-navigation-group + .homepage-navigation-group {
+  margin-top: 1.5rem;
+}
+.homepage-navigation-group h5 {
+  font-size: 1em;
+  margin: 0 0 .75rem;
+}
+.homepage-navigation a img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
 }

@@ -56,11 +56,12 @@ public final class HomepageWidgets {
         new HomepageContentStore.NavigationConfiguration(true, true));
   }
 
-  public record NavigationItem(String id, String label, String description, boolean space) {
+  public record NavigationItem(String id, String label, String description, boolean space, String icon) {
     public String getId() { return id; }
     public String getLabel() { return label; }
     public String getDescription() { return description; }
     public boolean isSpace() { return space; }
+    public String getIcon() { return icon; }
   }
 
   public static Map<String, List<NavigationItem>> navigation(HomepagePage page,
@@ -76,13 +77,13 @@ public final class HomepageWidgets {
         java.util.Arrays.stream(organization.getAllowedSubSpaceIds(helper.getUserId(), page.owner()))
             .map(organization::getSpaceInstLightById).filter(java.util.Objects::nonNull)
             .forEach(space -> items.add(new NavigationItem(space.getId(),
-                space.getName(helper.getLanguage()), space.getDescription(helper.getLanguage()), true)));
+                space.getName(helper.getLanguage()), space.getDescription(helper.getLanguage()), true, "")));
       }
       if (configuration.apps()) {
         java.util.Arrays.stream(organization.getAvailCompoIdsAtRoot(page.owner(), helper.getUserId()))
             .map(organization::getComponentInstLight).filter(java.util.Objects::nonNull)
             .filter(app -> !app.isHidden()).forEach(app -> items.add(new NavigationItem(app.getId(),
-                app.getLabel(helper.getLanguage()), app.getDescription(helper.getLanguage()), false)));
+                app.getLabel(helper.getLanguage()), app.getDescription(helper.getLanguage()), false, app.getIcon(true))));
       }
       result.put(widget.id(), List.copyOf(items));
     }

@@ -45,16 +45,32 @@
         <c:if test="${not empty homepageNavigation[widget.id]}">
           <section class="secteur-container homepage-navigation" id="homepage-widget-${widget.id}">
             <h4><c:out value="${widget.title}"/></h4>
-            <ul>
+            <c:forTokens items="spaces,apps" delims="," var="group">
+              <c:set var="hasNavigationGroup" value="${false}"/>
               <c:forEach var="item" items="${homepageNavigation[widget.id]}">
-                <li>
-                  <c:url value="/Space/${item.id}" var="navigationUrl"/>
-                  <c:if test="${not item.space}"><c:url value="/Component/${item.id}" var="navigationUrl"/></c:if>
-                  <a href="<c:out value='${navigationUrl}'/>" data-navigation-id="<c:out value='${item.id}'/>" data-navigation-kind="${item.space ? 'space' : 'component'}"><c:out value="${item.label}"/></a>
-                  <c:if test="${not empty item.description}"><p><c:out value="${item.description}"/></p></c:if>
-                </li>
+                <c:if test="${item.space == (group == 'spaces')}"><c:set var="hasNavigationGroup" value="${true}"/></c:if>
               </c:forEach>
-            </ul>
+              <c:if test="${hasNavigationGroup}">
+                <div class="homepage-navigation-group">
+                  <h5>${group == 'spaces' ? 'Sous-espaces' : 'Applications'}</h5>
+                  <ul class="homepage-navigation-${group}">
+                    <c:forEach var="item" items="${homepageNavigation[widget.id]}">
+                      <c:if test="${item.space == (group == 'spaces')}">
+                        <li>
+                          <c:url value="/Space/${item.id}" var="navigationUrl"/>
+                          <c:if test="${not item.space}"><c:url value="/Component/${item.id}" var="navigationUrl"/></c:if>
+                          <a href="<c:out value='${navigationUrl}'/>" data-navigation-id="<c:out value='${item.id}'/>" data-navigation-kind="${item.space ? 'space' : 'component'}">
+                            <c:if test="${not item.space and not empty item.icon}"><img src="<c:out value='${item.icon}'/>" alt=""/></c:if>
+                            <span><c:out value="${item.label}"/></span>
+                          </a>
+                          <c:if test="${not empty item.description}"><p><c:out value="${item.description}"/></p></c:if>
+                        </li>
+                      </c:if>
+                    </c:forEach>
+                  </ul>
+                </div>
+              </c:if>
+            </c:forTokens>
           </section>
         </c:if>
       </c:when>

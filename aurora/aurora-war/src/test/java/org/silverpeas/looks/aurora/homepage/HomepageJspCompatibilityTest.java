@@ -56,6 +56,10 @@ class HomepageJspCompatibilityTest {
     assertTrue(tag.contains("<c:out value=\"${item.label}\"/>"));
     assertTrue(tag.contains("<c:out value=\"${item.description}\"/>"));
     assertTrue(tag.contains("/Component/${item.id}"));
+    assertTrue(tag.contains("homepage-navigation-${group}"));
+    assertTrue(tag.contains("item.space == (group == 'spaces')"));
+    assertTrue(tag.contains("not item.space and not empty item.icon"));
+    assertTrue(tag.contains("<c:out value='${item.icon}'/>"));
     assertTrue(tag.contains("/Space/${item.id}"));
     String editor = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/navigationEditor.jsp"));
     assertFalse(editor.contains("<script>"));

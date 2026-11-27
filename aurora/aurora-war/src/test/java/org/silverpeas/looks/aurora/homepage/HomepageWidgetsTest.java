@@ -80,6 +80,7 @@ class HomepageWidgetsTest {
     var app = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
     when(app.getId()).thenReturn("kmelia1");
     when(app.getLabel("fr")).thenReturn("Fichiers");
+    when(app.getIcon(true)).thenReturn("/util/icons/component/kmeliaBig.gif");
     var hidden = mock(org.silverpeas.core.admin.component.model.ComponentInstLight.class);
     when(hidden.isHidden()).thenReturn(true);
     when(organization.getAllowedSubSpaceIds("42", "WA1")).thenReturn(new String[]{"WA2"});
@@ -95,6 +96,8 @@ class HomepageWidgetsTest {
       assertEquals(List.of("WA2", "kmelia1"), items.stream().map(HomepageWidgets.NavigationItem::id).toList());
       assertTrue(items.get(0).space());
       assertFalse(items.get(1).space());
+      assertEquals("", items.get(0).icon());
+      assertEquals("/util/icons/component/kmeliaBig.gif", items.get(1).icon());
       store.saveNavigationWidget(space, widget.id(), "fr", "Navigation", widget.content().layout(),
           new HomepageContentStore.NavigationConfiguration(false, true), "");
       var saved = store.readWidget(space, widget.id(), "fr");
