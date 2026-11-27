@@ -374,3 +374,5 @@ Les opérations de chargement, d’édition et d’enregistrement refusent les p
 ### Nouveaux utilisateurs des espaces
 
 Le widget `users` est aussi disponible pour les pages `spaces`. Il recense les utilisateurs des applications de l’espace courant et de ses sous-espaces, sans doublons et hors comptes bloqués, désactivés ou supprimés. Le classement utilise la date de création du compte, et non une date d’arrivée dans l’espace. Le nombre (0 à 100), les avatars et les champs de profil sont configurables ; le groupe source est réservé aux pages générales. La configuration est stockée dans le properties de l’espace. Une liste vide affiche un message.
+
+Le widget « Nouveaux utilisateurs de l’espace » est réservé aux pages d’accueil d’espace : absent du catalogue et du rendu général, ses actions de configuration sont refusées pour une page générale.

@@ -59,7 +59,7 @@
   request.setAttribute("homepageNews", homepageNews);
   request.setAttribute("homepageQuestions", HomepageWidgets.questions(homepageWidgets, homepageHelper));
   request.setAttribute("homepageSubscriptions", HomepageWidgets.subscriptions(homepageWidgets, homepageHelper));
-  request.setAttribute("homepageUsers", HomepageWidgets.users(homepageWidgets, homepageHelper));
+  request.setAttribute("homepageUsers", java.util.Map.of());
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepageWidgets, homepageHelper));
   request.setAttribute("isAtLeastOneCarousel", homepageNews.values().stream()
       .filter(news -> !news.isEmpty()).anyMatch(news -> news.getRenderingType().isCarousel()) || homepageWidgets.stream()

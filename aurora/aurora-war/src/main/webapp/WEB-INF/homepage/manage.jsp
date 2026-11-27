@@ -282,12 +282,12 @@
                 <span class="homepage-catalog-description">Affichez les rendez-vous à venir.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
               </a>
-              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
+              <c:if test="${param.kind == 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M2 21v-2a6 6 0 0 1 12 0v2 M19 8v6 M16 11h6"/></svg>
-                <span class="homepage-catalog-name">${param.kind == 'spaces' ? 'Nouveaux utilisateurs de l’espace' : 'Nouveaux utilisateurs'}</span>
-                <span class="homepage-catalog-description">${param.kind == 'spaces' ? 'Présentez les nouveaux utilisateurs ayant accès à cet espace.' : 'Présentez les nouveaux membres de votre communauté.'}</span>
+                <span class="homepage-catalog-name">Nouveaux utilisateurs de l’espace</span>
+                <span class="homepage-catalog-description">Présentez les nouveaux utilisateurs ayant accès à cet espace.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a>
+              </a></c:if>
               <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addFaqUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v14H9l-6 4z M9 9a3 3 0 1 1 5 2l-2 1v1 M12 15v1"/></svg>
                 <span class="homepage-catalog-name">FAQ</span>

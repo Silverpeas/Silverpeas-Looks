@@ -116,7 +116,7 @@ public class HomepageContentServlet extends HttpServlet {
         }
       }
       HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
-      if (!"spaces".equals(page.kind()) && java.util.List.of("spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins", "navigationEditor", "loadNavigation", "saveNavigation").contains(action == null ? "" : action)) {
+      if (!"spaces".equals(page.kind()) && java.util.List.of("usersEditor", "loadUsers", "saveUsers", "spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins", "navigationEditor", "loadNavigation", "saveNavigation").contains(action == null ? "" : action)) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }

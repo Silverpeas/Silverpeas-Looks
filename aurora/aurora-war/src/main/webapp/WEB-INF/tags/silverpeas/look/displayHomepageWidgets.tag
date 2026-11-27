@@ -159,7 +159,7 @@
       <c:when test="${widget.type == 'faq'}">
         <viewTags:displayFAQ questions="${questions[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
       </c:when>
-      <c:when test="${widget.type == 'users'}">
+      <c:when test="${widget.type == 'users' and homepageKind == 'spaces'}">
         <c:choose>
           <c:when test="${homepageKind == 'spaces' and empty users[widget.id].users}">
             <div class="secteur-container homepage-users" id="homepage-content-${widget.id}">

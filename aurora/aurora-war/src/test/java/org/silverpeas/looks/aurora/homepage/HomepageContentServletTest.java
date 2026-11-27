@@ -782,8 +782,19 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void usersEndpointsRejectGeneralHomepage() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    for (String action : java.util.List.of("usersEditor", "loadUsers", "saveUsers")) {
+      when(request.getParameter("action")).thenReturn(action);
+      if (action.startsWith("save")) { servlet.doPost(request, response); }
+      else { servlet.doGet(request, response); }
+    }
+    verify(response, times(3)).sendError(400);
+  }
+
+  @Test
   void communitySettingsRequireAdminCsrfAndFreshRevision() throws Exception {
-    for (String type : java.util.List.of("Faq", "Users")) {
+    for (String type : java.util.List.of("Faq")) {
       prepareNewsSave();
       when(request.getParameter("action")).thenReturn("save" + type);
       when(request.getParameter("widget")).thenReturn(type.toLowerCase() + "-test");
