@@ -249,8 +249,11 @@ public final class HomepageWidgets {
   public static HomepageContentStore.Widget communityWidget(HomepageContentStore store,
       HomepagePage page, String id, String language, LookAuroraHelper helper, String type)
       throws IOException {
-    if (!List.of("faq", "users").contains(type)) {
+    if (!List.of("faq", "users", "selectedUsers").contains(type)) {
       throw new IllegalArgumentException("Invalid community type");
+    }
+    if ("selectedUsers".equals(type) && !"spaces".equals(page.kind())) {
+      throw new IllegalArgumentException("Selected users require a space homepage");
     }
     var saved = store.readWidget(page, id, language);
     if (!saved.content().revision().isEmpty()) {
@@ -262,7 +265,7 @@ public final class HomepageWidgets {
     boolean faq = "faq".equals(type);
     var users = faq ? null : new HomepageContentStore.UsersConfiguration("", 5, true, "title phone fonction");
     return new HomepageContentStore.Widget(id,
-        new HomepageContentStore.Content(faq ? "FAQ" : ("spaces".equals(page.kind()) ? "Nouveaux utilisateurs de l’espace" : "Nouveaux utilisateurs"), "", "",
+        new HomepageContentStore.Content(faq ? "FAQ" : "selectedUsers".equals(type) ? "Utilisateurs sélectionnés" : ("spaces".equals(page.kind()) ? "Nouveaux utilisateurs de l’espace" : "Nouveaux utilisateurs"), "", "",
             new HomepageContentStore.Layout(faq ? "right" : "main", faq ? 20 : 60,
                 faq || users.size() > 0)),
         type, null, 0, null, null, null,
@@ -291,9 +294,11 @@ public final class HomepageWidgets {
       return users(widgets, helper);
     }
     Map<String, org.silverpeas.looks.aurora.NewUsersList> result = new LinkedHashMap<>();
-    widgets.stream().filter(widget -> widget.isEnabled() && "users".equals(widget.type()))
+    widgets.stream().filter(widget -> widget.isEnabled() && List.of("users", "selectedUsers").contains(widget.type()))
         .forEach(widget -> result.put(widget.id(),
-            helper.getConfiguredSpaceNewUsers(page.owner(), widget.usersConfiguration())));
+            "selectedUsers".equals(widget.type())
+                ? helper.getConfiguredSelectedSpaceUsers(page.owner(), widget.usersConfiguration())
+                : helper.getConfiguredSpaceNewUsers(page.owner(), widget.usersConfiguration())));
     return result;
   }
 

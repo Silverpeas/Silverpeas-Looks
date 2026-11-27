@@ -103,7 +103,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action) || "imageEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "selectedUsersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action) || "imageEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -116,7 +116,7 @@ public class HomepageContentServlet extends HttpServlet {
         }
       }
       HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
-      if (!"spaces".equals(page.kind()) && java.util.List.of("usersEditor", "loadUsers", "saveUsers", "spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins", "navigationEditor", "loadNavigation", "saveNavigation").contains(action == null ? "" : action)) {
+      if (!"spaces".equals(page.kind()) && java.util.List.of("selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers", "usersEditor", "loadUsers", "saveUsers", "spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins", "navigationEditor", "loadNavigation", "saveNavigation").contains(action == null ? "" : action)) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
@@ -168,7 +168,7 @@ public class HomepageContentServlet extends HttpServlet {
   }
 
   static boolean spaceAction(String action) {
-    return java.util.Set.of("usersEditor", "loadUsers", "saveUsers", "manage", "editor", "load", "save", "upload", "asset", "view",
+    return java.util.Set.of("selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers", "usersEditor", "loadUsers", "saveUsers", "manage", "editor", "load", "save", "upload", "asset", "view",
         "updateLayouts", "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
         "loadPublications", "savePublications", "eventsEditor", "loadEvents", "saveEvents",
         "shortcutsEditor", "loadShortcuts", "saveShortcuts", "searchEditor", "loadSearch",
@@ -312,19 +312,21 @@ public class HomepageContentServlet extends HttpServlet {
           new HomepageContentStore.SubscriptionsConfiguration(Integer.parseInt(request.getParameter("size")),
               option(request, "showMore")), request.getParameter("revision"));
       subscriptionsResponse(request, response, page, widget, language, "");
-    } else if ("saveFaq".equals(action) || "saveUsers".equals(action)) {
+    } else if ("saveFaq".equals(action) || "saveUsers".equals(action) || "saveSelectedUsers".equals(action)) {
       boolean faq = "saveFaq".equals(action);
+      String type = faq ? "faq" : "saveSelectedUsers".equals(action) ? "selectedUsers" : "users";
       store.saveCommunityWidget(page, widget, language, request.getParameter("title"),
           new HomepageContentStore.Layout(request.getParameter("zone"),
               Integer.parseInt(request.getParameter("order")),
-              Boolean.parseBoolean(request.getParameter("enabled"))), faq ? "faq" : "users",
+              Boolean.parseBoolean(request.getParameter("enabled"))), type,
           faq ? new HomepageContentStore.FaqConfiguration(request.getParameter("source"),
               Integer.parseInt(request.getParameter("size")), request.getParameter("selection")) : null,
           faq ? null : new HomepageContentStore.UsersConfiguration("spaces".equals(page.kind()) ? "" : request.getParameter("group"),
               Integer.parseInt(request.getParameter("size")),
-              Boolean.parseBoolean(request.getParameter("avatar")), request.getParameter("fields")),
+              Boolean.parseBoolean(request.getParameter("avatar")), request.getParameter("fields"),
+              "selectedUsers".equals(type) ? request.getParameter("userIds") : ""),
           request.getParameter("revision"));
-      communityResponse(request, response, page, widget, language, "", faq ? "faq" : "users");
+      communityResponse(request, response, page, widget, language, "", type);
     } else if ("saveEvents".equals(action) || "saveRss".equals(action)) {
       boolean events = "saveEvents".equals(action);
       store.saveFeedWidget(page, widget, language, request.getParameter("title"),
@@ -383,7 +385,24 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void read(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action, String csrf) throws IOException, ServletException {
-    if ("sources".equals(action)) {
+    if ("selectableUsers".equals(action)) {
+      var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
+          request.getSession(false).getAttribute("Silverpeas_LookHelper");
+      String query = java.util.Objects.toString(request.getParameter("q"), "").strip();
+      if (query.length() < 2 || query.length() > 100) {
+        json(response, "{\"users\":[]}");
+        return;
+      }
+      String search = query.toLowerCase(java.util.Locale.ROOT);
+      json(response, JSONCodec.encodeObject(o -> o.putJSONArray("users", array -> {
+        helper.getSelectableSpaceUsers(page.owner()).stream()
+            .filter(user -> user.getDisplayedName().toLowerCase(java.util.Locale.ROOT).contains(search))
+            .sorted(java.util.Comparator.comparing(org.silverpeas.core.admin.user.model.User::getDisplayedName))
+            .limit(20).forEach(user -> array.addJSONObject(item ->
+                item.put("id", user.getId()).put("label", user.getDisplayedName())));
+        return array;
+      })));
+    } else if ("sources".equals(action)) {
       var organization = OrganizationController.get();
       String userId = MainSessionController.getInstance(request.getSession(false)).getCurrentUserDetail().getId();
       String type = request.getParameter("sourceType");
@@ -504,10 +523,10 @@ public class HomepageContentServlet extends HttpServlet {
       subscriptionsResponse(request, response, page, widget, language, csrf);
     } else if ("subscriptionsEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/subscriptionsEditor.jsp").forward(request, response);
-    } else if ("loadFaq".equals(action) || "loadUsers".equals(action)) {
+    } else if ("loadFaq".equals(action) || "loadUsers".equals(action) || "loadSelectedUsers".equals(action)) {
       communityResponse(request, response, page, widget, language, csrf,
-          "loadFaq".equals(action) ? "faq" : "users");
-    } else if ("faqEditor".equals(action) || "usersEditor".equals(action)) {
+          "loadFaq".equals(action) ? "faq" : "loadSelectedUsers".equals(action) ? "selectedUsers" : "users");
+    } else if ("faqEditor".equals(action) || "usersEditor".equals(action) || "selectedUsersEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/" + action + ".jsp").forward(request, response);
     } else if ("loadEvents".equals(action) || "loadRss".equals(action)) {
       feedResponse(request, response, page, widget, language, csrf,
@@ -561,6 +580,7 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newShortcutsWidgetId", "shortcuts-" + UUID.randomUUID());
       request.setAttribute("newSubscriptionsWidgetId", "subscriptions-" + UUID.randomUUID());
       request.setAttribute("newFaqWidgetId", "faq-" + UUID.randomUUID());
+      request.setAttribute("newSelectedUsersWidgetId", "selectedUsers-" + UUID.randomUUID());
       request.setAttribute("newUsersWidgetId", "users-" + UUID.randomUUID());
       request.setAttribute("newRssWidgetId", "rss-" + UUID.randomUUID());
       request.setAttribute("newEphemerisWidgetId", "ephemeris-" + UUID.randomUUID());
@@ -697,7 +717,18 @@ public class HomepageContentServlet extends HttpServlet {
       } else {
         var configuration = model.usersConfiguration();
         o.put("group", configuration.group()).put("size", configuration.size())
-            .put("avatar", configuration.avatar()).put("fields", configuration.fields());
+            .put("avatar", configuration.avatar()).put("fields", configuration.fields())
+            .put("userIds", configuration.userIds());
+        if ("selectedUsers".equals(type)) {
+          var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
+              request.getSession(false).getAttribute("Silverpeas_LookHelper");
+          var selected = helper.getConfiguredSelectedSpaceUsers(page.owner(), configuration);
+          o.putJSONArray("selectedUsers", array -> {
+            selected.getUsers().forEach(user -> array.addJSONObject(item ->
+                item.put("id", user.getId()).put("label", user.getDisplayedName())));
+            return array;
+          });
+        }
       }
       return o;
     }));

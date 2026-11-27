@@ -187,10 +187,11 @@ public class HomepageContentStore {
         "faq".equals(type) ? new FaqConfiguration(settings.getProperty(prefix + ".source", ""),
             Integer.parseInt(settings.getProperty(prefix + ".size", "1")),
             settings.getProperty(prefix + ".selection", "random")) : null,
-        "users".equals(type) ? new UsersConfiguration(settings.getProperty(prefix + ".group", ""),
+        java.util.List.of("users", "selectedUsers").contains(type) ? new UsersConfiguration(settings.getProperty(prefix + ".group", ""),
             Integer.parseInt(settings.getProperty(prefix + ".size", "5")),
             Boolean.parseBoolean(settings.getProperty(prefix + ".avatar", "true")),
-            settings.getProperty(prefix + ".fields", "")) : null,
+            settings.getProperty(prefix + ".fields", ""),
+            settings.getProperty(prefix + ".userIds", "")) : null,
         "subscriptions".equals(type) ? new SubscriptionsConfiguration(
             Integer.parseInt(settings.getProperty(prefix + ".size", "4")),
             Boolean.parseBoolean(settings.getProperty(prefix + ".showMore", "true"))) : null,
@@ -753,9 +754,13 @@ public class HomepageContentStore {
     }
   }
 
-  public record UsersConfiguration(String group, int size, boolean avatar, String fields) {
+  public record UsersConfiguration(String group, int size, boolean avatar, String fields, String userIds) {
+    public UsersConfiguration(String group, int size, boolean avatar, String fields) {
+      this(group, size, avatar, fields, "");
+    }
     public UsersConfiguration {
-      if (group == null || !group.matches("(?:|-1|[0-9]+)") || size < 0 || size > 100 || fields == null ||
+      if (userIds == null || !userIds.matches("(?:|[0-9]+(?: [0-9]+)*)") || userIds.length() > 2000 ||
+          userIds.split(" ").length > 100 || group == null || !group.matches("(?:|-1|[0-9]+)") || size < 0 || size > 100 || fields == null ||
           !fields.matches("(?:|[A-Za-z][A-Za-z0-9_-]*(?: [A-Za-z][A-Za-z0-9_-]*)*)") || fields.length() > 500) {
         throw new IllegalArgumentException("Invalid new users configuration");
       }
@@ -765,9 +770,12 @@ public class HomepageContentStore {
   public synchronized void saveCommunityWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, String type, FaqConfiguration faq, UsersConfiguration users,
       String expectedRevision) throws IOException {
-    if (!java.util.List.of("faq", "users").contains(type) ||
+    if (!java.util.List.of("faq", "users", "selectedUsers").contains(type) ||
         ("faq".equals(type) ? faq == null : users == null)) {
       throw new IllegalArgumentException("Invalid community widget");
+    }
+    if ("selectedUsers".equals(type) && !"spaces".equals(page.kind())) {
+      throw new IllegalArgumentException("Selected users require a space homepage");
     }
     HomepagePage.validateIdentifier(widget);
     var properties = properties(page);
@@ -801,6 +809,7 @@ public class HomepageContentStore {
       properties.setProperty(prefix + ".selection", faq.selection());
     } else {
       properties.setProperty(prefix + ".group", users.group());
+      properties.setProperty(prefix + ".userIds", users.userIds());
       properties.setProperty(prefix + ".size", String.valueOf(users.size()));
       properties.setProperty(prefix + ".avatar", String.valueOf(users.avatar()));
       properties.setProperty(prefix + ".fields", users.fields());

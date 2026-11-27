@@ -539,3 +539,48 @@
   font-size: 1em;
   line-height: 1;
 }
+
+.homepage-user-results,
+.homepage-selected-users {
+  list-style: none;
+  margin: .5rem 0;
+  padding: 0;
+}
+.homepage-user-results {
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 15rem;
+  overflow-y: auto;
+}
+.homepage-user-results button {
+  display: block;
+  width: 100%;
+  padding: .5rem .75rem;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.homepage-user-results button:hover,
+.homepage-user-results button:focus {
+  background: #eef4e7;
+}
+.homepage-selected-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.homepage-selected-users li {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .25rem .5rem;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: .25rem;
+}
+.homepage-selected-users .simple-button {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
+}

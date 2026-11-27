@@ -782,6 +782,75 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void selectedUsersSaveRequiresCsrfAndFreshRevision() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("kind")).thenReturn("spaces");
+    when(request.getParameter("owner")).thenReturn("WA1");
+    when(request.getParameter("action")).thenReturn("saveSelectedUsers");
+    when(request.getParameter("widget")).thenReturn("selected-test");
+    when(request.getParameter("title")).thenReturn("Équipe");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("3");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("size")).thenReturn("100");
+    when(request.getParameter("avatar")).thenReturn("true");
+    when(request.getParameter("fields")).thenReturn("phone");
+    when(request.getParameter("userIds")).thenReturn("2 1");
+    when(request.getParameter("revision")).thenReturn("");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    assertTrue(store.widgets(new HomepagePage("spaces", "WA1"), "fr").isEmpty());
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+    when(helper.getConfiguredSelectedSpaceUsers(eq("WA1"), any())).thenReturn(
+        new org.silverpeas.looks.aurora.NewUsersList(java.util.List.of()));
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var saved = store.readWidget(new HomepagePage("spaces", "WA1"), "selected-test", "fr");
+    assertEquals("selectedUsers", saved.type());
+    assertEquals("2 1", saved.usersConfiguration().userIds());
+    assertEquals("Équipe", saved.getTitle());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+  }
+
+  @Test
+  void selectedUsersEndpointsRejectGeneralHomepageAndAutocompleteRequiresManagement() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    for (String action : java.util.List.of("selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers")) {
+      assertTrue(HomepageContentServlet.spaceAction(action));
+      when(request.getParameter("action")).thenReturn(action);
+      if (action.startsWith("save")) { servlet.doPost(request, response); }
+      else { servlet.doGet(request, response); }
+    }
+    verify(response, times(4)).sendError(400);
+    when(request.getParameter("kind")).thenReturn("spaces");
+    when(request.getParameter("owner")).thenReturn("WA1");
+    when(user.isAccessAdmin()).thenReturn(false);
+    var organization = mock(OrganizationController.class);
+    when(organization.getUserManageableSpaceIds("42")).thenReturn(new String[0]);
+    try (var organizations = mockStatic(OrganizationController.class)) {
+      organizations.when(OrganizationController::get).thenReturn(organization);
+      servlet.doGet(request, response);
+    }
+    verify(response).sendError(403);
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("q")).thenReturn("al");
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+    var alice = new UserDetail();
+    alice.setId("12");
+    alice.setFirstName("Alice");
+    alice.setLastName("Martin");
+    when(helper.getSelectableSpaceUsers("WA1")).thenReturn(java.util.List.of(alice));
+    clearInvocations(response);
+    servlet.doGet(request, response);
+    verify(response, never()).sendError(anyInt());
+    assertTrue(output.toString().contains("Alice"));
+    assertTrue(output.toString().contains("12"));
+  }
+
+  @Test
   void usersEndpointsRejectGeneralHomepage() throws Exception {
     when(user.isAccessAdmin()).thenReturn(true);
     for (String action : java.util.List.of("usersEditor", "loadUsers", "saveUsers")) {

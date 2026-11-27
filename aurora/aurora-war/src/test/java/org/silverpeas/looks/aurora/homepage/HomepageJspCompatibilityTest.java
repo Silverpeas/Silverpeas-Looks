@@ -47,6 +47,18 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void selectedUsersHavePickerAndSpaceOnlyRendering() throws Exception {
+    var web = Path.of("src/main/webapp");
+    String editor = Files.readString(web.resolve("WEB-INF/homepage/selectedUsersEditor.jsp"));
+    assertTrue(editor.contains("data-widget-type=\"selectedUsers\""));
+    assertTrue(editor.contains("selected-users-search"));
+    assertTrue(editor.contains("homepage-selected-users.js"));
+    String tag = Files.readString(web.resolve("WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(tag.contains("widget.type == 'selectedUsers') and homepageKind == 'spaces'"));
+    assertTrue(tag.contains("Aucun utilisateur sélectionné à afficher."));
+  }
+
+  @Test
   void spaceNewUsersHaveAnEditorAndAVisibleEmptyState() throws Exception {
     Path web = Path.of("src/main/webapp");
     String page = Files.readString(web.resolve("look/jsp/spaceHomePage.jsp"));
@@ -294,7 +306,7 @@ class HomepageJspCompatibilityTest {
         required.put(name, mandatory);
       }
     }
-    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp", "searchEditor.jsp", "weatherEditor.jsp", "bookmarksEditor.jsp", "bookmarksWidget.jsp")) {
+    for (String view : List.of("manage.jsp", "contentEditor.jsp", "newsEditor.jsp", "publicationsEditor.jsp", "ephemerisEditor.jsp", "eventsEditor.jsp", "rssEditor.jsp", "faqEditor.jsp", "usersEditor.jsp", "selectedUsersEditor.jsp", "subscriptionsEditor.jsp", "shortcutsEditor.jsp", "searchEditor.jsp", "weatherEditor.jsp", "bookmarksEditor.jsp", "bookmarksWidget.jsp")) {
       String jsp = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage", view));
       var uses = Pattern.compile("<view:([\\w-]+)([^>]*?)/?>").matcher(jsp);
       while (uses.find()) {

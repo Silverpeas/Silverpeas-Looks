@@ -37,7 +37,7 @@ class HomepageFeedRenderingTest {
     return mock(LookAuroraHelper.class, invocation -> {
       switch (invocation.getMethod().getName()) {
         case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
-            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers", "getConfiguredSpaceNewUsers",
+            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers", "getConfiguredSpaceNewUsers", "getSelectableSpaceUsers", "getConfiguredSelectedSpaceUsers",
             "getDefaultFaqConfiguration", "getDefaultUsersConfiguration", "getConfiguredSubscriptions",
             "getConfiguredSearchForm", "getDefaultSearchConfiguration", "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
         case "getOrganisationController" -> { return organization; }
@@ -107,6 +107,30 @@ class HomepageFeedRenderingTest {
       when(manager.getQuestions("questionReply12")).thenReturn(List.of());
       assertNull(helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random")));
     }
+  }
+
+  @Test
+  void selectedUsersKeepSelectionOrderAndExcludeUnavailableOrBlockedAccounts() {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var first = new org.silverpeas.core.admin.user.model.UserDetail();
+    first.setId("1");
+    var second = new org.silverpeas.core.admin.user.model.UserDetail();
+    second.setId("2");
+    var blocked = new org.silverpeas.core.admin.user.model.UserDetail();
+    blocked.setId("3");
+    blocked.setState(org.silverpeas.core.admin.user.constant.UserState.BLOCKED);
+    assertTrue(helper.getConfiguredSelectedSpaceUsers("WA1",
+        new HomepageContentStore.UsersConfiguration("", 100, true, "", "")).getUsers().isEmpty());
+    verifyNoInteractions(organization);
+    when(organization.getAllComponentIdsRecur("WA1")).thenReturn(new String[]{"kmelia1"});
+    when(organization.getAllUsers("kmelia1")).thenReturn(
+        new org.silverpeas.core.admin.user.model.UserDetail[]{first, second, blocked});
+    var result = helper.getConfiguredSelectedSpaceUsers("WA1",
+        new HomepageContentStore.UsersConfiguration("", 100, false, "phone title", "2 1 2 3 99"));
+    assertEquals(List.of(second, first), result.getUsers());
+    assertFalse(result.isAvatar());
+    assertEquals(List.of("phone", "title"), result.getFields());
   }
 
   @Test

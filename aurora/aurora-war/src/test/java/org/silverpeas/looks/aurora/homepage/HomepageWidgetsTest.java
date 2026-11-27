@@ -39,6 +39,35 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void selectedUsersPersistWithRevisionAndAreReservedForSpaces() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "WA1");
+    var helper = mock(LookAuroraHelper.class);
+    var widget = HomepageWidgets.communityWidget(store, space, "selected-test", "fr", helper, "selectedUsers");
+    assertEquals("Utilisateurs sélectionnés", widget.getTitle());
+    var configuration = new HomepageContentStore.UsersConfiguration("", 100, true, "phone", "2 1");
+    store.saveCommunityWidget(space, widget.id(), "fr", widget.getTitle(),
+        new HomepageContentStore.Layout("right", 4, true), "selectedUsers", null, configuration, "");
+    var saved = store.readWidget(space, widget.id(), "fr");
+    assertEquals(configuration, saved.usersConfiguration());
+    HomepageWidgets.users(space, List.of(saved), helper);
+    verify(helper).getConfiguredSelectedSpaceUsers("WA1", configuration);
+    assertThrows(ConcurrentModificationException.class, () -> store.saveCommunityWidget(space,
+        widget.id(), "fr", "Autre", saved.content().layout(), "selectedUsers", null, configuration, ""));
+    assertThrows(IllegalArgumentException.class, () -> HomepageWidgets.communityWidget(
+        store, page, widget.id(), "fr", helper, "selectedUsers"));
+    assertThrows(IllegalArgumentException.class, () -> store.saveCommunityWidget(page,
+        widget.id(), "fr", "Titre", saved.content().layout(), "selectedUsers", null, configuration, ""));
+    assertThrows(IllegalArgumentException.class,
+        () -> new HomepageContentStore.UsersConfiguration("", 100, true, "", "1 <script>"));
+    clearInvocations(helper);
+    store.saveCommunityWidget(space, widget.id(), "fr", widget.getTitle(),
+        new HomepageContentStore.Layout("right", 4, false), "selectedUsers", null, configuration, saved.getRevision());
+    HomepageWidgets.users(space, store.widgets(space, "fr"), helper);
+    verifyNoInteractions(helper);
+  }
+
+  @Test
   void spaceNewUsersPersistAndUseOnlyTheCurrentSpace() throws Exception {
     var store = new HomepageContentStore(root);
     var space = new HomepagePage("spaces", "WA1");

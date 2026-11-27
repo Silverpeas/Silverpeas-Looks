@@ -92,6 +92,13 @@
   <c:param name="widget" value="${newUsersWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addSelectedUsersUrl">
+  <c:param name="action" value="selectedUsersEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="widget" value="${newSelectedUsersWidgetId}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+</c:url>
 <c:url value="/AuroraHomepageContent" var="addWeatherUrl">
   <c:param name="action" value="weatherEditor"/>
   <c:param name="kind" value="${param.kind}"/>
@@ -197,7 +204,7 @@
                 <tbody>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="${widget.type == 'spaceAdmins' ? 'spaceAdminsEditor' : widget.type == 'image' ? 'imageEditor' : widget.type == 'navigation' ? 'navigationEditor' : widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
+                    <c:param name="action" value="${widget.type == 'selectedUsers' ? 'selectedUsersEditor' : widget.type == 'spaceAdmins' ? 'spaceAdminsEditor' : widget.type == 'image' ? 'imageEditor' : widget.type == 'navigation' ? 'navigationEditor' : widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -210,7 +217,7 @@
                   <tr data-widget="${widget.id}" data-revision="${widget.revision}" data-enabled="${widget.enabled}" data-zone="${widget.zone}">
                     <td><button type="button" draggable="true" class="homepage-widget-grip" aria-label="Déplacer le widget" title="Glisser pour déplacer ; flèches haut et bas au clavier"><svg viewBox="0 0 16 24" width="16" height="20" fill="currentColor" aria-hidden="true"><circle cx="5" cy="6" r="1.5"/><circle cx="11" cy="6" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="18" r="1.5"/><circle cx="11" cy="18" r="1.5"/></svg></button></td>
                     <td>${editLink}</td>
-                    <td>${widget.type == 'spaceAdmins' ? 'Responsables de l’espace' : widget.type == 'image' ? 'Image' : widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? (param.kind == 'spaces' ? 'Nouveaux utilisateurs de l’espace' : 'Nouveaux utilisateurs') : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
+                    <td>${widget.type == 'selectedUsers' ? 'Utilisateurs sélectionnés' : widget.type == 'spaceAdmins' ? 'Responsables de l’espace' : widget.type == 'image' ? 'Image' : widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? (param.kind == 'spaces' ? 'Nouveaux utilisateurs de l’espace' : 'Nouveaux utilisateurs') : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
                     <td>${widget.zone == 'right' ? 'Droite' : 'Principale'}</td>
                     <td>${widget.order}</td>
                     <td>${displayStatus}</td>
@@ -286,6 +293,12 @@
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M2 21v-2a6 6 0 0 1 12 0v2 M19 8v6 M16 11h6"/></svg>
                 <span class="homepage-catalog-name">Nouveaux utilisateurs de l’espace</span>
                 <span class="homepage-catalog-description">Présentez les nouveaux utilisateurs ayant accès à cet espace.</span>
+                <span class="homepage-catalog-add" aria-hidden="true">+</span>
+              </a></c:if>
+              <c:if test="${param.kind == 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addSelectedUsersUrl}'/>">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M2 21v-2a6 6 0 0 1 12 0v2 M19 8v6 M16 11h6"/></svg>
+                <span class="homepage-catalog-name">Utilisateurs sélectionnés</span>
+                <span class="homepage-catalog-description">Mettez en avant les personnes de votre choix dans cet espace.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
               </a></c:if>
               <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addFaqUrl}'/>">

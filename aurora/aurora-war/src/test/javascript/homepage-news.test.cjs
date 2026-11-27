@@ -46,7 +46,7 @@ async function editor(status = 200, configured = false, publications = false, ep
   const location = {href: 'http://localhost/silverpeas/AuroraHomepageContent?action=newsEditor&kind=skins&owner=waves&widget=news-fourth&language=fr'};
   const calls = [];
   let start;
-  const data = {apps: true, subspaces: false, cities: "2988507|Paris", showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
+  const data = {apps: true, subspaces: false, cities: "2988507|Paris", showWhenEmpty: true, emptyFragment: '/silverpeas/empty.html', mode: 'taxonomy', template: '', labelsInside: true, period: false, space: true, entries: [{label: 'Docs', url: '/docs', iconUrl: '', target: 'bottomFrame'}], userIds: '2 1', selectedUsers: [{id: '2', label: 'Alice'}, {id: '1', label: 'Bob'}], group: '12', fields: 'phone title', avatar: true, selection: 'random', maxDays: 4, personal: true, includeToday: false, title: 'Infos', zone: 'right', order: 7, source: 'quickinfo12', size: 5, importantOnly: true,
     showMoreNews: true, showAllNews: false, spaceId: 'WA12', showMore: true, enabled: true, rendering: 'LIST', revision: 'first', csrf: 'token', configured};
   class XHR {
     constructor() { this.headers = {}; }
@@ -66,7 +66,7 @@ async function editor(status = 200, configured = false, publications = false, ep
   }
   vm.runInNewContext(source, {URL, URLSearchParams, FormData: Multipart, XMLHttpRequest: XHR,
     document: {getElementById(id) { return controls[id] || null; }},
-    window: {AuroraHomeShortcuts: {
+    window: {AuroraSelectedUsers: {load(users) { controls.selectedUsers = users; }}, AuroraHomeShortcuts: {
       load(entries, upload) { controls.entries = entries; controls.upload = upload; },
       serialize(body) { body.set('count', controls.entries.length); controls.entries.forEach((entry, index) => Object.keys(entry).forEach(key => body.set('entry.' + index + '.' + key, entry[key]))); }
     }, location,
@@ -394,4 +394,19 @@ test('navigation editor saves independent application and subspace options', asy
   assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
   assert.equal(new URLSearchParams(saved.body).get('apps'), 'false');
   assert.equal(new URLSearchParams(saved.body).get('subspaces'), 'true');
+});
+
+
+test('selected users editor loads choices and saves ids with revision and CSRF', async () => {
+  const {controls, calls, submit, location} = await editor(200, true, false, false, 'selectedUsers');
+  assert.equal(controls.selectedUsers.length, 2);
+  assert.equal(controls['news-user-ids'].value, '2 1');
+  controls['news-user-ids'].value = '2';
+  await submit();
+  const saved = calls.at(-1);
+  assert.match(saved.url, /saveSelectedUsers/);
+  assert.equal(saved.headers['X-Aurora-CSRF'], 'token');
+  assert.equal(new URLSearchParams(saved.body).get('userIds'), '2');
+  assert.equal(new URLSearchParams(saved.body).get('revision'), 'first');
+  assert.match(location.href, /action=manage/);
 });

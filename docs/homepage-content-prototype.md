@@ -376,3 +376,11 @@ Les opérations de chargement, d’édition et d’enregistrement refusent les p
 Le widget `users` est aussi disponible pour les pages `spaces`. Il recense les utilisateurs des applications de l’espace courant et de ses sous-espaces, sans doublons et hors comptes bloqués, désactivés ou supprimés. Le classement utilise la date de création du compte, et non une date d’arrivée dans l’espace. Le nombre (0 à 100), les avatars et les champs de profil sont configurables ; le groupe source est réservé aux pages générales. La configuration est stockée dans le properties de l’espace. Une liste vide affiche un message.
 
 Le widget « Nouveaux utilisateurs de l’espace » est réservé aux pages d’accueil d’espace : absent du catalogue et du rendu général, ses actions de configuration sont refusées pour une page générale.
+
+### Utilisateurs sélectionnés (espaces uniquement)
+
+Le widget `selectedUsers` permet de choisir jusqu’à 100 personnes par autocomplétion (à partir de deux caractères, 20 résultats maximum). La recherche porte sur les utilisateurs actifs ayant accès aux applications de l’espace courant ou de ses sous-espaces. Les personnes déjà sélectionnées ne sont plus proposées ; chaque personne peut être retirée de la sélection. Le clavier permet de parcourir les résultats avec les flèches et de valider avec Entrée.
+
+Le titre, la colonne, l’ordre, la visibilité, les avatars et les champs de profil sont configurables. Les personnes s’affichent dans l’ordre de sélection. Les comptes bloqués, désactivés, supprimés ou n’ayant plus accès à l’espace sont exclus à chaque affichage. Un message apparaît si la sélection affichable est vide.
+
+Les identifiants sont enregistrés dans `widget.<id>.userIds` dans `data/homepages/spaces/<SpaceId>.properties`, avec les autres réglages du widget. La sauvegarde utilise les protections communes (droits de gestion, CSRF, révision contre les modifications concurrentes). Les actions de configuration et de recherche sont refusées sur la page d’accueil générale.

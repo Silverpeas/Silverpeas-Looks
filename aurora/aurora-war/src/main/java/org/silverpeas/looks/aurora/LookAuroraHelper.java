@@ -1192,13 +1192,31 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     if (configuration.size() == 0) {
       return null;
     }
-    final OrganizationController organization = getOrganisationController();
-    List<User> users = of(organization.getAllComponentIdsRecur(spaceId))
-        .flatMap(id -> of(organization.getAllUsers(id)).map(User.class::cast))
-        .filter(user -> !List.of(BLOCKED, DEACTIVATED, REMOVED).contains(user.getState()))
-        .distinct()
+    List<User> users = getSelectableSpaceUsers(spaceId).stream()
         .sorted(new UserDetail.OnCreationDate().reversed())
         .limit(configuration.size())
+        .toList();
+    NewUsersList result = new NewUsersList(users);
+    result.setAvatar(configuration.avatar());
+    result.setFields(configuration.fields().isEmpty() ? List.of() : List.of(configuration.fields().split(" ")));
+    return result;
+  }
+
+  public List<User> getSelectableSpaceUsers(String spaceId) {
+    final OrganizationController organization = getOrganisationController();
+    return of(organization.getAllComponentIdsRecur(spaceId))
+        .flatMap(id -> of(organization.getAllUsers(id)).map(User.class::cast))
+        .filter(user -> !List.of(BLOCKED, DEACTIVATED, REMOVED).contains(user.getState()))
+        .distinct().toList();
+  }
+
+  public NewUsersList getConfiguredSelectedSpaceUsers(String spaceId,
+      HomepageContentStore.UsersConfiguration configuration) {
+    List<String> ids = configuration.userIds().isEmpty() ? List.of()
+        : List.of(configuration.userIds().split(" "));
+    List<User> available = ids.isEmpty() ? List.of() : getSelectableSpaceUsers(spaceId);
+    List<User> users = ids.stream().distinct()
+        .flatMap(id -> available.stream().filter(user -> id.equals(user.getId())).findFirst().stream())
         .toList();
     NewUsersList result = new NewUsersList(users);
     result.setAvatar(configuration.avatar());
