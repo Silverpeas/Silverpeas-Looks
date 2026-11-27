@@ -55,6 +55,7 @@ class HomepageJspCompatibilityTest {
     String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
     assertTrue(widgets.contains("widget.type == 'spaceAdmins' and homepageKind == 'spaces'"));
     assertTrue(widgets.contains("<view:username userId=\"${admin.id}\"/>"));
+    assertTrue(widgets.contains("<%@ tag pageEncoding=\"UTF-8\" %>"));
     assertTrue(widgets.contains("empty requestScope.homepageSpaceAdmins"));
     assertTrue(widgets.contains("Aucun responsable n’est défini pour cet espace."));
     assertFalse(widgets.contains("<c:if test=\"${not empty homepageSpaceAdmins}\">"));

@@ -21,6 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  --%>
+<%@ tag pageEncoding="UTF-8" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
 <%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view" %>
