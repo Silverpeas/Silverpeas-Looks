@@ -47,6 +47,27 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void imageIsAvailableInBothCataloguesAndUsesScopedAssetsAndEscapedAttributes() throws Exception {
+    String catalogue = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
+    assertTrue(catalogue.contains("${addImageUrl}"));
+    assertTrue(catalogue.contains("widget.type == 'image' ? 'imageEditor'"));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(widgets.contains("widget.type == 'image'"));
+    assertTrue(widgets.contains("${widget.imageConfiguration.fileName}"));
+    assertTrue(widgets.contains("<c:out value='${widget.imageConfiguration.alt}'/>"));
+    assertTrue(widgets.contains("<c:out value='${widget.imageConfiguration.url}'/>"));
+    assertTrue(widgets.contains("rel=\"noopener noreferrer\""));
+    for (String name : List.of("Main.jsp", "spaceHomePage.jsp")) {
+      assertTrue(Files.readString(Path.of("src/main/webapp/look/jsp", name)).contains("/look/jsp/css/homepage-image.css"));
+    }
+    String editor = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/imageEditor.jsp"));
+    assertTrue(editor.contains("type=\"file\""));
+    assertTrue(editor.contains("class=\"sp_button\""));
+    assertTrue(editor.contains("class=\"simple-button\""));
+    assertFalse(editor.contains("<script>"));
+  }
+
+  @Test
   void navigationCatalogueAndRenderingAreRestrictedToSpacesAndEscapeContent() throws Exception {
     String manage = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
     assertTrue(manage.contains("<c:if test=\"${param.kind == 'spaces'}\">"));

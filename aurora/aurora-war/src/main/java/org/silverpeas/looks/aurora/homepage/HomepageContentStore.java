@@ -72,7 +72,15 @@ public class HomepageContentStore {
       PublicationsConfiguration publicationsConfiguration,
       EventsConfiguration eventsConfiguration, RssConfiguration rssConfiguration,
       FaqConfiguration faqConfiguration, UsersConfiguration usersConfiguration,
-      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration, NavigationConfiguration navigationConfiguration) {
+      SubscriptionsConfiguration subscriptionsConfiguration, ShortcutsConfiguration shortcutsConfiguration, SearchConfiguration searchConfiguration, BookmarksConfiguration bookmarksConfiguration, NavigationConfiguration navigationConfiguration, ImageConfiguration imageConfiguration) {
+    public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
+        PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
+        FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
+        ShortcutsConfiguration shortcuts, SearchConfiguration search, BookmarksConfiguration bookmarks,
+        NavigationConfiguration navigation) {
+      this(id, content, type, news, legacyIndex, publications, events, rss, faq, users,
+          subscriptions, shortcuts, search, bookmarks, navigation, null);
+    }
     public Widget(String id, Content content, String type, NewsConfiguration news, int legacyIndex,
         PublicationsConfiguration publications, EventsConfiguration events, RssConfiguration rss,
         FaqConfiguration faq, UsersConfiguration users, SubscriptionsConfiguration subscriptions,
@@ -126,6 +134,7 @@ public class HomepageContentStore {
     public BookmarksConfiguration getBookmarksConfiguration() { return bookmarksConfiguration; }
     public SearchConfiguration getSearchConfiguration() { return searchConfiguration; }
     public NavigationConfiguration getNavigationConfiguration() { return navigationConfiguration; }
+    public ImageConfiguration getImageConfiguration() { return imageConfiguration; }
     public String getType() { return type; }
     public String getId() { return id; }
     public String getTitle() { return content.title(); }
@@ -188,7 +197,8 @@ public class HomepageContentStore {
         "shortcuts".equals(type) ? readShortcuts(settings, prefix) : null,
         "search".equals(type) ? readSearch(settings, prefix) : null,
         "bookmarks".equals(type) ? readBookmarks(settings, prefix) : null,
-        "navigation".equals(type) ? readNavigation(settings, prefix) : null);
+        "navigation".equals(type) ? readNavigation(settings, prefix) : null,
+        "image".equals(type) ? readImage(settings, prefix) : null);
   }
 
   public synchronized Content read(HomepagePage page, String widget, String language)
@@ -242,6 +252,9 @@ public class HomepageContentStore {
     }
     if ("navigation".equals(properties.getProperty(prefix + ".type"))) {
       configurationVersion = readNavigation(properties, prefix).toString();
+    }
+    if ("image".equals(properties.getProperty(prefix + ".type"))) {
+      configurationVersion = readImage(properties, prefix).toString();
     }
     String version = properties.containsKey(prefix + ".type")
         ? revision(!"html".equals(properties.getProperty(prefix + ".type"))
@@ -602,6 +615,55 @@ public class HomepageContentStore {
   public record NavigationConfiguration(boolean apps, boolean subspaces) {
     public boolean isApps() { return apps; }
     public boolean isSubspaces() { return subspaces; }
+  }
+
+  /** An uploaded picture with an optional destination link. */
+  public record ImageConfiguration(String fileName, String alt, String url, String target) {
+    public ImageConfiguration {
+      fileName = fileName == null ? "" : fileName.trim();
+      alt = alt == null ? "" : alt.trim();
+      url = url == null ? "" : url.trim();
+      target = target == null ? "" : target.trim();
+      if (!fileName.matches("(?:|[a-f0-9-]{36}\\.png)") || alt.length() > 200 ||
+          alt.indexOf('\u0000') >= 0 || !safeShortcutUrl(url, false) ||
+          !java.util.List.of("", "_self", "_blank", "_parent", "_top").contains(target)) {
+        throw new IllegalArgumentException("Invalid image configuration");
+      }
+    }
+    public String getFileName() { return fileName; }
+    public String getAlt() { return alt; }
+    public String getUrl() { return url; }
+    public String getTarget() { return target; }
+  }
+
+  private ImageConfiguration readImage(Properties properties, String prefix) {
+    return new ImageConfiguration(properties.getProperty(prefix + ".image", ""),
+        properties.getProperty(prefix + ".alt", ""), properties.getProperty(prefix + ".url", ""),
+        properties.getProperty(prefix + ".target", ""));
+  }
+
+  public synchronized void saveImageWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, ImageConfiguration configuration, String expectedRevision)
+      throws IOException {
+    HomepagePage.validateIdentifier(widget);
+    var properties = properties(page);
+    String prefix = "widget." + widget;
+    if (configuration == null || configuration.fileName().isEmpty() || widget.contains("legacy") ||
+        !"image".equals(properties.getProperty(prefix + ".type", "image")) ||
+        !Files.isRegularFile(path(page.kind(), page.owner(), "widgets", widget, "assets", configuration.fileName()))) {
+      throw new IllegalArgumentException("Upload an image for this widget first");
+    }
+    if (!read(page, widget, language).revision().equals(expectedRevision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "image");
+    properties.setProperty(prefix + ".image", configuration.fileName());
+    properties.setProperty(prefix + ".alt", configuration.alt());
+    properties.setProperty(prefix + ".url", configuration.url());
+    properties.setProperty(prefix + ".target", configuration.target());
+    saveProperties(page, properties);
   }
 
   private NavigationConfiguration readNavigation(Properties properties, String prefix) {

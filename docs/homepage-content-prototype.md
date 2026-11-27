@@ -355,3 +355,9 @@ La configuration (titre, placement, visibilité, `apps`, `subspaces`) est enregi
 dans `homepages/spaces/WA<id>.properties`, avec contrôle de révision et protection
 CSRF. Aucune source d’un autre espace n’est sélectionnable. Les liens utilisent la
 navigation Silverpeas et conservent des permaliens pour l’ouverture dans un nouvel onglet.
+
+### Widget Image (pages générale et d’espace)
+
+Le catalogue commun propose une image importée (5 Mo maximum, même traitement serveur que les images des zones libres). Le fichier normalisé en PNG est conservé dans le dossier `widgets/<id>/assets/` de la page. La configuration `widget.<id>.type=image` conserve le nom du fichier, le texte alternatif, le lien facultatif et sa cible, ainsi que le placement et la visibilité habituels. Le nom du widget sert à l’identifier dans la gestion ; l’accueil affiche uniquement l’image, sans titre ajouté.
+
+Le formulaire affiche un aperçu, permet de remplacer l’image et revient à la gestion après enregistrement. La sélection du fichier seule ne publie pas la modification. Le fichier doit appartenir au widget et à la page ; les révisions et les contrôles de droits/CSRF habituels s’appliquent. Les liens exécutables sont refusés, les valeurs HTML sont échappées et les liens utilisent `noopener noreferrer`.

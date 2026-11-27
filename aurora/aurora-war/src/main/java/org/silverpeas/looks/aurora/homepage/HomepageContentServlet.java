@@ -103,7 +103,7 @@ public class HomepageContentServlet extends HttpServlet {
           return;
         }
         activeSkin = skinId(factory);
-        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
+        if (("editor".equals(action) || "manage".equals(action) || "newsEditor".equals(action) || "publicationsEditor".equals(action) || "ephemerisEditor".equals(action) || "eventsEditor".equals(action) || "rssEditor".equals(action) || "faqEditor".equals(action) || "usersEditor".equals(action) || "subscriptionsEditor".equals(action) || "weatherEditor".equals(action) || "bookmarksEditor".equals(action) || "searchEditor".equals(action) || "shortcutsEditor".equals(action) || "imageEditor".equals(action)) && !activeSkin.equals(request.getParameter("owner"))) {
           if (!controller.getCurrentUserDetail().isAccessAdmin()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -172,7 +172,7 @@ public class HomepageContentServlet extends HttpServlet {
         "updateLayouts", "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
         "loadPublications", "savePublications", "eventsEditor", "loadEvents", "saveEvents",
         "shortcutsEditor", "loadShortcuts", "saveShortcuts", "searchEditor", "loadSearch",
-        "saveSearch", "navigationEditor", "loadNavigation", "saveNavigation", "renderFeed", "renderSearch").contains(action == null ? "" : action);
+        "saveSearch", "imageEditor", "loadImage", "saveImage", "navigationEditor", "loadNavigation", "saveNavigation", "renderFeed", "renderSearch").contains(action == null ? "" : action);
   }
 
   boolean isAllowed(MainSessionController controller, HomepagePage page, boolean edit, String activeSkin) {
@@ -273,6 +273,14 @@ public class HomepageContentServlet extends HttpServlet {
               request.getParameter("template"), option(request, "labelsInside"),
               option(request, "period"), option(request, "space")), request.getParameter("revision"));
       searchResponse(request, response, page, widget, language, "");
+    } else if ("saveImage".equals(action)) {
+      store.saveImageWidget(page, widget, language, request.getParameter("title"),
+          new HomepageContentStore.Layout(request.getParameter("zone"),
+              Integer.parseInt(request.getParameter("order")), option(request, "enabled")),
+          new HomepageContentStore.ImageConfiguration(request.getParameter("image"),
+              request.getParameter("alt"), request.getParameter("url"), request.getParameter("target")),
+          request.getParameter("revision"));
+      imageResponse(response, page, widget, language, "");
     } else if ("saveShortcuts".equals(action)) {
       int count = Integer.parseInt(request.getParameter("count"));
       if (count < 0 || count > 100) {
@@ -468,6 +476,10 @@ public class HomepageContentServlet extends HttpServlet {
       request.getRequestDispatcher("/WEB-INF/homepage/bookmarksEditor.jsp").forward(request, response);
     } else if ("loadNavigation".equals(action)) {
       navigationResponse(response, page, widget, language, csrf);
+    } else if ("loadImage".equals(action)) {
+      imageResponse(response, page, widget, language, csrf);
+    } else if ("imageEditor".equals(action)) {
+      request.getRequestDispatcher("/WEB-INF/homepage/imageEditor.jsp").forward(request, response);
     } else if ("navigationEditor".equals(action)) {
       request.getRequestDispatcher("/WEB-INF/homepage/navigationEditor.jsp").forward(request, response);
     } else if ("loadSearch".equals(action)) {
@@ -534,6 +546,7 @@ public class HomepageContentServlet extends HttpServlet {
       request.setAttribute("newBookmarksWidgetId", "bookmarks-" + UUID.randomUUID());
       request.setAttribute("newNavigationWidgetId", "navigation-" + UUID.randomUUID());
       request.setAttribute("newSearchWidgetId", "search-" + UUID.randomUUID());
+      request.setAttribute("newImageWidgetId", "image-" + UUID.randomUUID());
       request.setAttribute("newShortcutsWidgetId", "shortcuts-" + UUID.randomUUID());
       request.setAttribute("newSubscriptionsWidgetId", "subscriptions-" + UUID.randomUUID());
       request.setAttribute("newFaqWidgetId", "faq-" + UUID.randomUUID());
@@ -606,6 +619,19 @@ public class HomepageContentServlet extends HttpServlet {
               .put("iconUrl", entry.iconUrl()).put("target", entry.target())));
           return array;
         })));
+  }
+
+  private void imageResponse(HttpServletResponse response, HomepagePage page, String widget,
+      String language, String csrf) throws IOException {
+    var model = HomepageWidgets.imageWidget(store, page, widget, language);
+    var content = model.content();
+    var image = model.imageConfiguration();
+    json(response, JSONCodec.encodeObject(o -> o
+        .put("configured", !content.revision().isEmpty()).put("title", content.title())
+        .put("zone", content.layout().zone()).put("order", content.layout().order())
+        .put("enabled", content.layout().enabled()).put("revision", content.revision()).put("csrf", csrf)
+        .put("image", image.fileName()).put("alt", image.alt())
+        .put("url", image.url()).put("target", image.target())));
   }
 
   private void navigationResponse(HttpServletResponse response, HomepagePage page, String widget,

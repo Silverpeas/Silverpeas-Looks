@@ -117,6 +117,51 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void imageEndpointsRequireCsrfAndSupportBothHomepageKinds() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    when(request.getParameter("action")).thenReturn("loadImage");
+    servlet.doGet(request, response);
+    assertTrue(output.toString().contains("\"image\":\"\""));
+    when(request.getParameter("action")).thenReturn("saveImage");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    when(request.getParameter("title")).thenReturn("Illustration");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("5");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("revision")).thenReturn("");
+    String name = "12345678-1234-1234-1234-123456789abc.png";
+    when(request.getParameter("image")).thenReturn(name);
+    when(request.getParameter("alt")).thenReturn("Une illustration");
+    when(request.getParameter("url")).thenReturn("https://www.silverpeas.org/");
+    when(request.getParameter("target")).thenReturn("_blank");
+    for (var page : java.util.List.of(new HomepagePage("skins", "waves"), new HomepagePage("spaces", "WA1"))) {
+      when(request.getParameter("kind")).thenReturn(page.kind());
+      when(request.getParameter("owner")).thenReturn(page.owner());
+      store.saveAsset(page, "welcome", name, new byte[]{1});
+      servlet.doPost(request, response);
+      var saved = store.readWidget(page, "welcome", "fr");
+      assertEquals("image", saved.type());
+      assertEquals(name, saved.imageConfiguration().fileName());
+      assertEquals("_blank", saved.imageConfiguration().target());
+      assertTrue(output.toString().contains("\"alt\":\"Une illustration\""));
+    }
+    assertTrue(HomepageContentServlet.spaceAction("imageEditor"));
+    assertTrue(HomepageContentServlet.spaceAction("loadImage"));
+    assertTrue(HomepageContentServlet.spaceAction("saveImage"));
+    verify(response, never()).sendError(400);
+    when(request.getParameter("revision")).thenReturn("stale");
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+    when(user.isAccessAdmin()).thenReturn(false);
+    when(request.getParameter("kind")).thenReturn("skins");
+    when(request.getParameter("owner")).thenReturn("waves");
+    servlet.doPost(request, response);
+    verify(response, times(2)).sendError(403);
+  }
+
+  @Test
   void navigationEndpointsRejectGeneralHomeAndSaveForSpaceWithCsrf() throws Exception {
     when(user.isAccessAdmin()).thenReturn(true);
     for (String action : java.util.List.of("navigationEditor", "loadNavigation", "saveNavigation")) {

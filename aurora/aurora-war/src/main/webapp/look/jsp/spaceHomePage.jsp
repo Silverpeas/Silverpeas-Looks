@@ -83,6 +83,7 @@
     <view:link href="/look/jsp/css/themes.css"/>
     <view:link href="/look/jsp/css/homepage-main.css?version=15592-navigation-groups-v3"/>
     <view:link href="/look/jsp/css/homepage-space.css?version=15592-navigation-groups-v3"/>
+    <view:link href="/look/jsp/css/homepage-image.css?version=15592-image-v1"/>
     <view:includePlugin name="pdc"/>
     <view:includePlugin name="lightslideshow"/>
     <view:script src="/look/jsp/js/responsiveslides.min.js"/>

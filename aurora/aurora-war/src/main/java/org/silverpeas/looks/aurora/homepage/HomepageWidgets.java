@@ -37,6 +37,22 @@ import java.util.Map;
 public final class HomepageWidgets {
   private HomepageWidgets() { }
 
+  public static HomepageContentStore.Widget imageWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language) throws IOException {
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"image".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected an image widget");
+      }
+      return saved;
+    }
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Image", "", "",
+            new HomepageContentStore.Layout("main", 10, true)),
+        "image", null, 0, null, null, null, null, null, null, null, null, null, null,
+        new HomepageContentStore.ImageConfiguration("", "", "", "_self"));
+  }
+
   public static HomepageContentStore.Widget navigationWidget(HomepageContentStore store,
       HomepagePage page, String id, String language) throws IOException {
     if (!"spaces".equals(page.kind())) {

@@ -41,6 +41,27 @@
             publications="${publications[widget.id]}" id="homepage-widget-${widget.id}"
             title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMore="${widget.publicationsConfiguration.showMore}"/>
       </c:when>
+      <c:when test="${widget.type == 'image'}">
+        <c:if test="${not empty widget.imageConfiguration.fileName}">
+          <c:url value="/AuroraHomepageContent" var="homepageImageUrl">
+            <c:param name="action" value="asset"/>
+            <c:param name="kind" value="${empty homepageKind ? 'skins' : homepageKind}"/>
+            <c:param name="owner" value="${homepageOwner}"/>
+            <c:param name="widget" value="${widget.id}"/>
+            <c:param name="name" value="${widget.imageConfiguration.fileName}"/>
+          </c:url>
+          <div class="secteur-container homepage-image" id="homepage-widget-${widget.id}">
+            <c:choose>
+              <c:when test="${not empty widget.imageConfiguration.url}">
+                <a aria-label="<c:out value='${empty widget.imageConfiguration.alt ? widget.title : widget.imageConfiguration.alt}'/>" href="<c:out value='${widget.imageConfiguration.url}'/>" target="<c:out value='${widget.imageConfiguration.target}'/>" rel="noopener noreferrer">
+                  <img src="<c:out value='${homepageImageUrl}'/>" alt="<c:out value='${widget.imageConfiguration.alt}'/>" loading="lazy"/>
+                </a>
+              </c:when>
+              <c:otherwise><img src="<c:out value='${homepageImageUrl}'/>" alt="<c:out value='${widget.imageConfiguration.alt}'/>" loading="lazy"/></c:otherwise>
+            </c:choose>
+          </div>
+        </c:if>
+      </c:when>
       <c:when test="${widget.type == 'navigation' and homepageKind == 'spaces'}">
         <c:if test="${not empty homepageNavigation[widget.id]}">
           <section class="secteur-container homepage-navigation" id="homepage-widget-${widget.id}">

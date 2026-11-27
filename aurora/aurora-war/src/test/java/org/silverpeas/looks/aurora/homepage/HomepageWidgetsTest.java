@@ -39,6 +39,49 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void imageWidgetsPersistForBothHomepageKindsAndProtectAssetOwnershipAndRevision() throws Exception {
+    var store = new HomepageContentStore(root);
+    String name = "12345678-1234-1234-1234-123456789abc.png";
+    var layout = new HomepageContentStore.Layout("right", 4, true);
+    var image = new HomepageContentStore.ImageConfiguration(name, "Mon image", "/docs", "_blank");
+    for (var owner : List.of(page, new HomepagePage("spaces", "WA1"))) {
+      var initial = HomepageWidgets.imageWidget(store, owner, "image-test", "fr");
+      assertEquals("image", initial.type());
+      assertEquals("", initial.imageConfiguration().fileName());
+      assertThrows(IllegalArgumentException.class, () ->
+          store.saveImageWidget(owner, "image-test", "fr", "Image", layout, image, ""));
+      store.saveAsset(owner, "image-test", name, new byte[]{1, 2, 3});
+      store.saveImageWidget(owner, "image-test", "fr", "Image", layout, image, "");
+      var saved = HomepageWidgets.imageWidget(store, owner, "image-test", "fr");
+      assertEquals(image, saved.imageConfiguration());
+      assertEquals(layout, saved.content().layout());
+      assertTrue(HomepageWidgets.all(store, owner, "fr", helper()).stream()
+          .anyMatch(widget -> "image-test".equals(widget.id())));
+      var changed = new HomepageContentStore.ImageConfiguration(name, "Autre description", "", "_self");
+      store.saveImageWidget(owner, "image-test", "fr", "Image", layout, changed, saved.getRevision());
+      assertNotEquals(saved.getRevision(), store.readWidget(owner, "image-test", "fr").getRevision());
+      assertThrows(ConcurrentModificationException.class, () ->
+          store.saveImageWidget(owner, "image-test", "fr", "Image", layout, image, saved.getRevision()));
+      assertThrows(IllegalArgumentException.class, () ->
+          store.saveImageWidget(owner, "image-other", "fr", "Image", layout, image, ""));
+      assertThrows(IllegalArgumentException.class, () -> HomepageWidgets.shortcutsWidget(store,
+          owner, "image-test", "fr", helper()));
+      assertEquals(changed, new HomepageContentStore(root).readWidget(owner, "image-test", "fr").imageConfiguration());
+    }
+    assertThrows(IllegalArgumentException.class, () ->
+        new HomepageContentStore.ImageConfiguration("../image.png", "", "", ""));
+    assertThrows(IllegalArgumentException.class, () ->
+        new HomepageContentStore.ImageConfiguration(name, "", "javascript:alert(1)", ""));
+    assertThrows(IllegalArgumentException.class, () ->
+        new HomepageContentStore.ImageConfiguration(name, "", "", "bad target"));
+    store.saveConfigured(page, "html-image", "fr", "Texte", "<p>Bonjour</p>", "", layout);
+    store.saveAsset(page, "html-image", name, new byte[]{1});
+    assertThrows(IllegalArgumentException.class, () -> store.saveImageWidget(page, "html-image", "fr",
+        "Image", layout, image, store.read(page, "html-image", "fr").revision()));
+    assertThrows(IllegalArgumentException.class, () -> HomepageWidgets.imageWidget(store, page, "html-image", "fr"));
+  }
+
+  @Test
   void navigationIsSpaceOnlyWithRevisionAndTypeProtection() throws Exception {
     var store = new HomepageContentStore(root);
     var space = new HomepagePage("spaces", "WA1");

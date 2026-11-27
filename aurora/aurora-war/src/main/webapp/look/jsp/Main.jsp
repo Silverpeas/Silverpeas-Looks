@@ -102,6 +102,7 @@
     <view:link href="/look/jsp/css/aurora.css?version=15592-weather-v2"/>
     <view:includePlugin name="pdc" />
     <view:includePlugin name="popup"/>
+    <view:link href="/look/jsp/css/homepage-image.css?version=15592-image-v1"/>
     <view:link href="/look/jsp/css/homepage-main.css?version=15592-weather-v2"/>
     <script type="text/javascript" src="js/responsiveslides.min.js"></script>
     <view:script src="/look/jsp/js/homepage-feeds.js?version=15592-weather-v2"/>
