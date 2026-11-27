@@ -134,6 +134,13 @@
   <c:param name="widget" value="${newImageWidgetId}"/>
   <c:param name="language" value="${homepageLanguage}"/>
 </c:url>
+<c:url value="/AuroraHomepageContent" var="addSpaceAdminsUrl">
+  <c:param name="action" value="spaceAdminsEditor"/>
+  <c:param name="kind" value="${param.kind}"/>
+  <c:param name="owner" value="${param.owner}"/>
+  <c:param name="language" value="${homepageLanguage}"/>
+  <c:param name="widget" value="${newSpaceAdminsWidgetId}"/>
+</c:url>
 <c:url value="/AuroraHomepageContent" var="addNavigationUrl">
   <c:param name="action" value="navigationEditor"/>
   <c:param name="kind" value="${param.kind}"/>
@@ -190,7 +197,7 @@
                 <tbody>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
-                    <c:param name="action" value="${widget.type == 'image' ? 'imageEditor' : widget.type == 'navigation' ? 'navigationEditor' : widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
+                    <c:param name="action" value="${widget.type == 'spaceAdmins' ? 'spaceAdminsEditor' : widget.type == 'image' ? 'imageEditor' : widget.type == 'navigation' ? 'navigationEditor' : widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
                     <c:param name="kind" value="${param.kind}"/>
                     <c:param name="owner" value="${param.owner}"/>
                     <c:param name="widget" value="${widget.id}"/>
@@ -203,7 +210,7 @@
                   <tr data-widget="${widget.id}" data-revision="${widget.revision}" data-enabled="${widget.enabled}" data-zone="${widget.zone}">
                     <td><button type="button" draggable="true" class="homepage-widget-grip" aria-label="Déplacer le widget" title="Glisser pour déplacer ; flèches haut et bas au clavier"><svg viewBox="0 0 16 24" width="16" height="20" fill="currentColor" aria-hidden="true"><circle cx="5" cy="6" r="1.5"/><circle cx="11" cy="6" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="18" r="1.5"/><circle cx="11" cy="18" r="1.5"/></svg></button></td>
                     <td>${editLink}</td>
-                    <td>${widget.type == 'image' ? 'Image' : widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
+                    <td>${widget.type == 'spaceAdmins' ? 'Responsables de l’espace' : widget.type == 'image' ? 'Image' : widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
                     <td>${widget.zone == 'right' ? 'Droite' : 'Principale'}</td>
                     <td>${widget.order}</td>
                     <td>${displayStatus}</td>
@@ -226,6 +233,12 @@
             </div>
             <div class="homepage-catalog-grid">
               <c:if test="${param.kind == 'spaces'}">
+                <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addSpaceAdminsUrl}'/>">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><circle cx="9" cy="7" r="4"/><path d="M2 21v-3a7 7 0 0 1 14 0v3 M17 3a4 4 0 0 1 0 8 M19 14a6 6 0 0 1 3 5v2"/></svg>
+                  <span class="homepage-catalog-name">Responsables de l’espace</span>
+                  <span class="homepage-catalog-description">Identifiez les personnes responsables de cet espace.</span>
+                  <span class="homepage-catalog-add" aria-hidden="true">+</span>
+                </a>
                 <a class="homepage-catalog-tile" data-category="services" href="<c:out value='${addNavigationUrl}'/>">
                   <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><path d="M9 3h6v5H9z M3 16h6v5H3z M15 16h6v5h-6z M12 8v4 M6 16v-4h12v4"/></svg>
                   <span class="homepage-catalog-name">Navigation</span>

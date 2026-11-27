@@ -361,3 +361,12 @@ navigation Silverpeas et conservent des permaliens pour l’ouverture dans un no
 Le catalogue commun propose une image importée (5 Mo maximum, même traitement serveur que les images des zones libres). Le fichier normalisé en PNG est conservé dans le dossier `widgets/<id>/assets/` de la page. La configuration `widget.<id>.type=image` conserve le nom du fichier, le texte alternatif, le lien facultatif et sa cible, ainsi que le placement et la visibilité habituels. Le nom du widget sert à l’identifier dans la gestion ; l’accueil affiche uniquement l’image, sans titre ajouté.
 
 Le formulaire affiche un aperçu, permet de remplacer l’image et revient à la gestion après enregistrement. La sélection du fichier seule ne publie pas la modification. Le fichier doit appartenir au widget et à la page ; les révisions et les contrôles de droits/CSRF habituels s’appliquent. Les liens exécutables sont refusés, les valeurs HTML sont échappées et les liens utilisent `noopener noreferrer`.
+
+### Responsables de l’espace
+
+Le widget `spaceAdmins` est réservé aux pages d’accueil d’espace. Il reprend les responsables
+fournis par `LookAuroraHelper.getSpaceAdmins` pour l’espace courant, avec leur avatar et leur
+profil Silverpeas. Aucun choix manuel d’utilisateur n’est nécessaire. Le titre, la colonne,
+l’ordre et la visibilité sont enregistrés dans le fichier de l’espace avec contrôle de révision.
+Un widget masqué ne charge pas les responsables ; une liste vide ne produit aucun bloc.
+Les opérations de chargement, d’édition et d’enregistrement refusent les pages générales.

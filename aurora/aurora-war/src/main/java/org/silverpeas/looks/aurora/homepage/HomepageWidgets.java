@@ -53,6 +53,32 @@ public final class HomepageWidgets {
         new HomepageContentStore.ImageConfiguration("", "", "", "_self"));
   }
 
+  public static HomepageContentStore.Widget spaceAdminsWidget(HomepageContentStore store,
+      HomepagePage page, String id, String language) throws IOException {
+    if (!"spaces".equals(page.kind())) {
+      throw new IllegalArgumentException("Space administrators are only available for spaces");
+    }
+    var saved = store.readWidget(page, id, language);
+    if (!saved.content().revision().isEmpty()) {
+      if (!"spaceAdmins".equals(saved.type())) {
+        throw new IllegalArgumentException("Expected a space administrators widget");
+      }
+      return saved;
+    }
+    return new HomepageContentStore.Widget(id,
+        new HomepageContentStore.Content("Responsables de l’espace", "", "",
+            new HomepageContentStore.Layout("right", 10, true)), "spaceAdmins", null, 0);
+  }
+
+  public static List<org.silverpeas.core.admin.user.model.UserDetail> spaceAdmins(HomepagePage page,
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    if (!"spaces".equals(page.kind()) || widgets.stream()
+        .noneMatch(widget -> widget.isEnabled() && "spaceAdmins".equals(widget.type()))) {
+      return List.of();
+    }
+    return List.copyOf(helper.getSpaceAdmins(page.owner()));
+  }
+
   public static HomepageContentStore.Widget navigationWidget(HomepageContentStore store,
       HomepagePage page, String id, String language) throws IOException {
     if (!"spaces".equals(page.kind())) {

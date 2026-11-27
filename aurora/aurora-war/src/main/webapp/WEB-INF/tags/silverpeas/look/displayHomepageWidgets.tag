@@ -23,6 +23,7 @@
  --%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib tagdir="/WEB-INF/tags/silverpeas/look" prefix="viewTags" %>
+<%@ taglib uri="silverpeas.tags.viewGenerator" prefix="view" %>
 <%@ attribute name="publications" required="true" type="java.util.Map" %>
 <%@ attribute name="news" required="true" type="java.util.Map" %>
 <%@ attribute name="widgets" required="true" type="java.util.List" %>
@@ -33,6 +34,21 @@
 <c:forEach items="${widgets}" var="widget">
   <c:if test="${widget.enabled and widget.zone == zone}">
     <c:choose>
+      <c:when test="${widget.type == 'spaceAdmins' and homepageKind == 'spaces'}">
+        <c:if test="${not empty homepageSpaceAdmins}">
+          <div class="secteur-container homepage-space-admins" id="homepage-widget-${widget.id}">
+            <h4><c:out value="${widget.title}"/></h4>
+            <ul class="homepage-space-admins-list">
+              <c:forEach var="admin" items="${homepageSpaceAdmins}">
+                <li>
+                  <view:image css="avatar" src="${admin.avatar}" type="avatar"/>
+                  <view:username userId="${admin.id}"/>
+                </li>
+              </c:forEach>
+            </ul>
+          </div>
+        </c:if>
+      </c:when>
       <c:when test="${widget.type == 'news'}">
         <viewTags:displayNews listOfNews="${news[widget.id]}" id="homepage-widget-${widget.id}" title="${widget.title}" spaceId="${homepageKind == 'spaces' ? homepageOwner : ''}" showMoreNews="${widget.newsConfiguration.showMoreNews}" showAllNews="${widget.newsConfiguration.showAllNews}"/>
       </c:when>

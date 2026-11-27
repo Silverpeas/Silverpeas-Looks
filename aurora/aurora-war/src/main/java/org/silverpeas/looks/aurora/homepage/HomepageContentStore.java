@@ -672,6 +672,20 @@ public class HomepageContentStore {
         Boolean.parseBoolean(properties.getProperty(prefix + ".subspaces", "true")));
   }
 
+  public synchronized void saveSpaceAdminsWidget(HomepagePage page, String widget, String language,
+      String title, Layout layout, String revision) throws IOException {
+    HomepageWidgets.spaceAdminsWidget(this, page, widget, language);
+    var properties = properties(page);
+    if (!read(page, widget, language).revision().equals(revision)) {
+      throw new ConcurrentModificationException("Widget changed since it was loaded");
+    }
+    registerWidget(properties, widget);
+    String prefix = "widget." + widget;
+    configureLayout(properties, prefix, title, layout);
+    properties.setProperty(prefix + ".type", "spaceAdmins");
+    saveProperties(page, properties);
+  }
+
   public synchronized void saveNavigationWidget(HomepagePage page, String widget, String language,
       String title, Layout layout, NavigationConfiguration configuration, String expectedRevision)
       throws IOException {

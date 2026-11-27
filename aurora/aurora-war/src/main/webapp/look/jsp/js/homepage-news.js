@@ -25,13 +25,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const status = document.getElementById('news-status');
   const save = document.getElementById('news-save');
   const widgetType = document.getElementById('news-form').dataset.widgetType;
-  const community = ['navigation', 'faq', 'users', 'subscriptions', 'shortcuts', 'search', 'bookmarks', 'weather'].includes(widgetType);
+  const community = ['spaceAdmins', 'navigation', 'faq', 'users', 'subscriptions', 'shortcuts', 'search', 'bookmarks', 'weather'].includes(widgetType);
   const configurationAction = prefix => prefix + widgetType[0].toUpperCase() + widgetType.slice(1);
   const feed = ['events', 'rss'].includes(widgetType);
   const ephemeris = widgetType === 'ephemeris';
   const commonFields = {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'};
   const publications = document.getElementById('news-space');
-  const fields = widgetType === 'navigation' ? {...commonFields, apps: 'apps', subspaces: 'subspaces'} : widgetType === 'weather' ? commonFields : widgetType === 'bookmarks' ? {...commonFields, showWhenEmpty: 'show-when-empty', emptyFragment: 'empty-fragment'} : widgetType === 'search' ? {...commonFields, mode: 'mode', template: 'template', labelsInside: 'labels-inside', period: 'period', space: 'space'} : widgetType === 'shortcuts' ? commonFields : widgetType === 'subscriptions' ? {...commonFields, size: 'size', showMore: 'show-more'} : community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
+  const fields = widgetType === 'navigation' ? {...commonFields, apps: 'apps', subspaces: 'subspaces'} : ['spaceAdmins', 'weather'].includes(widgetType) ? commonFields : widgetType === 'bookmarks' ? {...commonFields, showWhenEmpty: 'show-when-empty', emptyFragment: 'empty-fragment'} : widgetType === 'search' ? {...commonFields, mode: 'mode', template: 'template', labelsInside: 'labels-inside', period: 'period', space: 'space'} : widgetType === 'shortcuts' ? commonFields : widgetType === 'subscriptions' ? {...commonFields, size: 'size', showMore: 'show-more'} : community ? {...commonFields, size: 'size', ...(widgetType === 'faq'
     ? {source: 'source', selection: 'selection'} : {group: 'group', avatar: 'avatar', fields: 'fields'})} : feed ? {...commonFields, source: 'source', ...(widgetType === 'events'
     ? {maxDays: 'max-days', includeToday: 'include-today', personal: 'personal', importantOnly: 'important', showMore: 'show-more'}
     : {rendering: 'rendering'})} : ephemeris ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled'} : publications ? {title: 'title', zone: 'zone', order: 'order', enabled: 'enabled',

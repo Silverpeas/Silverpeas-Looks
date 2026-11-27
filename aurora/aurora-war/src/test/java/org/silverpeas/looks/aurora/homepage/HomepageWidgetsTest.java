@@ -39,6 +39,40 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void spaceAdminsAreScopedPersistedAndProtectedAgainstStaleEdits() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "WA1");
+    var widget = HomepageWidgets.spaceAdminsWidget(store, space, "admins-test", "fr");
+    assertEquals("right", widget.getZone());
+    assertThrows(IllegalArgumentException.class,
+        () -> HomepageWidgets.spaceAdminsWidget(store, page, widget.id(), "fr"));
+    assertThrows(IllegalArgumentException.class, () -> store.saveSpaceAdminsWidget(page,
+        widget.id(), "fr", "Responsables", widget.content().layout(), ""));
+    store.saveSpaceAdminsWidget(space, widget.id(), "fr", "Responsables", widget.content().layout(), "");
+    var saved = HomepageWidgets.spaceAdminsWidget(store, space, widget.id(), "fr");
+    assertEquals("Responsables", saved.getTitle());
+    assertThrows(ConcurrentModificationException.class, () -> store.saveSpaceAdminsWidget(space,
+        widget.id(), "fr", "Autre titre", widget.content().layout(), ""));
+    assertThrows(IllegalArgumentException.class,
+        () -> HomepageWidgets.navigationWidget(store, space, widget.id(), "fr"));
+    var helper = helper();
+    var admin = mock(org.silverpeas.core.admin.user.model.UserDetail.class);
+    when(helper.getSpaceAdmins("WA1")).thenReturn(List.of(admin));
+    assertEquals(List.of(admin), HomepageWidgets.spaceAdmins(space, List.of(saved), helper));
+    verify(helper).getSpaceAdmins("WA1");
+    clearInvocations(helper);
+    assertTrue(HomepageWidgets.spaceAdmins(page, List.of(saved), helper).isEmpty());
+    var hidden = new HomepageContentStore.Widget(widget.id(),
+        new HomepageContentStore.Content("Responsables", "", "",
+            new HomepageContentStore.Layout("right", 1, false)), "spaceAdmins", null, 0);
+    assertTrue(HomepageWidgets.spaceAdmins(space, List.of(hidden), helper).isEmpty());
+    verifyNoInteractions(helper);
+    assertTrue(HomepageContentServlet.spaceAction("saveSpaceAdmins"));
+    assertTrue(HomepageContentServlet.spaceAction("loadSpaceAdmins"));
+    assertTrue(HomepageContentServlet.spaceAction("spaceAdminsEditor"));
+  }
+
+  @Test
   void imageWidgetsPersistForBothHomepageKindsAndProtectAssetOwnershipAndRevision() throws Exception {
     var store = new HomepageContentStore(root);
     String name = "12345678-1234-1234-1234-123456789abc.png";

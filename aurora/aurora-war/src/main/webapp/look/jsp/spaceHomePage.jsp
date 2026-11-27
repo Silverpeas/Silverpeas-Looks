@@ -60,6 +60,7 @@
   request.setAttribute("homepageLanguage", controller.getFavoriteLanguage());
   request.setAttribute("homepageWidgets", widgets);
   request.setAttribute("homepageNews", HomepageWidgets.news(store, homepagePage, widgets, helper));
+  request.setAttribute("homepageSpaceAdmins", HomepageWidgets.spaceAdmins(homepagePage, widgets, helper));
   request.setAttribute("homepageNavigation", HomepageWidgets.navigation(homepagePage, widgets, helper));
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepagePage, widgets, helper));
   request.setAttribute("homepageAdmin", controller.getCurrentUserDetail().isAccessAdmin() ||
@@ -82,7 +83,7 @@
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
     <view:link href="/look/jsp/css/homepage-main.css?version=15592-navigation-groups-v3"/>
-    <view:link href="/look/jsp/css/homepage-space.css?version=15592-space-news-v1"/>
+    <view:link href="/look/jsp/css/homepage-space.css?version=15592-space-admins-v1"/>
     <view:link href="/look/jsp/css/homepage-image.css?version=15592-image-v1"/>
     <view:includePlugin name="pdc"/>
     <view:includePlugin name="lightslideshow"/>

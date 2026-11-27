@@ -162,6 +162,32 @@ class HomepageContentServletTest {
   }
 
   @Test
+  void spaceAdminsEndpointsRejectGeneralHomeAndSaveForSpaceWithCsrf() throws Exception {
+    when(user.isAccessAdmin()).thenReturn(true);
+    for (String action : java.util.List.of("spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins")) {
+      when(request.getParameter("action")).thenReturn(action);
+      if (action.startsWith("save")) { servlet.doPost(request, response); }
+      else { servlet.doGet(request, response); }
+    }
+    verify(response, times(3)).sendError(400);
+    assertTrue(HomepageContentServlet.spaceAction("spaceAdminsEditor"));
+    when(request.getParameter("kind")).thenReturn("spaces");
+    when(request.getParameter("owner")).thenReturn("WA1");
+    when(request.getParameter("title")).thenReturn("Explorer");
+    when(request.getParameter("zone")).thenReturn("main");
+    when(request.getParameter("order")).thenReturn("5");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("revision")).thenReturn("");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    servlet.doPost(request, response);
+    var saved = store.readWidget(new HomepagePage("spaces", "WA1"), "welcome", "fr");
+    assertEquals("spaceAdmins", saved.type());
+    assertTrue(output.toString().contains("\"title\":\"Explorer\""));
+  }
+
+  @Test
   void navigationEndpointsRejectGeneralHomeAndSaveForSpaceWithCsrf() throws Exception {
     when(user.isAccessAdmin()).thenReturn(true);
     for (String action : java.util.List.of("navigationEditor", "loadNavigation", "saveNavigation")) {

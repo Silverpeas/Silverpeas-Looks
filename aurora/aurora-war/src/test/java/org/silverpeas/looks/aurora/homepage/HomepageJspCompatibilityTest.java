@@ -47,6 +47,18 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void spaceAdministratorsAreScopedAndRenderSilverpeasProfiles() throws Exception {
+    String catalogue = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
+    int start = catalogue.indexOf("<c:if test=\"${param.kind == 'spaces'}\">", catalogue.indexOf("homepage-catalog-grid"));
+    int end = catalogue.indexOf("</c:if>", start);
+    assertTrue(catalogue.substring(start, end).contains("${addSpaceAdminsUrl}"));
+    String widgets = Files.readString(Path.of("src/main/webapp/WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(widgets.contains("widget.type == 'spaceAdmins' and homepageKind == 'spaces'"));
+    assertTrue(widgets.contains("<view:username userId=\"${admin.id}\"/>"));
+    assertTrue(widgets.contains("<c:out value=\"${widget.title}\"/>"));
+  }
+
+  @Test
   void spaceNewsAndDeleteConfirmationHaveScopedLayoutRules() throws Exception {
     Path web = Path.of("src/main/webapp");
     String news = Files.readString(web.resolve("WEB-INF/tags/silverpeas/look/displayNews.tag"));
