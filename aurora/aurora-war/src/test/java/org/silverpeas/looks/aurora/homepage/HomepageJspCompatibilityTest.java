@@ -64,6 +64,19 @@ class HomepageJspCompatibilityTest {
   }
 
   @Test
+  void spaceWidgetsReuseSkinStylesWithoutTheGlobalHomepageLayout() throws Exception {
+    String page = Files.readString(Path.of("src/main/webapp/look/jsp/spaceHomePage.jsp"));
+    assertTrue(page.contains("class=\"main-home-page homepage-space-columns\""));
+    assertTrue(page.contains("/look/jsp/css/homepage-main.css?version="));
+    assertTrue(page.indexOf("homepage-main.css") < page.indexOf("homepage-space.css"));
+    assertFalse(page.contains("principal-main-container"));
+    String css = Files.readString(Path.of("src/main/webapp/look/jsp/css/homepage-space.css"));
+    assertTrue(css.contains(".homepage-publications .last-publication-list li"));
+    assertTrue(css.contains("var(--bgColor-de-fond-clair-bloc-home, #fff)"));
+    assertTrue(css.contains("repeat(auto-fit, minmax(min(100%, 14rem), 1fr))"));
+  }
+
+  @Test
   void spacesUseTheOperationMenuAndKeepWidgetRequestsAndMoreLinksScoped() throws Exception {
     String page = Files.readString(Path.of("src/main/webapp/look/jsp/spaceHomePage.jsp"));
     assertTrue(page.contains("<view:operation action=\"${manageHomepageUrl}\""));

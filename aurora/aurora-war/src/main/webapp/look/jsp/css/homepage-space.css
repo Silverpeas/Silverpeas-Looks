@@ -40,18 +40,46 @@
   display: block;
 }
 
-.homepage-navigation ul {
+/* Shared widgets retain the skin typography without the global homepage layout. */
+.homepage-space-columns .secteur-container {
+  min-width: 0;
+  margin-bottom: 2rem;
+}
+.homepage-space-columns .homepage-publications .last-publication-list li {
+  background-color: var(--bgColor-de-fond-clair-bloc-home, #fff);
+  padding: 1em;
+  margin-bottom: 1em;
+  overflow-wrap: anywhere;
+}
+.homepage-space-columns .homepage-publications .publication-name {
+  display: block;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.homepage-space-columns .homepage-navigation ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: .75rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.homepage-navigation li + li {
-  border-top: 1px solid #ddd;
+.homepage-space-columns .homepage-navigation li {
+  min-width: 0;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: var(--bgColor-de-fond-clair-bloc-home, #fff);
+  overflow-wrap: anywhere;
 }
-.homepage-navigation li {
-  padding: .65rem 0;
+.homepage-space-columns .homepage-navigation li:has(a:hover),
+.homepage-space-columns .homepage-navigation li:focus-within {
+  box-shadow: 0 0 0 1px var(--color-flashy-principale, #5f9d15);
 }
-.homepage-navigation p {
-  margin: .25rem 0 0;
-  color: #666;
+.homepage-space-columns .homepage-navigation a {
+  display: block;
+  font-weight: 600;
+}
+.homepage-space-columns .homepage-navigation p {
+  margin: .5rem 0 0;
+  color: var(--color-text-clair, #666);
 }

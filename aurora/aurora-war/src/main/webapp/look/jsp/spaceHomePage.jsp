@@ -81,13 +81,14 @@
     <view:link href="/look/jsp/css/aurora.css"/>
     <view:link href="/look/jsp/css/responsiveslides.css"/>
     <view:link href="/look/jsp/css/themes.css"/>
-    <view:link href="/look/jsp/css/homepage-space.css?version=15592-navigation-v1"/>
+    <view:link href="/look/jsp/css/homepage-main.css?version=15592-space-styles-v2"/>
+    <view:link href="/look/jsp/css/homepage-space.css?version=15592-space-styles-v2"/>
     <view:includePlugin name="pdc"/>
     <view:includePlugin name="lightslideshow"/>
     <view:script src="/look/jsp/js/responsiveslides.min.js"/>
     <view:script src="/look/jsp/js/homepage-feeds.js"/>
     <view:script src="/look/jsp/js/homepage-search.js"/>
-    <view:script src="/look/jsp/js/homepage-space.js?version=15592-navigation-v1"/>
+    <view:script src="/look/jsp/js/homepage-space.js?version=15592-space-styles-v2"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="spaceHome">
     <view:browseBar spaceId="${homepageOwner}"/>
@@ -97,7 +98,7 @@
       </c:if>
     </view:operationPane>
     <view:window>
-      <div class="homepage-space-columns">
+      <div class="main-home-page homepage-space-columns">
         <div class="homepage-space-main">
           <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="main"/>
         </div>
