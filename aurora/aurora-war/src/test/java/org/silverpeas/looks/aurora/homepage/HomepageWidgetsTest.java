@@ -38,6 +38,37 @@ class HomepageWidgetsTest {
   @TempDir Path root;
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
+  @Test
+  void listActionsPreserveContentAndRejectStaleOrIncompleteUpdatesAtomically() throws Exception {
+    var store = new HomepageContentStore(root);
+    store.saveConfigured(page, "first", "fr", "Premier", "Bonjour", "",
+        new HomepageContentStore.Layout("right", 8, true));
+    store.saveEphemerisWidget(page, "second", "fr", "Date",
+        new HomepageContentStore.Layout("main", 9, false), "");
+    store.saveEphemerisWidget(page, "deleted", "fr", "Supprimé",
+        new HomepageContentStore.Layout("main", 1, true), "");
+    store.deleteWidget(page, "deleted", "fr", store.read(page, "deleted", "fr").revision());
+    var first = store.read(page, "first", "fr");
+    var second = store.read(page, "second", "fr");
+    var updates = List.of(
+        new HomepageContentStore.LayoutUpdate("second", second.revision(), 1, true),
+        new HomepageContentStore.LayoutUpdate("first", first.revision(), 2, false));
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.updateLayouts(page, "fr", updates.subList(0, 1)));
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.updateLayouts(page, "fr", List.of(updates.get(0),
+            new HomepageContentStore.LayoutUpdate("first", "stale", 2, false))));
+    assertEquals(second, store.read(page, "second", "fr"));
+    store.updateLayouts(page, "fr", updates);
+    assertEquals(new HomepageContentStore.Layout("right", 2, false),
+        store.read(page, "first", "fr").layout());
+    assertEquals("Bonjour", store.read(page, "first", "fr").html());
+    assertEquals(new HomepageContentStore.Layout("main", 1, true),
+        store.read(page, "second", "fr").layout());
+    assertThrows(ConcurrentModificationException.class,
+        () -> store.updateLayouts(page, "fr", updates));
+  }
+
   private LookAuroraHelper helper() {
     var helper = mock(LookAuroraHelper.class);
     var settings = mock(org.silverpeas.looks.aurora.LookSettings.class);

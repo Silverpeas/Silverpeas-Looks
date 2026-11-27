@@ -165,7 +165,7 @@ public class HomepageContentServlet extends HttpServlet {
 
   static boolean spaceAction(String action) {
     return java.util.Set.of("manage", "editor", "load", "save", "upload", "asset", "view",
-        "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
+        "updateLayouts", "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
         "loadPublications", "savePublications", "eventsEditor", "loadEvents", "saveEvents",
         "shortcutsEditor", "loadShortcuts", "saveShortcuts", "searchEditor", "loadSearch",
         "saveSearch", "renderFeed", "renderSearch").contains(action == null ? "" : action);
@@ -203,7 +203,25 @@ public class HomepageContentServlet extends HttpServlet {
 
   private void write(HttpServletRequest request, HttpServletResponse response, HomepagePage page,
       String widget, String language, String action) throws IOException, ServletException {
-    if ("deleteWidget".equals(action)) {
+    if ("updateLayouts".equals(action)) {
+      String[] ids = request.getParameterValues("widgets");
+      String[] revisions = request.getParameterValues("revisions");
+      String[] enabled = request.getParameterValues("enabled");
+      if (ids == null || revisions == null || enabled == null
+          || ids.length != revisions.length || ids.length != enabled.length) {
+        throw new IllegalArgumentException("Invalid layouts");
+      }
+      var updates = new java.util.ArrayList<HomepageContentStore.LayoutUpdate>();
+      for (int i = 0; i < ids.length; i++) {
+        if (!"true".equals(enabled[i]) && !"false".equals(enabled[i])) {
+          throw new IllegalArgumentException("Invalid visibility");
+        }
+        updates.add(new HomepageContentStore.LayoutUpdate(ids[i], revisions[i], i + 1,
+            Boolean.parseBoolean(enabled[i])));
+      }
+      store.updateLayouts(page, language, updates);
+      json(response, "{}");
+    } else if ("deleteWidget".equals(action)) {
       store.deleteWidget(page, widget, language, request.getParameter("revision"));
       json(response, "{}");
     } else if ("saveNews".equals(action)) {

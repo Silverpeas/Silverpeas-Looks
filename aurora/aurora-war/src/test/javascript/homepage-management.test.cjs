@@ -28,10 +28,14 @@ const fs = require('node:fs');
 const source = fs.readFileSync(
     'aurora/aurora-war/src/main/webapp/look/jsp/js/homepage-management.js', 'utf8');
 
-function setup(responseStatus = 200) {
+function setup(responseStatus = 200, layout = false) {
   let click;
   let escape;
   const state = {calls: 0, reloads: 0};
+  const handlers = {};
+  const row = {dataset: {widget: 'weather-legacy', revision: 'abc', enabled: 'true', zone: 'right'}};
+  const table = {querySelectorAll: () => [row],
+    addEventListener: (name, callback) => { handlers[name] = callback; }};
   const status = {textContent: ''};
   const dialog = {
     open: false, showModal() { this.open = true; }, close() { this.open = false; },
@@ -46,11 +50,12 @@ function setup(responseStatus = 200) {
     dataset: {category}, hidden: false
   }));
   const management = {
-    dataset: {endpoint: '/sp/AuroraHomepageContent', csrf: 'token'},
+    dataset: {endpoint: '/sp/AuroraHomepageContent', csrf: 'token', kind: 'skins', owner: 'waves', language: 'fr'},
     contains: () => true,
     querySelectorAll: selector => selector === '[data-catalog-filter]' ? filters : tiles,
     addEventListener: (name, callback) => { click = callback; },
-    querySelector: selector => selector === '.homepage-delete-dialog' ? dialog : status
+    querySelector: selector => selector === '.homepage-installed-table' ? (layout ? table : null)
+        : selector === '.homepage-delete-dialog' ? dialog : status
   };
   vm.runInNewContext(source, {
     whenSilverpeasReady: callback => callback(),
@@ -71,9 +76,15 @@ function setup(responseStatus = 200) {
         assert.equal(this.headers['X-Aurora-CSRF'], 'token');
         assert.equal(this.headers['Content-Type'], 'application/x-www-form-urlencoded;charset=UTF-8');
         const parameters = new URLSearchParams(body);
-        for (const [name, value] of Object.entries({action: 'deleteWidget',
+        if (layout) {
+          assert.equal(parameters.get('action'), 'updateLayouts');
+          assert.deepEqual(parameters.getAll('widgets'), ['weather-legacy']);
+          assert.deepEqual(parameters.getAll('revisions'), ['abc']);
+          assert.deepEqual(parameters.getAll('enabled'), ['false']);
+        }
+        for (const [name, value] of Object.entries({action: layout ? 'updateLayouts' : 'deleteWidget',
           widget: 'weather-legacy', revision: 'abc', kind: 'skins', owner: 'waves', language: 'fr'})) {
-          assert.equal(parameters.get(name), value);
+          if (!layout || !['widget', 'revision'].includes(name)) { assert.equal(parameters.get(name), value); }
         }
         if (responseStatus === 'network') { this.onerror(); }
         else if (responseStatus === 'timeout') { this.ontimeout(); }
@@ -89,6 +100,8 @@ function setup(responseStatus = 200) {
   const event = target => ({target: {closest: () => target}, preventDefault() {}});
   return {
     state, status, dialog, button, filters, tiles,
+    toggle: () => click(event({matches: selector => selector === '.homepage-status-badge',
+      closest: () => row})),
     open: () => click(event(button)),
     action: selector => click(event({matches: other => other === selector})),
     escape: () => { escape(); dialog.close(); }
@@ -144,4 +157,63 @@ test('category filters hide unrelated tiles and Tous restores the catalogue', ()
   }
   ui.filters[0].click();
   assert.ok(ui.tiles.every(tile => !tile.hidden));
+});
+
+for (const result of [200, 409, 403, 'network']) {
+  test('visibility action persists with revision and handles ' + result, async () => {
+    const ui = setup(result, true);
+    await ui.toggle();
+    assert.equal(ui.state.calls, 1);
+    assert.equal(ui.state.reloads, result === 200 ? 1 : 0);
+    if (result !== 200) { assert.ok(ui.status.textContent); }
+  });
+}
+
+test('drag and keyboard reorder within the same column and persist the full list', async () => {
+  for (const keyboard of [false, true]) {
+    const handlers = {};
+    let sent;
+    const rows = ['a', 'b', 'c'].map((id, index) => ({
+      dataset: {widget: id, revision: id + '-rev', enabled: 'true', zone: index === 2 ? 'right' : 'main'},
+      classList: {add() {}, remove() {}}
+    }));
+    const table = {querySelectorAll: () => rows,
+      addEventListener: (name, callback) => { handlers[name] = callback; }};
+    const parent = {insertBefore(row, before) {
+      rows.splice(rows.indexOf(row), 1);
+      rows.splice(before ? rows.indexOf(before) : rows.length, 0, row);
+    }};
+    rows.forEach(row => { row.parentNode = parent;
+      Object.defineProperty(row, 'nextSibling', {get: () => rows[rows.indexOf(row) + 1]});
+    });
+    const management = {
+      dataset: {kind: 'spaces', owner: 'WA1', language: 'fr'},
+      querySelectorAll: () => [], addEventListener() {},
+      querySelector: selector => selector === '.homepage-installed-table' ? table
+          : selector === '.homepage-delete-dialog' ? {addEventListener() {}} : {textContent: ''}
+    };
+    vm.runInNewContext(source, {
+      whenSilverpeasReady: callback => callback(), document: {querySelector: () => management},
+      URLSearchParams, window: {location: {reload() {}}},
+      XMLHttpRequest: class {
+        open() {} setRequestHeader() {}
+        send(body) { sent = new URLSearchParams(body); this.status = 200; this.onload(); }
+      }
+    });
+    const grip = {closest: () => rows[0]};
+    const gripTarget = {closest: () => grip};
+    if (keyboard) {
+      await handlers.keydown({target: gripTarget, key: 'ArrowDown', preventDefault() {}});
+    } else {
+      handlers.dragstart({target: gripTarget, dataTransfer: {setData() {}}});
+      const foreign = rows[2];
+      await handlers.drop({target: {closest: () => foreign}, preventDefault() {}});
+      assert.equal(sent, undefined, 'cross-column drop is ignored');
+      const target = rows[1];
+      await handlers.drop({target: {closest: () => target}, preventDefault() {}});
+    }
+    assert.deepEqual(sent.getAll('widgets'), ['b', 'a', 'c']);
+    assert.deepEqual(sent.getAll('revisions'), ['b-rev', 'a-rev', 'c-rev']);
+    assert.equal(sent.get('owner'), 'WA1');
+  }
 });

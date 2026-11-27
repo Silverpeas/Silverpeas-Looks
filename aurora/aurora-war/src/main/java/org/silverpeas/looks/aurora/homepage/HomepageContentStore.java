@@ -262,6 +262,30 @@ public class HomepageContentStore {
     saveProperties(page, properties);
   }
 
+  public record LayoutUpdate(String widget, String revision, int order, boolean enabled) { }
+
+  public synchronized void updateLayouts(HomepagePage page, String language,
+      java.util.List<LayoutUpdate> updates) throws IOException {
+    var deleted = deletedWidgets(page);
+    var current = widgets(page, language).stream()
+        .filter(widget -> !deleted.contains(widget.getId())).toList();
+    var ids = updates.stream().map(LayoutUpdate::widget).collect(Collectors.toSet());
+    if (ids.size() != updates.size() || !ids.equals(current.stream()
+        .map(Widget::getId).collect(Collectors.toSet()))) {
+      throw new ConcurrentModificationException("Widget list changed");
+    }
+    var settings = properties(page);
+    for (var update : updates) {
+      var content = read(page, update.widget(), language);
+      if (!content.revision().equals(update.revision())) {
+        throw new ConcurrentModificationException("Widget changed");
+      }
+      var layout = new Layout(content.layout().zone(), update.order(), update.enabled());
+      configureLayout(settings, "widget." + update.widget(), content.title(), layout);
+    }
+    saveProperties(page, settings);
+  }
+
   public synchronized void deleteWidget(HomepagePage page, String widget, String language,
       String expectedRevision) throws IOException {
     HomepagePage.validateIdentifier(widget);

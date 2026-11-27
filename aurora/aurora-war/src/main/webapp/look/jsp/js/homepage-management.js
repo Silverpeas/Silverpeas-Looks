@@ -77,10 +77,87 @@ whenSilverpeasReady(function() {
     }
   }
 
+  const table = management.querySelector('.homepage-installed-table');
+  let saving = false;
+  let dragged;
+  const rows = () => Array.from(table.querySelectorAll('tbody tr'));
+
+  async function saveLayouts() {
+    if (saving) { return; }
+    saving = true;
+    status.textContent = 'Enregistrement…';
+    const parameters = new URLSearchParams({action: 'updateLayouts',
+      kind: management.dataset.kind, owner: management.dataset.owner,
+      language: management.dataset.language});
+    rows().forEach(function(row) {
+      parameters.append('widgets', row.dataset.widget);
+      parameters.append('revisions', row.dataset.revision);
+      parameters.append('enabled', row.dataset.enabled);
+    });
+    try {
+      const result = await deleteRequest(parameters);
+      if (result === 200) { window.location.reload(); return; }
+      status.textContent = result === 409
+          ? 'La liste a été modifiée. Rechargez la page avant de réessayer.'
+          : 'Enregistrement impossible. Rechargez la page avant de réessayer.';
+    } catch (error) {
+      status.textContent = 'Enregistrement impossible. Vérifiez votre connexion et rechargez la page.';
+    }
+    // Keep editing locked after a failure: the displayed order may differ from storage.
+  }
+
+  if (table) {
+    table.addEventListener('dragstart', function(event) {
+      const grip = event.target.closest('.homepage-widget-grip');
+      if (!grip || saving) { event.preventDefault(); return; }
+      dragged = grip.closest('tr');
+      dragged.classList.add('homepage-dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', dragged.dataset.widget);
+    });
+    table.addEventListener('dragover', function(event) {
+      const target = event.target.closest('tbody tr');
+      if (dragged && target && target.dataset.zone === dragged.dataset.zone && !saving) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+      }
+    });
+    table.addEventListener('drop', async function(event) {
+      const target = event.target.closest('tbody tr');
+      if (!dragged || !target || dragged === target || saving
+          || target.dataset.zone !== dragged.dataset.zone) { return; }
+      event.preventDefault();
+      const ordered = rows();
+      target.parentNode.insertBefore(dragged,
+          ordered.indexOf(dragged) < ordered.indexOf(target) ? target.nextSibling : target);
+      await saveLayouts();
+    });
+    table.addEventListener('dragend', function() {
+      if (dragged) { dragged.classList.remove('homepage-dragging'); }
+      dragged = undefined;
+    });
+    table.addEventListener('keydown', async function(event) {
+      const grip = event.target.closest('.homepage-widget-grip');
+      if (!grip || saving || !['ArrowUp', 'ArrowDown'].includes(event.key)) { return; }
+      event.preventDefault();
+      const row = grip.closest('tr');
+      const siblings = rows().filter(item => item.dataset.zone === row.dataset.zone);
+      const index = siblings.indexOf(row);
+      const target = siblings[index + (event.key === 'ArrowUp' ? -1 : 1)];
+      if (!target) { return; }
+      target.parentNode.insertBefore(row, event.key === 'ArrowDown' ? target.nextSibling : target);
+      await saveLayouts();
+    });
+  }
+
   management.addEventListener('click', async function(event) {
     const button = event.target.closest('button');
     if (!button || !management.contains(button) || button.disabled) { return; }
-    if (button.matches('.homepage-delete-widget')) {
+    if (button.matches('.homepage-status-badge') && !saving) {
+      const row = button.closest('tr');
+      row.dataset.enabled = String(row.dataset.enabled !== 'true');
+      await saveLayouts();
+    } else if (button.matches('.homepage-delete-widget') && !saving) {
       event.preventDefault();
       pendingButton = button;
       dialog.showModal();

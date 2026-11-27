@@ -129,9 +129,9 @@
 </c:url>
 <view:sp-page>
   <view:sp-head-part>
-    <view:script src="/look/jsp/js/homepage-management.js?version=15592-editor-v3"/>
+    <view:script src="/look/jsp/js/homepage-management.js?version=15592-layout-v1"/>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-layout-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
@@ -140,7 +140,7 @@
     </view:browseBar>
     <view:window>
       <view:frame>
-        <main class="homepage-content-editor homepage-content-management" data-csrf="<c:out value='${homepageCsrf}'/>" data-endpoint="<c:url value='/AuroraHomepageContent'/>">
+        <main class="homepage-content-editor homepage-content-management" data-kind="${param.kind}" data-owner="<c:out value='${param.owner}'/>" data-language="${homepageLanguage}" data-csrf="<c:out value='${homepageCsrf}'/>" data-endpoint="<c:url value='/AuroraHomepageContent'/>">
           <p role="status" class="homepage-delete-status"></p>
           <dialog class="homepage-delete-dialog" aria-labelledby="homepage-delete-title">
             <h2 id="homepage-delete-title">Supprimer ce widget ?</h2>
@@ -171,13 +171,9 @@
               </view:board>
             </c:when>
             <c:otherwise>
-              <view:arrayPane var="homepageContentZones" routingAddress="${manageUrl}" numberLinesPerPage="20">
-                <view:arrayColumn title="Widget" sortable="false"/>
-                <view:arrayColumn title="Type" sortable="false"/>
-                <view:arrayColumn title="Colonne" sortable="false"/>
-                <view:arrayColumn title="Ordre" sortable="false"/>
-                <view:arrayColumn title="Affichage" sortable="false"/>
-                <view:arrayColumn title="Actions" sortable="false"/>
+              <table class="homepage-installed-table">
+                <thead><tr><th aria-label="Ordre"></th><th>Widget</th><th>Type</th><th>Colonne</th><th>Ordre</th><th>Affichage</th><th>Actions</th></tr></thead>
+                <tbody>
                 <c:forEach items="${homepageWidgets}" var="widget">
                   <c:url value="/AuroraHomepageContent" var="editUrl">
                     <c:param name="action" value="${widget.type == 'weather' ? 'weatherEditor' : widget.type == 'bookmarks' ? 'bookmarksEditor' : widget.type == 'search' ? 'searchEditor' : widget.type == 'news' ? 'newsEditor' : (widget.type == 'publications' ? 'publicationsEditor' : (widget.type == 'ephemeris' ? 'ephemerisEditor' : (widget.type == 'events' ? 'eventsEditor' : (widget.type == 'rss' ? 'rssEditor' : (widget.type == 'faq' ? 'faqEditor' : (widget.type == 'users' ? 'usersEditor' : (widget.type == 'subscriptions' ? 'subscriptionsEditor' : (widget.type == 'shortcuts' ? 'shortcutsEditor' : 'editor'))))))))}"/>
@@ -187,22 +183,23 @@
                     <c:param name="language" value="${homepageLanguage}"/>
                   </c:url>
                   <c:set var="editLink"><a href="<c:out value='${editUrl}'/>"><c:out value="${empty widget.title ? 'Zone sans titre' : widget.title}"/></a></c:set>
-                  <c:set var="displayStatus"><span class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></span></c:set>
+                  <c:set var="displayStatus"><button type="button" aria-pressed="${widget.enabled}" title="Afficher ou masquer le widget" class="homepage-status-badge ${widget.enabled ? 'homepage-status-visible' : 'homepage-status-hidden'}"><c:out value="${widget.enabled ? 'Visible' : 'Masquée'}"/></button></c:set>
                   <c:set var="deleteButton"><button type="button" class="homepage-delete-widget simple-button" aria-label="Supprimer le widget" title="Supprimer le widget" data-widget="<c:out value='${widget.id}'/>" data-revision="<c:out value='${widget.revision}'/>" data-kind="<c:out value='${param.kind}'/>" data-owner="<c:out value='${param.owner}'/>" data-language="<c:out value='${homepageLanguage}'/>"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 6h18M9 6V4h6v2M5 6l1 14h12l1-14M10 10v6M14 10v6"/></svg></button></c:set>
                   <c:set var="widgetActions"><span class="homepage-widget-actions"><a class="homepage-edit-widget simple-button" href="<c:out value='${editUrl}'/>" aria-label="Modifier le widget" title="Modifier le widget"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 3 5 5-12 12-6 1 1-6z M14 5l5 5"/></svg></a>${deleteButton}</span></c:set>
-                  <view:arrayLine id="${widget.id}">
-                    <view:arrayCellText text="${editLink}"/>
-                    <view:arrayCellText text="${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}"/>
-                    <view:arrayCellText text="${widget.zone == 'right' ? 'Droite' : 'Principale'}"/>
-                    <view:arrayCellText text="${widget.order}"/>
-                    <view:arrayCellText text="${displayStatus}"/>
-                    <view:arrayCellText text="${widgetActions}"/>
-                  </view:arrayLine>
+                  <tr data-widget="${widget.id}" data-revision="${widget.revision}" data-enabled="${widget.enabled}" data-zone="${widget.zone}">
+                    <td><button type="button" draggable="true" class="homepage-widget-grip" aria-label="Déplacer le widget" title="Glisser pour déplacer ; flèches haut et bas au clavier"><svg viewBox="0 0 16 24" width="16" height="20" fill="currentColor" aria-hidden="true"><circle cx="5" cy="6" r="1.5"/><circle cx="11" cy="6" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="18" r="1.5"/><circle cx="11" cy="18" r="1.5"/></svg></button></td>
+                    <td>${editLink}</td>
+                    <td>${widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
+                    <td>${widget.zone == 'right' ? 'Droite' : 'Principale'}</td>
+                    <td>${widget.order}</td>
+                    <td>${displayStatus}</td>
+                    <td>${widgetActions}</td>
+                  </tr>
                 </c:forEach>
-              </view:arrayPane>
+              </tbody></table>
             </c:otherwise>
           </c:choose>
-          <p class="homepage-help">Les plus petits numéros s’affichent en premier dans chaque colonne.</p>
+          <p class="homepage-help">Glissez la poignée pour ordonner les widgets dans leur colonne. Cliquez sur la pastille pour les afficher ou les masquer.</p>
           </section>
           <aside class="homepage-catalog" aria-labelledby="homepage-catalog-title">
             <h2 id="homepage-catalog-title">Ajouter un widget</h2>
