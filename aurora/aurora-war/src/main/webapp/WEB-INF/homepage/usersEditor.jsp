@@ -33,14 +33,14 @@
 </c:url>
 <view:sp-page>
   <view:sp-head-part>
-    <title>Configurer les nouveaux utilisateurs</title>
+    <title>Configurer les nouveaux utilisateurs${param.kind == 'spaces' ? ' de l’espace' : ''}</title>
     <view:link href="/look/jsp/css/homepage-content.css?version=15592-editor-v3"/>
     <view:script src="/look/jsp/js/homepage-news.js?version=15592-navigation-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:window><view:frame>
       <main class="homepage-content-editor">
-        <h1>Configurer les nouveaux utilisateurs</h1>
+        <h1>Configurer les nouveaux utilisateurs${param.kind == 'spaces' ? ' de l’espace' : ''}</h1>
         <p id="news-context" class="homepage-introduction"></p>
         <form id="news-form" data-widget-type="users">
           <view:board>
@@ -60,11 +60,19 @@
                   <input id="news-order" type="number" min="0" max="10000" required>
                 </div>
               </div>
-              <div class="homepage-field">
-                <label for="news-group">Groupe source</label>
-                <input id="news-group" type="text" maxlength="200" placeholder="12" pattern="-1|[0-9]+">
-                <p>Indiquez l’identifiant du groupe. Vide ou -1 : tous les utilisateurs actifs.</p>
-              </div>
+              <c:choose>
+                <c:when test="${param.kind == 'spaces'}">
+                  <input id="news-group" type="hidden" value="">
+                  <p>Utilisateurs ayant accès aux applications de cet espace et de ses sous-espaces, classés par date de création du compte.</p>
+                </c:when>
+                <c:otherwise>
+                  <div class="homepage-field">
+                    <label for="news-group">Groupe source</label>
+                    <input id="news-group" type="text" maxlength="200" placeholder="12" pattern="-1|[0-9]+">
+                    <p>Indiquez l’identifiant du groupe. Vide ou -1 : tous les utilisateurs actifs.</p>
+                  </div>
+                </c:otherwise>
+              </c:choose>
               <div class="homepage-field">
                 <label for="news-size">Nombre de nouveaux utilisateurs</label>
                 <input id="news-size" type="number" min="0" max="100" required>

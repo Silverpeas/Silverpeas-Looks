@@ -39,6 +39,26 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
+  void spaceNewUsersPersistAndUseOnlyTheCurrentSpace() throws Exception {
+    var store = new HomepageContentStore(root);
+    var space = new HomepagePage("spaces", "WA1");
+    var helper = mock(LookAuroraHelper.class);
+    var widget = HomepageWidgets.communityWidget(store, space, "users-one", "fr", helper, "users");
+    assertEquals("Nouveaux utilisateurs de l’espace", widget.content().title());
+    store.saveCommunityWidget(space, widget.id(), "fr", widget.content().title(),
+        widget.content().layout(), "users", null, widget.usersConfiguration(), "");
+    HomepageWidgets.users(space, store.widgets(space, "fr"), helper);
+    verify(helper).getConfiguredSpaceNewUsers("WA1", widget.usersConfiguration());
+    verify(helper, never()).getConfiguredNewUsers(any());
+    store.saveCommunityWidget(space, widget.id(), "fr", widget.content().title(),
+        new HomepageContentStore.Layout("right", 3, false), "users", null,
+        widget.usersConfiguration(), store.readWidget(space, widget.id(), "fr").content().revision());
+    clearInvocations(helper);
+    HomepageWidgets.users(space, store.widgets(space, "fr"), helper);
+    verifyNoInteractions(helper);
+  }
+
+  @Test
   void spaceAdminsAreScopedPersistedAndProtectedAgainstStaleEdits() throws Exception {
     var store = new HomepageContentStore(root);
     var space = new HomepagePage("spaces", "WA1");

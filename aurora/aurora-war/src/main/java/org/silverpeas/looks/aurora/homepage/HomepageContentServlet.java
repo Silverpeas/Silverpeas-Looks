@@ -168,7 +168,7 @@ public class HomepageContentServlet extends HttpServlet {
   }
 
   static boolean spaceAction(String action) {
-    return java.util.Set.of("manage", "editor", "load", "save", "upload", "asset", "view",
+    return java.util.Set.of("usersEditor", "loadUsers", "saveUsers", "manage", "editor", "load", "save", "upload", "asset", "view",
         "updateLayouts", "deleteWidget", "newsEditor", "loadNews", "saveNews", "publicationsEditor",
         "loadPublications", "savePublications", "eventsEditor", "loadEvents", "saveEvents",
         "shortcutsEditor", "loadShortcuts", "saveShortcuts", "searchEditor", "loadSearch",
@@ -320,7 +320,7 @@ public class HomepageContentServlet extends HttpServlet {
               Boolean.parseBoolean(request.getParameter("enabled"))), faq ? "faq" : "users",
           faq ? new HomepageContentStore.FaqConfiguration(request.getParameter("source"),
               Integer.parseInt(request.getParameter("size")), request.getParameter("selection")) : null,
-          faq ? null : new HomepageContentStore.UsersConfiguration(request.getParameter("group"),
+          faq ? null : new HomepageContentStore.UsersConfiguration("spaces".equals(page.kind()) ? "" : request.getParameter("group"),
               Integer.parseInt(request.getParameter("size")),
               Boolean.parseBoolean(request.getParameter("avatar")), request.getParameter("fields")),
           request.getParameter("revision"));

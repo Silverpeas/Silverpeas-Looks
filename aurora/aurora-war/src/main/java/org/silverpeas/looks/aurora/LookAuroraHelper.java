@@ -1187,6 +1187,25 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
     return result;
   }
 
+  public NewUsersList getConfiguredSpaceNewUsers(String spaceId,
+      HomepageContentStore.UsersConfiguration configuration) {
+    if (configuration.size() == 0) {
+      return null;
+    }
+    final OrganizationController organization = getOrganisationController();
+    List<User> users = of(organization.getAllComponentIdsRecur(spaceId))
+        .flatMap(id -> of(organization.getAllUsers(id)).map(User.class::cast))
+        .filter(user -> !List.of(BLOCKED, DEACTIVATED, REMOVED).contains(user.getState()))
+        .distinct()
+        .sorted(new UserDetail.OnCreationDate().reversed())
+        .limit(configuration.size())
+        .toList();
+    NewUsersList result = new NewUsersList(users);
+    result.setAvatar(configuration.avatar());
+    result.setFields(configuration.fields().isEmpty() ? List.of() : List.of(configuration.fields().split(" ")));
+    return result;
+  }
+
   private NewUsersList getNewUsersList(boolean spaceScope, List<User> users) {
     String paramPrefix = spaceScope ? "space.homepage." : "home.";
     int nbUsersDisplayed = getSettings(paramPrefix + "users.nb", 0);

@@ -262,7 +262,7 @@ public final class HomepageWidgets {
     boolean faq = "faq".equals(type);
     var users = faq ? null : new HomepageContentStore.UsersConfiguration("", 5, true, "title phone fonction");
     return new HomepageContentStore.Widget(id,
-        new HomepageContentStore.Content(faq ? "FAQ" : "Nouveaux utilisateurs", "", "",
+        new HomepageContentStore.Content(faq ? "FAQ" : ("spaces".equals(page.kind()) ? "Nouveaux utilisateurs de l’espace" : "Nouveaux utilisateurs"), "", "",
             new HomepageContentStore.Layout(faq ? "right" : "main", faq ? 20 : 60,
                 faq || users.size() > 0)),
         type, null, 0, null, null, null,
@@ -282,6 +282,18 @@ public final class HomepageWidgets {
     Map<String, org.silverpeas.looks.aurora.NewUsersList> result = new LinkedHashMap<>();
     widgets.stream().filter(widget -> widget.isEnabled() && "users".equals(widget.type()))
         .forEach(widget -> result.put(widget.id(), helper.getConfiguredNewUsers(widget.usersConfiguration())));
+    return result;
+  }
+
+  public static Map<String, org.silverpeas.looks.aurora.NewUsersList> users(HomepagePage page,
+      List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
+    if (!"spaces".equals(page.kind())) {
+      return users(widgets, helper);
+    }
+    Map<String, org.silverpeas.looks.aurora.NewUsersList> result = new LinkedHashMap<>();
+    widgets.stream().filter(widget -> widget.isEnabled() && "users".equals(widget.type()))
+        .forEach(widget -> result.put(widget.id(),
+            helper.getConfiguredSpaceNewUsers(page.owner(), widget.usersConfiguration())));
     return result;
   }
 

@@ -160,7 +160,17 @@
         <viewTags:displayFAQ questions="${questions[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
       </c:when>
       <c:when test="${widget.type == 'users'}">
-        <viewTags:displayNewUsers newUsers="${users[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
+        <c:choose>
+          <c:when test="${homepageKind == 'spaces' and empty users[widget.id].users}">
+            <div class="secteur-container homepage-users" id="homepage-content-${widget.id}">
+              <h4><c:out value="${widget.title}"/></h4>
+              <p>Aucun nouvel utilisateur à afficher pour cet espace.</p>
+            </div>
+          </c:when>
+          <c:otherwise>
+            <viewTags:displayNewUsers newUsers="${users[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
+          </c:otherwise>
+        </c:choose>
       </c:when>
       <c:when test="${widget.type == 'events' or widget.type == 'rss'}">
         <c:url value="/AuroraHomepageContent" var="feedUrl">

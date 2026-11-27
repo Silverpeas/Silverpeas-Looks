@@ -274,6 +274,9 @@ class HomepageContentServletTest {
 
   @Test
   void spacesExposeOnlySupportedWidgetTypes() throws Exception {
+    assertTrue(HomepageContentServlet.spaceAction("usersEditor"));
+    assertTrue(HomepageContentServlet.spaceAction("loadUsers"));
+    assertTrue(HomepageContentServlet.spaceAction("saveUsers"));
     assertTrue(HomepageContentServlet.spaceAction("shortcutsEditor"));
     assertFalse(HomepageContentServlet.spaceAction("rssEditor"));
     assertFalse(HomepageContentServlet.spaceAction("sources"));

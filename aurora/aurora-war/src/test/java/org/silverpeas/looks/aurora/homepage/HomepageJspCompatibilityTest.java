@@ -47,6 +47,20 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void spaceNewUsersHaveAnEditorAndAVisibleEmptyState() throws Exception {
+    Path web = Path.of("src/main/webapp");
+    String page = Files.readString(web.resolve("look/jsp/spaceHomePage.jsp"));
+    assertTrue(page.contains("HomepageWidgets.users(homepagePage, widgets, helper)"));
+    assertTrue(page.contains("users=\"${homepageUsers}\""));
+    String editor = Files.readString(web.resolve("WEB-INF/homepage/usersEditor.jsp"));
+    assertTrue(editor.contains("id=\"news-group\" type=\"hidden\" value=\"\""));
+    String widgets = Files.readString(web.resolve("WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
+    assertTrue(widgets.contains("Aucun nouvel utilisateur à afficher pour cet espace."));
+    String catalogue = Files.readString(web.resolve("WEB-INF/homepage/manage.jsp"));
+    assertTrue(catalogue.contains("Nouveaux utilisateurs de l’espace"));
+  }
+
+  @Test
   void spaceAdministratorsAreScopedAndRenderSilverpeasProfiles() throws Exception {
     String catalogue = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
     int start = catalogue.indexOf("<c:if test=\"${param.kind == 'spaces'}\">", catalogue.indexOf("homepage-catalog-grid"));

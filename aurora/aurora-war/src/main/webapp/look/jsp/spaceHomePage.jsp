@@ -60,6 +60,7 @@
   request.setAttribute("homepageLanguage", controller.getFavoriteLanguage());
   request.setAttribute("homepageWidgets", widgets);
   request.setAttribute("homepageNews", HomepageWidgets.news(store, homepagePage, widgets, helper));
+  request.setAttribute("homepageUsers", HomepageWidgets.users(homepagePage, widgets, helper));
   request.setAttribute("homepageSpaceAdmins", HomepageWidgets.spaceAdmins(homepagePage, widgets, helper));
   request.setAttribute("homepageNavigation", HomepageWidgets.navigation(homepagePage, widgets, helper));
   request.setAttribute("homepagePublications", HomepageWidgets.publications(homepagePage, widgets, helper));
@@ -102,10 +103,10 @@
     <view:window>
       <div class="main-home-page homepage-space-columns">
         <div class="homepage-space-main">
-          <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="main"/>
+          <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" users="${homepageUsers}" zone="main"/>
         </div>
         <div class="homepage-space-right">
-          <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" zone="right"/>
+          <viewTags:displayHomepageWidgets widgets="${homepageWidgets}" news="${homepageNews}" publications="${homepagePublications}" users="${homepageUsers}" zone="right"/>
         </div>
       </div>
     </view:window>

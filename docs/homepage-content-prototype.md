@@ -370,3 +370,7 @@ profil Silverpeas. Aucun choix manuel d’utilisateur n’est nécessaire. Le ti
 l’ordre et la visibilité sont enregistrés dans le fichier de l’espace avec contrôle de révision.
 Un widget masqué ne charge pas les responsables ; une liste vide ne produit aucun bloc.
 Les opérations de chargement, d’édition et d’enregistrement refusent les pages générales.
+
+### Nouveaux utilisateurs des espaces
+
+Le widget `users` est aussi disponible pour les pages `spaces`. Il recense les utilisateurs des applications de l’espace courant et de ses sous-espaces, sans doublons et hors comptes bloqués, désactivés ou supprimés. Le classement utilise la date de création du compte, et non une date d’arrivée dans l’espace. Le nombre (0 à 100), les avatars et les champs de profil sont configurables ; le groupe source est réservé aux pages générales. La configuration est stockée dans le properties de l’espace. Une liste vide affiche un message.

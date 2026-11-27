@@ -37,7 +37,7 @@ class HomepageFeedRenderingTest {
     return mock(LookAuroraHelper.class, invocation -> {
       switch (invocation.getMethod().getName()) {
         case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
-            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers",
+            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers", "getConfiguredSpaceNewUsers",
             "getDefaultFaqConfiguration", "getDefaultUsersConfiguration", "getConfiguredSubscriptions",
             "getConfiguredSearchForm", "getDefaultSearchConfiguration", "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
         case "getOrganisationController" -> { return organization; }
@@ -107,6 +107,38 @@ class HomepageFeedRenderingTest {
       when(manager.getQuestions("questionReply12")).thenReturn(List.of());
       assertNull(helper.getConfiguredQuestions(new HomepageContentStore.FaqConfiguration("questionReply12", 2, "random")));
     }
+  }
+
+  @Test
+  void spaceNewUsersAreDistinctSortedActiveAndBounded() {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var config = new HomepageContentStore.UsersConfiguration("", 5, false, "phone");
+    assertNull(helper.getConfiguredSpaceNewUsers("WA1",
+        new HomepageContentStore.UsersConfiguration("", 0, true, "")));
+    verifyNoInteractions(organization);
+    var older = new org.silverpeas.core.admin.user.model.UserDetail();
+    older.setId("1");
+    older.setCreationDate(new java.util.Date(1000));
+    var newer = new org.silverpeas.core.admin.user.model.UserDetail();
+    newer.setId("2");
+    newer.setCreationDate(new java.util.Date(2000));
+    var blocked = new org.silverpeas.core.admin.user.model.UserDetail();
+    blocked.setId("3");
+    blocked.setState(org.silverpeas.core.admin.user.constant.UserState.BLOCKED);
+    when(organization.getAllComponentIdsRecur("WA1")).thenReturn(new String[]{"kmelia1", "quickinfo2"});
+    when(organization.getAllUsers("kmelia1")).thenReturn(
+        new org.silverpeas.core.admin.user.model.UserDetail[]{older, newer, blocked});
+    when(organization.getAllUsers("quickinfo2")).thenReturn(
+        new org.silverpeas.core.admin.user.model.UserDetail[]{newer});
+    var result = helper.getConfiguredSpaceNewUsers("WA1", config);
+    assertEquals(List.of(newer, older), result.getUsers());
+    assertFalse(result.isAvatar());
+    assertEquals(List.of("phone"), result.getFields());
+    assertEquals(List.of(newer), helper.getConfiguredSpaceNewUsers("WA1",
+        new HomepageContentStore.UsersConfiguration("", 1, true, "")).getUsers());
+    when(organization.getAllComponentIdsRecur("WA1")).thenReturn(new String[0]);
+    assertTrue(helper.getConfiguredSpaceNewUsers("WA1", config).getUsers().isEmpty());
   }
 
   @Test

@@ -210,7 +210,7 @@
                   <tr data-widget="${widget.id}" data-revision="${widget.revision}" data-enabled="${widget.enabled}" data-zone="${widget.zone}">
                     <td><button type="button" draggable="true" class="homepage-widget-grip" aria-label="Déplacer le widget" title="Glisser pour déplacer ; flèches haut et bas au clavier"><svg viewBox="0 0 16 24" width="16" height="20" fill="currentColor" aria-hidden="true"><circle cx="5" cy="6" r="1.5"/><circle cx="11" cy="6" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/><circle cx="5" cy="18" r="1.5"/><circle cx="11" cy="18" r="1.5"/></svg></button></td>
                     <td>${editLink}</td>
-                    <td>${widget.type == 'spaceAdmins' ? 'Responsables de l’espace' : widget.type == 'image' ? 'Image' : widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? 'Nouveaux utilisateurs' : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
+                    <td>${widget.type == 'spaceAdmins' ? 'Responsables de l’espace' : widget.type == 'image' ? 'Image' : widget.type == 'navigation' ? 'Navigation' : widget.type == 'weather' ? 'Météo' : widget.type == 'bookmarks' ? 'Favoris personnels' : widget.type == 'search' ? 'Recherche' : widget.type == 'news' ? 'Actualités' : (widget.type == 'publications' ? 'Dernières publications' : (widget.type == 'ephemeris' ? 'Éphémérides' : (widget.type == 'events' ? 'Prochains événements' : (widget.type == 'rss' ? 'Flux RSS' : (widget.type == 'faq' ? 'FAQ' : (widget.type == 'users' ? (param.kind == 'spaces' ? 'Nouveaux utilisateurs de l’espace' : 'Nouveaux utilisateurs') : (widget.type == 'subscriptions' ? 'Actualités des abonnements' : (widget.type == 'shortcuts' ? 'Raccourcis' : 'Zone libre'))))))))}</td>
                     <td>${widget.zone == 'right' ? 'Droite' : 'Principale'}</td>
                     <td>${widget.order}</td>
                     <td>${displayStatus}</td>
@@ -282,12 +282,12 @@
                 <span class="homepage-catalog-description">Affichez les rendez-vous à venir.</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
               </a>
-              <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
+              <a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addUsersUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M2 21v-2a6 6 0 0 1 12 0v2 M19 8v6 M16 11h6"/></svg>
-                <span class="homepage-catalog-name">Nouveaux utilisateurs</span>
-                <span class="homepage-catalog-description">Présentez les nouveaux membres de votre communauté.</span>
+                <span class="homepage-catalog-name">${param.kind == 'spaces' ? 'Nouveaux utilisateurs de l’espace' : 'Nouveaux utilisateurs'}</span>
+                <span class="homepage-catalog-description">${param.kind == 'spaces' ? 'Présentez les nouveaux utilisateurs ayant accès à cet espace.' : 'Présentez les nouveaux membres de votre communauté.'}</span>
                 <span class="homepage-catalog-add" aria-hidden="true">+</span>
-              </a></c:if>
+              </a>
               <c:if test="${param.kind != 'spaces'}"><a class="homepage-catalog-tile" data-category="community" href="<c:out value='${addFaqUrl}'/>">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 4h18v14H9l-6 4z M9 9a3 3 0 1 1 5 2l-2 1v1 M12 15v1"/></svg>
                 <span class="homepage-catalog-name">FAQ</span>
