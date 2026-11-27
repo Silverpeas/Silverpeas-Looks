@@ -93,33 +93,35 @@ test('requires a selection and keeps the form open on a revision conflict', asyn
   assert.equal(controls['news-save'].disabled, false);
 });
 
-test('carousel arrows follow the viewport, boundaries and reduced motion', () => {
+test('single-slide carousel supports arrows, wraparound, keyboard and swipe', () => {
   const code = fs.readFileSync(path.resolve(__dirname, '../../main/webapp/look/jsp/js/homepage-medias-carousel.js'), 'utf8');
   const buttons = [-1, 1].map(direction => ({dataset: {direction}, addEventListener(event, callback) { this.click = callback; }}));
   const controls = {querySelectorAll: () => buttons};
-  const list = {scrollWidth: 700, clientWidth: 300, scrollLeft: 0,
-    addEventListener(event, callback) { this.scroll = callback; }, scrollBy(options) { this.movement = options; }};
-  let start, resize;
-  let reduced = false;
-  vm.runInNewContext(code, {window: {addEventListener(event, callback) { start = callback; },
-    matchMedia: () => ({matches: reduced})},
-    document: {querySelectorAll: () => [{querySelector: selector => selector.endsWith('-list') ? list : controls}]},
-    ResizeObserver: class {constructor(callback) { resize = callback; } observe() {}}});
+  const slides = [{}, {}, {}];
+  const list = {children: slides, handlers: {}, addEventListener(event, callback) { this.handlers[event] = callback; }};
+  const position = {};
+  let start;
+  vm.runInNewContext(code, {window: {addEventListener(event, callback) { start = callback; }},
+    document: {querySelectorAll: () => [{querySelector: selector => selector.endsWith('-list') ? list : selector.endsWith('-position') ? position : controls}]}});
   start();
-  assert.equal(controls.hidden, false);
-  assert.equal(buttons[0].disabled, true);
-  assert.equal(buttons[1].disabled, false);
+  const visible = () => slides.map(slide => !slide.hidden);
+  assert.deepEqual(visible(), [true, false, false]);
+  assert.equal(position.textContent, '1 / 3');
   buttons[1].click();
-  assert.equal(list.movement.left, 255);
-  assert.equal(list.movement.behavior, 'smooth');
-  list.scrollLeft = 400;
-  list.scroll();
-  assert.equal(buttons[1].disabled, true);
-  reduced = true;
+  assert.deepEqual(visible(), [false, true, false]);
+  list.handlers.keydown({key: 'ArrowRight', preventDefault() {}});
+  assert.deepEqual(visible(), [false, false, true]);
+  buttons[1].click();
+  assert.deepEqual(visible(), [true, false, false]);
   buttons[0].click();
-  assert.equal(list.movement.left, -255);
-  assert.equal(list.movement.behavior, 'instant');
-  list.scrollWidth = 300;
-  resize();
+  assert.equal(position.textContent, '3 / 3');
+  list.handlers.touchstart({touches: [{clientX: 100, clientY: 0}]});
+  list.handlers.touchend({changedTouches: [{clientX: 10, clientY: 5}]});
+  assert.equal(position.textContent, '1 / 3');
+  list.handlers.touchstart({touches: [{clientX: 100, clientY: 0}]});
+  list.handlers.touchend({changedTouches: [{clientX: 90, clientY: 100}]});
+  assert.equal(position.textContent, '1 / 3');
+  slides.splice(1);
+  start();
   assert.equal(controls.hidden, true);
 });

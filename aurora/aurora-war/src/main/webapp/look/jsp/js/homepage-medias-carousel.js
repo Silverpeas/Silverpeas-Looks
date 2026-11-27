@@ -25,20 +25,40 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.homepage-medias[data-display="carousel"]').forEach(widget => {
     const list = widget.querySelector('.homepage-medias-list');
     const controls = widget.querySelector('.homepage-medias-controls');
+    const position = widget.querySelector('.homepage-medias-position');
     if (!list || !controls) { return; }
+    const slides = Array.from(list.children);
     const buttons = controls.querySelectorAll('button');
-    const refresh = () => {
-      const maximum = list.scrollWidth - list.clientWidth;
-      controls.hidden = maximum <= 1;
-      buttons[0].disabled = list.scrollLeft <= 1;
-      buttons[1].disabled = list.scrollLeft >= maximum - 1;
+    let current = 0;
+    const show = index => {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => { slide.hidden = i !== current; });
+      if (position) { position.textContent = `${current + 1} / ${slides.length}`; }
     };
+    if (!slides.length) { return; }
+    controls.hidden = slides.length < 2;
     buttons.forEach(button => button.addEventListener('click', () => {
-      list.scrollBy({left: Number(button.dataset.direction) * list.clientWidth * .85,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+      show(current + Number(button.dataset.direction));
     }));
-    list.addEventListener('scroll', refresh, {passive: true});
-    new ResizeObserver(refresh).observe(list);
-    refresh();
+    list.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(current + (event.key === 'ArrowLeft' ? -1 : 1));
+      }
+    });
+    let touchStart;
+    list.addEventListener('touchstart', event => {
+      touchStart = event.touches.length === 1 ? event.touches[0] : null;
+    }, {passive: true});
+    list.addEventListener('touchend', event => {
+      if (!touchStart || !event.changedTouches.length) { return; }
+      const dx = event.changedTouches[0].clientX - touchStart.clientX;
+      const dy = event.changedTouches[0].clientY - touchStart.clientY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        show(current + (dx < 0 ? 1 : -1));
+      }
+      touchStart = null;
+    }, {passive: true});
+    show(0);
   });
 });

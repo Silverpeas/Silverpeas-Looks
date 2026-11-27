@@ -34,20 +34,23 @@
   <c:choose>
     <c:when test="${empty medias}"><p>Aucun média à afficher.</p></c:when>
     <c:otherwise>
+      <div class="homepage-medias-stage">
       <c:if test="${display == 'carousel'}">
         <div class="homepage-medias-controls" hidden>
-          <button type="button" class="simple-button" data-direction="-1" aria-label="Médias précédents">&#8592;</button>
-          <button type="button" class="simple-button" data-direction="1" aria-label="Médias suivants">&#8594;</button>
+          <button type="button" class="simple-button homepage-medias-previous" data-direction="-1" aria-label="Média précédent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+          <button type="button" class="simple-button homepage-medias-next" data-direction="1" aria-label="Média suivant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
         </div>
       </c:if>
       <ul class="homepage-medias-list" tabindex="${display == 'carousel' ? '0' : '-1'}" aria-label="Derniers médias">
         <c:forEach var="media" items="${medias}">
-          <li><a href="<c:out value='${media.permalink}'/>">
+          <li class="homepage-medias-slide"><a href="<c:out value='${media.permalink}'/>">
             <img src="<c:out value='${media.getApplicationThumbnailUrl(homepageMediaResolution)}'/>" alt="" loading="lazy">
-            <span><c:out value="${media.title}"/></span>
+            <span class="homepage-medias-caption"><c:out value="${media.title}"/></span>
           </a></li>
         </c:forEach>
       </ul>
+      </div>
+      <c:if test="${display == 'carousel'}"><p class="homepage-medias-position" aria-live="polite" aria-atomic="true"></p></c:if>
     </c:otherwise>
   </c:choose>
 </section>

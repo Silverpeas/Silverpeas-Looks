@@ -401,3 +401,31 @@ est limitée par la configuration de pagination du composant. Seuls les applicat
 non masquées et les médias accessibles au visiteur sont affichés. Une liste vide affiche un message.
 Plusieurs widgets peuvent coexister sans identifiants de carrousel partagés.
 L’enregistrement conserve les protections CSRF et de révision et revient à la gestion.
+
+#### Présentation des médias et personnalisation du carrousel
+
+`widget.<id>.display` vaut `grid` (par défaut) ou `carousel`. Le carrousel affiche un seul
+média à la fois, sans défilement automatique ni scrollbar. Il se pilote avec les boutons
+SVG, les flèches du clavier ou un balayage horizontal tactile. Les boutons disparaissent
+pour un média unique. Le compteur annonce la position aux lecteurs d’écran.
+
+Le style est regroupé dans `look/jsp/css/homepage-medias.css`. Un skin peut surcharger
+les variables sur `.homepage-medias` ou sur `#homepage-widget-<id>` :
+
+```css
+.homepage-medias {
+  --media-carousel-height: 360px;
+  --media-carousel-fit: cover; /* contain pour préserver l’image entière */
+  --media-carousel-background: #fff;
+  --media-carousel-radius: 12px;
+  --media-carousel-button-size: 44px;
+  --media-carousel-button-background: #fff;
+  --media-carousel-button-color: #5f9d15;
+  --media-carousel-caption-color: #303840;
+}
+```
+
+Les classes `.homepage-medias-stage`, `.homepage-medias-slide`, `.homepage-medias-caption`,
+`.homepage-medias-controls`, `.homepage-medias-previous`, `.homepage-medias-next` et
+`.homepage-medias-position` permettent de personnaliser séparément chaque élément.
+Aucun style de présentation n’est généré par JavaScript ni ajouté en ligne.
