@@ -70,7 +70,7 @@
 </c:if>
 
 <c:if test="${not empty listOfNews.news}">
-  <div class="secteur-container ${carousel ? 'homepage-news-carousel' : ''}" id="${id}">
+  <div class="secteur-container homepage-news ${carousel ? 'homepage-news-carousel' : ''}" id="${id}">
     <h4><c:out value="${empty title ? labelNews : title}"/></h4>
     <ul class="${newsClass}" id="slider">
       <c:forEach var="news" items="${listOfNews.news}">

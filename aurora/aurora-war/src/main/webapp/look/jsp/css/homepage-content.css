@@ -525,3 +525,17 @@
 .homepage-status-badge { border: 0; cursor: pointer; font: inherit; font-weight: bold; }
 .homepage-widget-grip:focus-visible, .homepage-status-badge:focus-visible { outline: 2px solid #5f9d15; outline-offset: 2px; }
 .homepage-installed-table .homepage-dragging { opacity: 0.45; }
+
+/* Keep both Silverpeas confirmation buttons aligned at the same height. */
+.homepage-delete-dialog-actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 42px;
+  min-height: 42px;
+  padding: .75rem;
+  margin: 0;
+  font-size: 1em;
+  line-height: 1;
+}

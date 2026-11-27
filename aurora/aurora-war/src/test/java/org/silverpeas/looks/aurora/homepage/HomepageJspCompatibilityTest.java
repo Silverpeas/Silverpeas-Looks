@@ -47,6 +47,20 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
+  void spaceNewsAndDeleteConfirmationHaveScopedLayoutRules() throws Exception {
+    Path web = Path.of("src/main/webapp");
+    String news = Files.readString(web.resolve("WEB-INF/tags/silverpeas/look/displayNews.tag"));
+    assertTrue(news.contains("secteur-container homepage-news"));
+    String css = Files.readString(web.resolve("look/jsp/css/homepage-space.css"));
+    assertTrue(css.contains(".homepage-space-columns .homepage-news .caption {\n  position: static;"));
+    assertTrue(css.contains(".homepage-space-columns .homepage-news .list-news > li > a"));
+    assertTrue(css.contains(".homepage-space-columns .homepage-news .rslides > li {\n  height: auto;"));
+    String management = Files.readString(web.resolve("look/jsp/css/homepage-content.css"));
+    assertTrue(management.contains(".homepage-delete-dialog-actions > button {"));
+    assertTrue(management.contains("height: 42px;"));
+  }
+
+  @Test
   void imageIsAvailableInBothCataloguesAndUsesScopedAssetsAndEscapedAttributes() throws Exception {
     String catalogue = Files.readString(Path.of("src/main/webapp/WEB-INF/homepage/manage.jsp"));
     assertTrue(catalogue.contains("${addImageUrl}"));

@@ -145,7 +145,7 @@
   <view:sp-head-part>
     <view:script src="/look/jsp/js/homepage-management.js?version=15592-layout-v1"/>
     <title>Modifier la page d’accueil</title>
-    <view:link href="/look/jsp/css/homepage-content.css?version=15592-layout-v1"/>
+    <view:link href="/look/jsp/css/homepage-content.css?version=15592-dialog-buttons-v1"/>
   </view:sp-head-part>
   <view:sp-body-part cssClass="homepage-content-page">
     <view:browseBar>
