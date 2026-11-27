@@ -802,7 +802,7 @@ class HomepageContentServletTest {
     assertTrue(store.widgets(new HomepagePage("spaces", "WA1"), "fr").isEmpty());
     when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
     var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
-    when(helper.getConfiguredSelectedSpaceUsers(eq("WA1"), any())).thenReturn(
+    when(helper.getConfiguredSelectedUsers(eq("WA1"), any())).thenReturn(
         new org.silverpeas.looks.aurora.NewUsersList(java.util.List.of()));
     clearInvocations(response);
     servlet.doPost(request, response);
@@ -816,15 +816,43 @@ class HomepageContentServletTest {
   }
 
   @Test
-  void selectedUsersEndpointsRejectGeneralHomepageAndAutocompleteRequiresManagement() throws Exception {
+  void generalSelectedUsersSaveRequiresCsrfAndFreshRevision() throws Exception {
     when(user.isAccessAdmin()).thenReturn(true);
-    for (String action : java.util.List.of("selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers")) {
-      assertTrue(HomepageContentServlet.spaceAction(action));
-      when(request.getParameter("action")).thenReturn(action);
-      if (action.startsWith("save")) { servlet.doPost(request, response); }
-      else { servlet.doGet(request, response); }
-    }
-    verify(response, times(4)).sendError(400);
+    when(request.getParameter("kind")).thenReturn("skins");
+    when(request.getParameter("owner")).thenReturn("waves");
+    when(request.getParameter("action")).thenReturn("saveSelectedUsers");
+    when(request.getParameter("widget")).thenReturn("selected-test");
+    when(request.getParameter("title")).thenReturn("Équipe");
+    when(request.getParameter("zone")).thenReturn("right");
+    when(request.getParameter("order")).thenReturn("3");
+    when(request.getParameter("enabled")).thenReturn("true");
+    when(request.getParameter("group")).thenReturn("");
+    when(request.getParameter("size")).thenReturn("100");
+    when(request.getParameter("avatar")).thenReturn("true");
+    when(request.getParameter("fields")).thenReturn("phone");
+    when(request.getParameter("userIds")).thenReturn("2 1");
+    when(request.getParameter("revision")).thenReturn("");
+    servlet.doPost(request, response);
+    verify(response).sendError(403);
+    assertTrue(store.widgets(new HomepagePage("skins", "waves"), "fr").isEmpty());
+    when(request.getHeader("X-Aurora-CSRF")).thenReturn("test-token");
+    var helper = (org.silverpeas.looks.aurora.LookAuroraHelper) session.getAttribute("Silverpeas_LookHelper");
+    when(helper.getConfiguredSelectedUsers(eq(""), any())).thenReturn(
+        new org.silverpeas.looks.aurora.NewUsersList(java.util.List.of()));
+    clearInvocations(response);
+    servlet.doPost(request, response);
+    verify(response, never()).sendError(anyInt());
+    var saved = store.readWidget(new HomepagePage("skins", "waves"), "selected-test", "fr");
+    assertEquals("selectedUsers", saved.type());
+    assertEquals("2 1", saved.usersConfiguration().userIds());
+    assertEquals("Équipe", saved.getTitle());
+    servlet.doPost(request, response);
+    verify(response).sendError(409);
+  }
+
+  @Test
+  void selectedUsersAutocompleteRequiresManagement() throws Exception {
+    when(request.getParameter("action")).thenReturn("selectableUsers");
     when(request.getParameter("kind")).thenReturn("spaces");
     when(request.getParameter("owner")).thenReturn("WA1");
     when(user.isAccessAdmin()).thenReturn(false);
@@ -842,12 +870,19 @@ class HomepageContentServletTest {
     alice.setId("12");
     alice.setFirstName("Alice");
     alice.setLastName("Martin");
-    when(helper.getSelectableSpaceUsers("WA1")).thenReturn(java.util.List.of(alice));
+    when(helper.getSelectableUsers("WA1")).thenReturn(java.util.List.of(alice));
     clearInvocations(response);
     servlet.doGet(request, response);
     verify(response, never()).sendError(anyInt());
     assertTrue(output.toString().contains("Alice"));
     assertTrue(output.toString().contains("12"));
+    when(request.getParameter("kind")).thenReturn("skins");
+    when(request.getParameter("owner")).thenReturn("waves");
+    when(helper.getSelectableUsers("")).thenReturn(java.util.List.of(alice));
+    clearInvocations(response);
+    servlet.doGet(request, response);
+    verify(response, never()).sendError(anyInt());
+    verify(helper).getSelectableUsers("");
   }
 
   @Test

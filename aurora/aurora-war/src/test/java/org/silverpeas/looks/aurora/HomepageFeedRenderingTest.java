@@ -37,7 +37,7 @@ class HomepageFeedRenderingTest {
     return mock(LookAuroraHelper.class, invocation -> {
       switch (invocation.getMethod().getName()) {
         case "getConfiguredNextEvents", "getConfiguredRSSFeeds", "getDefaultEventsConfiguration",
-            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers", "getConfiguredSpaceNewUsers", "getSelectableSpaceUsers", "getConfiguredSelectedSpaceUsers",
+            "getDefaultRssConfiguration", "getRSSFeeds", "getConfiguredQuestions", "getConfiguredNewUsers", "getConfiguredSpaceNewUsers", "getSelectableSpaceUsers", "getSelectableUsers", "getConfiguredSelectedUsers",
             "getDefaultFaqConfiguration", "getDefaultUsersConfiguration", "getConfiguredSubscriptions",
             "getConfiguredSearchForm", "getDefaultSearchConfiguration", "getLastNewsSubscribed", "getDefaultSubscriptionsConfiguration" -> { return invocation.callRealMethod(); }
         case "getOrganisationController" -> { return organization; }
@@ -110,6 +110,28 @@ class HomepageFeedRenderingTest {
   }
 
   @Test
+  void generalSelectedUsersQueryOnlySelectedActiveIdsInOrder() {
+    var organization = mock(OrganizationController.class);
+    var helper = helper(organization);
+    var first = new org.silverpeas.core.admin.user.model.UserDetail();
+    first.setId("1");
+    var second = new org.silverpeas.core.admin.user.model.UserDetail();
+    second.setId("2");
+    when(organization.searchUsers(any())).thenReturn(new org.silverpeas.core.util.SilverpeasArrayList<>(List.of(first, second)));
+    var result = helper.getConfiguredSelectedUsers("",
+        new HomepageContentStore.UsersConfiguration("", 100, true, "", "2 1 99"));
+    assertEquals(List.of(second, first), result.getUsers());
+    var criterion = org.mockito.ArgumentCaptor.forClass(org.silverpeas.core.admin.user.model.UserDetailsSearchCriteria.class);
+    verify(organization).searchUsers(criterion.capture());
+    assertArrayEquals(new String[]{"2", "1", "99"}, criterion.getValue().getCriterionOnUserIds());
+    assertTrue(java.util.Arrays.asList(criterion.getValue().getCriterionOnUserStatesToExclude())
+        .containsAll(List.of(org.silverpeas.core.admin.user.constant.UserState.BLOCKED,
+            org.silverpeas.core.admin.user.constant.UserState.DEACTIVATED,
+            org.silverpeas.core.admin.user.constant.UserState.REMOVED)));
+    verify(organization, never()).getAllComponentIdsRecur(anyString());
+  }
+
+  @Test
   void selectedUsersKeepSelectionOrderAndExcludeUnavailableOrBlockedAccounts() {
     var organization = mock(OrganizationController.class);
     var helper = helper(organization);
@@ -120,13 +142,13 @@ class HomepageFeedRenderingTest {
     var blocked = new org.silverpeas.core.admin.user.model.UserDetail();
     blocked.setId("3");
     blocked.setState(org.silverpeas.core.admin.user.constant.UserState.BLOCKED);
-    assertTrue(helper.getConfiguredSelectedSpaceUsers("WA1",
+    assertTrue(helper.getConfiguredSelectedUsers("WA1",
         new HomepageContentStore.UsersConfiguration("", 100, true, "", "")).getUsers().isEmpty());
     verifyNoInteractions(organization);
     when(organization.getAllComponentIdsRecur("WA1")).thenReturn(new String[]{"kmelia1"});
     when(organization.getAllUsers("kmelia1")).thenReturn(
         new org.silverpeas.core.admin.user.model.UserDetail[]{first, second, blocked});
-    var result = helper.getConfiguredSelectedSpaceUsers("WA1",
+    var result = helper.getConfiguredSelectedUsers("WA1",
         new HomepageContentStore.UsersConfiguration("", 100, false, "phone title", "2 1 2 3 99"));
     assertEquals(List.of(second, first), result.getUsers());
     assertFalse(result.isAvatar());

@@ -252,9 +252,6 @@ public final class HomepageWidgets {
     if (!List.of("faq", "users", "selectedUsers").contains(type)) {
       throw new IllegalArgumentException("Invalid community type");
     }
-    if ("selectedUsers".equals(type) && !"spaces".equals(page.kind())) {
-      throw new IllegalArgumentException("Selected users require a space homepage");
-    }
     var saved = store.readWidget(page, id, language);
     if (!saved.content().revision().isEmpty()) {
       if (!type.equals(saved.type())) {
@@ -291,13 +288,17 @@ public final class HomepageWidgets {
   public static Map<String, org.silverpeas.looks.aurora.NewUsersList> users(HomepagePage page,
       List<HomepageContentStore.Widget> widgets, LookAuroraHelper helper) {
     if (!"spaces".equals(page.kind())) {
-      return users(widgets, helper);
+      Map<String, org.silverpeas.looks.aurora.NewUsersList> result = new LinkedHashMap<>();
+      widgets.stream().filter(widget -> widget.isEnabled() && "selectedUsers".equals(widget.type()))
+          .forEach(widget -> result.put(widget.id(),
+              helper.getConfiguredSelectedUsers("", widget.usersConfiguration())));
+      return result;
     }
     Map<String, org.silverpeas.looks.aurora.NewUsersList> result = new LinkedHashMap<>();
     widgets.stream().filter(widget -> widget.isEnabled() && List.of("users", "selectedUsers").contains(widget.type()))
         .forEach(widget -> result.put(widget.id(),
             "selectedUsers".equals(widget.type())
-                ? helper.getConfiguredSelectedSpaceUsers(page.owner(), widget.usersConfiguration())
+                ? helper.getConfiguredSelectedUsers(page.owner(), widget.usersConfiguration())
                 : helper.getConfiguredSpaceNewUsers(page.owner(), widget.usersConfiguration())));
     return result;
   }

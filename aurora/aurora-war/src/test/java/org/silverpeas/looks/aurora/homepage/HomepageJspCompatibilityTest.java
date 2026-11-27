@@ -47,15 +47,17 @@ class HomepageJspCompatibilityTest {
   Path temporary;
 
   @Test
-  void selectedUsersHavePickerAndSpaceOnlyRendering() throws Exception {
+  void selectedUsersHavePickerAndRenderOnBothHomepageTypes() throws Exception {
     var web = Path.of("src/main/webapp");
     String editor = Files.readString(web.resolve("WEB-INF/homepage/selectedUsersEditor.jsp"));
     assertTrue(editor.contains("data-widget-type=\"selectedUsers\""));
     assertTrue(editor.contains("selected-users-search"));
     assertTrue(editor.contains("homepage-selected-users.js"));
     String tag = Files.readString(web.resolve("WEB-INF/tags/silverpeas/look/displayHomepageWidgets.tag"));
-    assertTrue(tag.contains("widget.type == 'selectedUsers') and homepageKind == 'spaces'"));
+    assertTrue(tag.contains("widget.type == 'selectedUsers' or (widget.type == 'users' and homepageKind == 'spaces')"));
     assertTrue(tag.contains("Aucun utilisateur sélectionné à afficher."));
+    String main = Files.readString(web.resolve("look/jsp/Main.jsp"));
+    assertTrue(main.contains("HomepageWidgets.users(homepagePage, homepageWidgets, homepageHelper)"));
   }
 
   @Test

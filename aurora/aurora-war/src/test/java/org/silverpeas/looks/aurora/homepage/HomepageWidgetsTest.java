@@ -39,7 +39,7 @@ class HomepageWidgetsTest {
   private final HomepagePage page = new HomepagePage("skins", "waves");
 
   @Test
-  void selectedUsersPersistWithRevisionAndAreReservedForSpaces() throws Exception {
+  void selectedUsersPersistWithRevisionForGeneralAndSpaceHomepages() throws Exception {
     var store = new HomepageContentStore(root);
     var space = new HomepagePage("spaces", "WA1");
     var helper = mock(LookAuroraHelper.class);
@@ -51,13 +51,14 @@ class HomepageWidgetsTest {
     var saved = store.readWidget(space, widget.id(), "fr");
     assertEquals(configuration, saved.usersConfiguration());
     HomepageWidgets.users(space, List.of(saved), helper);
-    verify(helper).getConfiguredSelectedSpaceUsers("WA1", configuration);
+    verify(helper).getConfiguredSelectedUsers("WA1", configuration);
     assertThrows(ConcurrentModificationException.class, () -> store.saveCommunityWidget(space,
         widget.id(), "fr", "Autre", saved.content().layout(), "selectedUsers", null, configuration, ""));
-    assertThrows(IllegalArgumentException.class, () -> HomepageWidgets.communityWidget(
-        store, page, widget.id(), "fr", helper, "selectedUsers"));
-    assertThrows(IllegalArgumentException.class, () -> store.saveCommunityWidget(page,
-        widget.id(), "fr", "Titre", saved.content().layout(), "selectedUsers", null, configuration, ""));
+    var general = HomepageWidgets.communityWidget(store, page, widget.id(), "fr", helper, "selectedUsers");
+    store.saveCommunityWidget(page, widget.id(), "fr", general.getTitle(), general.content().layout(),
+        "selectedUsers", null, configuration, "");
+    HomepageWidgets.users(page, store.widgets(page, "fr"), helper);
+    verify(helper).getConfiguredSelectedUsers("", configuration);
     assertThrows(IllegalArgumentException.class,
         () -> new HomepageContentStore.UsersConfiguration("", 100, true, "", "1 <script>"));
     clearInvocations(helper);

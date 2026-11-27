@@ -159,9 +159,9 @@
       <c:when test="${widget.type == 'faq'}">
         <viewTags:displayFAQ questions="${questions[widget.id]}" id="homepage-content-${widget.id}" title="${widget.title}"/>
       </c:when>
-      <c:when test="${(widget.type == 'users' or widget.type == 'selectedUsers') and homepageKind == 'spaces'}">
+      <c:when test="${widget.type == 'selectedUsers' or (widget.type == 'users' and homepageKind == 'spaces')}">
         <c:choose>
-          <c:when test="${homepageKind == 'spaces' and empty users[widget.id].users}">
+          <c:when test="${empty users[widget.id].users}">
             <div class="secteur-container homepage-users" id="homepage-content-${widget.id}">
               <h4><c:out value="${widget.title}"/></h4>
               <p>${widget.type == 'selectedUsers' ? 'Aucun utilisateur sélectionné à afficher.' : 'Aucun nouvel utilisateur à afficher pour cet espace.'}</p>

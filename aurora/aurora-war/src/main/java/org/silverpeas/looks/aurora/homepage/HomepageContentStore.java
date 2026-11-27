@@ -774,9 +774,6 @@ public class HomepageContentStore {
         ("faq".equals(type) ? faq == null : users == null)) {
       throw new IllegalArgumentException("Invalid community widget");
     }
-    if ("selectedUsers".equals(type) && !"spaces".equals(page.kind())) {
-      throw new IllegalArgumentException("Selected users require a space homepage");
-    }
     HomepagePage.validateIdentifier(widget);
     var properties = properties(page);
     String prefix = "widget." + widget;

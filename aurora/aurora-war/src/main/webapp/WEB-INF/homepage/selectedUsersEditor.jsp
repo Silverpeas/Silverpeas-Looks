@@ -63,7 +63,7 @@
               </div>
               <div class="homepage-field homepage-user-picker">
                 <label for="selected-users-search">Utilisateurs</label>
-                <p id="selected-users-help">Recherchez une personne ayant accès à l’espace, puis sélectionnez-la dans la liste.</p>
+                <p id="selected-users-help">${param.kind == 'spaces' ? 'Recherchez une personne ayant accès à l’espace, puis sélectionnez-la dans la liste.' : 'Recherchez une personne dans l’annuaire, puis sélectionnez-la dans la liste.'}</p>
                 <input id="selected-users-search" type="search" autocomplete="off" maxlength="100"
                     aria-describedby="selected-users-help" aria-controls="selected-users-results" aria-expanded="false">
                 <ul id="selected-users-results" class="homepage-user-results" hidden></ul>

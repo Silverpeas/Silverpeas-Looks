@@ -116,7 +116,7 @@ public class HomepageContentServlet extends HttpServlet {
         }
       }
       HomepagePage page = new HomepagePage(request.getParameter("kind"), request.getParameter("owner"));
-      if (!"spaces".equals(page.kind()) && java.util.List.of("selectedUsersEditor", "loadSelectedUsers", "saveSelectedUsers", "selectableUsers", "usersEditor", "loadUsers", "saveUsers", "spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins", "navigationEditor", "loadNavigation", "saveNavigation").contains(action == null ? "" : action)) {
+      if (!"spaces".equals(page.kind()) && java.util.List.of("usersEditor", "loadUsers", "saveUsers", "spaceAdminsEditor", "loadSpaceAdmins", "saveSpaceAdmins", "navigationEditor", "loadNavigation", "saveNavigation").contains(action == null ? "" : action)) {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
@@ -395,7 +395,7 @@ public class HomepageContentServlet extends HttpServlet {
       }
       String search = query.toLowerCase(java.util.Locale.ROOT);
       json(response, JSONCodec.encodeObject(o -> o.putJSONArray("users", array -> {
-        helper.getSelectableSpaceUsers(page.owner()).stream()
+        helper.getSelectableUsers("spaces".equals(page.kind()) ? page.owner() : "").stream()
             .filter(user -> user.getDisplayedName().toLowerCase(java.util.Locale.ROOT).contains(search))
             .sorted(java.util.Comparator.comparing(org.silverpeas.core.admin.user.model.User::getDisplayedName))
             .limit(20).forEach(user -> array.addJSONObject(item ->
@@ -722,7 +722,7 @@ public class HomepageContentServlet extends HttpServlet {
         if ("selectedUsers".equals(type)) {
           var helper = (org.silverpeas.looks.aurora.LookAuroraHelper)
               request.getSession(false).getAttribute("Silverpeas_LookHelper");
-          var selected = helper.getConfiguredSelectedSpaceUsers(page.owner(), configuration);
+          var selected = helper.getConfiguredSelectedUsers("spaces".equals(page.kind()) ? page.owner() : "", configuration);
           o.putJSONArray("selectedUsers", array -> {
             selected.getUsers().forEach(user -> array.addJSONObject(item ->
                 item.put("id", user.getId()).put("label", user.getDisplayedName())));

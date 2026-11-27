@@ -1210,11 +1210,22 @@ public class LookAuroraHelper extends LookSilverpeasV5Helper {
         .distinct().toList();
   }
 
-  public NewUsersList getConfiguredSelectedSpaceUsers(String spaceId,
+  public List<User> getSelectableUsers(String spaceId) {
+    if (!spaceId.isEmpty()) {
+      return getSelectableSpaceUsers(spaceId);
+    }
+    return new ArrayList<>(getOrganisationController().searchUsers(
+        new UserDetailsSearchCriteria().onUserStatesToExclude(BLOCKED, DEACTIVATED, REMOVED)));
+  }
+
+  public NewUsersList getConfiguredSelectedUsers(String spaceId,
       HomepageContentStore.UsersConfiguration configuration) {
     List<String> ids = configuration.userIds().isEmpty() ? List.of()
         : List.of(configuration.userIds().split(" "));
-    List<User> available = ids.isEmpty() ? List.of() : getSelectableSpaceUsers(spaceId);
+    List<User> available = ids.isEmpty() ? List.of() : spaceId.isEmpty()
+        ? new ArrayList<>(getOrganisationController().searchUsers(new UserDetailsSearchCriteria()
+            .onUserStatesToExclude(BLOCKED, DEACTIVATED, REMOVED).onUserIds(ids.toArray(String[]::new))))
+        : getSelectableSpaceUsers(spaceId);
     List<User> users = ids.stream().distinct()
         .flatMap(id -> available.stream().filter(user -> id.equals(user.getId())).findFirst().stream())
         .toList();
